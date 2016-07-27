@@ -24,3 +24,8 @@ Route::auth();
 //Route::get('/home', 'HomeController@index');
 
 Route::resource('api/article', 'ArticleController');
+Route::get('article/new', 'ArticleController@newarticle');
+
+Route::resource('resource', 'ResourceController');
+
+Route::post('resource/upload', 'ResourceController@upload');

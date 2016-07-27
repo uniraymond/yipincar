@@ -39,17 +39,13 @@
 
                 <!-- Branding Image -->
                 <a class="navbar-brand" href="{{ url('/') }}">
-                    Laravel
+                    Yi Pin Cars
                 </a>
             </div>
 
             <div class="collapse navbar-collapse" id="app-navbar-collapse">
                 <!-- Left Side Of Navbar -->
                 <ul class="nav navbar-nav">
-                    <li><a href="{{ url('/post') }}">Posts</a></li>
-                    <li><a href="{{ url('/api/post/page/2/items/3') }}">Api Posts Pagination </a></li>
-                    <li><a href="{{ url('/api/post/filterTitle/esse') }}">Api Posts Title Filter - esse</a></li>
-                    <li><a href="{{ url('/api/post/filterBody/vitae') }}">Api Posts Body Filter - vitae</a></li>
                 </ul>
 
                 <!-- Right Side Of Navbar -->
