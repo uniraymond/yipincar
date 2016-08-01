@@ -13,6 +13,7 @@ class ArticleController extends Controller
 {
   public function index()
   {
+    echo "articles: ";
     $article = Article::getAllArticles();
     return response()->json($article);
   }
@@ -90,6 +91,7 @@ class ArticleController extends Controller
   {
     $authuser = $request->user();
 
+//    dd($request['title']);
     $title = $request->input('title');
     $content = trim($request->input('content'));
     $description = trim(substr($content, 0, 20));
@@ -143,7 +145,7 @@ class ArticleController extends Controller
 
   public function newarticle()
   {
-    $articletypes = DB::table('articletypes')->get();
+    $articletypes = DB::table('article_types')->get();
 
     return view('articles.newart', ['articletypes'=>$articletypes]);
   }

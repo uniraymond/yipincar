@@ -18,12 +18,12 @@ class CreateArticlesTable extends Migration
             $table->string('title');
             $table->string('description');
             $table->string('content');
-            $table->integer('category_id')->references('id')->on('categories');
-            $table->integer('type_id')->references('id')->on('articletypes');
-            $table->timestamp('created_at');
-            $table->integer('created_by')->references('id')->on('users');
-            $table->timestamp('updated_at');
-            $table->integer('updated_by')->references('id')->on('users');
+            $table->integer('category_id')->references('id')->on('categories')->onDelete('cascade');
+            $table->integer('type_id')->references('id')->on('article_types')->onDelete('cascade');
+            $table->tinyInteger('published');
+            $table->timestamps();
+            $table->integer('updated_by')->references('id')->on('users')->onDelete('cascade');
+            $table->integer('created_by')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

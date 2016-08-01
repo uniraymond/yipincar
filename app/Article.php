@@ -11,14 +11,15 @@ class Article extends Model
   {
     $list = DB::table('articles')
                 ->join('categories', 'articles.category_id', '=', 'categories.id')
-                ->join('articletypes', 'articles.type_id', '=', 'articletypes.id')
-                ->join('artres', 'articles.id', '=', 'artres.artcle_id')
-                ->join('resources', 'artres.resource_id', '=', 'resources.id')
+                ->join('article_types', 'articles.type_id', '=', 'article_types.id')
+                ->leftJoin('article_resource', 'articles.id', '=', 'article_resource.artcle_id')
+                ->leftJoin('resources', 'article_resource.resource_id', '=', 'resources.id')
                 ->select('articles.*',
                     'categories.name as categoryName',
-                    'articletypes.name as articletypeName',
+                    'article_types.name as articletypeName',
                     'resources.name as resourceName',
-                    'resources.link as resourceLink')
+                    'resources.link as resourceLink'
+                     )
                 ->get();
 
     return $list;
@@ -28,8 +29,8 @@ class Article extends Model
   {
     $article = DB::table('articles')
         ->join('categories', 'articles.category_id', '=', 'categories.id')
-        ->join('articletypes', 'articles.type_id', '=', 'articletypes.id')
-        ->select('articles.*', 'categories.name as categoryName', 'articletypes.name as articletypeName')
+        ->join('article_types', 'articles.type_id', '=', 'article_types.id')
+        ->select('articles.*', 'categories.name as categoryName', 'article_types.name as articletypeName')
         ->where('articles.id', '=', $id)
         ->get();
 

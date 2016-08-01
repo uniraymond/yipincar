@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateRestypesTable extends Migration
+class CreateTagsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,10 +12,13 @@ class CreateRestypesTable extends Migration
      */
     public function up()
     {
-        Schema::create('restypes', function (Blueprint $table) {
+        Schema::create('tags', function(Blueprint $table){
             $table->increments('id');
             $table->string('name');
-            $table->string('descrition');
+            $table->string('description');
+            $table->timestamps();
+            $table->integer('updated_by')->references('id')->on('users')->onDelete('cascade');
+            $table->integer('created_by')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
@@ -26,6 +29,6 @@ class CreateRestypesTable extends Migration
      */
     public function down()
     {
-        Schema::drop('restypes');
+        Schema::drop('tags');
     }
 }

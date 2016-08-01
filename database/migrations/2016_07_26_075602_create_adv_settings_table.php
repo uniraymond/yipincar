@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateAdvsettingsTable extends Migration
+class CreateAdvSettingsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,10 +12,13 @@ class CreateAdvsettingsTable extends Migration
      */
     public function up()
     {
-        Schema::create('advsettings', function(Blueprint $table) {
+        Schema::create('adv_settings', function(Blueprint $table) {
             $table->increments('id');
             $table->integer('displaytime');
             $table->integer('displaynumber');
+            $table->timestamps();
+            $table->integer('updated_by')->references('id')->on('users')->onDelete('cascade');
+            $table->integer('created_by')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
@@ -26,6 +29,6 @@ class CreateAdvsettingsTable extends Migration
      */
     public function down()
     {
-        //
+        Schema::drop('adv_settings');
     }
 }

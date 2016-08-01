@@ -11,9 +11,9 @@
 |
 */
 
-Route::get('/', function () {
+Route::get('/', ['middleware' => 'auth', function () {
     return view('welcome');
-});
+}]);
 
 Route::auth();
 
@@ -23,9 +23,12 @@ Route::auth();
 //Route::get('api/post/filterTitle/{filterTitle}', 'PostController@filterTitle');
 //Route::get('/home', 'HomeController@index');
 
-Route::resource('api/article', 'ArticleController');
-Route::get('article/new', 'ArticleController@newarticle');
+Route::group(['middleware'=>'auth'], function() {
+    Route::resource('api/article', 'ArticleController');
 
-Route::resource('resource', 'ResourceController');
+    Route::get('article/new', 'ArticleController@newarticle');
 
-Route::post('resource/upload', 'ResourceController@upload');
+    Route::resource('resource', 'ResourceController');
+
+    Route::post('resource/upload', 'ResourceController@upload');
+});
