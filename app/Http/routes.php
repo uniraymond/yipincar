@@ -32,3 +32,6 @@ Route::group(['middleware'=>'auth'], function() {
 
     Route::post('resource/upload', 'ResourceController@upload');
 });
+
+Route::get('admin/advsetting/list', 'AdvsettingController@index');
+Route::post('admin/advsetting/update', 'AdvsettingController@update');

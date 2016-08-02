@@ -46,6 +46,8 @@ class ResourceController extends Controller
               'name' => $fileName,
               'description' => $request->input('description'),
               'link' => $fileDir.'/'.$fileName,
+              'type_id' => 1,
+              'published' => 1,
               'created_by' => $authuser->id
           ]
       );
