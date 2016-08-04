@@ -31,7 +31,18 @@ Route::group(['middleware'=>'auth'], function() {
     Route::resource('resource', 'ResourceController');
 
     Route::post('resource/upload', 'ResourceController@upload');
+
+    Route::get('admin/advsetting/list', 'AdvsettingController@index');
+    Route::post('admin/advsetting/update', 'AdvsettingController@update');
+    Route::get('admin/advsetting/editimage/{id}', 'AdvsettingController@editimage');
+
+    Route::post('api/updateImage', 'AdvsettingController@updateImage');
+    Route::post('api/uploadImage', 'AdvsettingController@uploadImage');
 });
 
-Route::get('admin/advsetting/list', 'AdvsettingController@index');
-Route::post('admin/advsetting/update', 'AdvsettingController@update');
+Route::get('api/category', 'CategoryController@index');
+
+Route::get('admin/category/list', 'CategoryController@list');
+Route::put('admin/category/update', 'CategoryController@update');
+Route::post('admin/category/create', 'CategoryController@create');
+Route::delete('admin/category/create', 'CategoryController@create');
