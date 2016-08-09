@@ -5,9 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
-use App\Comment as Comment;
 
-class CommentController extends Controller
+use App\Category;
+
+class CategoryController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,19 +17,8 @@ class CommentController extends Controller
      */
     public function index()
     {
-        $comments = Comment::paginate(20);
-        return view('comments/index', $comments);
-    }
-
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function articlecomments($id)
-    {
-        $comments = Comment::where('article_id', '=>' , $id )->paginate(20);
-        return view('admin/comment', $comments);
+        $categories = Category::all();
+        return view('category/index', ['categories'=>$categories]);
     }
 
     /**
@@ -38,7 +28,7 @@ class CommentController extends Controller
      */
     public function create()
     {
-        //
+        return view('category/create');
     }
 
     /**
@@ -49,7 +39,14 @@ class CommentController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $category = new Category;
+        $category->name = $request->name;
+        $category->description = $request->description;
+        $category->save();
+
+        $request->session()->flash('status', 'Category: '. $category->name .' has been created Successful!');
+        
+        return redirect('admin/category');
     }
 
     /**
@@ -60,7 +57,6 @@ class CommentController extends Controller
      */
     public function show($id)
     {
-        //
     }
 
     /**
@@ -71,7 +67,9 @@ class CommentController extends Controller
      */
     public function edit($id)
     {
-        //
+        $category = Category::find($id);
+
+        return view('category/edit', ['category'=>$category]);
     }
 
     /**
@@ -83,7 +81,18 @@ class CommentController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $category = Category::find($id);
+        if ($request->name) {
+            $category->name = $request->name;
+        }
+        if ($request->description) {
+            $category->description = $request->description;
+        }
+        $category->save();
+
+        $request->session()->flash('status', 'Update Successful!');
+        
+        return redirect('admin/category');
     }
 
     /**
@@ -94,6 +103,8 @@ class CommentController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $category = Category::find($id);
+        $category->delete();
+        return redirect('admin/category');
     }
 }

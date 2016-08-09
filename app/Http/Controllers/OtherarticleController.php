@@ -3,11 +3,16 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\DB as DB;
+use Illuminate\Http\Response;
 use App\Http\Requests;
-use App\Comment as Comment;
+use App\Article;
+use App\ArticleTags as ArticleTags;
+use App\Category as Category;
+use App\ArticleTypes as ArticleTypes;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
-class CommentController extends Controller
+class OtherarticleController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,19 +21,23 @@ class CommentController extends Controller
      */
     public function index()
     {
-        $comments = Comment::paginate(20);
-        return view('comments/index', $comments);
+        //website
+        $articleType = ArticleTypes::where('name', 'Advertisment')->first();
+        $articles = Article::where('type_id', $articleType->id)->paginate(5);
+        return view('otherarticles/articlelist', ['articles'=>$articles]);
     }
 
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
+     * @param string $articletype
+     * @return mixed
      */
-    public function articlecomments($id)
+
+    public function articlelist($articletype = 'Advertisment')
     {
-        $comments = Comment::where('article_id', '=>' , $id )->paginate(20);
-        return view('admin/comment', $comments);
+        //website
+        $articleType = ArticleTypes::where('name', $articletype)->first();
+        $articles = Article::where('type_id', $articleType->id)->paginate(5);
+        return view('otherarticles/articlelist', ['articles'=>$articles]);
     }
 
     /**

@@ -7,139 +7,193 @@ use Illuminate\Support\Facades\DB as DB;
 use Illuminate\Http\Response;
 use App\Http\Requests;
 use App\Article;
-
+use App\ArticleTags as ArticleTags;
+use App\Category as Category;
+use App\ArticleTypes as ArticleTypes;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class ArticleController extends Controller
 {
   public function index()
   {
-    echo "articles: ";
-    $article = Article::getAllArticles();
-    return response()->json($article);
+    //website
+    $articleType = ArticleTypes::where('name', 'Webpage')->first();
+    $articles = Article::where('type_id', $articleType->id)->paginate(5);
+    return view('articles/index', ['articles'=>$articles]);
   }
+
+  // advertisment
+  public function advlist()
+  {
+    //website
+    $articleType = ArticleTypes::where('name', 'Advertisment')->first();
+    $articles = Article::where('type_id', $articleType->id)->paginate(5);
+    return view('articles/advlist', ['articles'=>$articles]);
+  }
+
+  // video
+  public function videolist()
+  {
+    //website
+    $articleType = ArticleTypes::where('name', 'video')->first();
+    $articles = Article::where('type_id', $articleType->id)->paginate(5);
+    return view('articles/vediolist', ['articles'=>$articles]);
+  }
+
+  /**
+   * @param $id
+   */
 
   public function show($id)
   {
-    $article = Article::getArticle($id);
-    return response()->json($article);
   }
 
   public function edit($id)
   {
-    
+    $article = Article::find($id);
+    $categories = DB::table('categories')->get();
+    $tags = DB::table('tags')->get();
+    foreach ($article->tags as $tag) {
+      $currentTags[] = $tag->id;
+    }
+
+    return view('articles/edit', [
+        'article' => $article,
+        'categories' => $categories,
+        'tags' => $tags,
+        'currentTags' => $currentTags,
+    ]);
   }
 
   public function update(Request $request, $id)
   {
-    
+    $authuser = $request->user();
+    $title = $request->input('title');
+    $content = trim($request->input('content'));
+    $description = trim(substr($content, 0, 20));
+//    $typeId = $request['type_id'];
+    $categoryId = $request['category_id'];
+    $published = $request['published'] ? 1 : 0;
+
+    $article = Article::find($id);
+    $article->title = $title;
+    $article->content = $content;
+    $article->description = $description;
+    $article->created_by = $authuser->id;
+//    $article->type_id = $typeId;
+    $article->category_id = $categoryId;
+    $article->published = $published;
+    $article->save();
+
+    $currentTagIds = DB::table('article_tags')->where('article_id', $id)->lists('tag_id', 'id');
+
+    // add new tags to article tags
+    foreach($request['tag_ids'] as $tag_id) {
+      if (!in_array($tag_id, $currentTagIds)) {
+        $article_tag = new ArticleTags();
+        $article_tag->article_id = $article->id;
+        $article_tag->tag_id = $tag_id;
+        $article_tag->created_by = $authuser->id;
+        $article_tag->save();
+      }
+    }
+
+    // remove tags from article tags
+    foreach($currentTagIds as $currentId => $currentTagId) {
+      if (!in_array($currentTagId, $request['tag_ids'])) {
+        ArticleTags::find($currentId)->delete();
+      }
+    }
+    $request->session()->flash('status', 'Article: '. $title .' has been updated!');
+    $type = ArticleTypes::where('id', $article->type_id)->first();
+
+    switch ($type->name) {
+      case 'Webpage':
+        return redirect('admin/article');
+        break;
+      case 'Advertisment':
+        return redirect('admin/advlist');
+        break;
+      case 'Video':
+        return redirect('admin/videolist');
+        break;
+      default:
+        return redirect('admin/article');
+        break;
+    }
   }
 
-  public function create(Request $request)
+  public function groupupdate(Request $request)
   {
     $authuser = $request->user();
 
-    $title = $request->input('title');
-    $content = $request->input('content');
-    $description = substr($content, 0, 20);
-    $typeId = $request->input('arttype');
+    $articleIds = $request['id'];
+    $publisheds = $request['published'];
+    $deletes = $request['delete'];
 
-    $newarticle = DB::table('articles')->insert(
-        [
-          'title' => $title,
-          'content' => $content,
-          'description' => $description,
-          'created_by' => $authuser->id,
-          'type_id' => $typeId,
-          'category_id' => 1
-        ]
-    );
+    foreach($articleIds as $id) {
+      $article = Article::find($id);
+      $articleName = $article->title;
+      $article->updated_by = $authuser->id;
+      $article->published = isset($publisheds[$id]) && $publisheds[$id] ? 1 : 0;
+      if (isset($deletes[$id]) && $deletes[$id]) {
+        $article->article_tags()->delete(); //remove article_tags record
+        $article->delete(); //remove the artile
 
-    $file = $request->file('file');
+        $request->session()->flash('status', 'Article: '. $articleName .' has been removed!');
+      } else {
 
-    if(!empty($file)) {
-      $fileName = $file->getClientOriginalName();
-      $fileDir = "resources";
-      $file->move($fileDir, $fileName);
-      $newfile = DB::table('resources')->insert(
-          [
-              'name' => $fileName,
-              'description' => $request->input('description'),
-              'link' => $fileDir.'/'.$fileName,
-              'created_by' => $authuser->id
-          ]
-      );
-
-      $artres = DB::table('artres')->insert(
-          [
-            'artcle_id' => $newarticle->id,
-            'resource_id' => $newfile->id
-          ]
-      );
-
+        $request->session()->flash('status', 'Article: '. $articleName .' has been '. $article->published ? 'published ' : 'unpublished ' .'!');
+        $article->save(); //published the article
+      }
     }
+    return redirect('admin/article');
+  }
 
-    $result = array(
-        'filename'=>$file->getClientOriginalName(),
-        'path'=>storage_path($file->getClientOriginalName()),
-        'userId' => $authuser->id,
-        'arttype' => $artres->id,
-    );
-    return response()->json($result);
+  public function create()
+  {
+    $categories = DB::table('categories')->get();
+    $articletypes = DB::table('article_types')->get();
+    $tags = DB::table('tags')->get();
+
+    return view('articles/create', [
+            'articletypes' => $articletypes,
+            'categories' => $categories,
+            'tags' => $tags
+        ]);
   }
 
   public function store(Request $request)
   {
     $authuser = $request->user();
-
-//    dd($request['title']);
     $title = $request->input('title');
     $content = trim($request->input('content'));
     $description = trim(substr($content, 0, 20));
-    $typeId = $request->input('arttype');
+    $typeId = $request['type_id'];
+    $categoryId = $request['category_id'];
+    $published = $request['published'] ? 1 : 0;
 
-    $newarticle = DB::table('articles')->insertGetId(
-        [
-            'title' => $title,
-            'content' => $content,
-            'description' => $description,
-            'created_by' => $authuser->id,
-            'type_id' => $typeId,
-            'category_id' => 1
-        ]
-    );
+    $article = new Article();
+    $article->title = $title;
+    $article->content = $content;
+    $article->description = $description;
+    $article->created_by = $authuser->id;
+    $article->type_id = $typeId;
+    $article->category_id = $categoryId;
+    $article->published = $published;
+    $article->save();
 
-    $file = $request->file('file');
 
-    if(!empty($file)) {
-      $fileName = $file->getClientOriginalName();
-      $fileDir = "resources";
-      $file->move($fileDir, $fileName);
-      $newfile = DB::table('resources')->insertGetId(
-          [
-              'name' => $fileName,
-              'description' => $request->input('filedescription'),
-              'link' => $fileDir.'/'.$fileName,
-              'created_by' => $authuser->id
-          ]
-      );
-
-      $artres = DB::table('artres')->insertGetId(
-          [
-              'artcle_id' => $newarticle,
-              'resource_id' => $newfile
-          ]
-      );
-
+    foreach($request['tag_ids'] as $tag_id) {
+      $article_tag = new ArticleTags();
+      $article_tag->article_id = $article->id;
+      $article_tag->tag_id = $tag_id;
+      $article_tag->created_by = $authuser->id;
+      $article_tag->save();
     }
 
-    $result = array(
-        'filename'=>$file->getClientOriginalName(),
-        'path'=>storage_path($file->getClientOriginalName()),
-        'userId' => $authuser->id,
-        'arttype' => $artres,
-        'newfile' => $newfile,
-    );
-    return response()->json($result);
+    $request->session()->flash('status', 'Article: '. $title .' has been added!');
+    return redirect('admin/article');
 
   }
 
@@ -150,8 +204,12 @@ class ArticleController extends Controller
     return view('articles.newart', ['articletypes'=>$articletypes]);
   }
   
-  public function destroy($id)
+  public function destroy($id, Request $request)
   {
-    DB::table('articles')->where('id', '=', $id)->delete();
+    $article = Articles::find($id);
+    $title = $article->title;
+    $article->delete();
+    $request->session()->flash('status', 'Article: '. $title .' has been added!');
   }
+
 }

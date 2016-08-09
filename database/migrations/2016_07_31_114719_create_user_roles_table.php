@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateArticleResourceTable extends Migration
+class CreateUserRolesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,11 +12,10 @@ class CreateArticleResourceTable extends Migration
      */
     public function up()
     {
-        Schema::create('article_resource', function (Blueprint $table) {
+        Schema::create('user_roles', function(Blueprint $table) {
             $table->increments('id');
-            $table->integer('artcle_id')->references('id')->on('articles')->onDelete('cascade');
-            $table->integer('resource_id')->references('id')->on('resources')->onDelete('cascade');
-            $table->integer('displayorder');
+            $table->integer('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->integer('role_id')->references('id')->on('roles')->onDelete('cascade');
             $table->timestamps();
             $table->integer('updated_by')->references('id')->on('users')->onDelete('cascade');
             $table->integer('created_by')->references('id')->on('users')->onDelete('cascade');
@@ -30,6 +29,6 @@ class CreateArticleResourceTable extends Migration
      */
     public function down()
     {
-        Schema::drop('article_resource');
+        Schema::drop('user_roles');
     }
 }

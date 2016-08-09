@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateArticleTagTable extends Migration
+class CreateArticleResourcesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,10 +12,11 @@ class CreateArticleTagTable extends Migration
      */
     public function up()
     {
-        Schema::create('article_resource', function (Blueprint $table) {
+        Schema::create('article_resources', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('artcle_id')->references('id')->on('articles')->onDelete('cascade');
-            $table->integer('tag_id')->references('id')->on('tags')->onDelete('cascade');
+            $table->integer('resource_id')->references('id')->on('resources')->onDelete('cascade');
+            $table->integer('displayorder');
             $table->timestamps();
             $table->integer('updated_by')->references('id')->on('users')->onDelete('cascade');
             $table->integer('created_by')->references('id')->on('users')->onDelete('cascade');
@@ -29,6 +30,6 @@ class CreateArticleTagTable extends Migration
      */
     public function down()
     {
-        //
+        Schema::drop('article_resources');
     }
 }

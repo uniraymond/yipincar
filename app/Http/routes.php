@@ -23,26 +23,32 @@ Route::auth();
 //Route::get('api/post/filterTitle/{filterTitle}', 'PostController@filterTitle');
 //Route::get('/home', 'HomeController@index');
 
-Route::group(['middleware'=>'auth'], function() {
-    Route::resource('api/article', 'ArticleController');
+Route::group(['middleware'=>'auth', 'prefix'=>'admin'], function() {
+    Route::resource('article', 'ArticleController');
+    Route::resource('category', 'CategoryController');
+    Route::resource('articletypes', 'ArticleTypesController');
+    Route::resource('tag', 'TagsController');
+    Route::resource('resource', 'ResourceController');
+    Route::resource('comment', 'CommentController');
+
+    Route::resource('otherarticle', 'OtherarticleController');
+    Route::get('otherarticlelist', 'OtherarticleController@articlelist');
+    Route::get('otherarticlelist/{articletype}', 'OtherarticleController@articlelist');
+
+    Route::get('advlist', 'ArticleController@advlist');
+    Route::get('videolist', 'ArticleController@advlist');
+
+    Route::post('article/groupupdate', 'ArticleController@groupupdate');
 
     Route::get('article/new', 'ArticleController@newarticle');
 
-    Route::resource('resource', 'ResourceController');
-
     Route::post('resource/upload', 'ResourceController@upload');
+    
+    Route::get('advsetting/list', 'AdvsettingController@index');
+    Route::post('advsetting/update', 'AdvsettingController@update');
+    Route::get('advsetting/editimage/{id}', 'AdvsettingController@editimage');
 
-    Route::get('admin/advsetting/list', 'AdvsettingController@index');
-    Route::post('admin/advsetting/update', 'AdvsettingController@update');
-    Route::get('admin/advsetting/editimage/{id}', 'AdvsettingController@editimage');
-
+    Route::get('api/category', 'CategoryController@index');
     Route::post('api/updateImage', 'AdvsettingController@updateImage');
     Route::post('api/uploadImage', 'AdvsettingController@uploadImage');
 });
-
-Route::get('api/category', 'CategoryController@index');
-
-Route::get('admin/category/list', 'CategoryController@list');
-Route::put('admin/category/update', 'CategoryController@update');
-Route::post('admin/category/create', 'CategoryController@create');
-Route::delete('admin/category/create', 'CategoryController@create');

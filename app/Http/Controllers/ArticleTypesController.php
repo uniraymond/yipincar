@@ -5,9 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
-use App\Comment as Comment;
 
-class CommentController extends Controller
+use App\ArticleTypes;
+
+class ArticleTypesController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,19 +17,8 @@ class CommentController extends Controller
      */
     public function index()
     {
-        $comments = Comment::paginate(20);
-        return view('comments/index', $comments);
-    }
-
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function articlecomments($id)
-    {
-        $comments = Comment::where('article_id', '=>' , $id )->paginate(20);
-        return view('admin/comment', $comments);
+        $articletypes = ArticleTypes::all();
+        return view('articletypes/index', ['articletypes'=>$articletypes]);
     }
 
     /**
@@ -38,7 +28,7 @@ class CommentController extends Controller
      */
     public function create()
     {
-        //
+        return view('articletypes/create');
     }
 
     /**
@@ -49,7 +39,14 @@ class CommentController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $articletype = new ArticleTypes;
+        $articletype->name = $request->name;
+        $articletype->description = $request->description;
+        $articletype->save();
+
+        $request->session()->flash('status', 'articletypes: '. $articletype->name .' has been created Successful!');
+
+        return redirect('admin/articletypes');
     }
 
     /**
@@ -71,7 +68,9 @@ class CommentController extends Controller
      */
     public function edit($id)
     {
-        //
+        $articletype = ArticleTypes::find($id);
+
+        return view('articletypes/edit', ['articletype'=>$articletype]);
     }
 
     /**
@@ -83,7 +82,18 @@ class CommentController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $articletype = ArticleTypes::find($id);
+        if ($request->name) {
+            $articletype->name = $request->name;
+        }
+        if ($request->description) {
+            $articletype->description = $request->description;
+        }
+        $articletype->save();
+
+        $request->session()->flash('status', 'Update Successful!');
+
+        return redirect('admin/articletypes');
     }
 
     /**
@@ -92,8 +102,12 @@ class CommentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
-        //
+        $articletype = ArticleTypes::find($id);
+        $articletype->delete();
+
+        $request->session()->flash('status', 'Delete Successful!');
+        return redirect('admin/articletypes');
     }
 }

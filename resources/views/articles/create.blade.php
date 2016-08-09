@@ -5,34 +5,43 @@
         <div class="row">
             <div class="col-md-7 col-md-offset-1">
                 <div class="panel panel-default">
-                    <div class="panel-heading">Edit Article</div>
+                    <div class="panel-heading">New Article</div>
                     <div class="panel-body">
-                        {!! Form::open(array('url' => 'admin/article/'.$article->id, 'class' => 'form', 'method'=>'put')) !!}
-{{--                        <form class="form" action="{{ url('admin/article/'.$article->id) }}" method="put" enctype="multipart/form-data">--}}
+
+{{--                        {!! Form::open(array('url' => 'admin/article', 'class' => 'up', 'method'=>'post', 'enctype' =>"multipart/form-data")) !!}--}}
+                        <form class="form" action="{{ url('admin/article') }}" method="post" enctype="multipart/form-data">
                             <div class="form-group col-md-6" >
                                 <label class="col-md-12">Content</label>
-                                <textarea class="col-md-12" id="content" name="content">{{ $article->content }}</textarea>
+                                <textarea class="col-md-12" id="content" name="content"></textarea>
 
 
                                 <label class="col-md-12">Title</label>
-                                <input class="col-md-12" type="text" id="title" name="title" value="{{ $article->title }}" />
+                                <input class="col-md-12" type="text" id="title" name="title" />
 
 
                                 <label class="col-md-12">Select Category</label>
                                 <select class="col-md-12" name="category_id">
                                     @foreach ($categories as $category)
-                                        <option {{ $article->category_id == $category->id ? 'selected' : '' }} value="{{$category->id}}">{{$category->name}}</option>
+                                        <option value="{{$category->id}}">{{$category->name}}</option>
+                                    @endforeach
+                                </select>
+                                <label class="col-md-12">Select Type</label>
+                                <select class="col-md-12" name="type_id">
+                                    @foreach ($articletypes as $type)
+                                        <option value="{{$type->id}}">{{$type->name}}</option>
                                     @endforeach
                                 </select>
                                 <label class="col-md-12">Select Tags</label>
                                 <select class="col-md-12" name="tag_ids[]" multiple>
                                     @foreach ($tags as $tag)
-                                        <option {{ in_array($tag->id, $currentTags) ? 'selected' : '' }} value="{{$tag->id}}">{{$tag->name}}</option>
+                                        <option value="{{$tag->id}}">{{$tag->name}}</option>
                                     @endforeach
                                 </select>
                                 <label class="col-md-4">Publish</label>
                                 <input class="col-md-4" type="checkbox" name="published" />
                             </div>
+                            <input type="text" hidden="hidden" id="fileurl" />
+                            <input type="text" hidden="hidden" id="filename" />
                             {!! Form::token() !!}
                             <input type="submit" id="submit" value="Submit" />
                         </form>

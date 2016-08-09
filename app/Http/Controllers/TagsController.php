@@ -5,9 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
-use App\Comment as Comment;
 
-class CommentController extends Controller
+use App\Tags as Tags;
+
+class TagsController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,19 +17,8 @@ class CommentController extends Controller
      */
     public function index()
     {
-        $comments = Comment::paginate(20);
-        return view('comments/index', $comments);
-    }
-
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function articlecomments($id)
-    {
-        $comments = Comment::where('article_id', '=>' , $id )->paginate(20);
-        return view('admin/comment', $comments);
+        $tags = Tags::all();
+        return view('tag/index', ['tags'=>$tags]);
     }
 
     /**
@@ -38,7 +28,7 @@ class CommentController extends Controller
      */
     public function create()
     {
-        //
+        return view('tag/create');
     }
 
     /**
@@ -49,7 +39,14 @@ class CommentController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $tag = new Tags;
+        $tag->name = $request->name;
+        $tag->description = $request->description;
+        $tag->save();
+
+        $request->session()->flash('status', 'Tag: '. $tag->name .' has been created Successful!');
+
+        return redirect('admin/tag');
     }
 
     /**
@@ -71,7 +68,9 @@ class CommentController extends Controller
      */
     public function edit($id)
     {
-        //
+        $tag = Tags::find($id);
+
+        return view('tag/edit', ['tag'=>$tag]);
     }
 
     /**
@@ -83,7 +82,18 @@ class CommentController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $tag = Tags::find($id);
+        if ($request->name) {
+            $tag->name = $request->name;
+        }
+        if ($request->description) {
+            $tag->description = $request->description;
+        }
+        $tag->save();
+
+        $request->session()->flash('status', 'Update Successful!');
+
+        return redirect('admin/tag');
     }
 
     /**
@@ -92,8 +102,12 @@ class CommentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
-        //
+        $tag = Tags::find($id);
+        $tag->delete();
+
+        $request->session()->flash('status', 'Delete Successful!');
+        return redirect('admin/tag');
     }
 }
