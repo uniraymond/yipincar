@@ -50,10 +50,10 @@
     var editor_config = {
         path_absolute : "{{ URL::to('/') }}/",
         selector: "textarea",
-        plugins : 'link image imagetools preview',
+        plugins : 'image',
         menubar: false,
         toolbar: [
-            'undo redo | bold italic | link image' | 'alignleft aligncenter alignright'],
+            'undo redo | image' | 'alignleft aligncenter alignright'],
 //        relative_urls: false,
         file_browser_callback_types: 'image media',
         file_browser_callback : function(field_name, url, type, win) {

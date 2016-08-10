@@ -17,6 +17,7 @@
                     <th>Tag</th>
                     <th>Published</th>
                     <th>编辑</th>
+                    <th>Comments</th>
                     <th>删除</th>
                 </tr>
                 </thead>
@@ -40,6 +41,7 @@
                                 <input type="checkbox" name="published[{{ $article->id }}]" {{ $article->published ? 'checked' : '' }}/>
                             </td>
                             <td><a href="{{ url('admin/article/'.$article->id.'/edit') }}" target="_blank" class="btn btn-default" id="editBtn_{{ $article->id }}">编辑</a></td>
+                            <td><a href="{{ url('admin/articlecomment/'.$article->id) }}" target="_blank" class="btn btn-default" id="commentBtn_{{ $article->id }}">Comments({{ count($article->comments) }})</a></td>
                             <td><input type="checkbox" name="delete[{{ $article->id }}]" ng-checked="delete_{{$article->id}}" ng-click="confirmDelete('{{ $article->id }}')"/></td>
                         </tr>
                     @endforeach

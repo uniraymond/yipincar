@@ -33,6 +33,10 @@ class Article extends Model
     return $this->hasMany('App\ArticleTags');
   }
 
+  public function comments() {
+    return $this->hasMany('App\Comment');
+  }
+
   public static function getArticle($id)
   {
     $article = DB::table('articles')

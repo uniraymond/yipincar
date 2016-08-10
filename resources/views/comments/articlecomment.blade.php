@@ -35,10 +35,11 @@
                                 {!! Form::token() !!}
                             </td>
                             <td>
-                                {!! Html::link('admin/zan/'.$comment->id, 'Zans') !!}
+                                {!! Html::link('admin/zan/'.$comment->id, 'Zans ('.count($comment->Zan).' )') !!}
                             </td>
                         </tr>
                         <tr>
+                            <td>{!! Html::link('admin/article', 'back to article list') !!}</td>
                             <td>{!! Form::submit('Submit', array('class'=>'btn btn-primary')) !!}</td>
                         </tr>
                         {!! Form::close() !!}

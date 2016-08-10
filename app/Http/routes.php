@@ -31,6 +31,10 @@ Route::group(['middleware'=>'auth', 'prefix'=>'admin'], function() {
     Route::resource('resource', 'ResourceController');
     Route::resource('comment', 'CommentController');
 
+    Route::get('articlecomment/{articleId}', 'CommentController@articlecomment');
+    Route::get('zan/{commentId}', 'CommentController@zan');
+    Route::post('zan/{commentId}', 'CommentController@zanupdate');
+
     Route::resource('otherarticle', 'OtherarticleController');
     Route::get('otherarticlelist', 'OtherarticleController@articlelist');
     Route::get('otherarticlelist/{articletype}', 'OtherarticleController@articlelist');

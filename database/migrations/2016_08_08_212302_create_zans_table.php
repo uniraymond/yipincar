@@ -16,7 +16,7 @@ class CreateZansTable extends Migration
             $table->increments('id');
             $table->integer('article_id')->references('id')->on('zans')->onDelete('cascade');
             $table->integer('comment_id')->references('id')->on('zans')->onDelete('cascade');
-            $table->integer('token');
+            $table->string('token');
             $table->integer('comfirmed');
             $table->timestamps();
         });
