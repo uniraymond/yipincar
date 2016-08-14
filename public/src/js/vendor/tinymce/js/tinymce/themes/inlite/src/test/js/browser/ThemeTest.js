@@ -194,7 +194,7 @@ asynctest('browser/core/ThemeTest', [
 		], onSuccess, onFailure);
 	}, {
 		theme: 'inlite',
-		plugins: 'image table link paste contextmenu textpattern',
+		plugins: 'images table link paste contextmenu textpattern',
 		insert_toolbar: 'quickimage media quicktable',
 		selection_toolbar: 'bold italic | quicklink h1 h2 blockquote',
 		inline: true

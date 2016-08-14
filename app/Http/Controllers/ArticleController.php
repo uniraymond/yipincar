@@ -209,7 +209,8 @@ class ArticleController extends Controller
     $article = Articles::find($id);
     $title = $article->title;
     $article->delete();
-    $request->session()->flash('status', 'Article: '. $title .' has been added!');
+    $request->session()->flash('status', 'Article: '. $title .' has been removed!');
+    return redirect('admin/article');
   }
 
 }

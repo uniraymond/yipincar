@@ -3,19 +3,33 @@
 @section('content')
     <div class="container">
         <div class="row">
-            <a class="btn btn-default" href="{{ route('admin.articletypes.create') }}">New</a>
-            <div class="title">
-                {{ $success = Session::get('status')}}
+            <div class="col-lg-12 col-md-12 col-sm-12">
+                <h1>Article Types</h1>
             </div>
-            <table class="table">
-                <thead>
-                <tr>
-                    <th>Title</th>
-                    <th>Details</th>
-                    <th>编辑</th>
-                </tr>
-                </thead>
-                @if($articletypes)
+
+            {{--new blog link--}}
+            <div class="col-lg-2 col-md-2 col-sm-2 pull-right clearfix">
+                {{ link_to('admin/articletypes/create', 'New Article Types', ['class'=>'btn btn-default']) }}
+            </div>
+
+            {{--flash alert--}}
+            @if ($success = Session::get('status'))
+                <div class="col-lg-12 col-md-12 col-sm-12 bs-example-bg-classes" >
+                    <p class="bg-success">
+                        {{ $success }}
+                    </p>
+                </div>
+            @endif
+
+            @if($articletypes)
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Details</th>
+                            <th>编辑</th>
+                        </tr>
+                    </thead>
                     <tbody>
                     @foreach($articletypes as $articletype)
                         <tr>
@@ -32,8 +46,12 @@
                         </tr>
                     @endforeach
                     </tbody>
-                @endif
-            </table>
+                </table>
+            @else
+                <div class="col-lg-12 col-md-12 col-sm-12 clearfix">
+                    <h4>The article type is not available.</h4>
+                </div>
+            @endif
         </div>
     </div>
 @endsection

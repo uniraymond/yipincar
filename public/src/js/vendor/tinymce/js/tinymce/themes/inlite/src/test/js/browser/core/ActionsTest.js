@@ -149,7 +149,7 @@ asynctest('browser/core/ActionsTest', [
 				tinyApis.sSetContent(inputHtml),
 				tinyApis.sSetCursor(path, offset),
 				sInsertBlob(blob, base64),
-				tinyApis.sAssertContent(expectedHtml, 'Should have a image')
+				tinyApis.sAssertContent(expectedHtml, 'Should have a images')
 			]);
 		};
 
@@ -157,7 +157,7 @@ asynctest('browser/core/ActionsTest', [
 		var blob = base64ToBlob(base64, 'image/gif');
 
 		return GeneralSteps.sequence([
-			sInsertBlobTest('<p>a</p>', [0, 0], 0, base64, blob, '<p><img src="data:image/gif;base64,' + base64 + '" />a</p>')
+			sInsertBlobTest('<p>a</p>', [0, 0], 0, base64, blob, '<p><img src="data:images/gif;base64,' + base64 + '" />a</p>')
 		]);
 	};
 

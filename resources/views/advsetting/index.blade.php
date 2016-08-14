@@ -78,7 +78,7 @@
                             {!! Form::label('description', 'Description', array('class'=>'col-md-12')) !!}
                             {!! Form::textarea('description', '', array('class' => 'description input col-md-12', 'placeholder' => 'Description')) !!}
                             {!! Form::label('images', 'Upload Images', array('class'=>'col-md-12')) !!}
-                            {!! Form::file('image', '', array('class'=>'col-md-12 form-control-file')) !!}
+                            {!! Form::file('images', '', array('class'=>'col-md-12 form-control-file')) !!}
                             {!! Form::token() !!}
                             {!! Form::text('type_id', 1, array('hidden'=>'hidden')) !!}
                             {!! Form::submit('保存', array('class'=>'btn btn-primary')) !!}

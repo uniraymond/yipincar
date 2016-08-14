@@ -31,7 +31,7 @@ class AdvsettingController extends Controller
   public function editimage($id)
   {
     $image = AdvSetting::getAdvImage($id);
-    return view('advsetting/editimage', ['image'=>$image]);
+    return view('advsetting/editimage', ['images'=>$image]);
   }
 
   /**
@@ -61,7 +61,7 @@ class AdvsettingController extends Controller
   public function uploadImage(Request $request)
   {
     $authuser = $request->user();
-    $file = $request->file('image');
+    $file = $request->file('images');
     if(!empty($file)) {
       $fileName = $request['name'] ? $request['name'] : $file->getClientOriginalName();
 //      Storage::put($fileName, file_get_contents($file));

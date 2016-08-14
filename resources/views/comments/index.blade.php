@@ -3,13 +3,21 @@
 @section('content')
     <div class="container">
         <div class="row">
-            <div class="title">
-                All Comments
+            <div class="col-lg-12 col-md-12 col-sm-12">
+                <h1>All Comments</h1>
             </div>
-            <div>
-                {{ $success = Session::get('status') }}
-            </div>
-            <table class="table">
+
+            {{--flash alert--}}
+            @if ($success = Session::get('status'))
+                <div class="col-lg-12 col-md-12 col-sm-12 bs-example-bg-classes" >
+                    <p class="bg-success">
+                        {{ $success }}
+                    </p>
+                </div>
+            @endif
+
+            @if($comments)
+            <table class="table table-striped">
                 <thead>
                 <tr>
                     <th>Comment</th>
@@ -18,7 +26,6 @@
                     <th>Delete</th>
                 </tr>
                 </thead>
-                @if($comments)
                     <tbody>
                     @foreach($comments as $comment)
                         {!! Form::open(array('url' => 'admin/comment/'.$comment->id, 'class' => 'form', 'method'=>'delete', 'onsubmit'=>'return confirm("Confirm to delete this category?");')) !!}
@@ -44,8 +51,12 @@
                         {!! Form::close() !!}
                     @endforeach
                     </tbody>
-                @endif
             </table>
+            @else
+                <div class="col-lg-12 col-md-12 col-sm-12 clearfix">
+                    <h4>The comment is not available.</h4>
+                </div>
+            @endif
         </div>
         <div>
             {!! $comments->links() !!}

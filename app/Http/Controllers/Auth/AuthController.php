@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Auth;
 
 use App\User;
+use App\Role;
+use GuzzleHttp\Psr7\Request;
 use Validator;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
@@ -22,6 +24,8 @@ class AuthController extends Controller
     */
 
     use AuthenticatesAndRegistersUsers, ThrottlesLogins;
+
+//    protected $guard = 'admin';
 
     /**
      * Where to redirect users after login / registration.
@@ -63,10 +67,85 @@ class AuthController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
+        $new_user =  User::create([
             'name' => $data['name'],
+            'username'=>$data['email'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
         ]);
+        $new_user->roles()->attach(Role::where('name', 'user')->first());
+        return $new_user;
+    }
+
+    public function postSignUp(Request $request)
+    {
+        $user = new User();
+        $user->name = $request['name'];
+        $user->email = $request['email'];
+        $user->password = bcrypt($request['password']);
+        $user->save();
+        $user->roles()->attach(Role::where('name', $request['role'])->first());
+        Auth::login($user);
+        return redirect()->route('welcome');
+    }
+
+    /**
+     * Show the application registration form.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function showRegistrationForm()
+    {
+        if (property_exists($this, 'registerView')) {
+            return view($this->registerView);
+        }
+
+        return view('auth.register');
+    }
+
+//    /**
+//     * Handle a registration request for the application.
+//     *
+//     * @param  \Illuminate\Http\Request  $request
+//     * @return \Illuminate\Http\Response
+//     */
+//    public function register(Request $request)
+//    {
+//        $validator = $this->validator($request->all());
+//
+//        if ($validator->fails()) {
+//            $this->throwValidationException(
+//                $request, $validator
+//            );
+//        }
+//
+//        Auth::guard($this->getGuard())->login($this->create($request->all()));
+//
+//        return redirect($this->redirectPath());
+//    }
+
+    public function newuser(Request $request)
+    {
+
+    }
+
+    public function listuser(Request $request)
+    {
+
+    }
+
+    public function edituser(Request $request, $userId)
+    {
+
+    }
+
+    public function deleteuser(Request $request, $userId)
+    {
+
+    }
+
+    public function showuser(Request $request, $userId)
+    {
+        
     }
 }

@@ -23,11 +23,11 @@
 
 
 function SetUrl(url){
-  //set the value of the desired input to image url
+  //set the value of the desired input to images url
   let target_input = $('#' + localStorage.getItem('target_input'));
   target_input.val(url);
 
-  //set or change the preview image src
+  //set or change the preview images src
   let target_preview = $('#' + localStorage.getItem('target_preview'));
   target_preview.attr('src',url);
 }

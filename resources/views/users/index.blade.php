@@ -4,13 +4,12 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12">
-                <h1>Article Tags</h1>
+                <h1>Users</h1>
             </div>
 
             {{--new blog link--}}
             <div class="col-lg-2 col-md-2 col-sm-2 pull-right clearfix">
-                {{ link_to('admin/tag/create', 'New Article Tag', ['class'=>'btn btn-default']) }}
-                {{--<a class="btn btn-default" href="{{ route('admin.tag.create') }}">New</a>--}}
+                {{ link_to('admin/user/create', 'New User', ['class'=>'btn btn-default']) }}
             </div>
 
             {{--flash alert--}}
@@ -22,36 +21,35 @@
                 </div>
             @endif
 
-            @if($tags)
-                <table class="table">
+            @if($users)
+                <table class="table table-striped">
                     <thead>
                     <tr>
-                        <th>Title</th>
-                        <th>Details</th>
+                        <th>Name</th>
+                        <th>Email</th>
                         <th>编辑</th>
                     </tr>
                     </thead>
                     <tbody>
-                    @foreach($tags as $tag)
+                    @foreach($users as $user)
+                        @if($user->hasRole('super_admin') && !Auth::user()->hasRole('super_admin'))
+                        @else
                         <tr>
-                            <td>{{ $tag->name }}</td>
-                            <td><span id="tagDesc_{{ $tag->id }}">{{ $tag->description }}</span></td>
-                            <td><a class="btn btn-default" href="/admin/tag/{{ $tag->id }}/edit" id="editBtn_{{ $tag->id }}">编辑</a></td>
+                            <td>{{ $user->name }}</td>
+                            <td><span id="email_{{ $user->id }}">{{ $user->email }}</span></td>
+                            {{--<td><a class="btn btn-default" href="/admin/user/{{ $user->id }}/edit" id="editBtn_{{ $user->id }}">编辑</a></td>--}}
                             <td>
-                                {!! Form::open(array('url' => 'admin/tag/'.$tag->id, 'class' => 'form', 'method'=>'delete', 'onsubmit'=>'return confirm("Confirm to delete this tag?");')) !!}
-                                {!! Form::text('id', $tag->id, array('hidden'=>'hidden', 'readonly' => true)) !!}
+                                {!! Form::open(array('url' => 'admin/user/'.$user->id, 'class' => 'form', 'method'=>'delete', 'onsubmit'=>'return confirm("Confirm to delete this user?");')) !!}
+                                {!! Form::text('id', $user->id, array('hidden'=>'hidden', 'readonly' => true)) !!}
                                 {!! Form::submit('Delete', array('class'=>'btn btn-primary')) !!}
                                 {!! Form::token() !!}
                                 {!! Form::close() !!}
                             </td>
                         </tr>
+                        @endif
                     @endforeach
                     </tbody>
                 </table>
-            @else
-                <div class="col-lg-12 col-md-12 col-sm-12 clearfix">
-                    <h4>The article tag is not available.</h4>
-                </div>
             @endif
         </div>
     </div>

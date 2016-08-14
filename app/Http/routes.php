@@ -30,6 +30,7 @@ Route::group(['middleware'=>'auth', 'prefix'=>'admin'], function() {
     Route::resource('tag', 'TagsController');
     Route::resource('resource', 'ResourceController');
     Route::resource('comment', 'CommentController');
+    Route::resource('user', 'UserController');
 
     Route::get('articlecomment/{articleId}', 'CommentController@articlecomment');
     Route::get('zan/{commentId}', 'CommentController@zan');

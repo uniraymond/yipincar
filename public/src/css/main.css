@@ -1,0 +1,75 @@
+body {
+    font-family: 'Lato';
+}
+
+.fa-btn {
+    margin-right: 6px;
+}
+
+.navbar-default {
+    /*background-color: #00B7E1;*/
+    /*filter: alpha(opacity=60);*/
+    /*!* IE *!*/
+    /*-moz-opacity: 0.6;*/
+    /*!* Mozilla *!*/
+    /*opacity: 0.6;*/
+    /*!* CSS3 *!*/
+}
+
+.navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav>.open>a:focus, .navbar-default .navbar-nav>.open>a:hover {
+    color: #000;
+}
+
+.navbar-default .navbar-nav>li>a {
+    color: #000;
+}
+
+.navbar-brand {
+    padding-top: 5px;
+}
+
+#published_at {
+    background: url('/assets/images/calendar-icon-tiny.png') 99% 3px no-repeat transparent;
+}
+
+.bs-example-bg-classes p {
+    padding: 15px;
+}
+
+.bs-example {
+    position: relative;
+    padding: 45px 15px 15px;
+    margin: 0 -15px 15px;
+    border-color: #e5e5e5 #eee #eee;
+    border-style: solid;
+    border-width: 1px 0;
+    -webkit-box-shadow: inset 0 3px 6px rgba(0,0,0,.05);
+    box-shadow: inset 0 3px 6px rgba(0,0,0,.05);
+}
+
+.clearfix {
+    clear: both;
+}
+
+.sub-date-auth {
+    color: #777;
+    font-size: 12px;
+    font-style: italic;
+    margin-top: 0;
+}
+
+.sub-date-auth .sub-auth {
+    color: #333;
+}
+
+.blog .body {
+    padding: 15px 0;
+}
+
+.form label {
+    margin-top: 10px;
+}
+
+.form input.published {
+    margin-top: 15px;
+}

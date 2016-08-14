@@ -32,19 +32,19 @@ return [
 
     // available since v1.3.0
     'valid_image_mimetypes' => [
-        'image/jpeg',
-        'image/pjpeg',
-        'image/png',
-        'image/gif'
+        'images/jpeg',
+        'images/pjpeg',
+        'images/png',
+        'images/gif'
     ],
 
     // available since v1.3.0
     // only when '/laravel-filemanager?type=Files'
     'valid_file_mimetypes' => [
-        'image/jpeg',
-        'image/pjpeg',
-        'image/png',
-        'image/gif',
+        'images/jpeg',
+        'images/pjpeg',
+        'images/png',
+        'images/gif',
         'application/pdf',
         'text/plain',
     ],
@@ -73,10 +73,10 @@ return [
         'xls'  => 'fa-file-excel-o',
         'xls'  => 'fa-file-excel-o',
         'zip'  => 'fa-file-archive-o',
-        'gif'  => 'fa-file-image-o',
-        'jpg'  => 'fa-file-image-o',
-        'jpeg' => 'fa-file-image-o',
-        'png'  => 'fa-file-image-o',
+        'gif'  => 'fa-file-images-o',
+        'jpg'  => 'fa-file-images-o',
+        'jpeg' => 'fa-file-images-o',
+        'png'  => 'fa-file-images-o',
         'ppt'  => 'fa-file-powerpoint-o',
         'pptx' => 'fa-file-powerpoint-o',
     ],

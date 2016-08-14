@@ -1248,7 +1248,7 @@ define('tinymce/inlite/ui/Buttons', [
 
 		editor.addButton('quickimage', {
 			icon: 'image',
-			tooltip: 'Insert image',
+			tooltip: 'Insert images',
 			onclick: function () {
 				Picker.pickFile().then(function (files) {
 					var blob = files[0];
