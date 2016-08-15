@@ -32,11 +32,11 @@
                         <th>Tag</th>
                         <th>Published</th>
                         @if ( Null !== Auth::user() )
-                            <th>编辑</th>
+                            <th>Edit</th>
                         @endif
                         <th>Comments</th>
                         @if ( Null !== Auth::user() )
-                            <th>删除</th>
+                            <th>Delete</th>
                         @endif
                     </tr>
                     </thead>
