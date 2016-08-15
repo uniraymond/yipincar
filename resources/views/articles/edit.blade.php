@@ -28,7 +28,11 @@
                                 <div class={{ isset($errors) && $errors->has('content') ? 'has-error clearfix' : 'clearfix' }}>
                                     <label class="col-lg-12 col-md-12 col-sm-12 clearfix">Content</label>
                                     <div class="clearfix"></div>
-                                    <textarea class="col-lg-12 col-md-12 col-sm-12 clearfix" id="content" name="content" required>{{ $article->content }}</textarea>
+
+                                    <label class="col-md-12">Content</label>
+                                    <textarea class="col-md-12" id="content" name="content"></textarea>
+
+                                    {{--<textarea class="col-lg-12 col-md-12 col-sm-12 clearfix" id="content" name="content" required>{{ $article->content }}</textarea>--}}
 
                                     <span id="helpBlock2" class="help-block">{{ $errors->first('content')}}</span>
                                 </div>
@@ -46,7 +50,7 @@
                                     <label class="col-lg-12 col-md-12 col-sm-12">Select Tags</label>
                                     <select class="col-lg-12 col-md-12 col-sm-12" name="tag_ids[]" multiple>
                                         @foreach ($tags as $tag)
-                                            <option {{ in_array($tag->id, $currentTags) ? 'selected' : '' }} value="{{$tag->id}}">{{$tag->name}}</option>
+                                            <option @if (isset($currentTags)) {{ in_array($tag->id, $currentTags) ? 'selected' : '' }} @endif value="{{$tag->id}}">{{$tag->name}}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -75,12 +79,11 @@
     var editor_config = {
         path_absolute : "{{ URL::to('/') }}/",
         selector: "textarea",
-        plugins : 'image',
+        plugins : 'link image imagetools preview',
         menubar: false,
-        toolbar: [
-            'undo redo | images' | 'alignleft aligncenter alignright'],
-//        relative_urls: false,
-        file_browser_callback_types: 'images media',
+        toolbar: 'undo redo | link image',
+        relative_urls: false,
+        file_browser_callback_types: 'image media',
         file_browser_callback : function(field_name, url, type, win) {
             var x = window.innerWidth || document.documentElement.clientWidth || document.getElementsByTagName('body')[0].clientWidth;
             var y = window.innerHeight|| document.documentElement.clientHeight|| document.getElementsByTagName('body')[0].clientHeight;
