@@ -28,11 +28,9 @@
                                 <div class={{ isset($errors) && $errors->has('content') ? 'has-error clearfix' : 'clearfix' }}>
                                     <label class="col-lg-12 col-md-12 col-sm-12 clearfix">Content</label>
                                     <div class="clearfix"></div>
+                                    {{--<textarea class="col-lg-12 col-md-12 col-sm-12 clearfix" id="content" name="content" required></textarea>--}}
 
-                                    <label class="col-md-12">Content</label>
-                                    <textarea class="col-md-12" id="content" name="content"></textarea>
-
-                                    {{--<textarea class="col-lg-12 col-md-12 col-sm-12 clearfix" id="content" name="content" required>{{ $article->content }}</textarea>--}}
+                                    <textarea class="col-lg-12 col-md-12 col-sm-12 clearfix" id="content" name="content" required>{{ $article->content }}</textarea>
 
                                     <span id="helpBlock2" class="help-block">{{ $errors->first('content')}}</span>
                                 </div>

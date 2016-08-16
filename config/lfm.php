@@ -14,7 +14,7 @@ return [
 
     // Allow multi_user mode or not.
     // If true, laravel-filemanager create private folders for each signed-in user.
-    'allow_multi_user'      => true,
+    'allow_multi_user'      => false,
 
     // The database field to identify a user.
     // When set to 'id', the private folder will be named as the user id.
@@ -32,6 +32,10 @@ return [
 
     // available since v1.3.0
     'valid_image_mimetypes' => [
+        'image/jpeg',
+        'image/pjpeg',
+        'image/png',
+        'image/gif',
         'images/jpeg',
         'images/pjpeg',
         'images/png',
@@ -41,6 +45,10 @@ return [
     // available since v1.3.0
     // only when '/laravel-filemanager?type=Files'
     'valid_file_mimetypes' => [
+        'image/jpeg',
+        'image/pjpeg',
+        'image/png',
+        'image/gif',
         'images/jpeg',
         'images/pjpeg',
         'images/png',
