@@ -82,12 +82,13 @@
     </div>
 @endsection
 
+
 <script src="/src/js/vendor/tinymce/js/tinymce/tinymce.min.js"></script>
 <script>
     var editor_config = {
         path_absolute : "{{ URL::to('/') }}/",
         selector: "textarea",
-        plugins : 'image',
+        plugins : 'link image imagetools preview',
         menubar: false,
         toolbar: 'undo redo | link image',
         relative_urls: false,
@@ -97,7 +98,6 @@
             var y = window.innerHeight|| document.documentElement.clientHeight|| document.getElementsByTagName('body')[0].clientHeight;
 
             var cmsURL = editor_config.path_absolute + 'laravel-filemanager?field_name=' + field_name;
-            console.log(cmsURL);
             if (type == 'image') {
                 cmsURL = cmsURL + "&type=Images";
             } else {
@@ -114,6 +114,7 @@
             });
         },
     };
+
 
     tinymce.init(editor_config);
 </script>

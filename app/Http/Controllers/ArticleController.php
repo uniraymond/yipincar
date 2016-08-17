@@ -73,7 +73,7 @@ class ArticleController extends Controller
     $hasImage = false;
     $authuser = $request->user();
     $title = $request->input('title');
-    $content = trim($request->input('content'));
+    $content = trim($request['content']);
     $description = $request['description'] ? $request['description'] : trim(substr($content, 0, 20));
 //    $typeId = $request['type_id'];
     $categoryId = $request['category_id'];
@@ -202,8 +202,8 @@ class ArticleController extends Controller
   {
     $authuser = $request->user();
     $title = $request->input('title');
-    $content = trim($request->input('content'));
-    $description = trim(substr($content, 0, 20));
+    $content = trim($request['content']);
+    $description = $request['description'] ? $request['description'] : trim(substr($content, 0, 20));
     $typeId = $request['type_id'];
     $categoryId = $request['category_id'];
     $published = $request['published'] ? 1 : 0;
