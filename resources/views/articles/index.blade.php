@@ -10,7 +10,7 @@
 
             {{--new blog link--}}
             <div class="col-lg-2 col-md-2 col-sm-2 pull-right clearfix">
-                {{ link_to('admin/article/create', trans('yipin.new-article'), ['class'=>'btn btn-default', 'target'=>'_blank']) }}
+                {{ link_to('admin/article/create', trans('yipin.new-article'), ['class'=>'btn btn-default']) }}
             </div>
 
             {{--flash alert--}}
@@ -60,10 +60,10 @@
                                 </td>
                                 @if ( Null !== Auth::user() )
                                 <td>
-                                    <a href="{{ url('admin/article/'.$article->id.'/edit') }}" target="_blank" class="btn btn-default" id="editBtn_{{ $article->id }}">编辑</a>
+                                    <a href="{{ url('admin/article/'.$article->id.'/edit') }}" class="btn btn-default" id="editBtn_{{ $article->id }}">编辑</a>
                                 </td>
                                 @endif
-                                <td><a href="{{ url('admin/articlecomment/'.$article->id) }}" target="_blank" class="btn btn-default" id="commentBtn_{{ $article->id }}">评论({{ count($article->comments) }})</a></td>
+                                <td><a href="{{ url('admin/articlecomment/'.$article->id) }}" class="btn btn-default" id="commentBtn_{{ $article->id }}">评论({{ count($article->comments) }})</a></td>
                                 @if ( Null !== Auth::user() )
                                 <td>
                                     <input type="checkbox" name="delete[{{ $article->id }}]" ng-checked="delete_{{$article->id}}" ng-click="confirmDelete('{{ $article->id }}')"/>

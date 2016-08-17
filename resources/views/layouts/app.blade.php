@@ -52,7 +52,7 @@
                         <li>{{link_to('admin/tag', '归类')}}</li>
                     @endif
                     @if((null !== Auth::user()) && Auth::user()->hasAnyRole('super_admin', 'admin', 'editor'))
-                        <li>{{link_to('admin/article', 'Articles')}}</li>
+                        <li>{{link_to('admin/article', '文章')}}</li>
                     @endif
                 </ul>
 
