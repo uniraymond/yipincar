@@ -75,7 +75,7 @@
 @endsection
 
 
-<script src="https://cdn.tinymce.com/4/tinymce.min.js"></script>
+<script src="/src/js/vendor/tinymce/js/tinymce/tinymce.min.js"></script>
 <script>
     var editor_config = {
         path_absolute : "{{ URL::to('/') }}/",
