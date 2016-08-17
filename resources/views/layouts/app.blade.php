@@ -80,10 +80,10 @@
 
     @yield('content')
 
-    <script type="text/javascript" src="/src/js/jQuery.min.2.24.js"></script>
+    <script src="/src/js/jQuery.min.2.24.js"></script>
     <script src="/src/js/bootstrap.min.js"></script>
     {{--<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.29/angular.min.js"></script>--}}
 
-    <script src="/src/js/resourceApp.js"></script>
+    {{--<script src="/src/js/resourceApp.js"></script>--}}
 </body>
 </html>

@@ -8,7 +8,7 @@
                 <div class="panel-heading">Yi Pin Cars</div>
 
                 <div class="panel-body">
-                    <a href="{{ 'article/new' }}">New Article</a>
+                    <a href="{{ 'article/create' }}">New Article</a>
                 </div>
             </div>
         </div>
