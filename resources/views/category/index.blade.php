@@ -4,12 +4,12 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12">
-                <h1>Article Category</h1>
+                <h1>文章类别</h1>
             </div>
 
             {{--new blog link--}}
             <div class="col-lg-2 col-md-2 col-sm-2 pull-right clearfix">
-                {{ link_to('admin/category/create', 'New Category', ['class'=>'btn btn-default']) }}
+                {{ link_to('admin/category/create', '文章状态', ['class'=>'btn btn-default']) }}
             </div>
 
             {{--flash alert--}}

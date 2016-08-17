@@ -11,13 +11,15 @@ use App\ArticleTags as ArticleTags;
 use App\Category as Category;
 use App\ArticleTypes as ArticleTypes;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use App\Resource;
+use App\ArticleResources;
 
 class ArticleController extends Controller
 {
   public function index()
   {
     //website
-    $articleType = ArticleTypes::where('name', 'Webpage')->first();
+    $articleType = ArticleTypes::first();
     $articles = Article::where('type_id', $articleType->id)->paginate(5);
     return view('articles/index', ['articles'=>$articles]);
   }
@@ -68,6 +70,7 @@ class ArticleController extends Controller
 
   public function update(Request $request, $id)
   {
+    $hasImage = false;
     $authuser = $request->user();
     $title = $request->input('title');
     $content = trim($request->input('content'));
@@ -105,23 +108,52 @@ class ArticleController extends Controller
         ArticleTags::find($currentId)->delete();
       }
     }
-    $request->session()->flash('status', 'Article: '. $title .' has been updated!');
-    $type = ArticleTypes::where('id', $article->type_id)->first();
 
-    switch ($type->name) {
-      case 'Webpage':
-        return redirect('admin/article');
+    $files = Resource::all();
+
+    $image_links = array();
+    $image_names = array();
+
+    foreach ($files as $file) {
+      // check there is a record on article resource page.
+      $article_image = ArticleResources::where('article_id', $article->id)->where('resource_id', $file->id)->first();
+
+      $image_links[] = $file->link;
+      $image_names[] = $file->name;
+
+      //check a image in the content and image in resource table
+      if (false !== strpos($article->content, $file->link)) {
+        $hasImage = true;
+        if (count($article_image)) {
+          break;
+        } else {
+          $article->resources()->attach($file->id);
+        }
         break;
-      case 'Advertisment':
-        return redirect('admin/advlist');
-        break;
-      case 'Video':
-        return redirect('admin/videolist');
-        break;
-      default:
-        return redirect('admin/article');
-        break;
+      }
+
+      if (!$hasImage && $article_image) {
+        $article_image->delete();
+      }
     }
+
+    $request->session()->flash('status', 'Article: '. $title .' has been updated!'); exit;
+//    $type = ArticleTypes::where('id', $article->type_id)->first();
+//
+//    switch ($type->name) {
+//      case 'Webpage':
+//        return redirect('admin/article');
+//        break;
+//      case 'Advertisment':
+//        return redirect('admin/advlist');
+//        break;
+//      case 'Video':
+//        return redirect('admin/videolist');
+//        break;
+//      default:
+        return redirect('admin/article');
+//        break;
+//    }
   }
 
   public function groupupdate(Request $request)
@@ -191,6 +223,20 @@ class ArticleController extends Controller
       $article_tag->tag_id = $tag_id;
       $article_tag->created_by = $authuser->id;
       $article_tag->save();
+    }
+
+    $files = Resource::all();
+
+    $image_links = array();
+    $image_names = array();
+
+    foreach ($files as $file) {
+      $image_links[] = $file->link;
+      $image_names[] = $file->name;
+      if (strpos($article->content, $file->link) !== 0 ) {
+        $article->resources()->attach($file->id);
+        break;
+      }
     }
 
     $request->session()->flash('status', 'Article: '. $title .' has been added!');

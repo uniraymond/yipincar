@@ -14,7 +14,7 @@ class CreateArticleResourcesTable extends Migration
     {
         Schema::create('article_resources', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('artcle_id')->references('id')->on('articles')->onDelete('cascade');
+            $table->integer('article_id')->references('id')->on('articles')->onDelete('cascade');
             $table->integer('resource_id')->references('id')->on('resources')->onDelete('cascade');
             $table->integer('displayorder');
             $table->timestamps();

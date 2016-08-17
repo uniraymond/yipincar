@@ -37,6 +37,11 @@ class Article extends Model
     return $this->hasMany('App\Comment');
   }
 
+  public function resources()
+  {
+    return $this->belongsToMany('App\Resource', 'article_resources', 'article_id', 'resource_id');
+  }
+  
   public static function getArticle($id)
   {
     $article = DB::table('articles')

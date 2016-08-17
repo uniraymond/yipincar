@@ -4,7 +4,7 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12">
-                <h1>Article Types</h1>
+                <h1>文章类别</h1>
             </div>
 
             {{--new blog link--}}
@@ -25,8 +25,8 @@
                 <table class="table table-striped">
                     <thead>
                         <tr>
-                            <th>Title</th>
-                            <th>Details</th>
+                            <th>标题</th>
+                            <th>内容</th>
                             <th>编辑</th>
                         </tr>
                     </thead>
@@ -39,7 +39,7 @@
                             <td>
                                 {!! Form::open(array('url' => 'admin/articletypes/'.$articletype->id, 'class' => 'form', 'method'=>'delete', 'onsubmit'=>'return confirm("Confirm to delete this article type?");')) !!}
                                 {!! Form::text('id', $articletype->id, array('hidden'=>'hidden', 'readonly' => true)) !!}
-                                {!! Form::submit('Delete', array('class'=>'btn btn-primary')) !!}
+                                {!! Form::submit('删除', array('class'=>'btn btn-primary')) !!}
                                 {!! Form::token() !!}
                                 {!! Form::close() !!}
                             </td>
@@ -49,7 +49,7 @@
                 </table>
             @else
                 <div class="col-lg-12 col-md-12 col-sm-12 clearfix">
-                    <h4>The article type is not available.</h4>
+                    <h4>文章类别不存在.</h4>.</h4>
                 </div>
             @endif
         </div>

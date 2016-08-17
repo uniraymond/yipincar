@@ -6,7 +6,7 @@
             <div class="col-md-11 col-md-offset-1">
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        Edit Article
+                        编辑文章
                     </div>
                     @if ($fail = Session::get('warning'))
                         <div class=" col-lg-12 col-md-12 col-sm-12  bs-example-bg-classes" >
@@ -20,23 +20,21 @@
                         {!! Form::open(array('url' => 'admin/article/'.$article->id, 'class' => 'form', 'method'=>'put', 'enctype'=>'multipart/form-data')) !!}
                             <div class="form-group  col-lg-12 col-md-12 col-sm-12" >
                                 <div class="{{ isset($errors) && $errors->has('title') ? 'has-error clearfix' : 'clearfix' }}" style="margin-bottom: 5px" >
-                                    <label class="col-lg-12 col-md-12 col-sm-12">Title</label>
+                                    <label class="col-lg-12 col-md-12 col-sm-12">标题</label>
                                     <input class="col-lg-12 col-md-12 col-sm-12" type="text" id="title" name="title" required value="{{ $article->title }}"/>
                                     <span id="helpBlock2" class="help-block">{{ $errors->first('title')}}</span>
                                 </div>
 
                                 <div class={{ isset($errors) && $errors->has('content') ? 'has-error clearfix' : 'clearfix' }}>
-                                    <label class="col-lg-12 col-md-12 col-sm-12 clearfix">Content</label>
+                                    <label class="col-lg-12 col-md-12 col-sm-12 clearfix">内容</label>
                                     <div class="clearfix"></div>
-                                    {{--<textarea class="col-lg-12 col-md-12 col-sm-12 clearfix" id="content" name="content" required></textarea>--}}
-
                                     <textarea class="col-lg-12 col-md-12 col-sm-12 clearfix" id="content" name="content" required>{{ $article->content }}</textarea>
 
                                     <span id="helpBlock2" class="help-block">{{ $errors->first('content')}}</span>
                                 </div>
 
                                 <div>
-                                    <label class="col-lg-12 col-md-12 col-sm-12">Select Category</label>
+                                    <label class="col-lg-12 col-md-12 col-sm-12">选择类型</label>
                                     <select class="col-lg-12 col-md-12 col-sm-12" name="category_id">
                                         @foreach ($categories as $category)
                                             <option {{ $article->category_id == $category->id ? 'selected' : '' }} value="{{$category->id}}">{{$category->name}}</option>
@@ -45,7 +43,7 @@
                                 </div>
 
                                 <div>
-                                    <label class="col-lg-12 col-md-12 col-sm-12">Select Tags</label>
+                                    <label class="col-lg-12 col-md-12 col-sm-12">选择关键字</label>
                                     <select class="col-lg-12 col-md-12 col-sm-12" name="tag_ids[]" multiple>
                                         @foreach ($tags as $tag)
                                             <option @if (isset($currentTags)) {{ in_array($tag->id, $currentTags) ? 'selected' : '' }} @endif value="{{$tag->id}}">{{$tag->name}}</option>
@@ -54,13 +52,13 @@
                                 </div>
 
                                 <div>
-                                    <label class="col-lg-1 col-md-1 col-sm-1 pull-left">Publish</label>
+                                    <label class="col-lg-1 col-md-1 col-sm-1 pull-left">发布</label>
                                     <input class="col-lg-1 col-md-1 col-sm-1 pull-left published" type="checkbox" name="published"  />
                                 </div>
                             </div>
                             {!! Form::token() !!}
                             <div class=" col-lg-12 col-md-12 col-sm-12">
-                                <input type="submit" id="submit" value="Submit" class="btn btn-default" />
+                                <input type="submit" id="submit" value="保存" class="btn btn-default" />
                             </div>
                         </form>
                     </div>

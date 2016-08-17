@@ -5,12 +5,12 @@
     <div class="container container-full">
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12">
-                <h1>Articles</h1>
+                <h1>{{trans('yipin.article')}}</h1>
             </div>
 
             {{--new blog link--}}
             <div class="col-lg-2 col-md-2 col-sm-2 pull-right clearfix">
-                {{ link_to('admin/article/create', 'New Article', ['class'=>'btn btn-default', 'target'=>'_blank']) }}
+                {{ link_to('admin/article/create', trans('yipin.new-article'), ['class'=>'btn btn-default', 'target'=>'_blank']) }}
             </div>
 
             {{--flash alert--}}
@@ -26,17 +26,17 @@
                 <table class="table table-striped">
                     <thead>
                     <tr>
-                        <th>Article</th>
-                        <th>Category</th>
-                        <th>Type</th>
-                        <th>Tag</th>
+                        <th>文章</th>
+                        <th>类别</th>
+                        <th类型</th>
+                        <th>关键字</th>
                         <th>Published</th>
                         @if ( Null !== Auth::user() )
-                            <th>Edit</th>
+                            <th>关键字</th>
                         @endif
-                        <th>Comments</th>
+                        <th>评论</th>
                         @if ( Null !== Auth::user() )
-                            <th>Delete</th>
+                            <th>删除</th>
                         @endif
                     </tr>
                     </thead>
@@ -63,7 +63,7 @@
                                     <a href="{{ url('admin/article/'.$article->id.'/edit') }}" target="_blank" class="btn btn-default" id="editBtn_{{ $article->id }}">编辑</a>
                                 </td>
                                 @endif
-                                <td><a href="{{ url('admin/articlecomment/'.$article->id) }}" target="_blank" class="btn btn-default" id="commentBtn_{{ $article->id }}">Comments({{ count($article->comments) }})</a></td>
+                                <td><a href="{{ url('admin/articlecomment/'.$article->id) }}" target="_blank" class="btn btn-default" id="commentBtn_{{ $article->id }}">评论({{ count($article->comments) }})</a></td>
                                 @if ( Null !== Auth::user() )
                                 <td>
                                     <input type="checkbox" name="delete[{{ $article->id }}]" ng-checked="delete_{{$article->id}}" ng-click="confirmDelete('{{ $article->id }}')"/>
@@ -75,7 +75,7 @@
                             <tr>
                                 <td colspan="7"> </td>
                                 <td>
-                                    <input class="btn btn-primary" type="submit" value="submit" />
+                                    <input class="btn btn-primary" type="保存" value="{{ trans('yipin.submit') }}" />
                                 </td>
                             </tr>
                         @endif

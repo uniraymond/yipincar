@@ -10,11 +10,11 @@
             <table class="table">
                 <thead>
                 <tr>
-                    <th>Article</th>
-                    <th>Category</th>
-                    <th>Type</th>
-                    <th>Tag</th>
-                    <th>Published</th>
+                    <th>文章</th>
+                    <th>类别</th>
+                    <th>品种</th>
+                    <th>类型</th>
+                    <th>发布</th>
                     <th>编辑</th>
                     <th>删除</th>
                 </tr>
@@ -45,7 +45,7 @@
                     <tr>
                         <td colspan="5"> </td>
                         <td>
-                            <input class="btn btn-primary" type="submit" value="submit" />
+                            <input class="btn btn-primary" type="submit" value="确定" />
                         </td>
                     </tr>
                     </tbody>
