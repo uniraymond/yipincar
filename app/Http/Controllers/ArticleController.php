@@ -74,7 +74,7 @@ class ArticleController extends Controller
     $authuser = $request->user();
     $title = $request->input('title');
     $content = trim($request->input('content'));
-    $description = trim(substr($content, 0, 20));
+    $description = $request['description'] ? $request['description'] : trim(substr($content, 0, 20));
 //    $typeId = $request['type_id'];
     $categoryId = $request['category_id'];
     $published = $request['published'] ? 1 : 0;
@@ -137,7 +137,9 @@ class ArticleController extends Controller
       }
     }
 
-    $request->session()->flash('status', 'Article: '. $title .' has been updated!'); exit;
+    $request->session()->flash('status', 'Article: '. $title .' has been updated!');
+
+    return redirect('admin/article');
 //    $type = ArticleTypes::where('id', $article->type_id)->first();
 //
 //    switch ($type->name) {
@@ -151,7 +153,7 @@ class ArticleController extends Controller
 //        return redirect('admin/videolist');
 //        break;
 //      default:
-        return redirect('admin/article');
+//        return redirect('admin/article');
 //        break;
 //    }
   }
