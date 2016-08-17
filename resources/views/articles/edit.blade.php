@@ -25,6 +25,11 @@
                                     <span id="helpBlock2" class="help-block">{{ $errors->first('title')}}</span>
                                 </div>
 
+                                <div>
+                                    <label class="col-lg-12 col-md-12 col-sm-12">简介</label>
+                                    <input class="col-lg-12 col-md-12 col-sm-12" type="text" id="description" name="description" placeholder="简介" value="{{ $article->description }}"/>
+                                </div>
+
                                 <div class={{ isset($errors) && $errors->has('content') ? 'has-error clearfix' : 'clearfix' }}>
                                     <label class="col-lg-12 col-md-12 col-sm-12 clearfix">内容</label>
                                     <div class="clearfix"></div>
