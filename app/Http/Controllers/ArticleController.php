@@ -53,7 +53,7 @@ class ArticleController extends Controller
   public function edit($id)
   {
     $article = Article::find($id);
-    $categories = DB::table('categories')->get();
+    $categories = DB::table('categories')->where('category_id','<>', 0)->get();
     $tags = DB::table('tags')->get();
     $currentTags = null;
     foreach ($article->tags as $tag) {
@@ -187,7 +187,7 @@ class ArticleController extends Controller
 
   public function create()
   {
-    $categories = DB::table('categories')->get();
+    $categories = DB::table('categories')->where('category_id','<>', 0)->get();
     $articletypes = DB::table('article_types')->get();
     $tags = DB::table('tags')->get();
 

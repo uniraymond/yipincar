@@ -39,7 +39,7 @@
                             </div>
 
                             <div>
-                                <label class="col-lg-12 col-md-12 col-sm-12">选择类型</label>
+                                <label class="col-lg-12 col-md-12 col-sm-12">选择类别</label>
                                 <select class="col-lg-12 col-md-12 col-sm-12" name="category_id">
                                     @foreach ($categories as $category)
                                         <option value="{{$category->id}}">{{$category->name}}</option>
@@ -48,7 +48,7 @@
                             </div>
 
                             <div>
-                                <label class="col-lg-12 col-md-12 col-sm-12">选择类别</label>
+                                <label class="col-lg-12 col-md-12 col-sm-12">选择类型</label>
                                 <select class="col-lg-12 col-md-12 col-sm-12" name="type_id">
                                     @foreach ($articletypes as $type)
                                         <option value="{{$type->id}}">{{$type->name}}</option>
@@ -66,7 +66,7 @@
                             </div>
 
                             <div>
-                                <label class="col-lg-1 col-md-1 col-sm-1 pull-left">发布</label>
+                                <label class="col-lg-2 col-md-2 col-sm-2 pull-left">发布</label>
                                 <input class="col-lg-1 col-md-1 col-sm-1 pull-left published" type="checkbox" name="published" />
                             </div>
                         </div>
@@ -90,7 +90,7 @@
         selector: "textarea",
         plugins : 'link image imagetools preview',
         menubar: false,
-        toolbar: 'undo redo | link image',
+        toolbar: 'undo redo | image',
         relative_urls: false,
         file_browser_callback_types: 'image media',
         file_browser_callback : function(field_name, url, type, win) {

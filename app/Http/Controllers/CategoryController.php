@@ -28,7 +28,8 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        return view('category/create');
+        $categories = Category::all();
+        return view('category/create', ['categories'=>$categories]);
     }
 
     /**
@@ -42,6 +43,7 @@ class CategoryController extends Controller
         $category = new Category;
         $category->name = $request->name;
         $category->description = $request->description;
+        $category->category_id = $request['category_id'];
         $category->save();
 
         $request->session()->flash('status', 'Category: '. $category->name .' has been created Successful!');
@@ -67,9 +69,10 @@ class CategoryController extends Controller
      */
     public function edit($id)
     {
+        $categories = Category::all();
         $category = Category::find($id);
 
-        return view('category/edit', ['category'=>$category]);
+        return view('category/edit', ['category'=>$category, 'categories'=>$categories]);
     }
 
     /**

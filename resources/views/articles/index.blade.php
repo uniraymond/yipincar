@@ -30,9 +30,8 @@
                         <th>类别</th>
                         <th类型</th>
                         <th>关键字</th>
-                        <th>发表</th>
                         @if ( Null !== Auth::user() )
-                            <th>关键字</th>
+                            <th>发表</th>
                         @endif
                         <th>评论</th>
                         @if ( Null !== Auth::user() )

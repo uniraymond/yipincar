@@ -22,6 +22,15 @@
                         {!! Form::text('name', '' , array('class'=>'name input col-lg-12 col-md-12 col-sm-12', 'placeholder' => '标题', 'required')) !!}
                         {!! Form::label('description', '简介', array('class'=>'col-lg-12 col-md-12 col-sm-12')) !!}
                         {!! Form::text('description', '', array('class' => 'description input col-lg-12 col-md-12 col-sm-12', 'placeholder' => '简介')) !!}
+                        <div>
+                            <label class="col-lg-12 col-md-12 col-sm-12">选择上一级类别</label>
+                            <select class="col-lg-12 col-md-12 col-sm-12" name="category_id">
+                                <option selected value="0">选择一个类别</option>
+                                @foreach ($categories as $category)
+                                    <option value="{{$category->id}}">{{$category->name}}</option>
+                                @endforeach
+                            </select>
+                        </div>
                         {!! Form::submit('保存', array('class'=>'btn btn-primary pull-right')) !!}
                         {!! Form::token() !!}
                         {!! Form::close() !!}

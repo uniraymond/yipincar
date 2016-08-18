@@ -21,6 +21,15 @@
                         {!! Form::text('name', $category->name, array('class'=>'name col-lg-12 col-md-12 col-sm-12', 'placeholder' => '标题')) !!}
                         {!! Form::label('description', '简介', array('class'=>'col-lg-12 col-md-12 col-sm-12')) !!}
                         {!! Form::text('description', $category->description, array('class' => 'description input col-lg-12 col-md-12 col-sm-12', 'placeholder' => '简介')) !!}
+                        <div>
+                            <label class="col-lg-12 col-md-12 col-sm-12">选择父类别</label>
+                            <select class="col-lg-12 col-md-12 col-sm-12" name="category_id">
+                                <option {{ count($categories) > 0 ? '' : 'selected' }} value="0">选择一个类别</option>
+                                @foreach ($categories as $cate)
+                                    <option {{ $category->category_id == $cate->id ? 'selected' : '' }} value="{{$cate->id}}">{{$cate->name}}</option>
+                                @endforeach
+                            </select>
+                        </div>
                         {!! Form::submit('保存', array('class'=>'btn btn-primary')) !!}
                         {!! Form::token() !!}
                         {!! Form::close() !!}
