@@ -6,7 +6,7 @@
             <div class="col-md-11 col-md-offset-1">
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        Edit Tag
+                        编辑关键词
                     </div>
                     @if ($fail = Session::get('warning'))
                         <div class=" col-lg-12 col-md-12 col-sm-12  bs-example-bg-classes" >
@@ -17,11 +17,11 @@
                     @endif
                     <div class="panel-body">
                         {!! Form::open(array('url' => 'admin/tag/'.$tag->id, 'class' => 'form', 'method'=>'put')) !!}
-                        {!! Form::label('name', 'Name', array('class'=>'col-lg-12 col-md-12 col-sm-12')) !!}
-                        {!! Form::text('name', $tag->name, array('class'=>'name input col-lg-12 col-md-12 col-sm-12', 'placeholder' => 'Name')) !!}
-                        {!! Form::label('description', 'Description', array('class'=>'col-lg-12 col-md-12 col-sm-12')) !!}
-                        {!! Form::text('description', $tag->description, array('class' => 'description input col-lg-12 col-md-12 col-sm-12', 'placeholder' => 'Description')) !!}
-                        {!! Form::submit('Submit', array('class'=>'btn btn-primary pull-right')) !!}
+                        {!! Form::label('name', '标题', array('class'=>'col-lg-12 col-md-12 col-sm-12')) !!}
+                        {!! Form::text('name', $tag->name, array('class'=>'name input col-lg-12 col-md-12 col-sm-12', 'placeholder' => '标题')) !!}
+                        {!! Form::label('description', '简介', array('class'=>'col-lg-12 col-md-12 col-sm-12')) !!}
+                        {!! Form::text('description', $tag->description, array('class' => 'description input col-lg-12 col-md-12 col-sm-12', 'placeholder' => '简介')) !!}
+                        {!! Form::submit('保存', array('class'=>'btn btn-primary pull-right')) !!}
                         {!! Form::token() !!}
                         {!! Form::close() !!}
                     </div>

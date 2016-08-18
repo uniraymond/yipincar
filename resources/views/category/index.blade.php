@@ -9,7 +9,7 @@
 
             {{--new blog link--}}
             <div class="col-lg-2 col-md-2 col-sm-2 pull-right clearfix">
-                {{ link_to('admin/category/create', '文章状态', ['class'=>'btn btn-default']) }}
+                {{ link_to('admin/category/create', '新建', ['class'=>'btn btn-default']) }}
             </div>
 
             {{--flash alert--}}
@@ -25,8 +25,8 @@
                 <table class="table table-striped">
                     <thead>
                     <tr>
-                        <th>Title</th>
-                        <th>Details</th>
+                        <th>标题</th>
+                        <th>简介</th>
                         <th>编辑</th>
                     </tr>
                     </thead>
@@ -37,9 +37,9 @@
                                 <td><span id="categoryDesc_{{ $category->id }}">{{ $category->description }}</span></td>
                                 <td><a class="btn btn-default" href="/admin/category/{{ $category->id }}/edit" id="editBtn_{{ $category->id }}">编辑</a></td>
                                 <td>
-                                    {!! Form::open(array('url' => 'admin/category/'.$category->id, 'class' => 'form', 'method'=>'delete', 'onsubmit'=>'return confirm("Confirm to delete this category?");')) !!}
+                                    {!! Form::open(array('url' => 'admin/category/'.$category->id, 'class' => 'form', 'method'=>'delete', 'onsubmit'=>'return confirm("确定要删除?");')) !!}
                                     {!! Form::text('id', $category->id, array('hidden'=>'hidden', 'readonly' => true)) !!}
-                                    {!! Form::submit('Delete', array('class'=>'btn btn-primary')) !!}
+                                    {!! Form::submit('删除', array('class'=>'btn btn-primary')) !!}
                                     {!! Form::token() !!}
                                     {!! Form::close() !!}
                                 </td>
@@ -49,7 +49,7 @@
                 </table>
             @else
                 <div class="col-lg-12 col-md-12 col-sm-12 clearfix">
-                    <h4>The category is not available.</h4>
+                    <h4>文章类别没有找到</h4>
                 </div>
             @endif
         </div>

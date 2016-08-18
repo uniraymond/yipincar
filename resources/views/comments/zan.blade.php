@@ -4,7 +4,7 @@
     <div class="container">
         <div class="row">
             <div class="title">
-                All Comments
+                赞
             </div>
             <div>
 {{--                {{ $success = Session::get('status') }}--}}
@@ -12,10 +12,10 @@
             <table class="table">
                 <thead>
                 <tr>
-                    <th>Zan Token</th>
-                    <th>Comment</th>
-                    <th>Published</th>
-                    <th>Delete</th>
+                    <th>赞(token)</th>
+                    <th>评论</th>
+                    <th>发表</th>
+                    <th>删除</th>
                 </tr>
                 </thead>
                 @if($zans)
@@ -38,7 +38,7 @@
                     @endforeach
                     <tr>
                         <td>
-                            {!! Form::submit('Submit', array('class'=>'btn btn-primary')) !!}
+                            {!! Form::submit('确定', array('class'=>'btn btn-primary')) !!}
                         </td>
                     </tr>
                     {!! Form::close() !!}

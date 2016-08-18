@@ -4,12 +4,12 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12">
-                <h1>文章类别</h1>
+                <h1>文章类型</h1>
             </div>
 
             {{--new blog link--}}
             <div class="col-lg-2 col-md-2 col-sm-2 pull-right clearfix">
-                {{ link_to('admin/articletypes/create', 'New Article Types', ['class'=>'btn btn-default']) }}
+                {{ link_to('admin/articletypes/create', '新建', ['class'=>'btn btn-default']) }}
             </div>
 
             {{--flash alert--}}
@@ -26,7 +26,7 @@
                     <thead>
                         <tr>
                             <th>标题</th>
-                            <th>内容</th>
+                            <th>简介</th>
                             <th>编辑</th>
                         </tr>
                     </thead>
@@ -37,7 +37,7 @@
                             <td><span id="articletypeDesc_{{ $articletype->id }}">{{ $articletype->description }}</span></td>
                             <td><a class="btn btn-default" href="/admin/articletypes/{{ $articletype->id }}/edit" id="editBtn_{{ $articletype->id }}">编辑</a></td>
                             <td>
-                                {!! Form::open(array('url' => 'admin/articletypes/'.$articletype->id, 'class' => 'form', 'method'=>'delete', 'onsubmit'=>'return confirm("Confirm to delete this article type?");')) !!}
+                                {!! Form::open(array('url' => 'admin/articletypes/'.$articletype->id, 'class' => 'form', 'method'=>'delete', 'onsubmit'=>'return confirm("确定删除?");')) !!}
                                 {!! Form::text('id', $articletype->id, array('hidden'=>'hidden', 'readonly' => true)) !!}
                                 {!! Form::submit('删除', array('class'=>'btn btn-primary')) !!}
                                 {!! Form::token() !!}

@@ -4,7 +4,7 @@
     <div class="container">
         <div class="row">
             <div class="title">
-                All Comments
+                文章评论
             </div>
             <div>
                 {{ $success = Session::get('status') }}
@@ -12,16 +12,16 @@
             <table class="table">
                 <thead>
                 <tr>
-                    <th>Comment</th>
-                    <th>Article</th>
-                    <th>Published</th>
-                    <th>Delete</th>
+                    <th>文章评论</th>
+                    <th>文章</th>
+                    <th>发表</th>
+                    <th>删除</th>
                 </tr>
                 </thead>
                 @if($comments)
                     <tbody>
                     @foreach($comments as $comment)
-                        {!! Form::open(array('url' => 'admin/comment/'.$comment->id, 'class' => 'form', 'method'=>'delete', 'onsubmit'=>'return confirm("Confirm to delete this category?");')) !!}
+                        {!! Form::open(array('url' => 'admin/comment/'.$comment->id, 'class' => 'form', 'method'=>'delete', 'onsubmit'=>'return confirm("确定删除?");')) !!}
                         <tr>
                             <td>{{ $comment->comment }}</td>
                             <td><span id="article_{{ $comment->id }}">{{ $comment->article->title }}</span></td>
@@ -39,8 +39,8 @@
                             </td>
                         </tr>
                         <tr>
-                            <td>{!! Html::link('admin/article', 'back to article list') !!}</td>
-                            <td>{!! Form::submit('Submit', array('class'=>'btn btn-primary')) !!}</td>
+                            <td>{!! Html::link('admin/article', '返回文章列表') !!}</td>
+                            <td>{!! Form::submit('删除', array('class'=>'btn btn-primary')) !!}</td>
                         </tr>
                         {!! Form::close() !!}
                     @endforeach

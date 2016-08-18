@@ -4,7 +4,7 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12">
-                <h1>All Comments</h1>
+                <h1>文章评论</h1>
             </div>
 
             {{--flash alert--}}
@@ -20,15 +20,15 @@
             <table class="table table-striped">
                 <thead>
                 <tr>
-                    <th>Comment</th>
-                    <th>Article</th>
-                    <th>Published</th>
-                    <th>Delete</th>
+                    <th>文章评论</th>
+                    <th>文章</th>
+                    <th>发表</th>
+                    <th>删除</th>
                 </tr>
                 </thead>
                     <tbody>
                     @foreach($comments as $comment)
-                        {!! Form::open(array('url' => 'admin/comment/'.$comment->id, 'class' => 'form', 'method'=>'delete', 'onsubmit'=>'return confirm("Confirm to delete this category?");')) !!}
+                        {!! Form::open(array('url' => 'admin/comment/'.$comment->id, 'class' => 'form', 'method'=>'delete', 'onsubmit'=>'return confirm("确定删除?");')) !!}
                         <tr>
                             <td>{{ $comment->comment }}</td>
                             <td><span id="article_{{ $comment->id }}">{{ $comment->article->title }}</span></td>
@@ -46,7 +46,7 @@
                             </td>
                         </tr>
                         <tr>
-                            <td>{!! Form::submit('Submit', array('class'=>'btn btn-primary')) !!}</td>
+                            <td>{!! Form::submit('删除', array('class'=>'btn btn-primary')) !!}</td>
                         </tr>
                         {!! Form::close() !!}
                     @endforeach
@@ -54,7 +54,7 @@
             </table>
             @else
                 <div class="col-lg-12 col-md-12 col-sm-12 clearfix">
-                    <h4>The comment is not available.</h4>
+                    <h4>还没有任何评论.</h4>
                 </div>
             @endif
         </div>
