@@ -53,7 +53,6 @@ class ArticleController extends Controller
     $article = Article::find($id);
     $categories = DB::table('categories')->get();
     $tags = DB::table('tags')->get();
-    $currentTags = null;
     foreach ($article->tags as $tag) {
       $currentTags[] = $tag->id;
     }
