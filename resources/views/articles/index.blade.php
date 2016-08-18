@@ -5,12 +5,12 @@
     <div class="container container-full">
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12">
-                <h1>{{trans('yipin.article')}}</h1>
+                <h1>文章</h1>
             </div>
 
             {{--new blog link--}}
             <div class="col-lg-2 col-md-2 col-sm-2 pull-right clearfix">
-                {{ link_to('admin/article/create', trans('yipin.new-article'), ['class'=>'btn btn-default']) }}
+                {{ link_to('admin/article/create', '新建', ['class'=>'btn btn-default']) }}
             </div>
 
             {{--flash alert--}}
@@ -30,7 +30,7 @@
                         <th>类别</th>
                         <th类型</th>
                         <th>关键字</th>
-                        <th>Published</th>
+                        <th>发表</th>
                         @if ( Null !== Auth::user() )
                             <th>关键字</th>
                         @endif
@@ -75,7 +75,7 @@
                             <tr>
                                 <td colspan="7"> </td>
                                 <td>
-                                    <input class="btn btn-primary" type="保存" value="{{ trans('yipin.submit') }}" />
+                                    <input class="btn btn-primary" type="submit" value="保存" />
                                 </td>
                             </tr>
                         @endif
@@ -84,7 +84,7 @@
                 </table>
             @else
                 <div class="col-lg-12 col-md-12 col-sm-12 clearfix">
-                    <h4>No article is available.</h4>
+                    <h4>暂时还没有文章.</h4>
                 </div>
             @endif
         </div>
