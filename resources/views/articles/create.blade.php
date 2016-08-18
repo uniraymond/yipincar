@@ -34,7 +34,7 @@
                             <div class="{{ isset($errors) && $errors->has('content') ? 'has-error' : '' }}" >
                                 <label class="col-lg-12 col-md-12 col-sm-12">内容</label>
                                 <div class="clearfix"></div>
-                                <textarea class="col-lg-12 col-md-12 col-sm-12 form-control my-editor" id="content" name="content" placeholder="详细内容"></textarea>
+                                <textarea class="col-lg-12 col-md-12 col-sm-12 form-control my-editor" id="content" name="content" placeholder="详细内容" height="50" ></textarea>
                                 <span id="helpBlock2" class="help-block">{{ $errors->first('content')}}</span>
                             </div>
 
@@ -86,6 +86,7 @@
 <script src="/src/js/vendor/tinymce/js/tinymce/tinymce.min.js"></script>
 <script>
     var editor_config = {
+        height: "350",
         path_absolute : "{{ URL::to('/') }}/",
         selector: "textarea",
         plugins : 'link image imagetools preview',
