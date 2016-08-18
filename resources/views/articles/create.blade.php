@@ -28,7 +28,7 @@
 
                             <div>
                                 <label class="col-lg-12 col-md-12 col-sm-12">简介</label>
-                                <input class="col-lg-12 col-md-12 col-sm-12" type="text" id="description" name="description" placeholder="简介" />
+                                <textarea class="col-lg-12 col-md-12 col-sm-12" type="text" id="description" name="description" placeholder="简介" height="100"></textarea>
                             </div>
 
                             <div class="{{ isset($errors) && $errors->has('content') ? 'has-error' : '' }}" >
@@ -88,7 +88,7 @@
     var editor_config = {
         height: "350",
         path_absolute : "{{ URL::to('/') }}/",
-        selector: "textarea",
+        selector: "textarea#content",
         plugins : 'link image imagetools preview',
         menubar: false,
         toolbar: 'undo redo | image',
