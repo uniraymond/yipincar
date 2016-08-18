@@ -1,5 +1,5 @@
 /vendor
-!/vendor/unishap
+!/vendor/unisharp
 /node_modules
 /public/storage
 /public/photos
