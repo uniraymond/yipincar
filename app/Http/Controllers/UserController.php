@@ -34,9 +34,14 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        //
+        $auth = $request->user();
+        $authView = $auth->hasAnyRole(['super_admin', 'admin']);
+        if ($authView) {
+            return view('user/create');
+        }
+        return redirect('/');
     }
 
     /**
@@ -67,9 +72,15 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Request $request, $id)
     {
-        //
+        $auth = $request->user();
+        $authView = $auth->hasAnyRole(['super_admin', 'admin']);
+        if ($authView) {
+            $user = User::findorFail($id);
+            return view('user/create', ['user'=> $user]);
+        }
+        return redirect('/');
     }
 
     /**
