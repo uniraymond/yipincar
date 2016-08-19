@@ -5,10 +5,10 @@
     <div class="row">
         <div class="col-md-10 col-md-offset-1">
             <div class="panel panel-default">
-                <div class="panel-heading">Yi Pin Cars</div>
+                <div class="panel-heading">Dashboard</div>
 
                 <div class="panel-body">
-                    <a href="{{ 'article/create' }}">New Article</a>
+                    <a href="{{ 'article/create' }}">添加文章</a>
                 </div>
             </div>
         </div>
