@@ -8,7 +8,7 @@ use Illuminate\Http\Response;
 use App\Http\Requests;
 use App\Article;
 use App\ArticleTags as ArticleTags;
-use App\Category as Category;
+use App\Category;
 use App\ArticleTypes as ArticleTypes;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use App\Resource;
@@ -53,7 +53,8 @@ class ArticleController extends Controller
   public function edit($id)
   {
     $article = Article::find($id);
-    $categories = DB::table('categories')->where('category_id','<>', 0)->get();
+    $categories = Category::where('category_id', '<>', 0)->orderBy('category_id')->get();
+    
     $tags = DB::table('tags')->get();
     $currentTags = null;
     foreach ($article->tags as $tag) {

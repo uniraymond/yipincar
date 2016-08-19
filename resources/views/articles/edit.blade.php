@@ -41,9 +41,25 @@
                                 <div>
                                     <label class="col-lg-12 col-md-12 col-sm-12">选择类别</label>
                                     <select class="col-lg-12 col-md-12 col-sm-12" name="category_id">
-                                        @foreach ($categories as $category)
-                                            <option {{ $article->category_id == $category->id ? 'selected' : '' }} value="{{$category->id}}">{{$category->name}}</option>
+                                        @foreach($categories as $category)
+                                            <option {{ $article->category_id == $category->id ? 'selected' : '' }} value="{{$category->id}}">
+                                                {{$category->name}}
+                                            </option>
                                         @endforeach
+                                        {{--{{ $hasGroup = false }}--}}
+                                        {{--@foreach ($categories as $category)--}}
+                                            {{--@if (count($category->categories))--}}
+                                                {{--{{ $hasGroup = true }}--}}
+                                                {{--<optgroup label="{{ $category->name }}">--}}
+                                            {{--@else--}}
+                                                    {{--<option {{ $article->category_id == $category->id ? 'selected' : '' }} value="{{$category->id}}">--}}
+                                                        {{--{{$category->name}}--}}
+                                                    {{--</option>--}}
+                                            {{--@endif--}}
+                                        {{--@endforeach--}}
+                                        {{--@if ($hasGroup)--}}
+                                            {{--</optgroup>--}}
+                                        {{--@endif--}}
                                     </select>
                                 </div>
 
