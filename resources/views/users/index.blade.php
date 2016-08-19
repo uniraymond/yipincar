@@ -4,12 +4,12 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12">
-                <h1>Users</h1>
+                <h1>用户</h1>
             </div>
 
             {{--new blog link--}}
             <div class="col-lg-2 col-md-2 col-sm-2 pull-right clearfix">
-                {{ link_to('admin/user/create', 'New User', ['class'=>'btn btn-default']) }}
+                {{ link_to('admin/user/create', '添加', ['class'=>'btn btn-default']) }}
             </div>
 
             {{--flash alert--}}
@@ -25,8 +25,8 @@
                 <table class="table table-striped">
                     <thead>
                     <tr>
-                        <th>Name</th>
-                        <th>Email</th>
+                        <th>用户名</th>
+                        <th>电子邮件</th>
                         <th>编辑</th>
                     </tr>
                     </thead>
@@ -41,7 +41,7 @@
                             <td>
                                 {!! Form::open(array('url' => 'admin/user/'.$user->id, 'class' => 'form', 'method'=>'delete', 'onsubmit'=>'return confirm("Confirm to delete this user?");')) !!}
                                 {!! Form::text('id', $user->id, array('hidden'=>'hidden', 'readonly' => true)) !!}
-                                {!! Form::submit('Delete', array('class'=>'btn btn-primary')) !!}
+                                {!! Form::submit('删除', array('class'=>'btn btn-primary')) !!}
                                 {!! Form::token() !!}
                                 {!! Form::close() !!}
                             </td>
