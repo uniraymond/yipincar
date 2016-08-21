@@ -18,9 +18,11 @@ class CreateArticlesTable extends Migration
             $table->string('title');
             $table->string('description');
             $table->string('content');
+            $table->string('token');
+            $table->string('uid');
             $table->integer('category_id')->references('id')->on('categories')->onDelete('cascade');
             $table->integer('type_id')->references('id')->on('article_types')->onDelete('cascade');
-            $table->tinyInteger('published');
+            $table->tinyInteger('published')->references('id')->on('article_statuses');
             $table->timestamps();
             $table->integer('updated_by')->references('id')->on('users')->onDelete('cascade');
             $table->integer('created_by')->references('id')->on('users')->onDelete('cascade');

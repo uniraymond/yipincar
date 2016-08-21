@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use App\ArticleTypes;
 
 class ArticleTypesTableSeeder extends Seeder
 {
@@ -11,12 +12,14 @@ class ArticleTypesTableSeeder extends Seeder
      */
     public function run()
     {
-        for($i=1; $i<= 11; $i++) {
-            DB::table('article_types')->insert([
-                'article_id' => $i,
-                'type_id' => 1
-            ]);
+        $articleType = new ArticleTypes();
+        $articleType->name = '推广';
+        $articleType->description = '推广';
+        $articleType->save();
 
-        }
+        $articleType = new ArticleTypes();
+        $articleType->name = '文章';
+        $articleType->description = '文章';
+        $articleType->save();
     }
 }

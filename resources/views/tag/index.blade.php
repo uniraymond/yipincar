@@ -4,7 +4,7 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12">
-                <h1>关键词</h1>
+                <h1>标签</h1>
             </div>
 
             {{--new blog link--}}
@@ -50,7 +50,7 @@
                 </table>
             @else
                 <div class="col-lg-12 col-md-12 col-sm-12 clearfix">
-                    <h4>还没有关键词.</h4>
+                    <h4>还没有标签.</h4>
                 </div>
             @endif
         </div>

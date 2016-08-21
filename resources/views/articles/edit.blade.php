@@ -64,7 +64,7 @@
                                 </div>
 
                                 <div>
-                                    <label class="col-lg-12 col-md-12 col-sm-12">选择关键字</label>
+                                    <label class="col-lg-12 col-md-12 col-sm-12">选择标签(可以多选)</label>
                                     <select class="col-lg-12 col-md-12 col-sm-12" name="tag_ids[]" multiple>
                                         @foreach ($tags as $tag)
                                             <option @if (isset($currentTags)) {{ in_array($tag->id, $currentTags) ? 'selected' : '' }} @endif value="{{$tag->id}}">{{$tag->name}}</option>

@@ -41,6 +41,31 @@ class Article extends Model
   {
     return $this->belongsToMany('App\Resource', 'article_resources', 'article_id', 'resource_id');
   }
+
+  public function article_statuses()
+  {
+    return $this->belongsToMany('App\ArticleStatus', 'article_status_checks', 'article_id', 'article_status_id');
+  }
+
+  public function article_status()
+  {
+    return $this->belongsTo('App\ArticleStatus', 'published');
+  }
+
+  public function article_status_checks()
+  {
+    return $this->hasMany('App\ArticleStatusCheck');
+  }
+
+  public function user_created_by()
+  {
+    return $this->belongsTo('App\User', 'created_by');
+  }
+
+  public function user_updated_by()
+  {
+    return $this->belongsTo('App\User', 'updated_by');
+  }
   
   public static function getArticle($id)
   {

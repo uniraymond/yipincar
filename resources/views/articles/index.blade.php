@@ -28,15 +28,17 @@
                     <tr>
                         <th>文章</th>
                         <th>类别</th>
-                        <th类型</th>
+                        <th>类型</th>
                         <th>关键字</th>
                         @if ( Null !== Auth::user() )
                             <th>发表</th>
                         @endif
                         <th>评论</th>
                         @if ( Null !== Auth::user() )
+                            <th>编辑</th>
                             <th>删除</th>
                         @endif
+                        <th>文章状态</th>
                     </tr>
                     </thead>
                         {!! Form::open(array('url' => 'admin/article/groupupdate', 'class'=>'form', 'method'=>'POST')) !!}
@@ -44,7 +46,7 @@
                         <tbody>
                         @foreach($articles as $article)
                             <tr>
-                                <td>{{ $article->title }}</td>
+                                <td>{{ link_to('admin/article/'.$article->id, $article->title) }}</td>
                                 <td>{{ $article->categories->name }}</td>
                                 <td>{{ $article->article_types->name }}</td>
                                 <td>
@@ -57,17 +59,18 @@
                                     {!! Form::text('type_id['.$article->type_id.']', $article->type_id , array('class'=>'id input col-md-12', 'hidden', 'readonly')) !!}
                                     <input type="checkbox" name="published[{{ $article->id }}]" {{ $article->published ? 'checked' : '' }}/>
                                 </td>
+                                <td><a href="{{ url('admin/articlecomment/'.$article->id) }}" class="btn btn-default" id="commentBtn_{{ $article->id }}">评论({{ count($article->comments) }})</a></td>
                                 @if ( Null !== Auth::user() )
                                 <td>
                                     <a href="{{ url('admin/article/'.$article->id.'/edit') }}" class="btn btn-default" id="editBtn_{{ $article->id }}">编辑</a>
                                 </td>
-                                @endif
-                                <td><a href="{{ url('admin/articlecomment/'.$article->id) }}" class="btn btn-default" id="commentBtn_{{ $article->id }}">评论({{ count($article->comments) }})</a></td>
-                                @if ( Null !== Auth::user() )
                                 <td>
                                     <input type="checkbox" name="delete[{{ $article->id }}]" ng-checked="delete_{{$article->id}}" ng-click="confirmDelete('{{ $article->id }}')"/>
                                 </td>
                                 @endif
+                                <td>
+                                    {{ count($article->article_status)>0 ? $article->article_status->title : '草稿' }}
+                                </td>
                             </tr>
                         @endforeach
                         @if ( Null !== Auth::user() )
@@ -87,10 +90,8 @@
                 </div>
             @endif
         </div>
-        @if ( Null !== Auth::user() )
-            <div class="col-lg-12 col-md-12 col-sm-12 clearfix">
-                {!! $articles->links() !!}
-            </div>
-        @endif
+        <div class="col-lg-12 col-md-12 col-sm-12 clearfix">
+            {!! $articles->links() !!}
+        </div>
     </div>
 @endsection

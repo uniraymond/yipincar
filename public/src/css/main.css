@@ -73,3 +73,7 @@ body {
 .form input.published {
     margin-top: 15px;
 }
+
+.article_reviews {
+    padding: 10px 0;
+}

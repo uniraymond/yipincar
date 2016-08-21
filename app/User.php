@@ -60,4 +60,16 @@ class User extends Authenticatable
             return true;
         }
     }
+
+    public function userRoles()
+    {
+        $roles = array();
+        $allroles = $this->roles()->get();
+        if ($allroles) {
+            foreach($allroles  as $role) {
+                $roles[$role->id] = $role->name;
+            }
+        }
+        return $roles;
+    }
 }

@@ -6,7 +6,7 @@
             <div class="col-md-11 col-md-offset-1">
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        新的关键词
+                        新的标签
                     </div>
                     @if ($fail = Session::get('warning'))
                         <div class=" col-lg-12 col-md-12 col-sm-12  bs-example-bg-classes" >

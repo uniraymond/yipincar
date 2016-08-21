@@ -46,6 +46,8 @@ Route::group(['middleware'=>'auth', 'prefix'=>'admin'], function() {
     Route::post('article/groupupdate', 'ArticleController@groupupdate');
 
     Route::get('article/new', 'ArticleController@newarticle');
+    Route::put('article/review/{articleId}', 'ArticleController@newreview');
+    Route::post('article/review/{articleId}/edit/{id}', 'ArticleController@editreview');
 
     Route::post('resource/upload', 'ResourceController@upload');
     

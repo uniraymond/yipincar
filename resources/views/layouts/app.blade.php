@@ -49,7 +49,7 @@
                         <li>{{link_to('admin/user', '用户')}}</li>
 {{--                        <li>{{link_to('admin/category', '类别')}}</li>--}}
 {{--                        <li>{{link_to('admin/articletypes', '类型')}}</li>--}}
-                        <li>{{link_to('admin/tag', '关键词')}}</li>
+                        <li>{{link_to('admin/tag', '标签')}}</li>
                     @endif
                     @if((null !== Auth::user()) && Auth::user()->hasAnyRole('super_admin', 'admin', 'editor'))
                         <li>{{link_to('admin/article', '文章')}}</li>
@@ -82,7 +82,7 @@
 
     <script src="/src/js/jQuery.min.2.2.4.js"></script>
     <script src="/src/js/bootstrap.min.js"></script>
-    {{--<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.29/angular.min.js"></script>--}}  
+    {{--<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.29/angular.min.js"></script>--}}
     {{--<script src="/src/js/resourceApp.js"></script>--}}
 </body>
 </html>

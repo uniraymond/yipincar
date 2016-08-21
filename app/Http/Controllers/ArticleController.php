@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\ArticleStatus;
+use App\ArticleStatusCheck;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB as DB;
 use Illuminate\Http\Response;
@@ -13,6 +15,7 @@ use App\ArticleTypes as ArticleTypes;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use App\Resource;
 use App\ArticleResources;
+use App\Http\Controllers\Auth;
 
 class ArticleController extends Controller
 {
@@ -46,8 +49,24 @@ class ArticleController extends Controller
    * @param $id
    */
 
-  public function show($id)
+  public function show(Request $request, $id)
   {
+    $allStatusChecks = array();
+    $article = Article::findorFail($id);
+    $authuser = $request->user();
+    $articleStatus = $article->article_statuses;
+    $checks = $article->article_status_checks;
+    $allStatuses = ArticleStatus::orderBy('id', 'desc')->get();
+    foreach($allStatuses as $status) {
+      $allStatusChecks[$status->name] = $this->getArticleStatusObject($status->id, $id);
+    }
+
+    return view('articles/show', ['article'=>$article, 'allStatusChecks'=>$allStatusChecks]);
+  }
+
+  private function getArticleStatusObject($status_id, $article_id) {
+    $article_status = ArticleStatusCheck::where('article_status_id', $status_id)->where('article_id', $article_id)->get();
+    return $article_status;
   }
 
   public function edit($id)
@@ -261,6 +280,75 @@ class ArticleController extends Controller
     $article->delete();
     $request->session()->flash('status', 'Article: '. $title .' has been removed!');
     return redirect('admin/article');
+  }
+
+  public function reviewForm()
+  {
+    return view('articles.reviewForm');
+  }
+
+  public function newreview(Request $request, $articleId)
+  {
+    $authuser = $request->user();
+    $articleStatus = ArticleStatus::where('name', $request['article_status'])->first();
+
+    $articleStatusCheck = new ArticleStatusCheck();
+    $articleStatusCheck->article_id = $articleId;
+    $articleStatusCheck->article_status_id = $articleStatus->id;
+    $articleStatusCheck->comment = $request['comment'];
+    if ($request['article_status'] == 'reject' && $request['published']) {
+      $articleStatusCheck->checked = 4;
+    } elseif ($request['article_status'] == 'reject' && !$request['published']) {
+      $articleStatusCheck->checked = 2;
+    } elseif ($request['published']) {
+      $articleStatusCheck->checked = $articleStatus->id;
+    } else {
+      $articleStatusCheck->checked = 1;
+    }
+    $articleStatusCheck->created_by = $authuser->id;
+    $articleStatusCheck->save();
+
+    $article = Article::find($articleId);
+    $article->published = $articleStatus->id;
+    $article->save();
+
+    $request->session()->flash('status', '添加了新的文章评估.');
+    return redirect('admin/article/'.$articleId);
+  }
+
+  public function editreview(Request $request, $articleId, $id)
+  {
+    $allArticleStatus = ArticleStatus::all();
+    foreach ($allArticleStatus as $allAS) {
+      $allStatus[$allAS->id] = $allAS->name;
+    }
+    $authuser = $request->user();
+//    $articleStatus = ArticleStatus::where('name', $request['article_status'])->first();
+    $articleStatusId = array_search($request['article_status'], $allStatus);
+    $statusReview = array_search('review', $allStatus);
+
+    $articleStatusCheck = ArticleStatusCheck::find($id);
+    $articleStatusCheck->comment = $request['comment'];
+    $articleStatusCheck->updated_by = $authuser->id;
+    if ($request['article_status'] == 'reject' && $request['published']) {
+      $articleStatusCheck->checked = 4;
+    } elseif ($request['article_status'] == 'reject' && !$request['published']) {
+      $articleStatusCheck->checked = 2;
+    } elseif ($request['published']) {
+      $articleStatusCheck->checked = $articleStatusId;
+    }
+    $articleStatusCheck->save();
+
+    $article = Article::find($articleId);
+    if ($request['article_status'] == 'reject' && !$request['published']) {
+        $article->published = $statusReview;
+    } elseif ($request['published']) {
+        $article->published = $articleStatusId;
+    }
+    $article->save();
+
+    $request->session()->flash('status', '更新了文章评估.');
+    return redirect('admin/article/'.$articleId);
   }
 
 }
