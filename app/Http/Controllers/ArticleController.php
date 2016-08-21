@@ -69,9 +69,16 @@ class ArticleController extends Controller
     return $article_status;
   }
 
-  public function edit($id)
+  public function edit(Request $request, $id)
   {
     $article = Article::find($id);
+    $authuser = $request->user();
+
+    if ($article->created_by != $authuser->id) {
+
+      $request->session()->flash('status', '您不是文章的作者,不能编辑此文章.');
+      return redirect('admin/article/'.$id);
+    }
     $categories = Category::where('category_id', '<>', 0)->orderBy('category_id')->get();
     
     $tags = DB::table('tags')->get();

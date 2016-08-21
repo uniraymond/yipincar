@@ -57,16 +57,21 @@
                                 <td>
                                     {!! Form::text('id['.$article->id.']', $article->id , array('class'=>'id input col-md-12', 'hidden', 'readonly')) !!}
                                     {!! Form::text('type_id['.$article->type_id.']', $article->type_id , array('class'=>'id input col-md-12', 'hidden', 'readonly')) !!}
-                                    <input type="checkbox" name="published[{{ $article->id }}]" {{ $article->published ? 'checked' : '' }}/>
+                                    @if ( Null !== Auth::user() && $article->created_by == Auth::user()->id )
+                                        <input type="checkbox" name="published[{{ $article->id }}]" {{ $article->published ? 'checked' : '' }}/>
+                                    @endif
                                 </td>
                                 <td><a href="{{ url('admin/articlecomment/'.$article->id) }}" class="btn btn-default" id="commentBtn_{{ $article->id }}">评论({{ count($article->comments) }})</a></td>
-                                @if ( Null !== Auth::user() )
-                                <td>
-                                    <a href="{{ url('admin/article/'.$article->id.'/edit') }}" class="btn btn-default" id="editBtn_{{ $article->id }}">编辑</a>
-                                </td>
-                                <td>
-                                    <input type="checkbox" name="delete[{{ $article->id }}]" ng-checked="delete_{{$article->id}}" ng-click="confirmDelete('{{ $article->id }}')"/>
-                                </td>
+                                @if ( Null !== Auth::user() && $article->created_by == Auth::user()->id )
+                                    <td>
+                                        <a href="{{ url('admin/article/'.$article->id.'/edit') }}" class="btn btn-default" id="editBtn_{{ $article->id }}">编辑</a>
+                                    </td>
+                                    <td>
+                                        <input type="checkbox" name="delete[{{ $article->id }}]" ng-checked="delete_{{$article->id}}" ng-click="confirmDelete('{{ $article->id }}')"/>
+                                    </td>
+                                @else
+                                    <td></td>
+                                    <td></td>
                                 @endif
                                 <td>
                                     {{ count($article->article_status)>0 ? $article->article_status->title : '草稿' }}

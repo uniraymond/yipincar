@@ -21,17 +21,16 @@
     <nav class="navbar navbar-default navbar-static-top">
         <div class="container">
             <div class="navbar-header">
-
                 <!-- Collapsed Hamburger -->
                 <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#app-navbar-collapse">
                     <span class="sr-only">Toggle Navigation</span>
-                    @if( (null !== Auth::user()) && Auth::user()->hasAnyRole('super_admin', 'admin'))
+                    @if( (null !== Auth::user()) && Auth::user()->hasAnyRole(['super_admin', 'admin']))
                         <span class="icon-bar">{{link_to('admin/user', 'Users')}}</span>
                         {{--<span class="icon-bar">{{link_to('admin/category', 'Categories')}}</span>--}}
 {{--                        <span class="icon-bar">{{link_to('admin/articletypes', 'Article Types')}}</span>--}}
                         <span class="icon-bar">{{link_to('admin/tag', 'Article Tags')}}</span>
                     @endif
-                    @if((null !== Auth::user()) && Auth::user()->hasAnyRole('super_admin', 'admin', 'editor'))
+                    @if((null !== Auth::user()) && Auth::user()->hasAnyRole(['super_admin', 'admin', 'editor', 'main_editor', 'chefeditor', 'auth_editor']))
                         <span class="icon-bar">{{link_to('admin/article', 'Articles')}}</span>
                     @endif
                 </button>
@@ -45,13 +44,13 @@
             <div class="collapse navbar-collapse" id="app-navbar-collapse">
                 <!-- Left Side Of Navbar -->
                 <ul class="nav navbar-nav">
-                    @if( (null !== Auth::user()) && Auth::user()->hasAnyRole('super_admin', 'admin'))
+                    @if( (null !== Auth::user()) && Auth::user()->hasAnyRole(['super_admin', 'admin']))
                         <li>{{link_to('admin/user', '用户')}}</li>
 {{--                        <li>{{link_to('admin/category', '类别')}}</li>--}}
 {{--                        <li>{{link_to('admin/articletypes', '类型')}}</li>--}}
                         <li>{{link_to('admin/tag', '标签')}}</li>
                     @endif
-                    @if((null !== Auth::user()) && Auth::user()->hasAnyRole('super_admin', 'admin', 'editor'))
+                    @if((null !== Auth::user()) && Auth::user()->hasAnyRole(['super_admin', 'admin', 'editor', 'main_editor', 'chef_editor', 'auth_editor']))
                         <li>{{link_to('admin/article', '文章')}}</li>
                     @endif
                 </ul>
