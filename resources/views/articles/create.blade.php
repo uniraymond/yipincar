@@ -58,7 +58,7 @@
 
                             <div>
                                 <label class="col-lg-12 col-md-12 col-sm-12">选择关键字</label>
-                                <select class="col-lg-12 col-md-12 col-sm-12" name="tag_ids[]" multiple>
+                                <select class="col-lg-12 col-md-12 col-sm-12 form-control" name="tag_ids[]" multiple >
                                     @foreach ($tags as $tag)
                                         <option value="{{$tag->id}}">{{$tag->name}}</option>
                                     @endforeach
@@ -66,8 +66,9 @@
                             </div>
 
                             <div>
-                                <label class="col-lg-2 col-md-2 col-sm-2 pull-left">发布</label>
-                                <input class="col-lg-1 col-md-1 col-sm-1 pull-left published" type="checkbox" name="published" />
+                                <label class="col-lg-2 col-md-2 col-sm-2 pull-left">
+                                    <input class="col-lg-1 col-md-1 col-sm-1 pull-left published" type="checkbox" name="published" />发布
+                                </label>
                             </div>
                         </div>
                         {!! Form::token() !!}

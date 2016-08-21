@@ -65,7 +65,7 @@
 
                                 <div>
                                     <label class="col-lg-12 col-md-12 col-sm-12">选择标签(可以多选)</label>
-                                    <select class="col-lg-12 col-md-12 col-sm-12" name="tag_ids[]" multiple>
+                                    <select class="col-lg-12 col-md-12 col-sm-12 form-control" name="tag_ids[]" multiple >
                                         @foreach ($tags as $tag)
                                             <option @if (isset($currentTags)) {{ in_array($tag->id, $currentTags) ? 'selected' : '' }} @endif value="{{$tag->id}}">{{$tag->name}}</option>
                                         @endforeach
@@ -73,8 +73,9 @@
                                 </div>
 
                                 <div>
-                                    <label class="col-lg-2 col-md-2 col-sm-2 pull-left">发布</label>
-                                    <input class="col-lg-1 col-md-1 col-sm-1 pull-left published" type="checkbox" name="published"  />
+                                    <label class="col-lg-2 col-md-2 col-sm-2 pull-left">
+                                        <input class="col-lg-1 col-md-1 col-sm-1 pull-left published" type="checkbox" name="published"  />发布
+                                    </label>
                                 </div>
                             </div>
                             {!! Form::token() !!}
@@ -90,39 +91,61 @@
     </div>
 @endsection
 
+@section('script')
+    @parent
+    <script src="/src/js/vendor/tinymce/js/tinymce/tinymce.min.js"></script>
+    <script>
+        var editor_config = {
+            height: "350",
+            path_absolute : "{{ URL::to('/') }}/",
+            selector: "textarea#content",
+            plugins : 'link image imagetools preview',
+            menubar: false,
+            toolbar: 'undo redo | image',
+            relative_urls: false,
+            file_browser_callback_types: 'image media',
+            file_browser_callback : function(field_name, url, type, win) {
+                var x = window.innerWidth || document.documentElement.clientWidth || document.getElementsByTagName('body')[0].clientWidth;
+                var y = window.innerHeight|| document.documentElement.clientHeight|| document.getElementsByTagName('body')[0].clientHeight;
 
-<script src="/src/js/vendor/tinymce/js/tinymce/tinymce.min.js"></script>
-<script>
-    var editor_config = {
-        height: "350",
-        path_absolute : "{{ URL::to('/') }}/",
-        selector: "textarea#content",
-        plugins : 'link image imagetools preview',
-        menubar: false,
-        toolbar: 'undo redo | image',
-        relative_urls: false,
-        file_browser_callback_types: 'image media',
-        file_browser_callback : function(field_name, url, type, win) {
-            var x = window.innerWidth || document.documentElement.clientWidth || document.getElementsByTagName('body')[0].clientWidth;
-            var y = window.innerHeight|| document.documentElement.clientHeight|| document.getElementsByTagName('body')[0].clientHeight;
+                var cmsURL = editor_config.path_absolute + 'laravel-filemanager?field_name=' + field_name;
+                if (type == 'image') {
+                    cmsURL = cmsURL + "&type=Images";
+                } else {
+                    cmsURL = cmsURL + "&type=Files";
+                }
 
-            var cmsURL = editor_config.path_absolute + 'laravel-filemanager?field_name=' + field_name;
-            if (type == 'image') {
-                cmsURL = cmsURL + "&type=Images";
-            } else {
-                cmsURL = cmsURL + "&type=Files";
-            }
+                tinyMCE.activeEditor.windowManager.open({
+                    file : cmsURL,
+                    title : 'Filemanager',
+                    width : x * 0.8,
+                    height : y * 0.8,
+                    resizable : "yes",
+                    close_previous : "no"
+                });
+            },
+        };
 
-            tinyMCE.activeEditor.windowManager.open({
-                file : cmsURL,
-                title : 'Filemanager',
-                width : x * 0.8,
-                height : y * 0.8,
-                resizable : "yes",
-                close_previous : "no"
+        tinymce.init(editor_config);
+
+        var changeFlag=false;
+        //标识文本框值是否改变，为true，标识已变
+        $(document).ready(function(){
+            //文本框值改变即触发
+            $("input[type='text']").change(function(){
+                changeFlag=true;
             });
-        },
-    };
+            //文本域改变即触发
+            $("textarea").change(function(){
+                changeFlag=true;
+            });
+        });
 
-    tinymce.init(editor_config);
-</script>
+        //离开页面时保存文档
+        window.onbeforeunload = function() {
+            if(changeFlag ==true){
+                return confirm("页面值已经修改，是否要保存？");
+            }
+        }
+    </script>
+@endsection

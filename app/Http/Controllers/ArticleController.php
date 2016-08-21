@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\ArticleStatus;
 use App\ArticleStatusCheck;
+use App\Yipinlog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB as DB;
 use Illuminate\Http\Response;
@@ -23,7 +24,7 @@ class ArticleController extends Controller
   {
     //website
     $articleType = ArticleTypes::first();
-    $articles = Article::where('type_id', $articleType->id)->paginate(5);
+    $articles = Article::where('type_id', $articleType->id)->orderBy('created_at', 'desc')->paginate(5);
     return view('articles/index', ['articles'=>$articles]);
   }
 
@@ -107,6 +108,14 @@ class ArticleController extends Controller
     $published = $request['published'] ? 1 : 0;
 
     $article = Article::find($id);
+
+    $log['origin'] = 'Article Title: '. $article->title. '; ';
+    $log['origin'] .= 'Article Content: '. $article->content . '; ';
+    $log['origin'] .= 'Article Description: '. $article->description . '; ';
+    $log['origin'] .= 'Article Category: '. $article->category->name . '; ';
+    $log['origin'] .= 'Article Published: '. $article->published . '; ';
+    //type tag haven't been done
+
     $article->title = $title;
     $article->content = $content;
     $article->description = $description;
@@ -115,6 +124,12 @@ class ArticleController extends Controller
     $article->category_id = $categoryId;
     $article->published = $published;
     $article->save();
+
+    $log['target'] = 'Article Title: '. $article->title. '; ';
+    $log['target'] .= 'Article Content: '. $article->content . '; ';
+    $log['target'] .= 'Article Description: '. $article->description . '; ';
+    $log['target'] .= 'Article Category: '. $article->category->name . '; ';
+    $log['target'] .= 'Article Published: '. $article->published . '; ';
 
     $currentTagIds = DB::table('article_tags')->where('article_id', $id)->lists('tag_id', 'id');
 
@@ -163,6 +178,15 @@ class ArticleController extends Controller
         $article_image->delete();
       }
     }
+
+    $authuser = $request->user();
+
+    $log['name'] = 'Update Article';
+    $log['action'] = 'Update article - '. $article->title;
+    $log['action_id'] = $article->id;
+    $log['created_by'] = $authuser->id;
+
+    Yipinlog::createlog($log);
 
     $request->session()->flash('status', 'Article: '. $title .' has been updated!');
 
@@ -267,6 +291,22 @@ class ArticleController extends Controller
         break;
       }
     }
+
+    $log['name'] = 'Create Article';
+    $log['action'] = 'Create article - '. $article->title;
+    $log['action_id'] = $article->id;
+    $log['created_by'] = $authuser->id;
+    $log['comment'] = 'comment';
+
+    $log['origin'] = 'Article Title: '. $article->title. '; ';
+    $log['origin'] .= 'Article Content: '. $article->content . '; ';
+    $log['origin'] .= 'Article Description: '. $article->description . '; ';
+    $log['origin'] .= 'Article Category: '. $article->categories->name . '; ';
+    $log['origin'] .= 'Article Published: '. $article->published . '; ';
+
+    $log['target'] = $log['origin'];
+
+    Yipinlog::createlog($log);
 
     $request->session()->flash('status', 'Article: '. $title .' has been added!');
     return redirect('admin/article');
