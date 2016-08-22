@@ -77,35 +77,36 @@ class ArticleController extends Controller
     $article = Article::find($id);
     $authuser = $request->user();
 
-//    if ($article->created_by != $authuser->id || $authuser->Role) {
-//      $request->session()->flash('status', '您不是文章的作者,不能编辑此文章.');
-//      return redirect('admin/article/'.$id);
-//    }
-    $categories = Category::where('category_id', '<>', 0)->orderBy('category_id')->get();
+    if ($article->created_by == $authuser->id || $authuser->hasAnyRole(['super_admin', 'admin', 'chef_editor', 'main_editor'])) {
+      $categories = Category::where('category_id', '<>', 0)->orderBy('category_id')->get();
 
-    $tags = Tags::all();
+      $tags = Tags::all();
 
-    $tagString = '';
+      $tagString = '';
 
-    foreach ($tags as $tag) {
-      $tagString .= '"'.$tag->name . '", ';
+      foreach ($tags as $tag) {
+        $tagString .= '"' . $tag->name . '", ';
+      }
+
+      $currentTags = array();
+      $currentTagString = '';
+      foreach ($article->tags as $tag) {
+        $currentTags[] = $tag->id;
+        $currentTagString .= $tag->name . ', ';
+      }
+
+      return view('articles/edit', [
+          'article' => $article,
+          'categories' => $categories,
+          'tags' => $tags,
+          'currentTags' => $currentTags,
+          'tagString' => $tagString,
+          'currentTagString' => $currentTagString
+      ]);
+    } else {
+      $request->session()->flash('status', '您不是文章的作者,不能编辑此文章.');
+      return redirect('admin/article/'.$id);
     }
-
-    $currentTags = array();
-    $currentTagString = '';
-    foreach ($article->tags as $tag) {
-      $currentTags[] = $tag->id;
-      $currentTagString .= $tag->name .', ';
-    }
-
-    return view('articles/edit', [
-        'article' => $article,
-        'categories' => $categories,
-        'tags' => $tags,
-        'currentTags' => $currentTags,
-        'tagString' => $tagString,
-        'currentTagString' => $currentTagString
-    ]);
   }
 
   public function update(Request $request, $id)

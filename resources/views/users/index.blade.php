@@ -8,9 +8,11 @@
             </div>
 
             {{--new blog link--}}
-            {{--<div class="col-lg-2 col-md-2 col-sm-2 pull-right clearfix">--}}
-                {{--{{ link_to('admin/user/create', '添加', ['class'=>'btn btn-default']) }}--}}
-            {{--</div>--}}
+            @if (Auth::user()->hasAnyRole(['super_admin', 'admin']))
+            <div class="col-lg-2 col-md-2 col-sm-2 pull-right clearfix">
+                {{ link_to('admin/user/create', '添加', ['class'=>'btn btn-default']) }}
+            </div>
+            @endif
 
             {{--flash alert--}}
             @if ($success = Session::get('status'))
@@ -27,6 +29,8 @@
                     <tr>
                         <th>用户名</th>
                         <th>电子邮件</th>
+                        <th>权限</th>
+                        <th>编辑</th>
                         <th>删除</th>
                     </tr>
                     </thead>
@@ -37,7 +41,12 @@
                         <tr>
                             <td>{{ $user->name }}</td>
                             <td><span id="email_{{ $user->id }}">{{ $user->email }}</span></td>
-                            {{--<td><a class="btn btn-default" href="/admin/user/{{ $user->id }}/edit" id="editBtn_{{ $user->id }}">编辑</a></td>--}}
+                            <td>
+                                @foreach($user->roles as $ur)
+                                    {{ $ur->description }}
+                                @endforeach
+                            </td>
+                            <td><a class="btn btn-default" href="/admin/user/{{ $user->id }}/edit" id="editBtn_{{ $user->id }}">编辑</a></td>
                             <td>
                                 {!! Form::open(array('url' => 'admin/user/'.$user->id, 'class' => 'form', 'method'=>'delete', 'onsubmit'=>'return confirm("Confirm to delete this user?");')) !!}
                                 {!! Form::text('id', $user->id, array('hidden'=>'hidden', 'readonly' => true)) !!}

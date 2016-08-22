@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Role;
+use App\UserRoles;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -37,9 +39,10 @@ class UserController extends Controller
     public function create(Request $request)
     {
         $auth = $request->user();
+        $roles = Role::all();
         $authView = $auth->hasAnyRole(['super_admin', 'admin']);
         if ($authView) {
-            return view('user/create');
+            return view('users/create', ['roles'=>$roles]);
         }
         return redirect('/');
     }
@@ -52,7 +55,18 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $roleIds = $request['roles'];
+        $new_user =  User::create([
+            'name' => $request['name'],
+            'email' => $request['email'],
+            'password' => bcrypt($request['password']),
+        ]);
+        foreach($roleIds as $roleId) {
+            $new_user->roles()->attach($roleId);
+        }
+
+        $request->session()->flash('status', '成功创建用户: '. $new_user->name);
+        return redirect('admin/user');
     }
 
     /**
@@ -77,8 +91,9 @@ class UserController extends Controller
         $auth = $request->user();
         $authView = $auth->hasAnyRole(['super_admin', 'admin']);
         if ($authView) {
+            $roles = Role::all();
             $user = User::findorFail($id);
-            return view('user/create', ['user'=> $user]);
+            return view('users/edit', ['user'=> $user, 'roles'=>$roles]);
         }
         return redirect('/');
     }
@@ -92,7 +107,41 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $roleIds = $request['roles'];
+        $roles = Role::all();
+        $currentUser = User::find($id);
+        $currentUserRoles = $currentUser->userrole;
+        $currentRoleIds = array();
+
+        foreach ($currentUserRoles as $currUserRole) {
+            $currentRoleIds[] = $currUserRole->role_id;
+        }
+
+        foreach ($roles as $role) {
+            $allRoleIds[] = $role->id;
+        }
+        foreach($roleIds as $roleId) {
+            if (in_array($roleId, $allRoleIds) &&
+                !(in_array($roleId, $currentRoleIds))) {
+                $currentUser->roles()->attach($roleId);
+            }
+        }
+
+        foreach ($currentRoleIds as $cid) {
+            if (!in_array($cid, $roleIds)) {
+                $currentUser->roles()->detach($cid);
+            }
+        }
+
+            $currentUser->name = $request['name'];
+            $currentUser->email = $request['email'];
+            if ($request['password']) {
+                $currentUser->password = bcrypt($request['password']);
+            }
+            $currentUser->save();
+
+        $request->session()->flash('status', '用户: '. $currentUser->name .'升级资料成功!');
+        return redirect('admin/user');
     }
 
     /**
@@ -109,5 +158,21 @@ class UserController extends Controller
 
         $request->session()->flash('status', 'User: '. $userName .' has been removed!');
         return redirect('admin/user');
+    }
+
+
+    /**
+     * Get a validator for an incoming registration request.
+     *
+     * @param  array  $data
+     * @return \Illuminate\Contracts\Validation\Validator
+     */
+    protected function validator(array $data)
+    {
+        return Validator::make($data, [
+            'name' => 'required|max:255',
+            'email' => 'required|email|max:255|unique:users',
+            'password' => 'required|min:6|confirmed',
+        ]);
     }
 }
