@@ -78,7 +78,7 @@
 
                                 <div>
                                     <label class="col-lg-2 col-md-2 col-sm-2 pull-left">
-                                        <input class="col-lg-1 col-md-1 col-sm-1 pull-left published" type="checkbox" name="published"  />发布
+                                        <input class="col-lg-1 col-md-1 col-sm-1 pull-left published" type="checkbox" name="published"  />发表草稿
                                     </label>
                                 </div>
                             </div>
