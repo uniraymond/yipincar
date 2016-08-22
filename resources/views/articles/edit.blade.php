@@ -1,5 +1,10 @@
 @extends('layouts.app')
-
+@section('style')
+    @parent
+    <link rel="stylesheet" href="/src/css/jquery-ui.min.css">
+    <link rel="stylesheet" href="/src/css/jquery-ui.structure.min.css">
+    <link rel="stylesheet" href="/src/css/jquery-ui.theme.min.css">
+@endsection
 @section('content')
     <div class="container">
         <div class="row">
@@ -64,12 +69,11 @@
                                 </div>
 
                                 <div>
-                                    <label class="col-lg-12 col-md-12 col-sm-12">选择标签(可以多选)</label>
-                                    <select class="col-lg-12 col-md-12 col-sm-12 form-control" name="tag_ids[]" multiple >
-                                        @foreach ($tags as $tag)
-                                            <option @if (isset($currentTags)) {{ in_array($tag->id, $currentTags) ? 'selected' : '' }} @endif value="{{$tag->id}}">{{$tag->name}}</option>
-                                        @endforeach
-                                    </select>
+                                    <label class="col-lg-12 col-md-12 col-sm-12">选择标签(按空格键会有提示)</label>
+                                    <input id="tags" name="tags" class="col-lg-12 col-md-12 col-sm-12 form-control" placeholder="选择标签" value="{!! $currentTagString !!}" />
+                                    <div class="col-lg-12 col-md-12 col-sm-12 highlight">
+                                        <span><small>提示现有的标签: {!! $tagString !!}</small></span>
+                                    </div>
                                 </div>
 
                                 <div>
@@ -147,5 +151,49 @@
                 return confirm("页面值已经修改，是否要保存？");
             }
         }
+    </script>
+
+    <script src="/src/js/jquery-ui.min.js" ></script>
+    <script>
+        //autocomplete
+        jQuery( function() {
+            var availableTags = [ {!! $tagString !!} ];
+            function split( val ) {
+                return val.split( /,\s*/ );
+            }
+            function extractLast( term ) {
+                return split( term ).pop();
+            }
+
+            jQuery('#tags').on( "keydown", function( event ) { console.log('click');
+                        if ( event.keyCode === jQuery.ui.keyCode.TAB &&
+                                jQuery( this ).autocomplete( "instance" ).menu.active ) {
+                            event.preventDefault();
+                        }
+                    })
+                    .autocomplete({
+                        minLength: 0,
+                        source: function( request, response ) {
+                            // delegate back to autocomplete, but extract the last term
+                            response( jQuery.ui.autocomplete.filter(
+                                    availableTags, extractLast( request.term ) ) );
+                        },
+                        focus: function() {
+                            // prevent value inserted on focus
+                            return false;
+                        },
+                        select: function( event, ui ) {
+                            var terms = split( this.value );
+                            // remove the current input
+                            terms.pop();
+                            // add the selected item
+                            terms.push( ui.item.value );
+                            // add placeholder to get the comma-and-space at the end
+                            terms.push( "" );
+                            this.value = terms.join( ", " );
+                            return false;
+                        }
+                    });
+        } );
     </script>
 @endsection

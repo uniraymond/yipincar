@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\ArticleStatus;
 use App\ArticleStatusCheck;
+use App\Tags;
+use App\User;
 use App\Yipinlog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB as DB;
@@ -75,17 +77,25 @@ class ArticleController extends Controller
     $article = Article::find($id);
     $authuser = $request->user();
 
-    if ($article->created_by != $authuser->id) {
-
-      $request->session()->flash('status', '您不是文章的作者,不能编辑此文章.');
-      return redirect('admin/article/'.$id);
-    }
+//    if ($article->created_by != $authuser->id || $authuser->Role) {
+//      $request->session()->flash('status', '您不是文章的作者,不能编辑此文章.');
+//      return redirect('admin/article/'.$id);
+//    }
     $categories = Category::where('category_id', '<>', 0)->orderBy('category_id')->get();
-    
-    $tags = DB::table('tags')->get();
-    $currentTags = null;
+
+    $tags = Tags::all();
+
+    $tagString = '';
+
+    foreach ($tags as $tag) {
+      $tagString .= '"'.$tag->name . '", ';
+    }
+
+    $currentTags = array();
+    $currentTagString = '';
     foreach ($article->tags as $tag) {
       $currentTags[] = $tag->id;
+      $currentTagString .= $tag->name .', ';
     }
 
     return view('articles/edit', [
@@ -93,6 +103,8 @@ class ArticleController extends Controller
         'categories' => $categories,
         'tags' => $tags,
         'currentTags' => $currentTags,
+        'tagString' => $tagString,
+        'currentTagString' => $currentTagString
     ]);
   }
 
@@ -106,13 +118,20 @@ class ArticleController extends Controller
 //    $typeId = $request['type_id'];
     $categoryId = $request['category_id'];
     $published = $request['published'] ? 1 : 0;
+    $tags = preg_replace('/^(\w+)(\d+)(\x4E00-\x9FCF)/', ',', $request['tags']);
+    $tags = preg_replace("/。/",",",$tags);
+    $tags = preg_replace("/，/",",",$tags);
+    $tags = preg_replace("/；/",",",$tags);
+    $tags = explode(',', $tags);
+    $tags = array_map('trim', $tags);
+    $tags = array_unique($tags);
 
     $article = Article::find($id);
 
     $log['origin'] = 'Article Title: '. $article->title. '; ';
     $log['origin'] .= 'Article Content: '. $article->content . '; ';
     $log['origin'] .= 'Article Description: '. $article->description . '; ';
-    $log['origin'] .= 'Article Category: '. $article->category->name . '; ';
+    $log['origin'] .= 'Article Category: '. $article->categories->name . '; ';
     $log['origin'] .= 'Article Published: '. $article->published . '; ';
     //type tag haven't been done
 
@@ -128,25 +147,40 @@ class ArticleController extends Controller
     $log['target'] = 'Article Title: '. $article->title. '; ';
     $log['target'] .= 'Article Content: '. $article->content . '; ';
     $log['target'] .= 'Article Description: '. $article->description . '; ';
-    $log['target'] .= 'Article Category: '. $article->category->name . '; ';
+    $log['target'] .= 'Article Category: '. $article->categories->name . '; ';
     $log['target'] .= 'Article Published: '. $article->published . '; ';
 
     $currentTagIds = DB::table('article_tags')->where('article_id', $id)->lists('tag_id', 'id');
 
-    // add new tags to article tags
-    foreach($request['tag_ids'] as $tag_id) {
-      if (!in_array($tag_id, $currentTagIds)) {
-        $article_tag = new ArticleTags();
-        $article_tag->article_id = $article->id;
-        $article_tag->tag_id = $tag_id;
-        $article_tag->created_by = $authuser->id;
-        $article_tag->save();
+    $allTagArray = array();
+    $allTags = Tags::all();
+    foreach ($allTags as $allTag) {
+      $allTagArray[$allTag->id] = $allTag->name;
+    }
+    $tagIdArray = array();
+    foreach($tags as $tag) {
+      if (in_array($tag, $allTagArray)) {
+        $tagId = array_search($tag, $allTagArray);
+      } else {
+        $tagdb = new Tags();
+        $tagdb->name = $tag;
+        $tagdb->save();
+        $tagId = $tagdb->id;
       }
+      // add new tags to article tags
+        if (!in_array($tagId, $currentTagIds)) {
+          $article_tag = new ArticleTags();
+          $article_tag->article_id = $article->id;
+          $article_tag->tag_id = $tagId;
+          $article_tag->created_by = $authuser->id;
+          $article_tag->save();
+        }
+      $tagIdArray[] = $tagId;
     }
 
     // remove tags from article tags
     foreach($currentTagIds as $currentId => $currentTagId) {
-      if (!in_array($currentTagId, $request['tag_ids'])) {
+      if (!in_array($currentTagId, $tagIdArray)) {
         ArticleTags::find($currentId)->delete();
       }
     }
@@ -185,6 +219,7 @@ class ArticleController extends Controller
     $log['action'] = 'Update article - '. $article->title;
     $log['action_id'] = $article->id;
     $log['created_by'] = $authuser->id;
+    $log['comment'] = '';
 
     Yipinlog::createlog($log);
 
@@ -240,12 +275,18 @@ class ArticleController extends Controller
   {
     $categories = DB::table('categories')->where('category_id','<>', 0)->get();
     $articletypes = DB::table('article_types')->get();
-    $tags = DB::table('tags')->get();
+    $tags = Tags::all();
 
+    $tagString = '';
+
+    foreach ($tags as $tag) {
+      $tagString .= '"'.$tag->name . '", ';
+    }
     return view('articles/create', [
             'articletypes' => $articletypes,
             'categories' => $categories,
-            'tags' => $tags
+            'tags' => $tags,
+            'tagString' => $tagString,
         ]);
   }
 
@@ -258,6 +299,13 @@ class ArticleController extends Controller
     $typeId = $request['type_id'];
     $categoryId = $request['category_id'];
     $published = $request['published'] ? 1 : 0;
+    $tags = preg_replace('/^(\w+)(\d+)(\x4E00-\x9FCF)/', ',', $request['tags']);
+    $tags = preg_replace("/。/",",",$tags);
+    $tags = preg_replace("/，/",",",$tags);
+    $tags = preg_replace("/；/",",",$tags);
+    $tags = explode(',', $tags);
+    $tags = array_map('trim', $tags);
+    $tags = array_unique($tags);
 
     $article = new Article();
     $article->title = $title;
@@ -269,11 +317,24 @@ class ArticleController extends Controller
     $article->published = $published;
     $article->save();
 
+    $allTagArray = array();
+    $allTags = Tags::all();
+    foreach ($allTags as $allTag) {
+      $allTagArray[$allTag->id] = $allTag->name;
+    }
 
-    foreach($request['tag_ids'] as $tag_id) {
+    foreach($tags as $tag) {
+      if (in_array($tag, $allTagArray)) {
+        $tagId = array_search($tag, $allTagArray);
+      } else {
+        $tagdb = new Tags();
+        $tagdb->name = $tag;
+        $tagdb->save();
+        $tagId = $tagdb->id;
+      }
       $article_tag = new ArticleTags();
       $article_tag->article_id = $article->id;
-      $article_tag->tag_id = $tag_id;
+      $article_tag->tag_id = $tagId;
       $article_tag->created_by = $authuser->id;
       $article_tag->save();
     }

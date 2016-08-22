@@ -135,3 +135,9 @@ body {
 .bs-callout-info h4 {
     color: #5bc0de;
 }
+
+.highlight {
+    background: #eee;
+    padding: 5px;
+    margin: 5px 0;
+}
