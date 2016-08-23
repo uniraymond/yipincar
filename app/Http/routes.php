@@ -59,3 +59,4 @@ Route::group(['middleware'=>'auth', 'prefix'=>'admin'], function() {
     Route::post('api/updateImage', 'AdvsettingController@updateImage');
     Route::post('api/uploadImage', 'AdvsettingController@uploadImage');
 });
+

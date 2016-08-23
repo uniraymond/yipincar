@@ -208,19 +208,21 @@ class UserController extends Controller
                 'name' => 'required|max:255',
                 'email' => 'required|email|max:255|unique:users',
                 'password' => 'required|min:6',
-                'password-confirm' => 'required|min:6',
+                'password_confirmation' => 'required|min:6|confirmed',
                 'roles' => 'required'
             ], $this->messages($new));
         } elseif($checkemail){
             return Validator::make($data, [
                 'name' => 'required|max:255',
                 'email' => 'required|email|max:255|unique:users',
+                'password_confirmation' => 'confirmed',
                 'roles' => 'required'
             ], $this->messages());
         } else{
             return Validator::make($data, [
                 'name' => 'required|max:255',
                 'email' => 'required|email|max:255',
+                'password_confirmation' => 'confirmed',
                 'roles' => 'required'
             ], $this->messages());
         }
@@ -232,15 +234,27 @@ class UserController extends Controller
         if($new) {
             return [
                 'name.required' => '名字是必填的',
+                'name.max' => '名字太长了',
                 'email.required'  => '电子邮件是必填的',
+                'email.email'  => '电子邮件格式不正确',
+                'email.max'  => '电子邮件太长了',
+                'email.unique'  => '电子邮件已经被注册过了',
                 'password.required'  => '密码是必填的,最少6个字符',
-                'password-confirm.required'  => '确定密码是必填的,最少6个字符',
+                'password.min'  => '密码最少6个字符',
+                'password_confirmation.required'  => '确定密码是必填的,最少6个字符',
+                'password_confirmation.min'  => '确定密码最少是6个字符',
+                'password_confirmation.confirmed'  => '两个密码不一样',
                 'roles.required'  => '角色是必选的',
             ];
         } else{
             return [
                 'name.required' => '名字是必填的',
+                'name.max' => '名字太长了',
                 'email.required'  => '电子邮件是必填的',
+                'email.email'  => '电子邮件格式不正确',
+                'email.max'  => '电子邮件太长了',
+                'email.unique'  => '电子邮件已经被注册过了',
+                'password_confirmation.confirmed'  => '两个密码不一样',
                 'roles.required'  => '角色是必选的',
             ];
         }
