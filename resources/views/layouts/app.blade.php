@@ -62,7 +62,7 @@
                     <!-- Authentication Links -->
                     @if ((null == Auth::user()) && Auth::guest())
                         <li><a href="{{ url('/login') }}">登陆</a></li>
-                        <li><a href="{{ url('/register') }}">注册</a></li>
+{{--                        <li><a href="{{ url('/register') }}">注册</a></li>--}}
                     @else
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">

@@ -38,15 +38,15 @@
                             </div>
                         </div>
 
-                        <div class="form-group">
-                            <div class="col-md-6 col-md-offset-4">
-                                <div class="checkbox">
-                                    <label>
-                                        <input type="checkbox" name="remember"> 记住
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
+                        {{--<div class="form-group">--}}
+                            {{--<div class="col-md-6 col-md-offset-4">--}}
+                                {{--<div class="checkbox">--}}
+                                    {{--<label>--}}
+                                        {{--<input type="checkbox" name="remember"> 记住--}}
+                                    {{--</label>--}}
+                                {{--</div>--}}
+                            {{--</div>--}}
+                        {{--</div>--}}
 
                         <div class="form-group">
                             <div class="col-md-6 col-md-offset-4">
@@ -54,7 +54,7 @@
                                     <i class="fa fa-btn fa-sign-in"></i> 登录
                                 </button>
 
-                                <a class="btn btn-link" href="{{ url('/password/reset') }}">忘记密码?</a>
+{{--                                <a class="btn btn-link" href="{{ url('/password/reset') }}">忘记密码?</a>--}}
                             </div>
                         </div>
                     </form>
