@@ -81,7 +81,8 @@ class ArticleController extends Controller
       $categories = Category::where('category_id', '<>', 0)->orderBy('category_id')->get();
 
       $tags = Tags::all();
-
+      $articletypes = ArticleTypes::all()
+      ;
       $tagString = '';
 
       foreach ($tags as $tag) {
@@ -98,6 +99,7 @@ class ArticleController extends Controller
       return view('articles/edit', [
           'article' => $article,
           'categories' => $categories,
+          'articletypes' => $articletypes,
           'tags' => $tags,
           'currentTags' => $currentTags,
           'tagString' => $tagString,
@@ -113,6 +115,12 @@ class ArticleController extends Controller
   {
     $hasImage = false;
     $authuser = $request->user();
+
+    $this->validate($request, [
+      'title' => 'required|posts',
+      'content'=> 'required'
+    ]);
+
     $title = $request->input('title');
     $content = trim($request['content']);
     $description = $request['description'] ? $request['description'] : trim(substr($content, 0, 20));
@@ -294,6 +302,12 @@ class ArticleController extends Controller
   public function store(Request $request)
   {
     $authuser = $request->user();
+
+    $this->validate($request, [
+        'name' => 'required|norpeat|posts',
+        'content'=> 'required'
+    ]);
+
     $title = $request->input('title');
     $content = trim($request['content']);
     $description = $request['description'] ? $request['description'] : trim(substr($content, 0, 20));

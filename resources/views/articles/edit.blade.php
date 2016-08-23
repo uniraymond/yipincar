@@ -26,7 +26,7 @@
                             <div class="form-group  col-lg-12 col-md-12 col-sm-12" >
                                 <div class="{{ isset($errors) && $errors->has('title') ? 'has-error clearfix' : 'clearfix' }}" style="margin-bottom: 5px" >
                                     <label class="col-lg-12 col-md-12 col-sm-12">标题</label>
-                                    <input class="col-lg-12 col-md-12 col-sm-12" type="text" id="title" name="title" required value="{{ $article->title }}"/>
+                                    <input class="col-lg-12 col-md-12 col-sm-12" type="text" id="title" name="title" required  value="{{ $article->title }}"/>
                                     <span id="helpBlock2" class="help-block">{{ $errors->first('title')}}</span>
                                 </div>
 
@@ -51,20 +51,15 @@
                                                 {{$category->name}}
                                             </option>
                                         @endforeach
-                                        {{--{{ $hasGroup = false }}--}}
-                                        {{--@foreach ($categories as $category)--}}
-                                            {{--@if (count($category->categories))--}}
-                                                {{--{{ $hasGroup = true }}--}}
-                                                {{--<optgroup label="{{ $category->name }}">--}}
-                                            {{--@else--}}
-                                                    {{--<option {{ $article->category_id == $category->id ? 'selected' : '' }} value="{{$category->id}}">--}}
-                                                        {{--{{$category->name}}--}}
-                                                    {{--</option>--}}
-                                            {{--@endif--}}
-                                        {{--@endforeach--}}
-                                        {{--@if ($hasGroup)--}}
-                                            {{--</optgroup>--}}
-                                        {{--@endif--}}
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <label class="col-lg-12 col-md-12 col-sm-12">选择类型</label>
+                                    <select class="col-lg-12 col-md-12 col-sm-12" name="type_id">
+                                        @foreach ($articletypes as $type)
+                                            <option {{ $article->type_id == $type->id ? 'selected' : '' }} value="{{$type->id}}">{{$type->name}}</option>
+                                        @endforeach
                                     </select>
                                 </div>
 
@@ -78,7 +73,7 @@
 
                                 <div>
                                     <label class="col-lg-2 col-md-2 col-sm-2 pull-left">
-                                        <input class="col-lg-1 col-md-1 col-sm-1 pull-left published" type="checkbox" name="published"  />发表草稿
+                                        <input class="col-lg-1 col-md-1 col-sm-1 pull-left published" type="checkbox" name="published"  />提交
                                     </label>
                                 </div>
                             </div>
@@ -146,11 +141,12 @@
         });
 
         //离开页面时保存文档
-        window.onbeforeunload = function() {
-            if(changeFlag ==true){
-                return confirm("页面值已经修改，是否要保存？");
-            }
-        }
+//        jQuery('#submit').submit(
+//        window.onbeforeunload = function() {
+//            if(changeFlag ==true){
+//                return confirm("页面值已经修改，是否要保存？");
+//            }
+//        })
     </script>
 
     <script src="/src/js/jquery-ui.min.js" ></script>

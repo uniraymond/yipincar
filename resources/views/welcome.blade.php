@@ -8,7 +8,7 @@
                 <div class="panel-heading">Dashboard</div>
 
                 <div class="panel-body">
-                    <a href="{{ 'article/create' }}">添加文章</a>
+                    <a href="{{ 'admin/article' }}">文章</a>
                 </div>
             </div>
         </div>

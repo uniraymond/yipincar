@@ -11,6 +11,9 @@ use App\Http\Requests;
 
 use App\User;
 use App\Profile;
+//use Illuminate\Validation\Validator;
+use Validator;
+use App\Http\Controllers\Auth;
 
 class UserController extends Controller
 {
@@ -39,7 +42,7 @@ class UserController extends Controller
     public function create(Request $request)
     {
         $auth = $request->user();
-        $roles = Role::all();
+        $roles = Role::where('name','<>', 'super_admin')->get();
         $authView = $auth->hasAnyRole(['super_admin', 'admin']);
         if ($authView) {
             return view('users/create', ['roles'=>$roles]);
@@ -55,6 +58,19 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
+//        $data['name'] = $request['name'];
+//        $data['email'] = $request['email'];
+//        $data['password'] = $request['password'];
+//        $data['roles'] = $request['roles'];
+
+        $validator = $this->validator($request->all(), $new=true);
+
+        if ($validator->fails()) {
+            $this->throwValidationException(
+                $request, $validator
+            );
+        }
+
         $roleIds = $request['roles'];
         $new_user =  User::create([
             'name' => $request['name'],
@@ -91,7 +107,7 @@ class UserController extends Controller
         $auth = $request->user();
         $authView = $auth->hasAnyRole(['super_admin', 'admin']);
         if ($authView) {
-            $roles = Role::all();
+            $roles = Role::where('name','<>', 'super_admin')->get();
             $user = User::findorFail($id);
             return view('users/edit', ['user'=> $user, 'roles'=>$roles]);
         }
@@ -107,6 +123,19 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $emailChanges = true;
+        $checkemail = User::where('email', $request['email'])->first();
+        if (isset($checkemail) && $id == $checkemail->id)  {
+            $emailChanges = false;
+        }
+        $validator = $this->validator($request->all(), $new=false, $emailChanges);
+
+        if ($validator->fails()) {
+            $this->throwValidationException(
+                $request, $validator
+            );
+        }
+        $auth = $request->user();
         $roleIds = $request['roles'];
         $roles = Role::all();
         $currentUser = User::find($id);
@@ -134,7 +163,12 @@ class UserController extends Controller
         }
 
             $currentUser->name = $request['name'];
-            $currentUser->email = $request['email'];
+
+            $emailUser =  $currentUser->where('email',$request['email'])->get();
+            if ($id !=  $checkemail->id)  {
+                $currentUser->email = $request['email'];
+            }
+
             if ($request['password']) {
                 $currentUser->password = bcrypt($request['password']);
             }
@@ -167,12 +201,50 @@ class UserController extends Controller
      * @param  array  $data
      * @return \Illuminate\Contracts\Validation\Validator
      */
-    protected function validator(array $data)
+    protected function validator(array $data, $new=false, $checkemail=true)
     {
-        return Validator::make($data, [
-            'name' => 'required|max:255',
-            'email' => 'required|email|max:255|unique:users',
-            'password' => 'required|min:6|confirmed',
-        ]);
+        if ($new) {
+            return Validator::make($data, [
+                'name' => 'required|max:255',
+                'email' => 'required|email|max:255|unique:users',
+                'password' => 'required|min:6',
+                'password-confirm' => 'required|min:6',
+                'roles' => 'required'
+            ], $this->messages($new));
+        } elseif($checkemail){
+            return Validator::make($data, [
+                'name' => 'required|max:255',
+                'email' => 'required|email|max:255|unique:users',
+                'roles' => 'required'
+            ], $this->messages());
+        } else{
+            return Validator::make($data, [
+                'name' => 'required|max:255',
+                'email' => 'required|email|max:255',
+                'roles' => 'required'
+            ], $this->messages());
+        }
+
     }
+
+    public function messages($new=false)
+    {
+        if($new) {
+            return [
+                'name.required' => '名字是必填的',
+                'email.required'  => '电子邮件是必填的',
+                'password.required'  => '密码是必填的,最少6个字符',
+                'password-confirm.required'  => '确定密码是必填的,最少6个字符',
+                'roles.required'  => '角色是必选的',
+            ];
+        } else{
+            return [
+                'name.required' => '名字是必填的',
+                'email.required'  => '电子邮件是必填的',
+                'roles.required'  => '角色是必选的',
+            ];
+        }
+    }
+
+
 }
