@@ -26,7 +26,7 @@
                     <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
                         {!! Form::label('name', '名字', array('class'=>'col-md-4 control-label')) !!}
                         <div class="col-md-6">
-                            {!! Form::text('name', $user->name , array('class'=>'form-control', 'placeholder' => '名字')) !!}
+                            {!! Form::text('name', $user->name , array('class'=>'form-control', 'placeholder' => '名字', 'required'=>'required' )) !!}
 
                             @if ($errors->has('name'))
                                     <span class="help-block">
@@ -40,7 +40,7 @@
                     {!! Form::label('email', '电子邮件(用于登录)', array('class'=>'col-md-4 control-label')) !!}
 
                         <div class="col-md-6">
-                            {!! Form::text('email', $user->email , array('class'=>'form-control', 'placeholder' => '电子邮件')) !!}
+                            {!! Form::text('email', $user->email , array('class'=>'form-control', 'placeholder' => '电子邮件', 'required'=>'required' )) !!}
 
                             @if ($errors->has('email'))
                                 <span class="help-block">
