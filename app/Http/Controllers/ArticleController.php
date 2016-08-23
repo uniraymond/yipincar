@@ -117,7 +117,7 @@ class ArticleController extends Controller
     $authuser = $request->user();
 
     $this->validate($request, [
-      'title' => 'required|posts',
+      'title' => 'required',
       'content'=> 'required'
     ]);
 
@@ -131,6 +131,7 @@ class ArticleController extends Controller
     $tags = preg_replace("/。/",",",$tags);
     $tags = preg_replace("/，/",",",$tags);
     $tags = preg_replace("/；/",",",$tags);
+    $tags = rtrim(trim($tags), ',');
     $tags = explode(',', $tags);
     $tags = array_map('trim', $tags);
     $tags = array_unique($tags);
@@ -304,7 +305,7 @@ class ArticleController extends Controller
     $authuser = $request->user();
 
     $this->validate($request, [
-        'name' => 'required|norpeat|posts',
+        'title' => 'required',
         'content'=> 'required'
     ]);
 
@@ -318,6 +319,7 @@ class ArticleController extends Controller
     $tags = preg_replace("/。/",",",$tags);
     $tags = preg_replace("/，/",",",$tags);
     $tags = preg_replace("/；/",",",$tags);
+    $tags = rtrim(trim($tags), ',');
     $tags = explode(',', $tags);
     $tags = array_map('trim', $tags);
     $tags = array_unique($tags);
