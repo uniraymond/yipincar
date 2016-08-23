@@ -17,10 +17,21 @@
                     @endif
                     <div class="panel-body">
                         {!! Form::open(array('url' => 'admin/tag', 'class' => 'form', 'method'=>'post')) !!}
+                        <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
                         {!! Form::label('name', '标题', array('class'=>'col-lg-12 col-md-12 col-sm-12')) !!}
-                        {!! Form::text('name', '' , array('class'=>'name input col-lg-12 col-md-12 col-sm-12', 'placeholder' => '标题')) !!}
+                            <div class="col-md-6">
+                                {!! Form::text('name', '' , array('class'=>'form-control col-lg-12 col-md-12 col-sm-12', 'placeholder' => '标题', 'required'=>'required')) !!}
+                                @if ($errors->has('name'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('name') ? '标题不能为空' : '' }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
                         {!! Form::label('description', '简介', array('class'=>'col-lg-12 col-md-12 col-sm-12')) !!}
-                        {!! Form::text('description', '', array('class' => 'description input col-lg-12 col-md-12 col-sm-12', 'placeholder' => '简介')) !!}
+                        <div class="col-md-6">
+                            {!! Form::text('description', '', array('class' => 'form-control col-lg-12 col-md-12 col-sm-12', 'placeholder' => '简介')) !!}
+                        </div>
                         {!! Form::submit('确定', array('class'=>'btn btn-primary pull-right')) !!}
                         {!! Form::token() !!}
                         {!! Form::close() !!}

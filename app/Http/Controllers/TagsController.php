@@ -39,6 +39,9 @@ class TagsController extends Controller
      */
     public function store(Request $request)
     {
+        $this->validate($request, [
+            'name' => 'required'
+        ]);
         $tag = new Tags;
         $tag->name = $request->name;
         $tag->description = $request->description;
@@ -82,6 +85,9 @@ class TagsController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $this->validate($request, [
+            'name' => 'required'
+        ]);
         $tag = Tags::find($id);
         if ($request->name) {
             $tag->name = $request->name;
