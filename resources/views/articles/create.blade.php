@@ -28,52 +28,74 @@
                         <div class="form-group  col-lg-12 col-md-12 col-sm-12" >
                             <div class="{{ isset($errors) && $errors->has('title') ? 'has-error' : '' }}" >
                                 <label class="col-lg-12 col-md-12 col-sm-12">标题</label>
-                                <input class="col-lg-12 col-md-12 col-sm-12" type="text" id="title" name="title" required />
-                                <span id="helpBlock2" class="help-block">{{ $errors->first('title')}}</span>
+                                <div class="col-md-12">
+                                    <input class="col-lg-12 col-md-12 col-sm-12" type="text" id="title" name="title" required />
+                                    @if ($errors->has('title'))
+                                        <span class="help-block">
+                                        <strong>{{ $errors->first('title') ? '标题不能为空' : ''}}</strong>
+                                    </span>
+                                    @endif
+                                </div>
                             </div>
 
                             <div>
                                 <label class="col-lg-12 col-md-12 col-sm-12">简介</label>
-                                <textarea class="col-lg-12 col-md-12 col-sm-12" type="text" id="description" name="description" placeholder="简介" height="100"></textarea>
+                                <div class="col-md-12">
+                                    <textarea class="col-lg-12 col-md-12 col-sm-12" type="text" id="description" name="description" placeholder="简介" height="100"></textarea>
+                                </div>
                             </div>
 
                             <div class="{{ isset($errors) && $errors->has('content') ? 'has-error' : '' }}" >
                                 <label class="col-lg-12 col-md-12 col-sm-12">内容</label>
                                 <div class="clearfix"></div>
-                                <textarea class="col-lg-12 col-md-12 col-sm-12 form-control my-editor" id="content" name="content" placeholder="详细内容" height="50" ></textarea>
-                                <span id="helpBlock2" class="help-block">{{ $errors->first('content')}}</span>
-                            </div>
-
-                            <div>
-                                <label class="col-lg-12 col-md-12 col-sm-12">选择类别</label>
-                                <select class="col-lg-12 col-md-12 col-sm-12" name="category_id">
-                                    @foreach ($categories as $category)
-                                        <option value="{{$category->id}}">{{$category->name}}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-
-                            <div>
-                                <label class="col-lg-12 col-md-12 col-sm-12">选择类型</label>
-                                <select class="col-lg-12 col-md-12 col-sm-12" name="type_id">
-                                    @foreach ($articletypes as $type)
-                                        <option value="{{$type->id}}">{{$type->name}}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-
-                            <div>
-                                <label class="col-lg-12 col-md-12 col-sm-12">选择标签(按空格键会有提示)</label>
-                                <input id="tags" name="tags" class="col-lg-12 col-md-12 col-sm-12 form-control" placeholder="选择标签" />
-                                <div class="col-lg-12 col-md-12 col-sm-12 highlight">
-                                    <span><small>提示现有的标签: {!! $tagString !!}</small></span>
+                                <div class="col-md-12">
+                                    <textarea class="col-lg-12 col-md-12 col-sm-12 form-control my-editor" id="content" name="content" placeholder="详细内容" height="50" ></textarea>
+                                    @if ($errors->has('content'))
+                                        <span class="help-block">
+                                        <strong>{{ $errors->first('content') ? '内容不能为空' : ''}}</strong>
+                                    </span>
+                                    @endif
                                 </div>
                             </div>
 
                             <div>
-                                <label class="col-lg-2 col-md-2 col-sm-2 pull-left">
-                                    <input class="col-lg-1 col-md-1 col-sm-1 pull-left published" type="checkbox" name="published" />提交
+                                <label class="col-lg-12 col-md-12 col-sm-12">选择类别</label>
+                                <div class="col-md-12">
+                                    <select class="col-lg-12 col-md-12 col-sm-12" name="category_id">
+                                        @foreach ($categories as $category)
+                                            <option value="{{$category->id}}">{{$category->name}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="col-lg-12 col-md-12 col-sm-12">选择类型</label>
+                                <div class="col-md-12">
+                                    <select class="col-lg-12 col-md-12 col-sm-12" name="type_id">
+                                        @foreach ($articletypes as $type)
+                                            <option value="{{$type->id}}">{{$type->name}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="col-lg-12 col-md-12 col-sm-12">选择标签(按空格键会有提示)</label>
+                                <div class="col-md-12">
+                                    <input id="tags" name="tags" class="col-lg-12 col-md-12 col-sm-12 form-control" placeholder="选择标签" />
+                                    <div class="col-lg-12 col-md-12 col-sm-12 highlight">
+                                        <span><small>提示现有的标签: {!! $tagString !!}</small></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <div class="col-md-12">
+                                <label class="col-lg-2 col-md-2 col-sm-2 pull-left published_label">
+                                    <input class="col-lg-1 col-md-1 col-sm-1 pull-left published" type="checkbox" name="published" />  提交
                                 </label>
+                                </div>
                             </div>
                         </div>
                         {!! Form::token() !!}
