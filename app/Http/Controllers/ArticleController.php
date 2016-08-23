@@ -26,7 +26,7 @@ class ArticleController extends Controller
   {
     //website
     $articleType = ArticleTypes::first();
-    $articles = Article::where('type_id', $articleType->id)->orderBy('created_at', 'desc')->paginate(5);
+    $articles = Article::where('type_id', $articleType->id)->orderBy('created_at', 'desc')->paginate(15);
     return view('articles/index', ['articles'=>$articles]);
   }
 
@@ -35,7 +35,7 @@ class ArticleController extends Controller
   {
     //website
     $articleType = ArticleTypes::where('name', 'Advertisment')->first();
-    $articles = Article::where('type_id', $articleType->id)->paginate(5);
+    $articles = Article::where('type_id', $articleType->id)->paginate(15);
     return view('articles/advlist', ['articles'=>$articles]);
   }
 
@@ -44,7 +44,7 @@ class ArticleController extends Controller
   {
     //website
     $articleType = ArticleTypes::where('name', 'video')->first();
-    $articles = Article::where('type_id', $articleType->id)->paginate(5);
+    $articles = Article::where('type_id', $articleType->id)->paginate(15);
     return view('articles/vediolist', ['articles'=>$articles]);
   }
 

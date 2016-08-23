@@ -42,7 +42,7 @@ class CommentController extends Controller
      */
     public function zan($id)
     {
-        $zans = Zan::where('comment_id', $id )->paginate(20);
+        $zans = Zan::where('comment_id', $id )->paginate(15);
         return view('comments/zan', ['zans' => $zans, 'commentId' => $id]);
     }
 
@@ -74,7 +74,7 @@ class CommentController extends Controller
         }
         $request->session()->flash('status', 'Removed zan.');
 
-        $zans = Zan::where('comment_id', $comment_id )->paginate(20);
+        $zans = Zan::where('comment_id', $comment_id )->paginate(15);
         return view('comments/zan', ['zans' => $zans, 'commentId' => $comment_id]);
     }
 
@@ -94,7 +94,7 @@ class CommentController extends Controller
         }
 
         $request->session()->flash('status', 'Removed zan.');
-        $zans = Zan::where('comment_id', $comment_id )->paginate(20);
+        $zans = Zan::where('comment_id', $comment_id )->paginate(15);
 
         return view('comments/zan', ['zans' => $zans, 'commentId' => $comment_id]);
 
