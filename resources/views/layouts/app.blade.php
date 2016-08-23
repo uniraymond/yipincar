@@ -50,10 +50,10 @@
                         <li>{{link_to('admin/user', '用户')}}</li>
 {{--                        <li>{{link_to('admin/category', '类别')}}</li>--}}
 {{--                        <li>{{link_to('admin/articletypes', '类型')}}</li>--}}
-                        <li>{{link_to('admin/tag', '标签')}}</li>
                     @endif
                     @if((null !== Auth::user()) && Auth::user()->hasAnyRole(['super_admin', 'admin', 'editor', 'main_editor', 'chef_editor', 'auth_editor']))
-                        <li>{{link_to('admin/article', '文章')}}</li>
+                            <li>{{link_to('admin/tag', '标签')}}</li>
+                            <li>{{link_to('admin/article', '文章')}}</li>
                     @endif
                 </ul>
 
