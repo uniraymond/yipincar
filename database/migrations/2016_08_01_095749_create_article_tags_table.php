@@ -16,7 +16,8 @@ class CreateArticleTagsTable extends Migration
             $table->increments('id');
             $table->integer('article_id')->references('id')->on('articles')->onDelete('cascade');
             $table->integer('tag_id')->references('id')->on('tags')->onDelete('cascade');
-            $table->timestamps();
+            $table->timestamp('created_at')->default(\DB::raw('CURRENT_TIMESTAMP'));
+            $table->timestamp('updated_at');
             $table->integer('updated_by')->references('id')->on('users')->onDelete('cascade');
             $table->integer('created_by')->references('id')->on('users')->onDelete('cascade');
         });

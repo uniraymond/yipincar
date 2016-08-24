@@ -18,7 +18,8 @@ class CreateZansTable extends Migration
             $table->integer('comment_id')->references('id')->on('zans')->onDelete('cascade');
             $table->string('token');
             $table->integer('comfirmed');
-            $table->timestamps();
+            $table->timestamp('created_at')->default(\DB::raw('CURRENT_TIMESTAMP'));
+            $table->timestamp('updated_at');
         });
     }
 

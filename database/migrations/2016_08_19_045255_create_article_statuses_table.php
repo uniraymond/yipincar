@@ -17,7 +17,8 @@ class CreateArticleStatusesTable extends Migration
             $table->string('name');
             $table->string('title');
             $table->text('comment');
-            $table->timestamps();
+            $table->timestamp('created_at')->default(\DB::raw('CURRENT_TIMESTAMP'));
+            $table->timestamp('updated_at');
         });
     }
 

@@ -17,7 +17,8 @@ class CreateCategoriesTable extends Migration
             $table->string('name');
             $table->string('description');
             $table->integer('category_id')->references('id')->on('categories')->onDelete('cascade');
-            $table->timestamps();
+            $table->timestamp('created_at')->default(\DB::raw('CURRENT_TIMESTAMP'));
+            $table->timestamp('updated_at');
             $table->integer('created_by')->references('id')->on('users')->onDelete('cascade');
             $table->integer('updated_by')->references('id')->on('users')->onDelete('cascade');
         });

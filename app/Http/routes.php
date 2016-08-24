@@ -60,3 +60,7 @@ Route::group(['middleware'=>'auth', 'prefix'=>'admin'], function() {
     Route::post('api/uploadImage', 'AdvsettingController@uploadImage');
 });
 
+Route::group(['prefix'=>'api'], function() {
+    Route::resource('info', 'InfoController');
+});
+

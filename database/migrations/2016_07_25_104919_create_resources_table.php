@@ -18,7 +18,8 @@ class CreateResourcesTable extends Migration
             $table->string('description');
             $table->string('link');
             $table->integer('type_id')->references('id')->on('resource_types')->onDelete('cascade');
-            $table->timestamps();
+            $table->timestamp('created_at')->default(\DB::raw('CURRENT_TIMESTAMP'));
+            $table->timestamp('updated_at');
             $table->integer('updated_by')->references('id')->on('users')->onDelete('cascade');
             $table->integer('created_by')->references('id')->on('users')->onDelete('cascade');
         });

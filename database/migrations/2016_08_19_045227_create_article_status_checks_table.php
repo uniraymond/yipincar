@@ -18,7 +18,8 @@ class CreateArticleStatusChecksTable extends Migration
             $table->integer('article_status_id')->references('id')->on('article_status')->onDelete('cascade');
             $table->text('comment');
             $table->boolean('checked');
-            $table->timestamps();
+            $table->timestamp('created_at')->default(\DB::raw('CURRENT_TIMESTAMP'));
+            $table->timestamp('updated_at');
             $table->integer('created_by')->references('id')->on('users')->onDelete('cascade');
             $table->integer('updated_by')->references('id')->on('users')->onDelete('cascade');
         });
