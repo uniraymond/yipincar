@@ -16,13 +16,13 @@ class DatabaseSeeder extends Seeder
 
         $this->call(RolesTableSeeder::class);
         $this->call(UserTableSeeder::class);
-        $this->call(ArticlesTableSeeder::class);
         $this->call(ArticleTagsTableSeeder::class);
         $this->call(CategoryTableSeeder::class);
         $this->call(ArticleStatusTableSeeder::class);
         $this->call(ArticleTypesTableSeeder::class);
         $this->call(TagTableSeeder::class);
-
+        $this->call(ArticlesTableSeeder::class);
+        
         Model::reguard();
     }
 }
