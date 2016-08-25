@@ -16,6 +16,15 @@
     <link rel="stylesheet" href="/src/css/bootstrap.min.css">
     {{-- <link href="{{ elixir('css/app.css') }}" rel="stylesheet"> --}}
 
+    <!-- Custom CSS -->
+    <link href="/src/css/sb-admin.css" rel="stylesheet">
+
+    <!-- Morris Charts CSS -->
+    <link href="/src/css/plugins/morris.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="/src/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
     <link rel="stylesheet" href="/src/css/main.css" >
     @show
 </head>
@@ -39,7 +48,7 @@
 
                 <!-- Branding Image -->
                 <a class="navbar-brand" href="{{ url('/') }}">
-                    一品汽车
+                    <img src="/src/images/yipin.jpeg" />
                 </a>
             </div>
 
@@ -86,6 +95,10 @@
     <script src="/src/js/jQuery.min.2.2.4.js"></script>
     <script src="/src/js/bootstrap.min.js"></script>
     <script src="/src/js/angular.min.js"></script>
+
+    <script src="/src/js/plugins/morris/raphael.min.js"></script>
+    <script src="/src/js/plugins/morris/morris.min.js"></script>
+    <script src="/src/js/plugins/morris/morris-data.js"></script>
     {{--<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.29/angular.min.js"></script>--}}
     @show
     {{--<script src="/src/js/resourceApp.js"></script>--}}
