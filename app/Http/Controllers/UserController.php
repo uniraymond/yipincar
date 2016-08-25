@@ -209,14 +209,15 @@ class UserController extends Controller
                 'email' => 'required|email|max:255|unique:users',
                 'password' => 'required|min:6',
                 'password_confirmation' => 'required|min:6|confirmed',
-                'roles' => 'required'
+                'roles' => 'required',
+                'captcha' => 'required|captcha'
             ], $this->messages($new));
         } elseif($checkemail){
             return Validator::make($data, [
                 'name' => 'required|max:255',
                 'email' => 'required|email|max:255|unique:users',
                 'password_confirmation' => 'confirmed',
-                'roles' => 'required'
+                'roles' => 'required',
             ], $this->messages());
         } else{
             return Validator::make($data, [
@@ -245,6 +246,8 @@ class UserController extends Controller
                 'password_confirmation.min'  => '确定密码最少是6个字符',
                 'password_confirmation.confirmed'  => '两个密码不一样',
                 'roles.required'  => '角色是必选的',
+                'captcha.required' => '请输入验证码',
+                'captcha.captcha' => '输入的验证码错误',
             ];
         } else{
             return [

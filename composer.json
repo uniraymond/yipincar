@@ -11,7 +11,8 @@
         "mpociot/laravel-apidoc-generator": "^1.5",
         "unisharp/laravel-filemanager": "^1.5",
         "laravelcollective/html": "5.2.*",
-        "windwalker/structure": "^3.0"
+        "windwalker/structure": "^3.0",
+        "mews/captcha": "^2.1"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

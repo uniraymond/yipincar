@@ -88,6 +88,18 @@
                             @endif
                         </div>
                     </div>
+
+                    <div class="form-group{{ $errors->has('roles') ? ' has-error' : ''}}">
+                        <label for="captcha" class="col-md-4 control-label">{!! captcha_img() !!}</label>
+                        <div class="col-md-6">
+                            <input type="text" name="captcha" />
+                            @if ($errors->has('captcha'))
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('captcha') }}</strong>
+                                </span>
+                            @endif
+                        </div>
+                    </div>
                     <div class="clearfix"></div>
                     {!! Form::submit('保存', array('class'=>'btn btn-primary col-lg-offset-10 col-md-offset-10 col-sm-offset-10')) !!}
                     {!! Form::token() !!}
