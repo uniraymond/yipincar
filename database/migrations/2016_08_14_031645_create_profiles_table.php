@@ -22,6 +22,9 @@ class CreateProfilesTable extends Migration
             $table->enum('gender', array('male', 'female'));
             $table->string('phone');
             $table->string('cellphone');
+            $table->string('weibo_name');
+            $table->string('weixin_name');
+            $table->string('qq_name');
             $table->integer('updated_by')->references('id')->on('users')->onDelete('cascade');
             $table->integer('created_by')->references('id')->on('users')->onDelete('cascade');
             $table->timestamp('created_at')->default(\DB::raw('CURRENT_TIMESTAMP'));

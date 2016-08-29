@@ -12,11 +12,11 @@
     {{--<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:100,300,400,700">--}}
 
     @section('style')
-    <!-- Styles -->
+            <!-- Styles -->
     <link rel="stylesheet" href="/src/css/bootstrap.min.css">
     {{-- <link href="{{ elixir('css/app.css') }}" rel="stylesheet"> --}}
 
-    <!-- Custom CSS -->
+            <!-- Custom CSS -->
     <link href="/src/css/sb-admin.css" rel="stylesheet">
 
     <!-- Morris Charts CSS -->
@@ -25,53 +25,45 @@
     <!-- Custom Fonts -->
     <link href="/src/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 
-    <link rel="stylesheet" href="/src/css/main.css" >
+    <link rel="stylesheet" href="/src/css/login.css" >
     @show
 </head>
 <body id="app-layout">
-<div id="wrapper">
+<div wrapper>
     <nav class="navbar navbar-dark bg-inverse navbar-fixed-top">
         <div class="container">
             <div class="navbar-header">
                 <!-- Collapsed Hamburger -->
-                <button class="navbar-toggler hidden-sm-up pull-sm-right" type="button" data-toggle="collapse" data-target=".navbar-small-collapse">
-                    ☰
-                </button>
-
-                <!-- Branding Image -->
-                <a class="navbar-brand" href="{{ url('/') }}">
-                    一品汽车
-                </a>
-            </div>
-            <div class="hidden-sm-up navbar-toggleable-sm navbar-small-collapse collapse" aria-expanded="false" style="height: 0px;">
-                <ul>
+                <button type="button" class="navbar-toggler hidden-sm-up pull-sm-right collapsed" data-toggle="collapse" data-target="#app-navbar-collapse">
+                    <span class="sr-only">Toggle Navigation</span>
                     @if( (null !== Auth::user()) && Auth::user()->hasAnyRole(['super_admin', 'admin']))
-                        <li class="list-group-item">{{link_to('admin/user', '用户')}}</li>
+                        <span class="icon-bar">{{link_to('admin/user', 'Users')}}</span>
+                        {{--<span class="icon-bar">{{link_to('admin/category', 'Categories')}}</span>--}}
+                        {{--                        <span class="icon-bar">{{link_to('admin/articletypes', 'Article Types')}}</span>--}}
+                        <span class="icon-bar">{{link_to('admin/tag', 'Article Tags')}}</span>
                     @endif
-                    @if((null !== Auth::user()) && Auth::user()->hasAnyRole(['super_admin', 'admin', 'editor', 'main_editor', 'chef_editor', 'auth_editor']))
-                        <li class="list-group-item">{{link_to('admin/tag', '标签')}}</li>
-                        <li class="list-group-item">{{link_to('admin/article', '文章')}}</li>
+                    @if((null !== Auth::user()) && Auth::user()->hasAnyRole(['super_admin', 'admin', 'editor', 'main_editor', 'chefeditor', 'auth_editor']))
+                        <span class="icon-bar">{{link_to('admin/article', 'Articles')}}</span>
                     @endif
-                </ul>
+                </button>
             </div>
 
-            <div class="collapse navbar-collapse navbar-toggleable-sm" id="app-navbar-collapse">
+            <div class="collapse navbar-collapse" id="app-navbar-collapse">
                 <!-- Left Side Of Navbar -->
                 <ul class="nav navbar-nav">
                     @if( (null !== Auth::user()) && Auth::user()->hasAnyRole(['super_admin', 'admin']))
                         <li>{{link_to('admin/user', '用户')}}</li>
+                        {{--                        <li>{{link_to('admin/category', '类别')}}</li>--}}
+                        {{--                        <li>{{link_to('admin/articletypes', '类型')}}</li>--}}
                     @endif
                     @if((null !== Auth::user()) && Auth::user()->hasAnyRole(['super_admin', 'admin', 'editor', 'main_editor', 'chef_editor', 'auth_editor']))
-                            <li>{{link_to('admin/tag', '标签')}}</li>
-                            <li>{{link_to('admin/article', '文章')}}</li>
+                        <li>{{link_to('admin/tag', '标签')}}</li>
+                        <li>{{link_to('admin/article', '文章')}}</li>
                     @endif
                 </ul>
 
-            </div>
-
-            <!-- Right Side Of Navbar -->
-            <div id="top_user_login_link">
-                <ul class="nav navbar-nav navbar-right pull-xs-right user_button">
+                <!-- Right Side Of Navbar -->
+                <ul class="nav navbar-nav navbar-right">
                     <!-- Authentication Links -->
                     @if ((null == Auth::user()) && Auth::guest())
                         <li><a href="{{ url('/login') }}">登陆</a></li>
@@ -83,7 +75,6 @@
                             </a>
 
                             <ul class="dropdown-menu" role="menu">
-                                <li><a href="{{ url('admin/profile/'.Auth::user()->id.'/editprofile') }}"><i class="fa fa-btn fa-sign-out"></i>编辑</a></li>
                                 <li><a href="{{ url('/logout') }}"><i class="fa fa-btn fa-sign-out"></i>退出</a></li>
                             </ul>
                         </li>
@@ -93,19 +84,25 @@
         </div>
     </nav>
 
+    <div id="logo page-wrapper" class="home_logo">
+        <!-- Branding Image -->
+        <a class="navbar-brand" href="{{ url('/') }}">
+            <img src="/src/images/yipinlogo.png" id="logoimage"/>
+        </a>
+    </div>
     @yield('content')
 </div>
-    @section('script')
+@section('script')
 
     <script src="/src/js/jQuery.min.2.2.4.js"></script>
     <script src="/src/js/bootstrap.min.js"></script>
     <script src="/src/js/angular.min.js"></script>
 
     <script src="/src/js/plugins/morris/raphael.min.js"></script>
-    {{--<script src="/src/js/plugins/morris/morris.min.js"></script>--}}
-    {{--<script src="/src/js/plugins/morris/morris-data.js"></script>--}}
+    <script src="/src/js/plugins/morris/morris.min.js"></script>
+    <script src="/src/js/plugins/morris/morris-data.js"></script>
     {{--<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.29/angular.min.js"></script>--}}
-    @show
-    {{--<script src="/src/js/resourceApp.js"></script>--}}
+@show
+{{--<script src="/src/js/resourceApp.js"></script>--}}
 </body>
 </html>

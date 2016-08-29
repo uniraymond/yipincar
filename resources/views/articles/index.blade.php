@@ -10,7 +10,7 @@
 
             {{--new blog link--}}
             <div class="col-lg-2 col-md-2 col-sm-2 pull-right clearfix">
-                {{ link_to('admin/article/create', '新建', ['class'=>'btn btn-default']) }}
+                {{ link_to('admin/article/create', '新建', ['class'=>'btn btn-secondary']) }}
             </div>
 
             {{--flash alert--}}
@@ -98,5 +98,6 @@
         <div class="col-lg-12 col-md-12 col-sm-12 clearfix">
             {!! $articles->links() !!}
         </div>
+        @include('articles.sidebarCategory',['categories'=>$categories, 'types'=>$types, 'tag'=>$tags, 'currentAction'=>$currentAction])
     </div>
 @endsection

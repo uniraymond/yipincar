@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.appfull')
 
 @section('content')
     <div class="container">
@@ -9,7 +9,7 @@
 
             {{--new blog link--}}
             <div class="col-lg-2 col-md-2 col-sm-2 pull-right clearfix">
-                {{ link_to('admin/tag/create', '新建', ['class'=>'btn btn-default']) }}
+                {{ link_to('admin/tag/create', '新建', ['class'=>'btn btn-secondary']) }}
                 {{--<a class="btn btn-default" href="{{ route('admin.tag.create') }}">New</a>--}}
             </div>
 

@@ -94,12 +94,14 @@
                         </div>
                     </div>
                     <div class="clearfix"></div>
-                    {!! Form::submit('保存', array('class'=>'btn btn-primary col-lg-offset-10 col-md-offset-10 col-sm-offset-10')) !!}
+                    <a href="{{url('/admin/profile/'.$user->id.'/editprofile')}}" class="btn btn-secondary col-md-3">编辑资料</a>
+                    {!! Form::submit('保存', array('class'=>'btn btn-primary col-md-3 pull-right')) !!}
                     {!! Form::token() !!}
                     {!! Form::close() !!}
                 </div>
             </div>
         </div>
         </div>
+        @include('users.side',['usergroups'=>$usergroups])
     </div>
 @endsection

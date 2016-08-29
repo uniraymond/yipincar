@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Role;
+use Illuminate\Support\Facades\DB as DB;
 use App\UserRoles;
 use Illuminate\Http\Request;
 
@@ -27,8 +28,9 @@ class UserController extends Controller
         $auth = $request->user();
         $authView = $auth->hasAnyRole(['super_admin', 'admin']);
         if ($authView) {
+            $roles = Role::all();
             $users = User::paginate(10);
-            return view('users/index', ['users'=>$users]);
+            return view('users/index', ['users'=>$users, 'usergroups'=>$roles]);
         }
 
         return redirect('/');
@@ -45,7 +47,7 @@ class UserController extends Controller
         $roles = Role::where('name','<>', 'super_admin')->get();
         $authView = $auth->hasAnyRole(['super_admin', 'admin']);
         if ($authView) {
-            return view('users/create', ['roles'=>$roles]);
+            return view('users/create', ['roles'=>$roles, 'usergroups'=>$roles]);
         }
         return redirect('/');
     }
@@ -109,7 +111,7 @@ class UserController extends Controller
         if ($authView) {
             $roles = Role::where('name','<>', 'super_admin')->get();
             $user = User::findorFail($id);
-            return view('users/edit', ['user'=> $user, 'roles'=>$roles]);
+            return view('users/edit', ['user'=> $user, 'roles'=>$roles, 'usergroups'=>$roles]);
         }
         return redirect('/');
     }
@@ -256,9 +258,35 @@ class UserController extends Controller
                 'email.unique'  => '电子邮件已经被注册过了',
                 'password_confirmation.confirmed'  => '两个密码不一样',
                 'roles.required'  => '角色是必选的',
+
             ];
         }
     }
 
+    public function role(Request $request, $role_id)
+    {
+        $auth = $request->user();
+        $authView = $auth->hasAnyRole(['super_admin', 'admin']);
+        if ($authView) {
+            $roles = Role::all();
+
+            $users = Role::find($role_id)->users()->paginate(10);
+            return view('users/index', ['users'=>$users, 'usergroups'=>$roles]);
+        }
+
+        return redirect('/');
+    }
+
+    public function side(Request $request)
+    {
+        $auth = $request->user();
+        $authView = $auth->hasAnyRole(['super_admin', 'admin']);
+        if ($authView) {
+            $roles = Role::all();
+            return view('users.side', ['usergroups'=>$roles]);
+        } else {
+            return redirect('admin/dashboard');
+        }
+    }
 
 }

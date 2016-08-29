@@ -96,5 +96,6 @@
             </div>
             </div>
         </div>
+        @include('users.side',['usergroups'=>$usergroups])
      </div>
 @endsection

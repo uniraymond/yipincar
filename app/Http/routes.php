@@ -31,6 +31,15 @@ Route::group(['middleware'=>'auth', 'prefix'=>'admin'], function() {
     Route::resource('resource', 'ResourceController');
     Route::resource('comment', 'CommentController');
     Route::resource('user', 'UserController');
+    Route::get('profile/{user_id}/editprofile', 'ProfileController@edit');
+    Route::get('profile/{user_id}/create', 'ProfileController@create');
+
+    Route::resource('profile', 'ProfileController');
+
+    Route::get('user/role/{roleId}', 'UserController@role');
+    Route::get('article/category/{categoryId}', 'ArticleController@category');
+    Route::get('article/type/{typeId}', 'ArticleController@type');
+    Route::get('article/tag/{tagId}', 'ArticleController@tag');
 
     Route::get('articlecomment/{articleId}', 'CommentController@articlecomment');
     Route::get('zan/{commentId}', 'CommentController@zan');

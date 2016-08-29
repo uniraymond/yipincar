@@ -106,6 +106,8 @@
                     </div>
                 </div>
             </div>
+
+            @include('articles.sidebarCategory',['categories'=>$categories, 'types'=>$types, 'tag'=>$tags, 'currentAction'=>$currentAction])
         </div>
     </div>
 @endsection

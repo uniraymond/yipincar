@@ -25,9 +25,14 @@ class ArticleController extends Controller
   public function index()
   {
     //website
-    $articleType = ArticleTypes::first();
-    $articles = Article::where('type_id', $articleType->id)->orderBy('created_at', 'desc')->paginate(15);
-    return view('articles/index', ['articles'=>$articles]);
+
+    $categories = Category::where('category_id','<>', 0)->get();
+    $types = ArticleTypes::all();
+    $tags = Tags::all();
+    $currentAction = false;
+    
+    $articles = Article::orderBy('created_at', 'desc')->paginate(15);
+    return view('articles/index', ['articles'=>$articles, 'categories'=>$categories, 'types'=>$types, 'tags'=>$tags, 'currentAction'=>$currentAction]);
   }
 
   // advertisment
@@ -55,6 +60,12 @@ class ArticleController extends Controller
   public function show(Request $request, $id)
   {
     $allStatusChecks = array();
+
+    $categories = Category::where('category_id','<>', 0)->get();
+    $types = ArticleTypes::all();
+    $tags = Tags::all();
+    $currentAction = false;
+
     $article = Article::findorFail($id);
     $authuser = $request->user();
     $articleStatus = $article->article_statuses;
@@ -64,7 +75,7 @@ class ArticleController extends Controller
       $allStatusChecks[$status->name] = $this->getArticleStatusObject($status->id, $id);
     }
 
-    return view('articles/show', ['article'=>$article, 'allStatusChecks'=>$allStatusChecks]);
+    return view('articles/show', ['article'=>$article, 'allStatusChecks'=>$allStatusChecks, 'categories'=>$categories, 'types'=>$types, 'tags'=>$tags, 'currentAction'=>$currentAction]);
   }
 
   private function getArticleStatusObject($status_id, $article_id) {
@@ -76,6 +87,11 @@ class ArticleController extends Controller
   {
     $article = Article::find($id);
     $authuser = $request->user();
+
+    $categories = Category::where('category_id','<>', 0)->get();
+    $types = ArticleTypes::all();
+    $tags = Tags::all();
+    $currentAction = false;
 
     if ($article->created_by == $authuser->id || $authuser->hasAnyRole(['super_admin', 'admin', 'chef_editor', 'main_editor'])) {
       $categories = Category::where('category_id', '<>', 0)->orderBy('category_id')->get();
@@ -103,7 +119,8 @@ class ArticleController extends Controller
           'tags' => $tags,
           'currentTags' => $currentTags,
           'tagString' => $tagString,
-          'currentTagString' => $currentTagString
+          'currentTagString' => $currentTagString,
+           'types'=>$types, 'tags'=>$tags, 'currentAction'=>$currentAction
       ]);
     } else {
       $request->session()->flash('status', '您不是文章的作者,不能编辑此文章.');
@@ -236,22 +253,6 @@ class ArticleController extends Controller
     $request->session()->flash('status', 'Article: '. $title .' has been updated!');
 
     return redirect('admin/article');
-//    $type = ArticleTypes::where('id', $article->type_id)->first();
-//
-//    switch ($type->name) {
-//      case 'Webpage':
-//        return redirect('admin/article');
-//        break;
-//      case 'Advertisment':
-//        return redirect('admin/advlist');
-//        break;
-//      case 'Video':
-//        return redirect('admin/videolist');
-//        break;
-//      default:
-//        return redirect('admin/article');
-//        break;
-//    }
   }
 
   public function groupupdate(Request $request)
@@ -283,9 +284,10 @@ class ArticleController extends Controller
 
   public function create()
   {
-    $categories = DB::table('categories')->where('category_id','<>', 0)->get();
-    $articletypes = DB::table('article_types')->get();
+    $categories = Category::where('category_id','<>', 0)->get();
+    $types = ArticleTypes::all();
     $tags = Tags::all();
+    $currentAction = false;
 
     $tagString = '';
 
@@ -293,10 +295,10 @@ class ArticleController extends Controller
       $tagString .= '"'.$tag->name . '", ';
     }
     return view('articles/create', [
-            'articletypes' => $articletypes,
+            'articletypes' => $types,
             'categories' => $categories,
             'tags' => $tags,
-            'tagString' => $tagString,
+            'tagString' => $tagString, 'types'=>$types, 'tags'=>$tags, 'currentAction'=>$currentAction
         ]);
   }
 
@@ -474,6 +476,41 @@ class ArticleController extends Controller
 
     $request->session()->flash('status', '更新了文章评估.');
     return redirect('admin/article/'.$articleId);
+  }
+
+  public function category($category_id)
+  {
+    //website
+    $categories = Category::where('category_id','<>', 0)->get();
+    $types = ArticleTypes::all();
+    $tags = Tags::all();
+    $currentAction = 'category';
+
+    $articles = Category::find($category_id)->articles()->orderBy('created_at', 'desc')->paginate(10);
+
+    return view('articles/index', ['articles'=>$articles, 'categories'=>$categories, 'types'=>$types, 'tags'=>$tags, 'currentAction'=>$currentAction]);
+  }
+  public function type($type_id)
+  {
+    $categories = Category::where('category_id','<>', 0)->get();
+    $types = ArticleTypes::all();
+    $tags = Tags::all();
+    $currentAction = 'type';
+
+    $articles = ArticleTypes::find($type_id)->articles()->orderBy('created_at', 'desc')->paginate(10);
+
+    return view('articles/index', ['articles'=>$articles, 'categories'=>$categories, 'types'=>$types, 'tags'=>$tags, 'currentAction'=>$currentAction]);
+  }
+  public function tag($tag_id)
+  {
+    $categories = Category::where('category_id','<>', 0)->get();
+    $types = ArticleTypes::all();
+    $tags = Tags::all();
+    $currentAction = 'tag';
+
+    $articles = Tags::find($tag_id)->articles()->orderBy('created_at', 'desc')->paginate(10);
+
+    return view('articles/index', ['articles'=>$articles, 'categories'=>$categories, 'types'=>$types, 'tags'=>$tags, 'currentAction'=>$currentAction]);
   }
 
 }

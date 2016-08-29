@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.appfull')
 
 @section('content')
     <div class="container">
@@ -52,6 +52,7 @@
                     <h4>文章类别不存在.</h4>.</h4>
                 </div>
             @endif
+
         </div>
     </div>
 @endsection

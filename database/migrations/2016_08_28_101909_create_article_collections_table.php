@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateUserRolesTable extends Migration
+class CreateArticleCollectionsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,17 +12,14 @@ class CreateUserRolesTable extends Migration
      */
     public function up()
     {
-        Schema::create('user_roles', function(Blueprint $table) {
+        Schema::create('article_collections', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->integer('role_id')->references('id')->on('roles')->onDelete('cascade');
-            $table->string('weibo_id');
-            $table->string('weixin_id');
-            $table->string('qq_id');
+            $table->integer('article_id')->references('id')->on('articles')->onDelete('cascade');
+            $table->integer('created_by')->references('id')->on('users')->onDelete('cascade');
+            $table->integer('updated_by')->references('id')->on('users')->onDelete('cascade');
             $table->timestamp('created_at')->default(\DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamp('updated_at');
-            $table->integer('updated_by')->references('id')->on('users')->onDelete('cascade');
-            $table->integer('created_by')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
@@ -33,6 +30,6 @@ class CreateUserRolesTable extends Migration
      */
     public function down()
     {
-        Schema::drop('user_roles');
+        Schema::drop('article_collections');
     }
 }
