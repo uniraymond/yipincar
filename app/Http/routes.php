@@ -61,6 +61,7 @@ Route::group(['middleware'=>'auth', 'prefix'=>'admin'], function() {
     Route::post('resource/upload', 'ResourceController@upload');
     
     Route::get('advsetting/list', 'AdvsettingController@index');
+    Route::get('advsetting/type/{typeId}', 'AdvsettingController@type');
     Route::post('advsetting/update', 'AdvsettingController@update');
 
     Route::get('api/category', 'CategoryController@index');

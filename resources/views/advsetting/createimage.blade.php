@@ -1,4 +1,4 @@
-@extends('layouts.appfull')
+@extends('layouts.app')
 
 @section('content')
 <div class="container">
@@ -41,5 +41,6 @@
       </div>
     </div>
   </div>
+  @include('advsetting.sidebarType',['types'=>$types])
 </div>
 @endsection

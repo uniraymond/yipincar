@@ -21,9 +21,18 @@ class AdvsettingController extends Controller
   public function index()
   {
 //    $images = AdvSetting::getAdvImages();
+    $types = ResourceTypes::all();
     $images = Resource::where('type_id', '<>', 0)->paginate(15);
-    return view('advsetting/index', ['images' => $images]);
+    return view('advsetting/index', ['images' => $images, 'types'=>$types]);
   }
+
+  public function type(Request $request, $typeId)
+  {
+    $types = ResourceTypes::all();
+    $images = Resource::where('type_id', $typeId)->paginate(15);
+    return view('advsetting/index', ['images' => $images, 'types'=>$types]);
+  }
+
 
   public function update(Request $request)
   {

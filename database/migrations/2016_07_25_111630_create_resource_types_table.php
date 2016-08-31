@@ -15,7 +15,8 @@ class CreateResourceTypesTable extends Migration
         Schema::create('resource_types', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
-            $table->string('descrition');
+            $table->text('descrition');
+            $table->string('position');
             $table->timestamp('created_at')->default(\DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamp('updated_at');
             $table->integer('updated_by')->references('id')->on('users')->onDelete('cascade');

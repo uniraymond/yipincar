@@ -34,17 +34,10 @@
         <div class="container">
             <div class="navbar-header">
                 <!-- Collapsed Hamburger -->
-                <button type="button" class="navbar-toggler hidden-sm-up pull-sm-right collapsed" data-toggle="collapse" data-target="#app-navbar-collapse">
-                    <span class="sr-only">Toggle Navigation</span>
-                    @if( (null !== Auth::user()) && Auth::user()->hasAnyRole(['super_admin', 'admin']))
-                        <span class="icon-bar">{{link_to('admin/user', 'Users')}}</span>
-                        {{--<span class="icon-bar">{{link_to('admin/category', 'Categories')}}</span>--}}
-                        {{--                        <span class="icon-bar">{{link_to('admin/articletypes', 'Article Types')}}</span>--}}
-                        <span class="icon-bar">{{link_to('admin/tag', 'Article Tags')}}</span>
-                    @endif
-                    @if((null !== Auth::user()) && Auth::user()->hasAnyRole(['super_admin', 'admin', 'editor', 'main_editor', 'chefeditor', 'auth_editor']))
-                        <span class="icon-bar">{{link_to('admin/article', 'Articles')}}</span>
-                    @endif
+
+                <!-- Collapsed Hamburger -->
+                <button class="navbar-toggler hidden-sm-up pull-sm-right" type="button" data-toggle="collapse" data-target=".navbar-small-collapse">
+                    ☰
                 </button>
 
                 <!-- Branding Image -->
@@ -67,7 +60,23 @@
                         <li>{{link_to('admin/article', '文章')}}</li>
                         <li>{{link_to('admin/advsetting/list', '广告设置')}}</li>
                     @endif
-                </ul>
+                </ul><div class="collapse navbar-collapse navbar-toggleable-sm" id="app-navbar-collapse">
+                    <!-- Left Side Of Navbar -->
+                    <ul class="nav navbar-nav">
+                        @if( (null !== Auth::user()) && Auth::user()->hasAnyRole(['super_admin', 'admin']))
+                            <li>{{link_to('admin/user', '用户')}}</li>
+                        @endif
+                        @if((null !== Auth::user()) && Auth::user()->hasAnyRole(['super_admin', 'admin', 'editor', 'main_editor', 'chef_editor', 'auth_editor']))
+                            <li>{{link_to('admin/tag', '标签')}}</li>
+                            <li>{{link_to('admin/article', '文章')}}</li>
+                            <li>{{link_to('admin/advsetting/list', '广告设置')}}</li>
+                        @endif
+                    </ul>
+
+                </div>
+
+                <!-- Right Side Of Navbar -->
+
 
                 <!-- Right Side Of Navbar -->
                 <ul class="nav navbar-nav navbar-right">
@@ -82,6 +91,26 @@
                             </a>
 
                             <ul class="dropdown-menu" role="menu">
+                                <li><a href="{{ url('/logout') }}"><i class="fa fa-btn fa-sign-out"></i>退出</a></li>
+                            </ul>
+                        </li>
+                    @endif
+                </ul>
+            </div><!-- Right Side Of Navbar -->
+            <div id="top_user_login_link">
+                <ul class="nav navbar-nav navbar-right pull-xs-right user_button">
+                    <!-- Authentication Links -->
+                    @if ((null == Auth::user()) && Auth::guest())
+                        <li><a href="{{ url('/login') }}">登陆</a></li>
+                        {{--                        <li><a href="{{ url('/register') }}">注册</a></li>--}}
+                    @else
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                                @if (null !== Auth::user()) {{ Auth::user()->name }} @endif <span class="caret"></span>
+                            </a>
+
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="{{ url('admin/profile/'.Auth::user()->id.'/editprofile') }}"><i class="fa fa-btn fa-sign-out"></i>编辑</a></li>
                                 <li><a href="{{ url('/logout') }}"><i class="fa fa-btn fa-sign-out"></i>退出</a></li>
                             </ul>
                         </li>
