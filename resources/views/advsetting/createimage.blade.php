@@ -16,8 +16,10 @@
             @endif
           </div>
           {!! Form::open(array('url' => 'admin/advsetting/uploadimage', 'class' => 'form', 'enctype'=>'multipart/form-data', 'method'=>'put')) !!}
+          {!! Form::label('name', '广告标题', array('class'=>'col-md-12')) !!}
+          {!! Form::text('name', '', array('class' => 'input col-md-12', 'placeholder' => '广告标题')) !!}
           {!! Form::label('description', '广告描述', array('class'=>'col-md-12')) !!}
-          {!! Form::textarea('description', '', array('class' => 'description input col-md-12', 'placeholder' => 'Description')) !!}
+          {!! Form::textarea('description', '', array('class' => 'description input col-md-12', 'placeholder' => '广告详细描述')) !!}
           {!! Form::label('images', '上传广告图片', array('class'=>'col-md-12')) !!}
           {!! Form::file('images', '', array('class'=>'col-md-12 form-control-file')) !!}
           {!! Form::label('order', '显示顺序', array('class'=>'col-md-12')) !!}

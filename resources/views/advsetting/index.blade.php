@@ -17,8 +17,8 @@
             <table class="table">
                 <thead>
                     <tr>
-                        <th>图片</th>
-                        <th>细节</th>
+                        <th>标题</th>
+                        <th>描述</th>
                         <th>顺序</th>
                         <th>删除</th>
                         <th>编辑</th>

@@ -19,6 +19,8 @@
                             <img src="/{{ $image->link }}" alt="{{ $image->description }}" width="300px"/>
                         </div>
                         {!! Form::open(array('url' => 'admin/advsetting/updateimage', 'class' => 'form', 'enctype'=>'multipart/form-data')) !!}
+                        {!! Form::label('name', '广告标题', array('class'=>'col-md-12')) !!}
+                        {!! Form::text('name', $image->name, array('class' => 'input col-md-12', 'placeholder' => '广告标题')) !!}
                         {!! Form::label('description', '广告描述', array('class'=>'col-md-12')) !!}
                         {!! Form::textarea('description', $image->description, array('class' => 'description input col-md-12', 'placeholder' => 'Description')) !!}
                         {!! Form::label('displayorder', '显示顺序', array('class'=>'col-md-12')) !!}

@@ -82,6 +82,7 @@ class AdvsettingController extends Controller
     ]);
 
     $image = Resource::findorFail($request['id']);
+    $image->name = $request['name'];
     $image->description = $request['description'];
     $image->type_id = $request['type_id'];
     $image->order = $request['order'];
@@ -108,7 +109,7 @@ class AdvsettingController extends Controller
 
       $image = Image::make(sprintf('photos/adv/%s', $file->getClientOriginalName()))->resize(500, (int)((500 * $cell_img_size[1]) / $cell_img_size[0]))->save();
       $resource = new Resource();
-      $resource->name = $fileName;
+      $resource->name = $request['name'];
       $resource->description = $request['description'];
       $resource->link = $imageLink;
       $resource->type_id = $request['type_id'];
