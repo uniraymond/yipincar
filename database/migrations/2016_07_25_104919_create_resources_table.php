@@ -17,6 +17,8 @@ class CreateResourcesTable extends Migration
             $table->string('name');
             $table->string('description');
             $table->string('link');
+            $table->tinyInteger('order');
+            $table->tinyInteger('published');
             $table->integer('type_id')->references('id')->on('resource_types')->onDelete('cascade');
             $table->timestamp('created_at')->default(\DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamp('updated_at');

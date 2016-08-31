@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+    <div id="page-wrapper">
     <div class="container">
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12">
@@ -10,7 +11,7 @@
             {{--new blog link--}}
             @if (Auth::user()->hasAnyRole(['super_admin', 'admin']))
             <div class="col-lg-2 col-md-2 col-sm-2 pull-right clearfix">
-                {{ link_to('admin/user/create', '添加', ['class'=>'btn btn-default']) }}
+                {{ link_to('admin/user/create', '添加', ['class'=>'btn btn-secondary']) }}
             </div>
             @endif
 
@@ -61,11 +62,13 @@
                 </table>
             @endif
         </div>
+        @if ( Null !== Auth::user()->hasRole('super_admin', 'admin') )
+            <div class="col-lg-12 col-md-12 col-sm-12 clearfix">
+                {!! $users->links() !!}
+            </div>
+         @endif
+
+        @include('users.side',['usergroups'=>$usergroups])
     </div>
-    @if ( Null !== Auth::user()->hasRole('super_admin', 'admin') )
-        <div class="col-lg-12 col-md-12 col-sm-12 clearfix">
-            {!! $users->links() !!}
-        </div>
-     @endif
     </div>
 @endsection

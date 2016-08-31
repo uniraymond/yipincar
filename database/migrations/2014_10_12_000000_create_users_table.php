@@ -17,6 +17,9 @@ class CreateUsersTable extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->string('password');
+            $table->string('token');
+            $table->string('uid');
+            $table->string('phone');
             $table->integer('profile_id')->references('id')->on('profiles')->onDelete('cascade');
             $table->string('role');
             $table->rememberToken();

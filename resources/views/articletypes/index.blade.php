@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.appfull')
 
 @section('content')
     <div class="container">
@@ -9,7 +9,7 @@
 
             {{--new blog link--}}
             <div class="col-lg-2 col-md-2 col-sm-2 pull-right clearfix">
-                {{ link_to('admin/articletypes/create', '新建', ['class'=>'btn btn-default']) }}
+                {{ link_to('admin/articletypes/create', '新建', ['class'=>'btn btn-secondary']) }}
             </div>
 
             {{--flash alert--}}
@@ -52,6 +52,7 @@
                     <h4>文章类别不存在.</h4>.</h4>
                 </div>
             @endif
+
         </div>
     </div>
 @endsection

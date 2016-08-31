@@ -1,0 +1,21 @@
+/*login*/
+#logoimage {
+    text-align: center;
+    display: block;
+    width: 80%;
+    margin: 0 auto;
+}
+
+.home_logo a {
+    width: 100%;
+    display: block;
+}
+
+.logincontainer {
+    color: #FFF;
+}
+
+.logincontainer .form-group input, .logincontainer .form-group button{
+    margin: 5px 0;
+}
+/* endlogin */

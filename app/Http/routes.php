@@ -31,6 +31,15 @@ Route::group(['middleware'=>'auth', 'prefix'=>'admin'], function() {
     Route::resource('resource', 'ResourceController');
     Route::resource('comment', 'CommentController');
     Route::resource('user', 'UserController');
+    Route::get('profile/{user_id}/editprofile', 'ProfileController@edit');
+    Route::get('profile/{user_id}/create', 'ProfileController@create');
+
+    Route::resource('profile', 'ProfileController');
+
+    Route::get('user/role/{roleId}', 'UserController@role');
+    Route::get('article/category/{categoryId}', 'ArticleController@category');
+    Route::get('article/type/{typeId}', 'ArticleController@type');
+    Route::get('article/tag/{tagId}', 'ArticleController@tag');
 
     Route::get('articlecomment/{articleId}', 'CommentController@articlecomment');
     Route::get('zan/{commentId}', 'CommentController@zan');
@@ -53,11 +62,13 @@ Route::group(['middleware'=>'auth', 'prefix'=>'admin'], function() {
     
     Route::get('advsetting/list', 'AdvsettingController@index');
     Route::post('advsetting/update', 'AdvsettingController@update');
-    Route::get('advsetting/editimage/{id}', 'AdvsettingController@editimage');
 
     Route::get('api/category', 'CategoryController@index');
-    Route::post('api/updateImage', 'AdvsettingController@updateImage');
-    Route::post('api/uploadImage', 'AdvsettingController@uploadImage');
+    Route::get('advsetting/editimage/{id}', 'AdvsettingController@edit');
+    Route::post('advsetting/update', 'AdvsettingController@update');
+    Route::post('advsetting/updateimage', 'AdvsettingController@updateimage');
+    Route::get('advsetting/createimage', 'AdvsettingController@create');
+    Route::put('advsetting/uploadimage', 'AdvsettingController@uploadImage');
 });
 
 Route::group(['prefix'=>'api'], function() {
