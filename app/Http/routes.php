@@ -62,11 +62,13 @@ Route::group(['middleware'=>'auth', 'prefix'=>'admin'], function() {
     
     Route::get('advsetting/list', 'AdvsettingController@index');
     Route::post('advsetting/update', 'AdvsettingController@update');
-    Route::get('advsetting/editimage/{id}', 'AdvsettingController@editimage');
 
     Route::get('api/category', 'CategoryController@index');
-    Route::post('api/updateImage', 'AdvsettingController@updateImage');
-    Route::post('api/uploadImage', 'AdvsettingController@uploadImage');
+    Route::get('advsetting/editimage/{id}', 'AdvsettingController@edit');
+    Route::post('advsetting/update', 'AdvsettingController@update');
+    Route::post('advsetting/updateimage', 'AdvsettingController@updateimage');
+    Route::get('advsetting/createimage', 'AdvsettingController@create');
+    Route::put('advsetting/uploadimage', 'AdvsettingController@uploadImage');
 });
 
 Route::group(['prefix'=>'api'], function() {

@@ -51,6 +51,7 @@
                     @if((null !== Auth::user()) && Auth::user()->hasAnyRole(['super_admin', 'admin', 'editor', 'main_editor', 'chef_editor', 'auth_editor']))
                         <li class="list-group-item">{{link_to('admin/tag', '标签')}}</li>
                         <li class="list-group-item">{{link_to('admin/article', '文章')}}</li>
+                        <li class="list-group-item">{{link_to('admin/advsetting/list', '广告设置')}}</li>
                     @endif
                 </ul>
             </div>
@@ -64,6 +65,7 @@
                     @if((null !== Auth::user()) && Auth::user()->hasAnyRole(['super_admin', 'admin', 'editor', 'main_editor', 'chef_editor', 'auth_editor']))
                             <li>{{link_to('admin/tag', '标签')}}</li>
                             <li>{{link_to('admin/article', '文章')}}</li>
+                            <li>{{link_to('admin/advsetting/list', '广告设置')}}</li>
                     @endif
                 </ul>
 
@@ -107,5 +109,6 @@
     {{--<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.29/angular.min.js"></script>--}}
     @show
     {{--<script src="/src/js/resourceApp.js"></script>--}}
+
 </body>
 </html>
