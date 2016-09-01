@@ -45,6 +45,8 @@ Route::group(['middleware'=>'auth', 'prefix'=>'admin'], function() {
     Route::get('zan/{commentId}', 'CommentController@zan');
     Route::post('zan/{commentId}', 'CommentController@zanupdate');
 
+
+
     Route::resource('otherarticle', 'OtherarticleController');
     Route::get('otherarticlelist', 'OtherarticleController@articlelist');
     Route::get('otherarticlelist/{articletype}', 'OtherarticleController@articlelist');
@@ -70,9 +72,14 @@ Route::group(['middleware'=>'auth', 'prefix'=>'admin'], function() {
     Route::post('advsetting/updateimage', 'AdvsettingController@updateimage');
     Route::get('advsetting/createimage', 'AdvsettingController@create');
     Route::put('advsetting/uploadimage', 'AdvsettingController@uploadImage');
+    Route::get('/', 'ArticleController@index');
+    Route::get('statistics', 'DashboardController@index');
 });
+
+Route::get('/', 'ArticleController@index');
 
 Route::group(['prefix'=>'api'], function() {
     Route::resource('info', 'InfoController');
 });
+
 

@@ -1,0 +1,35 @@
+/**
+ * Created by raymond on 1/09/16.
+ */
+#app-navbar-collapse{
+    float: left;
+}
+
+.nav > li > a.active {
+    text-decoration: none;
+    background-color: #eee;
+    color: #23527c;
+}
+
+.list-group-item.active, .list-group-item.active:hover, .list-group-item.active:focus {
+    z-index: 2;
+    background-color: #eee;
+    color: #23527c;
+    border-color: #eee;
+}
+
+#heading_block {
+    padding: 14px;
+}
+
+textarea.name {
+    margin-bottom: 5px;
+}
+
+.edit_article {
+    margin-top: 10px;
+}
+
+#app-navbar-collapse .nav > li > a {
+    padding:15px 30px;
+}

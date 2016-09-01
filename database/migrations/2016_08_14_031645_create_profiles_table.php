@@ -15,10 +15,11 @@ class CreateProfilesTable extends Migration
         Schema::create('profiles', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->string('fname');
-            $table->string('lname');
+            $table->string('name');
             $table->date('dob');
             $table->string('address');
+            $table->string('aboutself');
+            $table->text('comment');
             $table->enum('gender', array('male', 'female'));
             $table->string('phone');
             $table->string('cellphone');

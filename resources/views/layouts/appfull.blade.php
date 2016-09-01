@@ -52,7 +52,7 @@
                 <ul class="nav navbar-nav">
                     @if( (null !== Auth::user()) && Auth::user()->hasAnyRole(['super_admin', 'admin']))
                         <li>{{link_to('admin/user', '用户')}}</li>
-                        {{--                        <li>{{link_to('admin/category', '类别')}}</li>--}}
+                        {{--                        <li>{{link_to('admin/category', '栏目')}}</li>--}}
                         {{--                        <li>{{link_to('admin/articletypes', '类型')}}</li>--}}
                     @endif
                     @if((null !== Auth::user()) && Auth::user()->hasAnyRole(['super_admin', 'admin', 'editor', 'main_editor', 'chef_editor', 'auth_editor']))

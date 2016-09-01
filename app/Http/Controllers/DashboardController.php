@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
@@ -16,7 +16,7 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        echo "this is admin dashboard";
+        return view('dashboard.index');
     }
 
     /**

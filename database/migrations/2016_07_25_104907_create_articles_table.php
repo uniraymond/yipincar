@@ -23,6 +23,8 @@ class CreateArticlesTable extends Migration
             $table->integer('category_id')->references('id')->on('categories')->onDelete('cascade');
             $table->integer('type_id')->references('id')->on('article_types')->onDelete('cascade');
             $table->tinyInteger('published')->references('id')->on('article_statuses');
+            $table->date('publish_date');
+            $table->date('close_date');
             $table->timestamp('created_at')->default(\DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamp('updated_at');
             $table->integer('updated_by')->references('id')->on('users')->onDelete('cascade');

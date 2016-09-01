@@ -11,22 +11,7 @@
     {{--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css" integrity="sha384-XdYbMnZ/QjLh6iI4ogqCTaIjrFk87ip+ekIjefZch0Y+PvJ8CDYtEs1ipDmPorQ+" crossorigin="anonymous">--}}
     {{--<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:100,300,400,700">--}}
 
-    @section('style')
-            <!-- Styles -->
-    <link rel="stylesheet" href="/src/css/bootstrap.min.css">
-    {{-- <link href="{{ elixir('css/app.css') }}" rel="stylesheet"> --}}
 
-            <!-- Custom CSS -->
-    <link href="/src/css/sb-admin.css" rel="stylesheet">
-
-    <!-- Morris Charts CSS -->
-    <link href="/src/css/plugins/morris.css" rel="stylesheet">
-
-    <!-- Custom Fonts -->
-    <link href="/src/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-
-    <link rel="stylesheet" href="/src/css/login.css" >
-    @show
 </head>
 <body id="app-layout">
 <div wrapper>
@@ -53,7 +38,7 @@
                 <ul class="nav navbar-nav">
                     @if( (null !== Auth::user()) && Auth::user()->hasAnyRole(['super_admin', 'admin']))
                         <li>{{link_to('admin/user', '用户')}}</li>
-                        {{--                        <li>{{link_to('admin/category', '类别')}}</li>--}}
+                        {{--                        <li>{{link_to('admin/category', '栏目')}}</li>--}}
                         {{--                        <li>{{link_to('admin/articletypes', '类型')}}</li>--}}
                     @endif
                     @if((null !== Auth::user()) && Auth::user()->hasAnyRole(['super_admin', 'admin', 'editor', 'main_editor', 'chef_editor', 'auth_editor']))

@@ -22,6 +22,7 @@ class CreateUsersTable extends Migration
             $table->string('phone');
             $table->integer('profile_id')->references('id')->on('profiles')->onDelete('cascade');
             $table->string('role');
+            $table->boolean('banned');
             $table->rememberToken();
             $table->timestamp('created_at')->default(\DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamp('updated_at');

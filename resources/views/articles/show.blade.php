@@ -1,20 +1,25 @@
-@extends('layouts.app')
+@extends('layouts.base')
+
+@include('articles.sidebarCategory',['categories'=>$categories, 'types'=>$types, 'tag'=>$tags, 'currentAction'=>$currentAction])
 @section('content')
-    @php ( $currentUser = Auth::user() )
-    <div class="container">
-        @if ($success = Session::get('status'))
-            <div class="col-lg-12 col-md-12 col-sm-12 bs-example-bg-classes" >
-                <p class="bg-success">
-                    {{ $success }}
-                </p>
-            </div>
-            <div class="clearfix"></div>
-        @endif
+    <div id="page-wrapper">
         <div class="row">
-            <div class="col-md-11 col-md-offset-1">
+            <div class="col-lg-12">
+                <h1 class="page-header">文章详情</h1>
+
+                @if ($success = Session::get('status'))
+                    <div class="col-lg-12 col-md-12 col-sm-12 bs-example-bg-classes" >
+                        <p class="bg-success">
+                            {{ $success }}
+                        </p>
+                    </div>
+                @endif
+
                 <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h1>{{ $article->title }}</h1>
+                    <div class="panel-heading heading_block_title col-lg-9 col-md-8">
+                        <h3 class=""panel-title">{{ $article->title }}</h3>
+                    </div>
+                    <div id="heading_block" class="panel-heading col-lg-3 col-md-4">
                         <div>
                             <small><span>作者: </span>{{ $article->created_by ? $article->user_created_by->name : '无名' }}</small>
                         </div>
@@ -34,7 +39,7 @@
                             <div>详细内容: </div>
                             <div> {!! $article->content !!} </div>
                             <div class="list-group">
-                                <div class="list-group-item list-group-item-action"> 类别: {{ $article->categories->name }} </div>
+                                <div class="list-group-item list-group-item-action"> 栏目: {{ $article->categories->name }} </div>
                                 <div class="list-group-item list-group-item-action"> 类型: {{ $article->article_types->name }} </div>
                                 <div class="list-group-item list-group-item-action"> 标签:
                                     @if (count($article->tags)>0)
@@ -47,47 +52,33 @@
                                 </div>
                             </div>
                         </div>
-                        @if ( Null !== Auth::user() && $article->created_by == Auth::user()->id )
-                            <div class="col-lg-2 col-md-2 col-sm-2 pull-right clearfix">
-                                {{ link_to('admin/article/'.$article->id.'/edit', '编辑', ['class'=>'btn btn-primary']) }}
-                            </div>
-                        @endif
                     </div>
+                    @if ( Null !== Auth::user() && $article->created_by == Auth::user()->id || Auth::user()->hasAnyRole('super_admin', 'admin', 'chef_editor', 'main_editor') )
+                        <div class="col-lg-2 col-md-2 col-sm-2 edit_article pull-right clearfix">
+                            {{ link_to('admin/article/'.$article->id.'/edit', '编辑', ['class'=>'btn btn-primary']) }}
+                        </div>
+                    @endif
                 </div>
 
-                @if ($fail = Session::get('warning'))
-                    <div class=" col-lg-12 col-md-12 col-sm-12  bs-example-bg-classes" >
-                        <p class="bg-danger">
-                            {{ $fail }}
-                        </p>
-                    </div>
-                @endif
-
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h3>文章审阅</h3>
-                    </div>
-
-                    <div class="panel-body">
-                        <div class="form-group  col-lg-12 col-md-12 col-sm-12" id="accordion">
-                            @if (count($allStatusChecks) > 0 )
+                <div class="panel-body">
+                    <div class="form-group  col-lg-12 col-md-12 col-sm-12" id="accordion">
+                        @if (count($allStatusChecks) > 0 )
                             @foreach ($allStatusChecks as $statusName => $statusCheck)
                                 <div class="col-lg-12 col-md-12 col-sm-12 article_reviews" id="heading_edit_status_check_form">
-                                @include('articles.reviewForm', [
-                                                                    'statusCheck'=>$statusCheck,
-                                                                    'currentUser'=>$currentUser,
-                                                                    'statusName'=>$statusName,
-                                                                    'article'=>$article
-                                                                ])
+                                    @include('articles.reviewForm', [
+                                                                        'statusCheck'=>$statusCheck,
+                                                                        'currentUser'=>Auth::user(),
+                                                                        'statusName'=>$statusName,
+                                                                        'article'=>$article
+                                                                    ])
                                 </div>
                                 <div class="clearfix col-lg-12 col-md-12 col-sm-12"></div>
                             @endforeach
-                                @endif
-                        </div>
+                        @endif
                     </div>
                 </div>
             </div>
-            @include('articles.sidebarCategory',['categories'=>$categories, 'types'=>$types, 'tag'=>$tags, 'currentAction'=>$currentAction])
         </div>
     </div>
 @endsection
+
