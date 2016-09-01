@@ -1,3 +1,4 @@
+{{--@extends('layouts.base')--}}
 @extends('layouts.app')
 
 @section('content')
