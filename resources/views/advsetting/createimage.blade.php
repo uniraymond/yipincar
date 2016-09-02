@@ -36,6 +36,7 @@
               <option value="{{$type->id}}">{{$type->name}}</option>
             @endforeach
           </select>
+          <div class="clearfix"></div>
 
           {!! Form::label('position_id', '选择位置', array('class'=>'col-md-12')) !!}
           <select class="col-lg-12 col-md-12 col-sm-12 form-control" name="position_id">
@@ -43,12 +44,15 @@
               <option value="{{$position->id}}">{{$position->name}}</option>
             @endforeach
           </select>
+          <div class="clearfix"></div>
 
           {!! Form::label('title', '内容', array('class'=>'col-md-12')) !!}
           {!! Form::text('title', '', array('class' => 'input col-md-12 form-control', 'placeholder' => '内容')) !!}
+          <div class="clearfix"></div>
 
           {!! Form::label('description', '广告描述', array('class'=>'col-md-12')) !!}
           <textarea name="description" class="description input col-md-12 form-control" placeholder="详细信息" rows="3" ></textarea>
+          <div class="clearfix"></div>
 
           {!! Form::label('order', '显示顺序', array('class'=>'col-md-12')) !!}
           <select class="col-lg-12 col-md-12 col-sm-12 form-control" name="order">
@@ -56,12 +60,15 @@
               <option value="{{ $i }}">{{ $i }}</option>i
             @endfor
           </select>
+          <div class="clearfix"></div>
 
           {!! Form::label('links', '链接', array('class'=>'col-md-12')) !!}
           {!! Form::text('links', '', array('class' => 'input col-md-12 form-control', 'placeholder' => '链接')) !!}
+          <div class="clearfix"></div>
 
           {!! Form::label('published_at', '开始显示日期', array('class'=>'col-md-12')) !!}
           {!! Form::date('published_at', '', array('class'=>'col-md-12', 'placehold'=>'开始日期')) !!}
+          <div class="clearfix"></div>
 
           {!! Form::label('category_id', '栏目', array('class'=>'col-md-12')) !!}
           <select class="col-lg-12 col-md-12 col-sm-12 form-control" name="category_id">
@@ -69,6 +76,7 @@
               <option value="{{$category->id}}">{{$category->name}}</option>
             @endforeach
           </select>
+          <div class="clearfix"></div>
 
           {!! Form::label('images', '上传图片*', array('class'=>'col-md-12')) !!}
           @if ($errors->has('images'))
@@ -77,6 +85,7 @@
             </span>
           @endif
           {!! Form::file('images', '', array('class'=>'col-md-12 form-control-file form-control', 'required'=>'required')) !!}
+          <div class="clearfix"></div>
 
           {!! Form::token() !!}
           <br>
