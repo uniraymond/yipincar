@@ -84,7 +84,8 @@
                 <strong>{{ $errors->first('images') ? '图片不能为空' : '' }}</strong>
             </span>
           @endif
-          {!! Form::file('images', '', array('class'=>'col-md-12 form-control-file form-control', 'required'=>'required')) !!}
+          {!! Form::file('images', '', array('class'=>'col-md-12 form-control-file form-control', 'id'=>'files', 'required'=>'required')) !!}
+          <img id="image" />
           <div class="clearfix"></div>
 
           {!! Form::token() !!}
@@ -97,4 +98,17 @@
       </div>
     </div>
   </div>
+<script>
+  document.getElementById("images").onchange = function () {
+    var reader = new FileReader();
+
+    reader.onload = function (e) {
+      // get loaded data and render thumbnail.
+      document.getElementById("image").src = e.target.result;
+    };
+
+    // read the image file as a data URL.
+    reader.readAsDataURL(this.files[0]);
+  };
+</script>
 @endsection
