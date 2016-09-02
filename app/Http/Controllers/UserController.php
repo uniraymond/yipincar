@@ -192,10 +192,36 @@ class UserController extends Controller
         $userName = $user->name;
         $user->delete();
 
-        $request->session()->flash('status', 'User: '. $userName .' has been removed!');
+        $request->session()->flash('status', '用户: '. $userName .' 被成功删除了.');
         return redirect('admin/user');
     }
 
+
+    public function banned(Request $request, $id)
+    {
+        $auth = $request->user();
+
+        $user = User::findorFail($id);
+        if ($user) {
+            $user->banned = 1;
+            $user->save();
+        }
+        $request->session()->flash('status', '用户: '. $user->name .' 已被屏蔽.');
+        return redirect('admin/user');
+    }
+
+    public function active(Request $request, $id)
+    {
+        $auth = $request->user();
+
+        $user = User::findorFail($id);
+        if ($user) {
+            $user->banned = 0;
+            $user->save();
+        }
+        $request->session()->flash('status', '被屏蔽的用户: '. $user->name .' 已被恢复.');
+        return redirect('admin/user');
+    }
 
     /**
      * Get a validator for an incoming registration request.
@@ -209,8 +235,8 @@ class UserController extends Controller
             return Validator::make($data, [
                 'name' => 'required|max:255',
                 'email' => 'required|email|max:255|unique:users',
-                'password' => 'required|min:6',
-                'password_confirmation' => 'required|min:6|confirmed',
+                'password' => 'required|min:6|confirmed',
+                'password_confirmation' => 'required|min:6',
                 'roles' => 'required',
                 'captcha' => 'required|captcha'
             ], $this->messages($new));
@@ -218,14 +244,14 @@ class UserController extends Controller
             return Validator::make($data, [
                 'name' => 'required|max:255',
                 'email' => 'required|email|max:255|unique:users',
-                'password_confirmation' => 'confirmed',
+                'password' => 'confirmed',
                 'roles' => 'required',
             ], $this->messages());
         } else{
             return Validator::make($data, [
                 'name' => 'required|max:255',
                 'email' => 'required|email|max:255',
-                'password_confirmation' => 'confirmed',
+                'password' => 'confirmed',
                 'roles' => 'required'
             ], $this->messages());
         }

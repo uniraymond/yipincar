@@ -37,6 +37,8 @@ Route::group(['middleware'=>'auth', 'prefix'=>'admin'], function() {
     Route::resource('profile', 'ProfileController');
 
     Route::get('user/role/{roleId}', 'UserController@role');
+    Route::put('user/{userId}/banned', 'UserController@banned');
+    Route::put('user/{userId}/active', 'UserController@active');
     Route::get('article/category/{categoryId}', 'ArticleController@category');
     Route::get('article/type/{typeId}', 'ArticleController@type');
     Route::get('article/tag/{tagId}', 'ArticleController@tag');
