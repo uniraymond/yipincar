@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -31,7 +31,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="{{ url ('/admin/article') }}"><img src="{{ url('/src/images/smLogo.png') }}" /></a>
+        <a class="navbar-brand" href="{{ url ('/admin/article') }}"><img src="{{ url('/src/images/toplogo.png') }}" /></a>
     </div>
     <div class="hidden-sm-up navbar-toggleable-sm navbar-small-collapse collapse" aria-expanded="false" style="height: 0px;">
         <ul>

@@ -22,7 +22,9 @@ class DatabaseSeeder extends Seeder
         $this->call(ArticleTypesTableSeeder::class);
         $this->call(TagTableSeeder::class);
         $this->call(ArticlesTableSeeder::class);
-        
+        $this->call(AdvPositionsTableSeeder::class);
+        $this->call(AdvTypesTableSeeder::class);
+
         Model::reguard();
     }
 }

@@ -64,7 +64,7 @@ Route::group(['middleware'=>'auth', 'prefix'=>'admin'], function() {
     
     Route::get('advsetting/list', 'AdvsettingController@index');
     Route::get('advsetting/type/{typeId}', 'AdvsettingController@type');
-    Route::post('advsetting/update', 'AdvsettingController@update');
+    Route::get('advsetting/position/{positionId}', 'AdvsettingController@position');
 
     Route::get('api/category', 'CategoryController@index');
     Route::get('advsetting/editimage/{id}', 'AdvsettingController@edit');

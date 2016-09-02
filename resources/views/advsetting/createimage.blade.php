@@ -15,12 +15,13 @@
               </p>
             </div>
           @endif
-          {{ $success = Session::get('filestatus')}}
+          {{ $success = Session::get('status')}}
           @if (count($errors) > 0)
             @foreach ($errors->all() as $error)
               <div class="col-md-12 bs-example-bg-classes" >
                 <p class="bg-danger">
-                  {{ $error }}
+                    需要上传图片
+                    {{--{{ $error }}--}}
                 </p>
               </div>
             @endforeach
@@ -28,28 +29,57 @@
         </div>
         <div class="col-lg-12 col-md-12 col-sm-12">
           {!! Form::open(array('url' => 'admin/advsetting/uploadimage', 'class' => 'form', 'enctype'=>'multipart/form-data', 'method'=>'put')) !!}
-          {!! Form::label('name', '广告标题', array('class'=>'col-md-12')) !!}
-          {!! Form::text('name', '', array('class' => 'input col-md-12 form-control', 'placeholder' => '广告标题')) !!}
-          {!! Form::label('description', '广告描述', array('class'=>'col-md-12')) !!}
-          {!! Form::textarea('description', '', array('class' => 'description input col-md-12 form-control', 'placeholder' => '广告详细描述')) !!}
-          {!! Form::label('images', '上传广告图片', array('class'=>'col-md-12')) !!}
-          {!! Form::file('images', '', array('class'=>'col-md-12 form-control-file form-control')) !!}
-          {!! Form::label('order', '显示顺序', array('class'=>'col-md-12')) !!}
-          {!! Form::text('order', '', array('class'=>'col-md-12 form-control', 'placehoder'=>'Order')) !!}
-          <div class="col-lg-12 col-md-12 col-sm-12">
-          <label for="published">
-            <input type="checkbox" name="published" />
-            显示</label>
-          </div>
-          {!! Form::label('types', '选择广告类型', array('class'=>'col-md-12')) !!}
+
+          {!! Form::label('type_id', '选择类型', array('class'=>'col-md-12')) !!}
           <select class="col-lg-12 col-md-12 col-sm-12 form-control" name="type_id">
             @foreach ($types as $type)
               <option value="{{$type->id}}">{{$type->name}}</option>
             @endforeach
           </select>
+
+          {!! Form::label('position_id', '选择位置', array('class'=>'col-md-12')) !!}
+          <select class="col-lg-12 col-md-12 col-sm-12 form-control" name="position_id">
+            @foreach ($positions as $position)
+              <option value="{{$position->id}}">{{$position->name}}</option>
+            @endforeach
+          </select>
+
+          {!! Form::label('title', '内容', array('class'=>'col-md-12')) !!}
+          {!! Form::text('title', '', array('class' => 'input col-md-12 form-control', 'placeholder' => '内容')) !!}
+
+          {!! Form::label('description', '广告描述', array('class'=>'col-md-12')) !!}
+          <textarea name="description" class="description input col-md-12 form-control" placeholder="详细信息" rows="3" ></textarea>
+
+          {!! Form::label('order', '显示顺序', array('class'=>'col-md-12')) !!}
+          <select class="col-lg-12 col-md-12 col-sm-12 form-control" name="order">
+            @for($i=1; $i<=6; $i++)
+              <option value="{{ $i }}">{{ $i }}</option>i
+            @endfor
+          </select>
+
+          {!! Form::label('links', '链接', array('class'=>'col-md-12')) !!}
+          {!! Form::text('links', '', array('class' => 'input col-md-12 form-control', 'placeholder' => '链接')) !!}
+
+          {!! Form::label('published_at', '开始显示日期', array('class'=>'col-md-12')) !!}
+          {!! Form::date('published_at', '', array('class'=>'col-md-12', 'placehold'=>'开始日期')) !!}
+
+          {!! Form::label('category_id', '栏目', array('class'=>'col-md-12')) !!}
+          <select class="col-lg-12 col-md-12 col-sm-12 form-control" name="category_id">
+            @foreach ($categories as $category)
+              <option value="{{$category->id}}">{{$category->name}}</option>
+            @endforeach
+          </select>
+
+          {!! Form::label('images', '上传图片*', array('class'=>'col-md-12')) !!}
+          @if ($errors->has('images'))
+            <span class="help-block">
+                <strong>{{ $errors->first('images') ? '图片不能为空' : '' }}</strong>
+            </span>
+          @endif
+          {!! Form::file('images', '', array('class'=>'col-md-12 form-control-file form-control', 'required'=>'required')) !!}
+
           {!! Form::token() !!}
-          {!! Form::text('type_id', 1, array('hidden'=>'hidden')) !!}
-          <div class="clearfix"></div>
+          <br>
           <div class=" col-lg-12 col-md-12 col-sm-12">
             {!! Form::submit('保存', array('class'=>'btn btn-primary')) !!}
           </div>

@@ -33,3 +33,7 @@ textarea.name {
 #app-navbar-collapse .nav > li > a {
     padding:15px 30px;
 }
+
+.clearfix {
+    clear: both;
+}

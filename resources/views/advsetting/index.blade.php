@@ -1,5 +1,5 @@
 @extends('layouts.base')
-@include('advsetting.sidebarType',['types'=>$types])
+@include('advsetting.sidebarType',['types'=>$types, 'positions'=>$positions])
 @section('content')
     <div id="page-wrapper">
         <div class="row">
@@ -20,12 +20,14 @@
                     </div>
                 @endif
 
-                @if(count($images)>0)
+                @if(count($advsettings)>0)
                     <table class="table">
                         <thead>
                             <tr>
                                 <th>标题</th>
-                                <th>描述</th>
+                                <th>位置</th>
+                                <th>类型</th>
+                                <th>日期</th>
                                 <th>顺序</th>
                                 <th>删除</th>
                                 <th>编辑</th>
@@ -33,14 +35,17 @@
                         </thead>
                         {!! Form::open(array('url' => 'admin/advsetting/update', 'class'=>'form')) !!}
                             <tbody>
-                                @foreach($images as $image)
+                                @foreach($advsettings as $advsetting)
                                     <tr>
-                                        <td>{{ $image->name }}</td>
-                                        <td><span id="imageDesc_{{ $image->id }}">{{ $image->description }}</span></td>
-                                        <td><input type="text" name="order[{{ $image->id }}]" value="{{ $image->order }}" /></td>
-                                        <td><input type="checkbox" name="delete[{{ $image->id }}]" ng-click="confirmDelete('{{ $image->id }}')"/></td>
+                                        <td>{{ $advsetting->title }}</td>
+                                        <td><span>{{ $advsetting->adv_positions->name }}</span></td>
+                                        <td><span>{{ $advsetting->adv_types->name }}</span></td>
+                                        <td><span>{{ date('Y-m-d', strtotime($advsetting->published_at)) }}</span></td>
+{{--                                        <td>{{ $advsetting->order }}</td>--}}
+                                        <td><input type="text" name="order[{{ $advsetting->id }}]" value="{{ $advsetting->order }}" style="width:30px;"/></td>
+                                        <td><input type="checkbox" name="delete[{{ $advsetting->id }}]" ng-click="confirmDelete('{{ $advsetting->id }}')"/></td>
                                         <td>
-                                            <a href="{{ url('admin/advsetting/editimage/'.$image->id) }}" class="btn btn-default">编辑</a>
+                                            <a href="{{ url('admin/advsetting/editimage/'.$advsetting->id) }}" class="btn btn-default">编辑</a>
                                          </td>
                                     </tr>
                                 @endforeach
@@ -55,7 +60,7 @@
                 @endif
             </div>
             <div class="col-lg-12 col-md-12 col-sm-12 clearfix">
-                {!! $images->links() !!}
+                {!! $advsettings->links() !!}
             </div>
         </div>
     </div>

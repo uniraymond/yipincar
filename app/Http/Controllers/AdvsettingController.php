@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\AdvPosition;
+use App\AdvType;
 use App\ArticleResources;
+use App\Category;
 use App\Resource;
 use App\ResourceTypes;
 use Illuminate\Http\Request;
@@ -21,51 +24,63 @@ class AdvsettingController extends Controller
   public function index()
   {
 //    $images = AdvSetting::getAdvImages();
-    $types = ResourceTypes::all();
-    $images = Resource::where('type_id', '<>', 0)->paginate(15);
-    return view('advsetting/index', ['images' => $images, 'types'=>$types]);
+    $types = AdvType::all();
+    $positions = AdvPosition::all();
+    $categories = Category::where('category_id', '<>', 0)->get();
+    $advSettings = AdvSetting::where('type_id', '<>', 0)->paginate(15);
+    return view('advsetting/index', ['advsettings' => $advSettings, 'types'=>$types, 'positions'=>$positions, 'categories'=>$categories]);
   }
 
-  public function type(Request $request, $typeId)
-  {
-    $types = ResourceTypes::all();
-    $images = Resource::where('type_id', $typeId)->paginate(15);
-    return view('advsetting/index', ['images' => $images, 'types'=>$types]);
-  }
+//  public function type(Request $request, $typeId)
+//  {
+//    $types = ResourceTypes::all();
+//    $images = Resource::where('type_id', $typeId)->paginate(15);
+//    return view('advsetting/index', ['images' => $images, 'types'=>$types]);
+//  }
 
 
   public function update(Request $request)
   {
     $authuser = $request->user();
-    $deleteIds = $request['delete'];
-    foreach ($deleteIds as $key => $deleteId) {
-      $image = Resource::findorFail($key);
-      $image->delete();
-    }
+
     $orders = $request['order'];
-    foreach ($orders as $imageId => $order) {
-      $oimage = Resource::findorFail($imageId);
-      $oimage->order = $order;
-      $oimage->save();
+    foreach ($orders as $advId => $order) {
+      $oimage = AdvSetting::findorFail($advId);
+      if($oimage) {
+        $oimage->order = $order;
+        $oimage->save();
+      }
+    }
+    $deleteIds = $request['delete'];
+    if (count($deleteIds)>0){
+      foreach ($deleteIds as $key => $deleteId) {
+        $advsetting = AdvSetting::findorFail($key);
+        $advsetting->delete();
+      }
     }
 
-    $request->session()->flash('filestatus', '广告已更新.');
+
+    $request->session()->flash('status', '广告已更新.');
     return redirect('admin/advsetting/list');
   }
 
   public function edit($id)
   {
-    $image = Resource::findorFail($id);
-    $types = ResourceTypes::all();
+    $types = AdvType::all();
+    $positions = AdvPosition::all();
+    $categories = Category::where('category_id', '<>', 0)->get();
+    $advSettings = AdvSetting::findorFail($id);
     $displayorder = ArticleResources::where('resource_id', $id)->where('article_id', 0)->first();
 
-    return view('advsetting/editimage', ['image' => $image, 'types'=>$types, 'displayorder'=>$displayorder]);
+    return view('advsetting/editimage', ['advSettings' => $advSettings, 'types'=>$types, 'displayorder'=>$displayorder, 'positions'=>$positions, 'categories'=>$categories]);
   }
 
   public function create(Request $request)
   {
-    $types = ResourceTypes::all();
-    return view('advsetting/createimage', ['types'=>$types]);
+    $types = AdvType::all();
+    $positions = AdvPosition::all();
+    $categories = Category::where('category_id', '<>', 0)->get();
+    return view('advsetting/createimage', ['types'=>$types, 'positions'=>$positions, 'categories'=>$categories]);
   }
 
   /**
@@ -81,21 +96,28 @@ class AdvsettingController extends Controller
         'id' => 'required',
     ]);
 
-    $image = Resource::findorFail($request['id']);
-    $image->name = $request['name'];
-    $image->description = $request['description'];
-    $image->type_id = $request['type_id'];
-    $image->order = $request['order'];
-    $image->published = $request['published'] ? 1 : 0;
-    $image->updated_by = $authuser->id;
-    $image->save();
+    $advSetting = AdvSetting::findorFail($request['id']);
 
-    $request->session()->flash('filestatus', '成功更新广告');
+    $advSetting->title = $request['title'];
+    $advSetting->type_id = $request['type_id'];
+    $advSetting->position_id = $request['position_id'];
+    $advSetting->category_id = $request['category_id'];
+    $advSetting->description = $request['description'];
+    $advSetting->order = $request['order'];
+    $advSetting->links = $request['links'];
+    $advSetting->published_at = $request['published_at'];
+    $advSetting->created_by = $authuser->id;
+    $advSetting->save();
+
+    $request->session()->flash('status', '成功更新广告');
     return redirect('admin/advsetting/list');
   }
 
   public function uploadimage(Request $request)
   {
+    $this->validate($request, [
+        'images' => 'required',
+    ]);
     $authuser = $request->user();
     $file = $request->file('images');
     if (!empty($file)) {
@@ -109,17 +131,46 @@ class AdvsettingController extends Controller
 
       $image = Image::make(sprintf('photos/adv/%s', $file->getClientOriginalName()))->resize(500, (int)((500 * $cell_img_size[1]) / $cell_img_size[0]))->save();
       $resource = new Resource();
-      $resource->name = $request['name'];
-      $resource->description = $request['description'];
+      $resource->name = $file->getClientOriginalName();
       $resource->link = $imageLink;
-      $resource->type_id = $request['type_id'];
-      $resource->order = $request['order'];
-      $resource->published = $request['published'] ? 1 : 0;
       $resource->created_by = $authuser->id;
       $resource->save();
+      
+      
+      $advSetting = new AdvSetting();
+      $advSetting->title = $request['title'];
+      $advSetting->resource_id = $resource->id;
+      $advSetting->type_id = $request['type_id'];
+      $advSetting->position_id = $request['position_id'];
+      $advSetting->category_id = $request['category_id'];
+      $advSetting->description = $request['description'];
+      $advSetting->order = $request['order'];
+      $advSetting->links = $request['links'];
+      $advSetting->published_at = $request['published_at'];
+      $advSetting->created_by = $authuser->id;
+      $advSetting->save();
     }
 
-    $request->session()->flash('filestatus', '图片上传成功.');
+    $request->session()->flash('status', '图片上传成功.');
     return redirect('admin/advsetting/list');
+  }
+
+  public function type($id)
+  {
+    $types = AdvType::all();
+    $positions = AdvPosition::all();
+    $categories = Category::where('category_id', '<>', 0)->get();
+    $advSettings = AdvSetting::where('type_id', $id)->paginate(15);
+    return view('advsetting/index', ['advsettings' => $advSettings, 'types'=>$types, 'positions'=>$positions, 'categories'=>$categories]);
+  }
+
+  public function position($id)
+  {
+    $types = AdvType::all();
+    $positions = AdvPosition::all();
+    $categories = Category::where('category_id', '<>', 0)->get();
+    $advSettings = AdvSetting::where('position_id', $id)->paginate(15);
+    return view('advsetting/index', ['advsettings' => $advSettings, 'types'=>$types, 'positions'=>$positions, 'categories'=>$categories]);
+
   }
 }
