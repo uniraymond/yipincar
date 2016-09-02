@@ -85,7 +85,7 @@
             </span>
           @endif
           {!! Form::file('images', '', array('class'=>'col-md-12 form-control-file form-control', 'id'=>'files', 'required'=>'required')) !!}
-          <img id="image" />
+          <img id="image" width="100" />
           <div class="clearfix"></div>
 
           {!! Form::token() !!}
