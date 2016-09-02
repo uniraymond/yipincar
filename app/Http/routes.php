@@ -75,8 +75,9 @@ Route::group(['middleware'=>'auth', 'prefix'=>'admin'], function() {
     Route::get('/', 'ArticleController@index');
     Route::get('statistics', 'DashboardController@index');
 });
-
-Route::get('/', 'ArticleController@index');
+Route::group(['middleware' => 'auth'], function () {
+    Route::get('/', 'ArticleController@index');
+});
 
 Route::group(['prefix'=>'api'], function() {
     Route::resource('info', 'InfoController');
