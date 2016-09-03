@@ -218,8 +218,10 @@ class UserController extends Controller
 
         $user = User::findorFail($id);
         if ($user) {
+            $status_id = $user->status_id;
             $user->banned = 1;
             $user->status_id = 4;
+            $user->pre_status_id = $status_id;
             $user->save();
         }
         $request->session()->flash('status', '用户: '. $user->name .' 已被屏蔽.');
@@ -232,8 +234,11 @@ class UserController extends Controller
 
         $user = User::findorFail($id);
         if ($user) {
+            $status_id = $user->status_id;
             $user->banned = 0;
             $user->status_id = $user->pre_status_id;
+            $user->save();
+            $user->pre_status_id = $status_id;
             $user->save();
         }
         $request->session()->flash('status', '被屏蔽的用户: '. $user->name .' 已被恢复.');
