@@ -75,6 +75,11 @@ class UserController extends Controller
                 $request, $validator
             );
         }
+        if($request['status_id'] == 4) {
+            $banned = 1;
+        } else {
+            $banned = 0;
+        }
 
         $roleIds = $request['roles'];
         $new_user =  User::create([
@@ -83,7 +88,9 @@ class UserController extends Controller
             'password' => bcrypt($request['password']),
             'status_id' => $request['status_id'],
             'pre_status_id' => $request['status_id'],
+            'banned'  => $banned,
         ]);
+
         foreach($roleIds as $roleId) {
             $new_user->roles()->attach($roleId);
         }
@@ -188,6 +195,11 @@ class UserController extends Controller
             if ($request['status_id']) {
                 $currentUser->pre_status_id = $currentUser->status_id;
                 $currentUser->status_id = $request['status_id'];
+                if($request['status_id'] == 4) {
+                    $currentUser->banned = 1;
+                } else {
+                    $currentUser->banned = 0;
+                }
             }
             $currentUser->save();
 
