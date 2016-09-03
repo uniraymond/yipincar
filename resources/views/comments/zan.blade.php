@@ -8,7 +8,7 @@
                 <div>
                     {{ $success = Session::get('status') }}
                 </div>
-                @if($zans)
+                @if(count($zans)>0)
                 <table class="table">
                     <thead>
                         <tr>
