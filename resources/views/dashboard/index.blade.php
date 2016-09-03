@@ -1,11 +1,9 @@
 @extends('layouts.base')
 
 @section('content')
-    <div id="page-wrapper">
-        <div class="row">
-            <div class="col-lg-12">
-                <h1 class="page-header">数据统计</h1>
-            </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <iframe src="http://mobile.umeng.com/apps" style="width: 100%; height: 800px;">
         </div>
     </div>
 @endsection
