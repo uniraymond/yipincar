@@ -39,7 +39,7 @@
                                 <td>
                                     {!! Form::open(array('url' => 'admin/tag/'.$tag->id, 'class' => 'form', 'method'=>'delete', 'onsubmit'=>'return confirm("确定删除?");')) !!}
                                     {!! Form::text('id', $tag->id, array('hidden'=>'hidden', 'readonly' => true)) !!}
-                                    {!! Form::submit('删除', array('class'=>'btn btn-primary')) !!}
+                                    {!! Form::submit('删除', array('class'=>'btn btn-danger')) !!}
                                     {!! Form::token() !!}
                                     {!! Form::close() !!}
                                 </td>

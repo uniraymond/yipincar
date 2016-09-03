@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Article;
 use App\Role;
+use App\UserStatus;
 use Illuminate\Support\Facades\DB as DB;
 use App\UserRoles;
 use Illuminate\Http\Request;
@@ -44,10 +46,11 @@ class UserController extends Controller
     public function create(Request $request)
     {
         $auth = $request->user();
+        $statuses = UserStatus::all();
         $roles = Role::where('name','<>', 'super_admin')->get();
         $authView = $auth->hasAnyRole(['super_admin', 'admin']);
         if ($authView) {
-            return view('users/create', ['roles'=>$roles, 'usergroups'=>$roles]);
+            return view('users/create', ['roles'=>$roles, 'usergroups'=>$roles, 'statuses'=>$statuses]);
         }
         return redirect('/');
     }
@@ -78,6 +81,8 @@ class UserController extends Controller
             'name' => $request['name'],
             'email' => $request['email'],
             'password' => bcrypt($request['password']),
+            'status_id' => $request['status_id'],
+            'pre_status_id' => $request['status_id'],
         ]);
         foreach($roleIds as $roleId) {
             $new_user->roles()->attach($roleId);
@@ -93,9 +98,13 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request, $id)
     {
-        //
+        $auth = $request->user();
+        $user = User::findorFail($id);
+        $articles = User::find($id)->articles()->orderBy('created_at', 'desc')->get();
+        
+        return view('users/show', ['user'=>$user, 'articles'=>$articles]);
     }
 
     /**
@@ -107,11 +116,12 @@ class UserController extends Controller
     public function edit(Request $request, $id)
     {
         $auth = $request->user();
+        $statuses = UserStatus::all();
         $authView = $auth->hasAnyRole(['super_admin', 'admin']);
         if ($authView) {
             $roles = Role::where('name','<>', 'super_admin')->get();
             $user = User::findorFail($id);
-            return view('users/edit', ['user'=> $user, 'roles'=>$roles, 'usergroups'=>$roles]);
+            return view('users/edit', ['user'=> $user, 'roles'=>$roles, 'usergroups'=>$roles, 'statuses'=>$statuses]);
         }
         return redirect('/');
     }
@@ -174,6 +184,11 @@ class UserController extends Controller
             if ($request['password']) {
                 $currentUser->password = bcrypt($request['password']);
             }
+
+            if ($request['status_id']) {
+                $currentUser->pre_status_id = $currentUser->status_id;
+                $currentUser->status_id = $request['status_id'];
+            }
             $currentUser->save();
 
         $request->session()->flash('status', '用户: '. $currentUser->name .'升级资料成功!');
@@ -204,6 +219,7 @@ class UserController extends Controller
         $user = User::findorFail($id);
         if ($user) {
             $user->banned = 1;
+            $user->status_id = 4;
             $user->save();
         }
         $request->session()->flash('status', '用户: '. $user->name .' 已被屏蔽.');
@@ -217,6 +233,7 @@ class UserController extends Controller
         $user = User::findorFail($id);
         if ($user) {
             $user->banned = 0;
+            $user->status_id = $user->pre_status_id;
             $user->save();
         }
         $request->session()->flash('status', '被屏蔽的用户: '. $user->name .' 已被恢复.');

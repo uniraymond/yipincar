@@ -90,6 +90,17 @@
                             </div>
                         </div>
 
+                        <div class="form-group">
+                            {!! Form::label('status_id', '账户状态', array('class'=>'col-md-4 control-label')) !!}
+                            <div class="col-md-6">
+                                <select name="status_id" id="status_id" class="form-control">
+                                    @foreach($statuses as $status)
+                                        <option value="{{ $status->id }}">{{ $status->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+
                         <div class="form-group{{ $errors->has('roles') ? ' has-error' : ''}}">
                             <label for="captcha" class="col-md-4 control-label">{!! captcha_img() !!}</label>
                             <div class="col-md-6">
@@ -101,6 +112,7 @@
                                 @endif
                             </div>
                         </div>
+
                         <div class="clearfix"></div>
                         {!! Form::submit('保存', array('class'=>'btn btn-primary col-lg-offset-10 col-md-offset-10 col-sm-offset-10')) !!}
                         {!! Form::token() !!}

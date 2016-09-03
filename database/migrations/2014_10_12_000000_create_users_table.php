@@ -21,6 +21,8 @@ class CreateUsersTable extends Migration
             $table->string('uid');
             $table->string('phone');
             $table->integer('profile_id')->references('id')->on('profiles')->onDelete('cascade');
+            $table->integer('status_id')->references('id')->on('user_status')->onDelete('cascade');
+            $table->integer('pre_status_id')->references('id')->on('user_status')->onDelete('cascade');
             $table->string('role');
             $table->boolean('banned');
             $table->rememberToken();

@@ -77,4 +77,9 @@ class User extends Authenticatable
         }
         return $roles;
     }
+
+    public function articles()
+    {
+        return $this->hasMany('App\Article', 'created_by');
+    }
 }

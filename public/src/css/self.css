@@ -1,6 +1,11 @@
 /**
  * Created by raymond on 1/09/16.
  */
+
+.clearfix {
+    clear: both;
+}
+
 #app-navbar-collapse{
     float: left;
 }
@@ -34,6 +39,8 @@ textarea.name {
     padding:15px 30px;
 }
 
-.clearfix {
-    clear: both;
+#auth_article_list {
+    height: 400px;
+    overflow-y: scroll;
+
 }
