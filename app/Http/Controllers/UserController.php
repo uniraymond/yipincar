@@ -82,14 +82,16 @@ class UserController extends Controller
         }
 
         $roleIds = $request['roles'];
-        $new_user =  User::create([
-            'name' => $request['name'],
-            'email' => $request['email'],
-            'password' => bcrypt($request['password']),
-            'status_id' => $request['status_id'],
-            'pre_status_id' => $request['status_id'],
-            'banned'  => $banned,
-        ]);
+        $new_user = new User();
+        $new_user->name = $request['name'];
+        $new_user->email = $request['email'];
+        $new_user->password = bcrypt($request['password']);
+        $new_user->status_id = $request['status_id'];
+        $new_user->pre_status_id = $request['status_id'];
+        if($request['status_id'] == 4) {
+            $new_user->banned = 1;
+        }
+        $new_user->save();
 
         foreach($roleIds as $roleId) {
             $new_user->roles()->attach($roleId);
