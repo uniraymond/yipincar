@@ -76,6 +76,7 @@ Route::group(['middleware'=>'auth', 'prefix'=>'admin'], function() {
     Route::put('advsetting/uploadimage', 'AdvsettingController@uploadImage');
     Route::get('/', 'ArticleController@index');
     Route::get('statistics', 'DashboardController@index');
+    Route::put('article', 'ArticleController@store');
 });
 Route::group(['middleware' => 'auth'], function () {
     Route::get('/', 'ArticleController@index');

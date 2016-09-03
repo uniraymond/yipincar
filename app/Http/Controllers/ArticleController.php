@@ -250,7 +250,7 @@ class ArticleController extends Controller
 
     Yipinlog::createlog($log);
 
-    $request->session()->flash('status', 'Article: '. $title .' has been updated!');
+    $request->session()->flash('status', '文章: '. $title .' 已经更新.');
 
     return redirect('admin/article');
   }
@@ -272,10 +272,10 @@ class ArticleController extends Controller
         $article->article_tags()->delete(); //remove article_tags record
         $article->delete(); //remove the artile
 
-        $request->session()->flash('status', 'Article: '. $articleName .' has been removed!');
+        $request->session()->flash('status', '文章: '. $articleName .' 已经被删除.');
       } else {
 
-        $request->session()->flash('status', 'Article: '. $articleName .' has been '. $article->published ? 'published ' : 'unpublished ' .'!');
+        $request->session()->flash('status', '文章: '. $articleName .' 已经被 '. $article->published ? 'published ' : 'unpublished ' .'!');
         $article->save(); //published the article
       }
     }
@@ -305,7 +305,6 @@ class ArticleController extends Controller
   public function store(Request $request)
   {
     $authuser = $request->user();
-
     $this->validate($request, [
         'title' => 'required',
         'content'=> 'required'
@@ -388,7 +387,7 @@ class ArticleController extends Controller
 
     Yipinlog::createlog($log);
 
-    $request->session()->flash('status', 'Article: '. $title .' has been added!');
+    $request->session()->flash('status', '文章: '. $title .' 已经被添加成功');
     return redirect('admin/article');
 
   }
@@ -405,7 +404,7 @@ class ArticleController extends Controller
     $article = Articles::find($id);
     $title = $article->title;
     $article->delete();
-    $request->session()->flash('status', 'Article: '. $title .' has been removed!');
+    $request->session()->flash('status', '文章: '. $title .' 已经被删除.');
     return redirect('admin/article');
   }
 
