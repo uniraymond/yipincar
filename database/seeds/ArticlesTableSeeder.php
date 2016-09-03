@@ -17,6 +17,7 @@ class ArticlesTableSeeder extends Seeder
                 'description' => str_random(10),
                 'content'=>'this is content',
                 'category_id' => 1,
+                'created_by' => 5,
                 'type_id' => 1
             ]);
 
