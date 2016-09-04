@@ -22,23 +22,30 @@
             $displayForm = true;
         }
           $reviewTitle = '审核文章';
-          $checkboxLabel = '已经审核';
+$checkboxLabel = '审核';
+        $radioLabel1 = '通过';
+        $radioLabel2 = '驳回';
           $currentStatusId = 2;
           break;
    case 'draft':
-        if(Auth::user()->hasAnyRole('editor', 'auth_editor')) {
+if(Auth::user()->hasAnyRole(['editor', 'auth_editor']) && $article->created_by == Auth::user()->id) {
             $displayForm = true;
         }
           $reviewTitle = '发表草稿';
-          $checkboxLabel = '申请审核';
+$checkboxLabel = '申请审核';
+          $radioLabel1 = '审核';
+          $radioLabel2 = '草稿';
           $currentStatusId = 1;
           break;
    default:
-        if(Auth::user()->hasAnyRole('editor', 'auth_editor')) {
+        if(Auth::user()->hasAnyRole(['editor', 'auth_editor']) && $article->created_by == Auth::user()->id) {
             $displayForm = true;
         }
           $reviewTitle = '发表草稿';
-          $checkboxLabel = '申请审核';
+
+$checkboxLabel = '申请审核';
+          $radioLabel1 = '审核';
+          $radioLabel2 = '草稿';
           $currentStatusId = 1;
           break;
    }
@@ -52,9 +59,18 @@
     {!! Form::textarea('comment', '', array('class'=>'name col-lg-12 col-md-12 col-sm-12', 'placeholder' => '建议', 'rows'=> '3')) !!}
     {!! Form::text('article_status', $statusName, array('hidden')) !!}
     <div class="form-check">
-        <label for="published" class="col-lg-2 col-md-2 col-sm-2 form-check-label">
-            <input type="checkbox" name="published" class="col-lg-2 col-md-2 col-sm-2 form-check-input" /> {{ $checkboxLabel }}
-        </label>
+        @if ($currentUser->hasRole('chef_editor'))
+            <label for="published" class="col-lg-2 col-md-2 col-sm-2 form-check-label">
+                <input type="checkbox" name="published" class="col-lg-2 col-md-2 col-sm-2 form-check-input" /> {{ $checkboxLabel }}
+            </label>
+        @else
+            <label for="published" class="col-lg-2 col-md-2 col-sm-2 form-check-label">
+                <input type="radio" name="published" class="col-lg-2 col-md-2 col-sm-2 form-check-input" checked="checked" value="1" /> {{ $radioLabel1 }}
+            </label>
+            <label for="published" class="col-lg-2 col-md-2 col-sm-2 form-check-label">
+                <input type="radio" name="published" class="col-lg-2 col-md-2 col-sm-2 form-check-input" value="0" /> {{ $radioLabel2 }}
+            </label>
+        @endif
     </div>
     {!! Form::submit('保存', array('class'=>'btn btn-primary col-lg-offset-8 col-md-offset-8 col-sm-offset-8')) !!}
     {!! Form::token() !!}

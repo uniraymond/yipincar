@@ -17,14 +17,14 @@
 
                 <div class="panel panel-default">
                     <div class="panel-heading heading_block_title col-lg-9 col-md-8">
-                        <h3 class=""panel-title">{{ $article->title }}</h3>
+                        <h3>{{ $article->title }}</h3>
                     </div>
                     <div id="heading_block" class="panel-heading col-lg-3 col-md-4">
                         <div>
                             <small><span>作者: </span>{{ $article->created_by ? $article->user_created_by->name : '无名' }}</small>
                         </div>
                         <div>
-                            <small><span>完成日期: </span>{{ date('Y m d, H:s', strtotime($article->created_date)) }}</small>
+                            <small><span>完成日期: </span>{{ $article->created_at }}</small>
                         </div>
                         <div>
                             <small><span>文章状态: </span>{{ count($article->article_status)>0 ? $article->article_status->title : '草稿' }}</small>

@@ -22,16 +22,21 @@ use App\Http\Controllers\Auth;
 
 class ArticleController extends Controller
 {
-  public function index()
+  public function index(Request $request)
   {
     //website
+    $authuser = $request->user();
 
     $categories = Category::where('category_id','<>', 0)->get();
     $types = ArticleTypes::all();
     $tags = Tags::all();
     $currentAction = false;
-    
-    $articles = Article::orderBy('created_at', 'desc')->paginate(15);
+
+      if ($authuser->hasRole('auth_editor')) {
+          $articles = Article::where('created_by', $authuser->id)->orderBy('created_at', 'desc')->paginate(15);
+      } else {
+          $articles = Article::orderBy('created_at', 'desc')->paginate(15);
+      }
     return view('articles/index', ['articles'=>$articles, 'categories'=>$categories, 'types'=>$types, 'tags'=>$tags, 'currentAction'=>$currentAction]);
   }
 
