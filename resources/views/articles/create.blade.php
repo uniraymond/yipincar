@@ -104,6 +104,9 @@
 
 <script src="/src/js/vendor/tinymce/js/tinymce/tinymce.min.js"></script>
 <script>
+    var jQueryyp = jQuery.noConflict( true );
+</script>
+<script>
     var editor_config = {
         height: "350",
         path_absolute : "{{ URL::to('/') }}/",

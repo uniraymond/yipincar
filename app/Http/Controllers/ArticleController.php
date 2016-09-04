@@ -71,6 +71,7 @@ class ArticleController extends Controller
     $articleStatus = $article->article_statuses;
     $checks = $article->article_status_checks;
     $allStatuses = ArticleStatus::orderBy('id', 'desc')->get();
+
     foreach($allStatuses as $status) {
       $allStatusChecks[$status->name] = $this->getArticleStatusObject($status->id, $id);
     }

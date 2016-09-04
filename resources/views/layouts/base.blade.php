@@ -89,7 +89,7 @@
 
     @yield('content')
 
-    <script src="{{ asset("src/js/jQuery.min.2.2.4.js") }}" type="text/javascript"></script>
+    <script src="{{ asset("/src/js/jQuery.min.2.2.4.js") }}" ></script>
     <script src="{{ asset("src/assets/scripts/frontend.js") }}" type="text/javascript"></script>
 </body>
 </html>

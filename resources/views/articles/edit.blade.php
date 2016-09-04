@@ -158,7 +158,9 @@
 //            }
 //        })
 </script>
-
+<script>
+    var jQueryyp = jQuery.noConflict( true );
+</script>
 <script src="/src/js/jquery-ui.min.js" ></script>
 <script>
     //autocomplete
