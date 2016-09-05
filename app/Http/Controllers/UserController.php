@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Article;
 use App\Role;
+use App\UserStatus;
+use Illuminate\Support\Facades\DB as DB;
 use App\UserRoles;
 use Illuminate\Http\Request;
 
@@ -27,8 +30,9 @@ class UserController extends Controller
         $auth = $request->user();
         $authView = $auth->hasAnyRole(['super_admin', 'admin']);
         if ($authView) {
+            $roles = Role::all();
             $users = User::paginate(10);
-            return view('users/index', ['users'=>$users]);
+            return view('users/index', ['users'=>$users, 'usergroups'=>$roles]);
         }
 
         return redirect('/');
@@ -42,10 +46,11 @@ class UserController extends Controller
     public function create(Request $request)
     {
         $auth = $request->user();
+        $statuses = UserStatus::all();
         $roles = Role::where('name','<>', 'super_admin')->get();
         $authView = $auth->hasAnyRole(['super_admin', 'admin']);
         if ($authView) {
-            return view('users/create', ['roles'=>$roles]);
+            return view('users/create', ['roles'=>$roles, 'usergroups'=>$roles, 'statuses'=>$statuses]);
         }
         return redirect('/');
     }
@@ -70,13 +75,24 @@ class UserController extends Controller
                 $request, $validator
             );
         }
+        if($request['status_id'] == 4) {
+            $banned = 1;
+        } else {
+            $banned = 0;
+        }
 
         $roleIds = $request['roles'];
-        $new_user =  User::create([
-            'name' => $request['name'],
-            'email' => $request['email'],
-            'password' => bcrypt($request['password']),
-        ]);
+        $new_user = new User();
+        $new_user->name = $request['name'];
+        $new_user->email = $request['email'];
+        $new_user->password = bcrypt($request['password']);
+        $new_user->status_id = $request['status_id'];
+        $new_user->pre_status_id = $request['status_id'];
+        if($request['status_id'] == 4) {
+            $new_user->banned = 1;
+        }
+        $new_user->save();
+
         foreach($roleIds as $roleId) {
             $new_user->roles()->attach($roleId);
         }
@@ -91,9 +107,13 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request, $id)
     {
-        //
+        $auth = $request->user();
+        $user = User::findorFail($id);
+        $articles = User::find($id)->articles()->orderBy('created_at', 'desc')->get();
+        
+        return view('users/show', ['user'=>$user, 'articles'=>$articles]);
     }
 
     /**
@@ -105,11 +125,12 @@ class UserController extends Controller
     public function edit(Request $request, $id)
     {
         $auth = $request->user();
+        $statuses = UserStatus::all();
         $authView = $auth->hasAnyRole(['super_admin', 'admin']);
         if ($authView) {
             $roles = Role::where('name','<>', 'super_admin')->get();
             $user = User::findorFail($id);
-            return view('users/edit', ['user'=> $user, 'roles'=>$roles]);
+            return view('users/edit', ['user'=> $user, 'roles'=>$roles, 'usergroups'=>$roles, 'statuses'=>$statuses]);
         }
         return redirect('/');
     }
@@ -172,6 +193,16 @@ class UserController extends Controller
             if ($request['password']) {
                 $currentUser->password = bcrypt($request['password']);
             }
+
+            if ($request['status_id']) {
+                $currentUser->pre_status_id = $currentUser->status_id;
+                $currentUser->status_id = $request['status_id'];
+                if($request['status_id'] == 4) {
+                    $currentUser->banned = 1;
+                } else {
+                    $currentUser->banned = 0;
+                }
+            }
             $currentUser->save();
 
         $request->session()->flash('status', '用户: '. $currentUser->name .'升级资料成功!');
@@ -190,10 +221,43 @@ class UserController extends Controller
         $userName = $user->name;
         $user->delete();
 
-        $request->session()->flash('status', 'User: '. $userName .' has been removed!');
+        $request->session()->flash('status', '用户: '. $userName .' 被成功删除了.');
         return redirect('admin/user');
     }
 
+
+    public function banned(Request $request, $id)
+    {
+        $auth = $request->user();
+
+        $user = User::findorFail($id);
+        if ($user) {
+            $status_id = $user->status_id;
+            $user->banned = 1;
+            $user->status_id = 4;
+            $user->pre_status_id = $status_id;
+            $user->save();
+        }
+        $request->session()->flash('status', '用户: '. $user->name .' 已被屏蔽.');
+        return redirect('admin/user');
+    }
+
+    public function active(Request $request, $id)
+    {
+        $auth = $request->user();
+
+        $user = User::findorFail($id);
+        if ($user) {
+            $status_id = $user->status_id;
+            $user->banned = 0;
+            $user->status_id = $user->pre_status_id;
+            $user->save();
+            $user->pre_status_id = $status_id;
+            $user->save();
+        }
+        $request->session()->flash('status', '被屏蔽的用户: '. $user->name .' 已被恢复.');
+        return redirect('admin/user');
+    }
 
     /**
      * Get a validator for an incoming registration request.
@@ -207,22 +271,23 @@ class UserController extends Controller
             return Validator::make($data, [
                 'name' => 'required|max:255',
                 'email' => 'required|email|max:255|unique:users',
-                'password' => 'required|min:6',
-                'password_confirmation' => 'required|min:6|confirmed',
-                'roles' => 'required'
+                'password' => 'required|min:6|confirmed',
+                'password_confirmation' => 'required|min:6',
+                'roles' => 'required',
+                'captcha' => 'required|captcha'
             ], $this->messages($new));
         } elseif($checkemail){
             return Validator::make($data, [
                 'name' => 'required|max:255',
                 'email' => 'required|email|max:255|unique:users',
-                'password_confirmation' => 'confirmed',
-                'roles' => 'required'
+                'password' => 'confirmed',
+                'roles' => 'required',
             ], $this->messages());
         } else{
             return Validator::make($data, [
                 'name' => 'required|max:255',
                 'email' => 'required|email|max:255',
-                'password_confirmation' => 'confirmed',
+                'password' => 'confirmed',
                 'roles' => 'required'
             ], $this->messages());
         }
@@ -245,6 +310,8 @@ class UserController extends Controller
                 'password_confirmation.min'  => '确定密码最少是6个字符',
                 'password_confirmation.confirmed'  => '两个密码不一样',
                 'roles.required'  => '角色是必选的',
+                'captcha.required' => '请输入验证码',
+                'captcha.captcha' => '输入的验证码错误',
             ];
         } else{
             return [
@@ -256,9 +323,35 @@ class UserController extends Controller
                 'email.unique'  => '电子邮件已经被注册过了',
                 'password_confirmation.confirmed'  => '两个密码不一样',
                 'roles.required'  => '角色是必选的',
+
             ];
         }
     }
 
+    public function role(Request $request, $role_id)
+    {
+        $auth = $request->user();
+        $authView = $auth->hasAnyRole(['super_admin', 'admin']);
+        if ($authView) {
+            $roles = Role::all();
+
+            $users = Role::find($role_id)->users()->paginate(10);
+            return view('users/index', ['users'=>$users, 'usergroups'=>$roles]);
+        }
+
+        return redirect('/');
+    }
+
+    public function side(Request $request)
+    {
+        $auth = $request->user();
+        $authView = $auth->hasAnyRole(['super_admin', 'admin']);
+        if ($authView) {
+            $roles = Role::all();
+            return view('users.side', ['usergroups'=>$roles]);
+        } else {
+            return redirect('admin/dashboard');
+        }
+    }
 
 }

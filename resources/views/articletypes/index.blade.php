@@ -1,7 +1,7 @@
-@extends('layouts.app')
+@extends('layouts.base')
 
 @section('content')
-    <div class="container">
+    <div id="page-wrapper">
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12">
                 <h1>文章类型</h1>
@@ -9,7 +9,7 @@
 
             {{--new blog link--}}
             <div class="col-lg-2 col-md-2 col-sm-2 pull-right clearfix">
-                {{ link_to('admin/articletypes/create', '新建', ['class'=>'btn btn-default']) }}
+                {{ link_to('admin/articletypes/create', '新建', ['class'=>'btn btn-secondary']) }}
             </div>
 
             {{--flash alert--}}
@@ -49,9 +49,10 @@
                 </table>
             @else
                 <div class="col-lg-12 col-md-12 col-sm-12 clearfix">
-                    <h4>文章类别不存在.</h4>.</h4>
+                    <h4>文章栏目不存在.</h4>.</h4>
                 </div>
             @endif
+
         </div>
     </div>
 @endsection

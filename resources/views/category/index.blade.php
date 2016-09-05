@@ -4,7 +4,7 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12">
-                <h1>文章类别</h1>
+                <h1>文章栏目</h1>
             </div>
 
             {{--new blog link--}}
@@ -21,7 +21,7 @@
                 </div>
             @endif
 
-            @if($categories)
+            @if(count($categories)>0)
                 <table class="table table-striped">
                     <thead>
                     <tr>
@@ -49,7 +49,7 @@
                 </table>
             @else
                 <div class="col-lg-12 col-md-12 col-sm-12 clearfix">
-                    <h4>文章类别没有找到</h4>
+                    <h4>文章栏目没有找到</h4>
                 </div>
             @endif
         </div>

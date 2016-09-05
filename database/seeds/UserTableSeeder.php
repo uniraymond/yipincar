@@ -28,6 +28,8 @@ class UserTableSeeder extends Seeder
         $user->name = 'raymond';
         $user->email = 'raymond@localhost';
         $user->password = bcrypt('password');
+        $user->status_id = 3;
+        $user->pre_status_id = 3;
         $user->save();
         $user->roles()->attach($role_super_admin);
         $user->roles()->attach($role_admin);
@@ -39,6 +41,8 @@ class UserTableSeeder extends Seeder
         $user->name = 'yuan';
         $user->email = 'yuan@localhost';
         $user->password = bcrypt('password');
+        $user->status_id = 3;
+        $user->pre_status_id = 3;
         $user->save();
         $user->roles()->attach($role_super_admin);
         $user->roles()->attach($role_chef_editor);
@@ -49,6 +53,8 @@ class UserTableSeeder extends Seeder
         $user->name = 'superadmin';
         $user->email = 'superadmin@localhost';
         $user->password = bcrypt('password');
+        $user->status_id = 3;
+        $user->pre_status_id = 3;
         $user->save();
         $user->roles()->attach($role_super_admin);
 
@@ -56,6 +62,8 @@ class UserTableSeeder extends Seeder
         $user->name = 'admin';
         $user->email = 'admin@localhost';
         $user->password = bcrypt('password');
+        $user->status_id = 3;
+        $user->pre_status_id = 3;
         $user->save();
         $user->roles()->attach($role_admin);
 
@@ -63,6 +71,8 @@ class UserTableSeeder extends Seeder
         $user->name = 'chefeditor';
         $user->email = 'sichefeditormon@localhost';
         $user->password = bcrypt('password');
+        $user->status_id = 3;
+        $user->pre_status_id = 3;
         $user->save();
         $user->roles()->attach($role_chef_editor);
 
@@ -70,6 +80,8 @@ class UserTableSeeder extends Seeder
         $user->name = 'maineditor';
         $user->email = 'maineditor@localhost';
         $user->password = bcrypt('password');
+        $user->status_id = 3;
+        $user->pre_status_id = 3;
         $user->save();
         $user->roles()->attach($role_main_editor);
 
@@ -77,6 +89,8 @@ class UserTableSeeder extends Seeder
         $user->name = 'editor';
         $user->email = 'editor@localhost';
         $user->password = bcrypt('password');
+        $user->status_id = 3;
+        $user->pre_status_id = 3;
         $user->save();
         $user->roles()->attach($role_editor);
 
@@ -84,6 +98,8 @@ class UserTableSeeder extends Seeder
         $user->name = 'autheditor';
         $user->email = 'autheditor@localhost';
         $user->password = bcrypt('password');
+        $user->status_id = 3;
+        $user->pre_status_id = 3;
         $user->save();
         $user->roles()->attach($role_auth_editor);
 
@@ -91,6 +107,8 @@ class UserTableSeeder extends Seeder
         $user->name = 'adveditor';
         $user->email = 'adveditor@localhost';
         $user->password = bcrypt('password');
+        $user->status_id = 3;
+        $user->pre_status_id = 3;
         $user->save();
         $user->roles()->attach($role_advertisment_editor);
 
@@ -98,6 +116,8 @@ class UserTableSeeder extends Seeder
         $user->name = 'technican';
         $user->email = 'technican@localhost';
         $user->password = bcrypt('password');
+        $user->status_id = 3;
+        $user->pre_status_id = 3;
         $user->save();
         $user->roles()->attach($role_technican);
 
@@ -105,6 +125,8 @@ class UserTableSeeder extends Seeder
         $user->name = 'user';
         $user->email = 'user@localhost';
         $user->password = bcrypt('password');
+        $user->status_id = 3;
+        $user->pre_status_id = 3;
         $user->save();
         $user->roles()->attach($role_user);
 
@@ -112,6 +134,8 @@ class UserTableSeeder extends Seeder
         $user->name = 'visitor';
         $user->email = 'visitor@localhost';
         $user->password = bcrypt('password');
+        $user->status_id = 3;
+        $user->pre_status_id = 3;
         $user->save();
         $user->roles()->attach($role_visitor);
     }

@@ -8,6 +8,6 @@ class Profile extends Model
 {
   public function users()
   {
-      
+    return $this->hasOne('App\User');
   }
 }

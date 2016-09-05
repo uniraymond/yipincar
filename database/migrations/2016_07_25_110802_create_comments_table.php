@@ -17,6 +17,7 @@ class CreateCommentsTable extends Migration
             $table->integer('article_id')->references('id')->on('articles');
             $table->string('comment');
             $table->tinyInteger('published');
+            $table->boolean('banned');
             $table->timestamp('created_at')->default(\DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamp('updated_at');
             $table->integer('updated_by')->references('id')->on('users')->onDelete('cascade');

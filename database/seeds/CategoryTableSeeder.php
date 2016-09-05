@@ -54,11 +54,11 @@ class CategoryTableSeeder extends Seeder
         $category->category_id = 1;
         $category->save();
 
-        $category = new Category();
-        $category->name = '订阅';
-        $category->description = '订阅';
-        $category->category_id = 1;
-        $category->save();
+//        $category = new Category();
+//        $category->name = '订阅';
+//        $category->description = '订阅';
+//        $category->category_id = 1;
+//        $category->save();
 
         $category = new Category();
         $category->name = '榜单';
@@ -75,19 +75,37 @@ class CategoryTableSeeder extends Seeder
         $category = new Category();
         $category->name = '产品';
         $category->description = '产品';
-        $category->category_id = 10;
+        $category->category_id = 8;
         $category->save();
 
         $category = new Category();
         $category->name = '市场';
         $category->description = '市场';
-        $category->category_id = 10;
+        $category->category_id = 8;
         $category->save();
 
         $category = new Category();
         $category->name = '行业';
         $category->description = '行业';
-        $category->category_id = 10;
+        $category->category_id = 8;
+        $category->save();
+
+        $category = new Category();
+        $category->name = '大咖';
+        $category->description = '大咖';
+        $category->category_id = 9;
+        $category->save();
+
+        $category = new Category();
+        $category->name = '专栏';
+        $category->description = '专栏';
+        $category->category_id = 9;
+        $category->save();
+
+        $category = new Category();
+        $category->name = '问道';
+        $category->description = '问道';
+        $category->category_id = 9;
         $category->save();
     }
 }

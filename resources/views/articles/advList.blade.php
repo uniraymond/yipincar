@@ -11,7 +11,7 @@
                 <thead>
                 <tr>
                     <th>文章</th>
-                    <th>类别</th>
+                    <th>栏目</th>
                     <th>品种</th>
                     <th>类型</th>
                     <th>发布</th>

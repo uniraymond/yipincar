@@ -6,7 +6,7 @@
             <div class="col-md-11 col-md-offset-1">
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        新建类别
+                        新建栏目
                     </div>
                     @if ($fail = Session::get('warning'))
                         <div class=" col-lg-12 col-md-12 col-sm-12  bs-example-bg-classes" >
@@ -23,9 +23,9 @@
                         {!! Form::label('description', '简介', array('class'=>'col-lg-12 col-md-12 col-sm-12')) !!}
                         {!! Form::text('description', '', array('class' => 'description input col-lg-12 col-md-12 col-sm-12', 'placeholder' => '简介')) !!}
                         <div>
-                            <label class="col-lg-12 col-md-12 col-sm-12">选择上一级类别</label>
+                            <label class="col-lg-12 col-md-12 col-sm-12">选择上一级栏目</label>
                             <select class="col-lg-12 col-md-12 col-sm-12" name="category_id">
-                                <option selected value="0">选择一个类别</option>
+                                <option selected value="0">选择一个栏目</option>
                                 @foreach ($categories as $category)
                                     <option value="{{$category->id}}">{{$category->name}}</option>
                                 @endforeach

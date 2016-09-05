@@ -46,4 +46,24 @@ class AdvSetting extends Model
 
       return;
     }
+
+  public function adv_types()
+  {
+    return $this->belongsTo('App\AdvType', 'type_id');
+  }
+
+  public function adv_positions()
+  {
+    return $this->belongsTo('App\AdvPosition', 'position_id');
+  }
+
+  public function categories()
+  {
+    return $this->belongsTo('App\Category', 'category_id');
+  }
+
+  public function resources()
+  {
+    return $this->belongsTo('App\Resource', 'resource_id');
+  }
 }
