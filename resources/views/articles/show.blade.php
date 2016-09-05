@@ -53,7 +53,7 @@
                             </div>
                         </div>
                     </div>
-                    @if ( Null !== Auth::user() && $article->created_by == Auth::user()->id || Auth::user()->hasAnyRole('super_admin', 'admin', 'chef_editor', 'main_editor') )
+                    @if ( Null !== Auth::user() && $article->created_by == Auth::user()->id || Auth::user()->hasAnyRole(['super_admin', 'admin', 'chef_editor', 'main_editor']) )
                         <div class="col-lg-2 col-md-2 col-sm-2 edit_article pull-right clearfix">
                             {{ link_to('admin/article/'.$article->id.'/edit', '编辑', ['class'=>'btn btn-primary']) }}
                         </div>
