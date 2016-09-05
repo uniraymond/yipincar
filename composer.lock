@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "57e3b65274edd8260e0754470c0591fb",
+    "hash": "265c1f7345cd8a9aeeba6c46cbe4a353",
     "content-hash": "9bf6e42686cad842c10530eb8d2d5f96",
     "packages": [
         {
@@ -335,16 +335,16 @@
         },
         {
             "name": "intervention/image",
-            "version": "2.3.7",
+            "version": "2.3.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Intervention/image.git",
-                "reference": "22088b04728a039bd1fc32f7e79a89a118b78698"
+                "reference": "4064a980324f6c3bfa2bd981dfb247afa705ec3c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Intervention/image/zipball/22088b04728a039bd1fc32f7e79a89a118b78698",
-                "reference": "22088b04728a039bd1fc32f7e79a89a118b78698",
+                "url": "https://api.github.com/repos/Intervention/image/zipball/4064a980324f6c3bfa2bd981dfb247afa705ec3c",
+                "reference": "4064a980324f6c3bfa2bd981dfb247afa705ec3c",
                 "shasum": ""
             },
             "require": {
@@ -393,7 +393,7 @@
                 "thumbnail",
                 "watermark"
             ],
-            "time": "2016-04-26 14:08:40"
+            "time": "2016-09-01 17:04:03"
         },
         {
             "name": "jakub-onderka/php-console-color",
@@ -631,16 +631,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v5.2.43",
+            "version": "v5.2.45",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "5490b8f00564bb60839002f86828e27edd1e5610"
+                "reference": "2a79f920d5584ec6df7cf996d922a742d11095d1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/5490b8f00564bb60839002f86828e27edd1e5610",
-                "reference": "5490b8f00564bb60839002f86828e27edd1e5610",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/2a79f920d5584ec6df7cf996d922a742d11095d1",
+                "reference": "2a79f920d5584ec6df7cf996d922a742d11095d1",
                 "shasum": ""
             },
             "require": {
@@ -721,7 +721,7 @@
                 "pusher/pusher-php-server": "Required to use the Pusher broadcast driver (~2.0).",
                 "symfony/css-selector": "Required to use some of the crawler integration testing tools (2.8.*|3.0.*).",
                 "symfony/dom-crawler": "Required to use most of the crawler integration testing tools (2.8.*|3.0.*).",
-                "symfony/psr-http-message-bridge": "Required to psr7 bridging features (0.2.*)."
+                "symfony/psr-http-message-bridge": "Required to use psr7 bridging features (0.2.*)."
             },
             "type": "library",
             "extra": {
@@ -757,7 +757,7 @@
                 "framework",
                 "laravel"
             ],
-            "time": "2016-08-10 12:23:59"
+            "time": "2016-08-26 11:44:52"
         },
         {
             "name": "laravelcollective/html",
@@ -989,16 +989,16 @@
         },
         {
             "name": "mnapoli/silly",
-            "version": "1.4.0",
+            "version": "1.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mnapoli/silly.git",
-                "reference": "2f53397797d992fa2862105992b198b25679d283"
+                "reference": "69ff63c3b5478eb61259768b3cf0915ce8230a9a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mnapoli/silly/zipball/2f53397797d992fa2862105992b198b25679d283",
-                "reference": "2f53397797d992fa2862105992b198b25679d283",
+                "url": "https://api.github.com/repos/mnapoli/silly/zipball/69ff63c3b5478eb61259768b3cf0915ce8230a9a",
+                "reference": "69ff63c3b5478eb61259768b3cf0915ce8230a9a",
                 "shasum": ""
             },
             "require": {
@@ -1029,7 +1029,7 @@
                 "micro-framework",
                 "silly"
             ],
-            "time": "2016-08-13 18:47:51"
+            "time": "2016-08-31 11:03:19"
         },
         {
             "name": "monolog/monolog",
@@ -1111,16 +1111,16 @@
         },
         {
             "name": "mpociot/documentarian",
-            "version": "0.2.0",
+            "version": "0.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mpociot/documentarian.git",
-                "reference": "87ca6e74372e92b31ef01894221d552076d0f95c"
+                "reference": "477f67a975f4ee6a496455938b5558d9f2a3cceb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mpociot/documentarian/zipball/87ca6e74372e92b31ef01894221d552076d0f95c",
-                "reference": "87ca6e74372e92b31ef01894221d552076d0f95c",
+                "url": "https://api.github.com/repos/mpociot/documentarian/zipball/477f67a975f4ee6a496455938b5558d9f2a3cceb",
+                "reference": "477f67a975f4ee6a496455938b5558d9f2a3cceb",
                 "shasum": ""
             },
             "require": {
@@ -1128,7 +1128,7 @@
                 "mnapoli/front-yaml": "^1.5",
                 "mnapoli/silly": "~1.0",
                 "php": ">=5.5.9",
-                "windwalker/renderer": "2.*"
+                "windwalker/renderer": "3.*"
             },
             "require-dev": {
                 "phpunit/phpunit": "^4.8"
@@ -1155,20 +1155,20 @@
                     "email": "m.pociot@gmail.com"
                 }
             ],
-            "time": "2016-05-11 12:35:08"
+            "time": "2016-08-26 21:14:19"
         },
         {
             "name": "mpociot/laravel-apidoc-generator",
-            "version": "1.5.2",
+            "version": "1.6.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mpociot/laravel-apidoc-generator.git",
-                "reference": "8d9a85ab27259358b399b554d6cc4b2f4486e1e2"
+                "reference": "976f5ed3a1b37c31d3f31e500d461d244d7525f2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mpociot/laravel-apidoc-generator/zipball/8d9a85ab27259358b399b554d6cc4b2f4486e1e2",
-                "reference": "8d9a85ab27259358b399b554d6cc4b2f4486e1e2",
+                "url": "https://api.github.com/repos/mpociot/laravel-apidoc-generator/zipball/976f5ed3a1b37c31d3f31e500d461d244d7525f2",
+                "reference": "976f5ed3a1b37c31d3f31e500d461d244d7525f2",
                 "shasum": ""
             },
             "require": {
@@ -1201,14 +1201,14 @@
                     "email": "m.pociot@gmail.com"
                 }
             ],
-            "description": "Generate beautiful API documentation from your Laravel / Lumen application",
+            "description": "Generate beautiful API documentation from your Laravel application",
             "homepage": "http://github.com/mpociot/laravel-apidoc-generator",
             "keywords": [
                 "api",
                 "documentation",
                 "laravel"
             ],
-            "time": "2016-08-09 13:41:04"
+            "time": "2016-08-30 13:13:04"
         },
         {
             "name": "mpociot/reflection-docblock",
@@ -1904,7 +1904,7 @@
         },
         {
             "name": "symfony/event-dispatcher",
-            "version": "v3.1.3",
+            "version": "v3.1.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/event-dispatcher.git",
@@ -2566,16 +2566,16 @@
         },
         {
             "name": "symfony/yaml",
-            "version": "v3.1.3",
+            "version": "v3.1.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/yaml.git",
-                "reference": "1819adf2066880c7967df7180f4f662b6f0567ac"
+                "reference": "f291ed25eb1435bddbe8a96caaef16469c2a092d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/yaml/zipball/1819adf2066880c7967df7180f4f662b6f0567ac",
-                "reference": "1819adf2066880c7967df7180f4f662b6f0567ac",
+                "url": "https://api.github.com/repos/symfony/yaml/zipball/f291ed25eb1435bddbe8a96caaef16469c2a092d",
+                "reference": "f291ed25eb1435bddbe8a96caaef16469c2a092d",
                 "shasum": ""
             },
             "require": {
@@ -2611,7 +2611,7 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
-            "time": "2016-07-17 14:02:08"
+            "time": "2016-09-02 02:12:52"
         },
         {
             "name": "unisharp/laravel-filemanager",
@@ -2671,16 +2671,16 @@
         },
         {
             "name": "vlucas/phpdotenv",
-            "version": "v2.3.0",
+            "version": "v2.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/vlucas/phpdotenv.git",
-                "reference": "9ca5644c536654e9509b9d257f53c58630eb2a6a"
+                "reference": "3cc116adbe4b11be5ec557bf1d24dc5e3a21d18c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/vlucas/phpdotenv/zipball/9ca5644c536654e9509b9d257f53c58630eb2a6a",
-                "reference": "9ca5644c536654e9509b9d257f53c58630eb2a6a",
+                "url": "https://api.github.com/repos/vlucas/phpdotenv/zipball/3cc116adbe4b11be5ec557bf1d24dc5e3a21d18c",
+                "reference": "3cc116adbe4b11be5ec557bf1d24dc5e3a21d18c",
                 "shasum": ""
             },
             "require": {
@@ -2692,7 +2692,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.3-dev"
+                    "dev-master": "2.4-dev"
                 }
             },
             "autoload": {
@@ -2717,128 +2717,34 @@
                 "env",
                 "environment"
             ],
-            "time": "2016-06-14 14:14:52"
-        },
-        {
-            "name": "windwalker/data",
-            "version": "2.1.9",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/ventoviro/windwalker-data.git",
-                "reference": "d39892475620e2a32c69e56263d29f0f2febdd7b"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/ventoviro/windwalker-data/zipball/d39892475620e2a32c69e56263d29f0f2febdd7b",
-                "reference": "d39892475620e2a32c69e56263d29f0f2febdd7b",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.10"
-            },
-            "require-dev": {
-                "windwalker/test": "~2.0"
-            },
-            "type": "windwalker-package",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "2.2-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Windwalker\\Data\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "LGPL-2.0+"
-            ],
-            "description": "Windwalker Data package",
-            "homepage": "https://github.com/ventoviro/windwalker-data",
-            "keywords": [
-                "data",
-                "framework",
-                "windwalker"
-            ],
-            "time": "2016-02-12 15:36:22"
-        },
-        {
-            "name": "windwalker/registry",
-            "version": "2.1.9",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/ventoviro/windwalker-registry.git",
-                "reference": "12e3bfd7b8977df5c5e6b12a969b12137ec25181"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/ventoviro/windwalker-registry/zipball/12e3bfd7b8977df5c5e6b12a969b12137ec25181",
-                "reference": "12e3bfd7b8977df5c5e6b12a969b12137ec25181",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.10"
-            },
-            "require-dev": {
-                "symfony/yaml": "2.*",
-                "windwalker/test": "~2.0"
-            },
-            "suggest": {
-                "symfony/yaml": "Install 2.* if you require YAML support."
-            },
-            "type": "windwalker-package",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "2.2-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Windwalker\\Registry\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "LGPL-2.0+"
-            ],
-            "description": "Windwalker Registry package",
-            "homepage": "https://github.com/ventoviro/windwalker-registry",
-            "keywords": [
-                "framework",
-                "registry",
-                "windwalker"
-            ],
-            "abandoned": "windwalker/structure",
-            "time": "2016-03-07 10:02:08"
+            "time": "2016-09-01 10:05:43"
         },
         {
             "name": "windwalker/renderer",
-            "version": "2.1.9",
+            "version": "3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ventoviro/windwalker-renderer.git",
-                "reference": "de05052c559a299fd6ab48e6299efd9f0b17f439"
+                "reference": "74bbb426fe90677af1d57ca49437ac15b5caf777"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ventoviro/windwalker-renderer/zipball/de05052c559a299fd6ab48e6299efd9f0b17f439",
-                "reference": "de05052c559a299fd6ab48e6299efd9f0b17f439",
+                "url": "https://api.github.com/repos/ventoviro/windwalker-renderer/zipball/74bbb426fe90677af1d57ca49437ac15b5caf777",
+                "reference": "74bbb426fe90677af1d57ca49437ac15b5caf777",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.10",
-                "windwalker/data": "~2.0",
-                "windwalker/registry": "~2.0"
+                "windwalker/structure": "~3.0"
             },
             "require-dev": {
                 "illuminate/view": "4.1.*",
                 "league/plates": "3.*",
                 "mustache/mustache": "2.*",
                 "twig/twig": "1.*",
-                "windwalker/dom": "~2.0",
-                "windwalker/filesystem": "~2.0",
-                "windwalker/test": "~2.0"
+                "windwalker/dom": "~3.0",
+                "windwalker/filesystem": "~3.0",
+                "windwalker/test": "~3.0"
             },
             "suggest": {
                 "illuminate/view": "Install 4.1.*(PHP 5.3) or 5.*(PHP 5.4) if you require Laravel Blade engine.",
@@ -2849,7 +2755,7 @@
             "type": "windwalker-package",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.2-dev"
+                    "dev-master": "3.x-dev"
                 }
             },
             "autoload": {
@@ -2868,7 +2774,7 @@
                 "renderer",
                 "windwalker"
             ],
-            "time": "2016-02-12 15:36:22"
+            "time": "2016-07-18 11:05:31"
         },
         {
             "name": "windwalker/structure",
@@ -3781,23 +3687,23 @@
         },
         {
             "name": "sebastian/environment",
-            "version": "1.3.7",
+            "version": "1.3.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/environment.git",
-                "reference": "4e8f0da10ac5802913afc151413bc8c53b6c2716"
+                "reference": "be2c607e43ce4c89ecd60e75c6a85c126e754aea"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/environment/zipball/4e8f0da10ac5802913afc151413bc8c53b6c2716",
-                "reference": "4e8f0da10ac5802913afc151413bc8c53b6c2716",
+                "url": "https://api.github.com/repos/sebastianbergmann/environment/zipball/be2c607e43ce4c89ecd60e75c6a85c126e754aea",
+                "reference": "be2c607e43ce4c89ecd60e75c6a85c126e754aea",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.3"
+                "php": "^5.3.3 || ^7.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "~4.4"
+                "phpunit/phpunit": "^4.8 || ^5.0"
             },
             "type": "library",
             "extra": {
@@ -3827,7 +3733,7 @@
                 "environment",
                 "hhvm"
             ],
-            "time": "2016-05-17 03:18:57"
+            "time": "2016-08-18 05:49:44"
         },
         {
             "name": "sebastian/exporter",
