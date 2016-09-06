@@ -37,6 +37,10 @@ class Article extends Model
     return $this->hasMany('App\Comment');
   }
 
+  public function zan() {
+    return $this->belongsTo('App\Zan');
+  }
+
   public function resources()
   {
     return $this->belongsToMany('App\Resource', 'article_resources', 'article_id', 'resource_id');

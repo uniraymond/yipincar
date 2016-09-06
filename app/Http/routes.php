@@ -84,6 +84,23 @@ Route::group(['middleware' => 'auth'], function () {
 
 Route::group(['prefix'=>'api'], function() {
     Route::resource('info', 'InfoController');
+    Route::get('articlelist/{category?}/{artlast?}/{advlast?}/{page?}', 'InfoController@getArticleList');
+    Route::get('articlelist/{category?}/{$artlast?}/{$advlast}/{page?}', 'InfoController@getArticleList');
+    Route::get('comments/{articleid?}/{lastid?}/{page?}/{limit?}', 'InfoController@getCommentList');
+    Route::get('recomments/{keys?}/{lastid?}', 'InfoController@getRecommendList');
+    Route::get('subscribes/{userid?}/{lastid?}/{page?}/{limit?}', 'InfoController@getSubscribeList');
+    Route::get('searcharticles/{key?}/{category?}', 'InfoController@searchArticles');
+    Route::put('comment/{userid?}/{articleid?}/{comment?}', 'InfoController@releaseComment');
+    Route::delete('delcomment/{commentid?}', 'InfoController@deleteComment');
+    Route::get('approvearticle/{uid?}/{articleid?}', 'InfoController@approveArticle');
+    Route::get('approvecomment/{uid?}/{commentid?}', 'InfoController@approveComment');
+    Route::post('upname/{userid?}/{name?}', 'InfoController@updateName');
+    Route::put('collect/{userid?}/{articleid?}', 'InfoController@collectArticle');
+    Route::delete('delcollect/{userid?}/{collectionid?}', 'InfoController@deleteCollection');
+    Route::put('subscribe/{userid?}/{authorid?}', 'InfoController@subscribe');
+    Route::delete('delsubscribe/{userid?}/{subscribid?}', 'InfoController@deleteSubscribe');
+    Route::get('getadvert/{userid?}/{subscribid?}', 'InfoController@getAdvertSet');
+    Route::post('upicon','infoController@updateMyIcon');
 });
 
 
