@@ -100,24 +100,27 @@ class InfoController extends Controller
         $limit = $category < 8 ? 7 :10;
         $from = ($page -1) * $limit;
 
-        $articles = Article:://DB::table('articles')
-        join('categories', 'articles.category_id', '=', 'categories.id')
-//            ->join('article_resources', 'articles.id', '=', 'article_resources.article_id')
+        $articles = Article::join('categories', 'articles.category_id', '=', 'categories.id')
+            ->leftJoin('article_resources', 'articles.id', '=', 'article_resources.article_id')
+            ->leftJoin('resources', 'resources.id', '=', 'article_resources.resource_id')
             ->join('article_types', 'articles.type_id', '=', 'article_types.id')
             ->select('articles.id', 'articles.title', 'categories.name as categoryName', 'article_types.name as articletypeName'
-                , 'articles.created_at')
-//                , 'article_resources.id as resourceid')
+                , 'articles.created_at' , 'resources.link as resourceLink')
             ->where('articles.category_id', '=', $category)
             ->where('articles.published', '=', 0)
             ->orderBy('articles.created_at', 'desc')
-            //            ->where('article_resources.displayorder', '=', 0)
             ->skip($from)
             ->take($limit);
+
 
         if($artlast && $artlast > 0)
             $articles = $articles->where('articles.id', '<=', $artlast);
 
         $articles = $articles->get();
+
+//        $resources = DB::table('resources')
+//            ->join('article_resources', 'resources.id', '=', 'article_resources.resource_id');
+//        $articles['resource'] = $resources;
 
         if($category < 8) {
             $adverts = Article::join('categories', 'articles.category_id', '=', 'categories.id')
