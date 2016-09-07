@@ -108,9 +108,14 @@ class InfoController extends Controller
             ->leftJoin('article_resources', 'articles.id', '=', 'article_resources.article_id')
             ->leftJoin('resources', 'resources.id', '=', 'article_resources.resource_id')
             ->join('article_types', 'articles.type_id', '=', 'article_types.id')
+<<<<<<< 7284ea3a73b236c1e5200be5325b11e9842645b9
             ->join('users', 'users.id', '=', 'articles.created_by')
             ->select('articles.id', 'articles.title', 'categories.name as categoryName', 'articles.category_id', 'article_types.name as articletypeName'
                 , 'articles.created_at' , 'resources.link as resourceLink', 'resources.name as resourceName', 'users.name as userName')
+=======
+            ->select('articles.id', 'articles.title', 'categories.name as categoryName', 'article_types.name as articletypeName'
+                , 'articles.created_at' , 'resources.link as resourceLink')
+>>>>>>> article list outer join
             ->where('articles.category_id', '=', $category)
             ->where('articles.published', '=', 0)
             ->orderBy('articles.created_at', 'desc')
