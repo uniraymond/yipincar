@@ -28,7 +28,7 @@ class ProfileController extends Controller
     public function create(Request $request, $userId)
     {
         $auth = $request->user();
-        if ($auth && ($auth->hasAnyRole(['super_admin', 'admin']) || $auth->id == $id)) {
+        if ($auth && ($auth->hasAnyRole(['super_admin', 'admin']) || $auth->id == $userId)) {
             $user = User::findorFail($userId);
             return view('profiles/create', ['user'=>$user]);
         }
@@ -73,9 +73,20 @@ class ProfileController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request, $id)
     {
-        //
+        $auth = $request->user();
+        $user = User::findorFail($id);
+        $userProfile = Profile::where('user_id', $id)->first();
+        if (isset($userProfile) && $userProfile) {
+            return view('profiles/show', ['user'=>$user, 'profile' => $userProfile]);
+        } else {
+            $request->session()->flash('warning', '还没有创建用户资料，请创建用户资料');
+            if ($auth && ($auth->hasAnyRole(['super_admin', 'admin']) || $auth->id == $id)) {
+                return view('profiles/create', ['user'=>$user]);
+            }
+            return  redirect('/');
+        }
     }
 
     /**

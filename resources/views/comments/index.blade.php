@@ -1,6 +1,6 @@
 @extends('layouts.base')
-
-@include('articles.sidebarCategory',['categories'=>$categories, 'types'=>$types, 'tag'=>$tags, 'currentAction'=>$currentAction])
+@include('layouts.settingSideBar')
+{{--@include('articles.sidebarCategory',['categories'=>$categories, 'types'=>$types, 'tag'=>$tags, 'currentAction'=>$currentAction])--}}
 @section('content')
     <div id="page-wrapper">
         <div class="row">

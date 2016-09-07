@@ -32,10 +32,11 @@ class ArticleController extends Controller
     $tags = Tags::all();
     $currentAction = false;
 
-      if ($authuser->hasRole('auth_editor')) {
-          $articles = Article::where('created_by', $authuser->id)->orderBy('created_at', 'desc')->paginate(15);
-      } else {
+      if ($authuser->hasAnyRole(['super_admin', 'admin', 'chef_editor', 'main_editor', 'adv_editor'])) {
           $articles = Article::orderBy('created_at', 'desc')->paginate(15);
+//      } else ($authuser->hasAnyRole(['auth_editor', 'editor'])) {
+      } else  {
+          $articles = Article::where('created_by', $authuser->id)->orderBy('created_at', 'desc')->paginate(15);
       }
     return view('articles/index', ['articles'=>$articles, 'categories'=>$categories, 'types'=>$types, 'tags'=>$tags, 'currentAction'=>$currentAction]);
   }

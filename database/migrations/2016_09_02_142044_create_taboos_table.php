@@ -14,7 +14,7 @@ class CreateTaboosTable extends Migration
     {
         Schema::create('taboos', function(Blueprint $table) {
             $table->increments('id');
-            $table->string('content');
+            $table->string('content')->unique();
             $table->string('category');
             $table->timestamp('created_at')->default(\DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamp('updated_at');
