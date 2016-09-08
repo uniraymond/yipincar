@@ -104,8 +104,9 @@ class InfoController extends Controller
             ->leftJoin('article_resources', 'articles.id', '=', 'article_resources.article_id')
             ->leftJoin('resources', 'resources.id', '=', 'article_resources.resource_id')
             ->join('article_types', 'articles.type_id', '=', 'article_types.id')
-            ->select('articles.id', 'articles.title', 'categories.name as categoryName', 'article_types.name as articletypeName'
-                , 'articles.created_at' , 'resources.link as resourceLink')
+            ->join('users', 'users.id', '=', 'articles.created_by')
+            ->select('articles.id', 'articles.title', 'categories.name as categoryName', 'categories.name as categoryID', 'article_types.name as articletypeName'
+                , 'articles.created_at' , 'resources.link as resourceLink', 'resources.name as resourceName', 'users.name as userName')
             ->where('articles.category_id', '=', $category)
             ->where('articles.published', '=', 0)
             ->orderBy('articles.created_at', 'desc')
@@ -126,7 +127,7 @@ class InfoController extends Controller
             $adverts = Article::join('categories', 'articles.category_id', '=', 'categories.id')
 //            ->join('article_resources', 'articles.id', '=', 'article_resources.article_id')
                 ->join('article_types', 'articles.type_id', '=', 'article_types.id')
-                ->select('articles.id', 'articles.title', 'categories.name as categoryName', 'article_types.name as articletypeName'
+                ->select('articles.id', 'articles.title', 'categories.name as categoryName', 'categories.name as categoryID', 'article_types.name as articletypeName'
                     , 'articles.created_at')
 //                , 'article_resources.id as resourceid')
                 ->where('articles.category_id', '=', $category)
@@ -328,16 +329,16 @@ class InfoController extends Controller
     }
 
     public function subscribe($userid, $authorid) {
-        $subscribe = DB::table('subscribes')
+        $subscribe = DB::table('user_subscribes')
             ->select('id')->where('user_id', $userid)
-            ->where('author_id', $authorid)
+            ->where('created_by', $authorid)
             ->get();
         if($subscribe && count($subscribe)) {
             return ['subscribe' => -1];
         } else {
-            $sub = DB::table('subscribes')->insert([
+            $sub = DB::table('user_subscribes')->insert([
                 'user_id'    => $userid,
-                'author_id' => $authorid
+                'created_by' => $authorid
             ]);
             return ['subscribe' => $sub ? 1 : 0];
         }
@@ -345,7 +346,7 @@ class InfoController extends Controller
     }
 
     public function deleteSubscribe($usrid, $subscribeid) {
-        $subscribe = DB::table('subscribes')->where('id', $subscribeid)->where('user_id', $usrid)->delete();
+        $subscribe = DB::table('user_subscribes')->where('id', $subscribeid)->where('user_id', $usrid)->delete();
         return ['delete' => $subscribe];
     }
 
@@ -356,8 +357,8 @@ class InfoController extends Controller
     public function getAdvertSet($date, $uid) {
 //        $date = date("Y-m-d");
         if($uid) {
-            $advert = DB::table('advert')
-                ->where('play_time', $date)
+            $advert = DB::table('adv_settings')
+                ->where('displaytime', $date)
                 ->get();
             return $advert;
         }
