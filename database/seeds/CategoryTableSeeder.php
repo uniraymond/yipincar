@@ -16,42 +16,49 @@ class CategoryTableSeeder extends Seeder
         $category->name = '资讯';
         $category->description = '资讯(一级)';
         $category->category_id = 0;
+        $category->last_category = 0;
         $category->save();
 
         $category = new Category();
         $category->name = '公信力';
         $category->description = '公信力(一级)';
         $category->category_id = 0;
+        $category->last_category = 0;
         $category->save();
 
         $category = new Category();
         $category->name = '动态';
         $category->description = '动态';
         $category->category_id = 1;
+        $category->last_category = 1;
         $category->save();
 
         $category = new Category();
         $category->name = '新闻';
         $category->description = '新闻';
         $category->category_id = 1;
+        $category->last_category = 1;
         $category->save();
 
         $category = new Category();
         $category->name = '一品汇';
         $category->description = '一品汇';
         $category->category_id = 1;
+        $category->last_category = 1;
         $category->save();
 
         $category = new Category();
         $category->name = '用车';
         $category->description = '用车';
         $category->category_id = 1;
+        $category->last_category = 1;
         $category->save();
 
         $category = new Category();
         $category->name = '测评';
         $category->description = '测评';
         $category->category_id = 1;
+        $category->last_category = 1;
         $category->save();
 
 //        $category = new Category();
@@ -64,48 +71,56 @@ class CategoryTableSeeder extends Seeder
         $category->name = '榜单';
         $category->description = '榜单';
         $category->category_id = 2;
+        $category->last_category = 0;
         $category->save();
 
         $category = new Category();
         $category->name = '智库';
         $category->description = '智库';
         $category->category_id = 2;
+        $category->last_category = 0;
         $category->save();
 
         $category = new Category();
         $category->name = '产品';
         $category->description = '产品';
         $category->category_id = 8;
+        $category->last_category = 1;
         $category->save();
 
         $category = new Category();
         $category->name = '市场';
         $category->description = '市场';
         $category->category_id = 8;
+        $category->last_category = 1;
         $category->save();
 
         $category = new Category();
         $category->name = '行业';
         $category->description = '行业';
         $category->category_id = 8;
+        $category->last_category = 1;
         $category->save();
 
         $category = new Category();
         $category->name = '大咖';
         $category->description = '大咖';
         $category->category_id = 9;
+        $category->last_category = 1;
         $category->save();
 
         $category = new Category();
         $category->name = '专栏';
         $category->description = '专栏';
         $category->category_id = 9;
+        $category->last_category = 1;
         $category->save();
 
         $category = new Category();
         $category->name = '问道';
         $category->description = '问道';
         $category->category_id = 9;
+        $category->last_category = 1;
         $category->save();
     }
 }
