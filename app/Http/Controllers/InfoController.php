@@ -127,7 +127,7 @@ class InfoController extends Controller
             $adverts = Article::join('categories', 'articles.category_id', '=', 'categories.id')
 //            ->join('article_resources', 'articles.id', '=', 'article_resources.article_id')
                 ->join('article_types', 'articles.type_id', '=', 'article_types.id')
-                ->select('articles.id', 'articles.title', 'categories.name as categoryName', 'categories.name as categoryID', 'article_types.name as articletypeName'
+                ->select('articles.id', 'articles.title', 'categories.name as categoryName', 'articles.category_id', 'article_types.name as articletypeName'
                     , 'articles.created_at')
 //                , 'article_resources.id as resourceid')
                 ->where('articles.category_id', '=', $category)
