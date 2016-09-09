@@ -78,6 +78,8 @@ Route::group(['middleware'=>'auth', 'prefix'=>'admin'], function() {
     Route::get('/', 'ArticleController@index');
     Route::get('statistics', 'DashboardController@index');
     Route::put('article', 'ArticleController@store');
+    Route::get('history', 'HistoryController@index');
+    Route::get('articles/actived', 'ArticleController@activedList');
 });
 Route::group(['middleware' => 'auth'], function () {
     Route::get('/', 'ArticleController@index');

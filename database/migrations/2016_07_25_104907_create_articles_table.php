@@ -20,6 +20,7 @@ class CreateArticlesTable extends Migration
             $table->string('content');
             $table->string('token');
             $table->string('uid');
+            $table->boolean('top');
             $table->integer('category_id')->references('id')->on('categories')->onDelete('cascade');
             $table->integer('type_id')->references('id')->on('article_types')->onDelete('cascade');
             $table->tinyInteger('published')->references('id')->on('article_statuses');

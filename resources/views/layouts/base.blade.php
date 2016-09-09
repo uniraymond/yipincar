@@ -15,8 +15,8 @@
     <![endif]-->
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="{{ asset("src/assets/stylesheets/styles.css") }}" />
-    <link rel="stylesheet" href="{{ asset("src/css/self.css") }}" />
+    <link rel="stylesheet" href="{{ asset("/src/assets/stylesheets/styles.css") }}" />
+    <link rel="stylesheet" href="{{ asset("/src/css/self.css") }}" />
 
     {{--<link rel="stylesheet" href="/src/css/main.css" >--}}
     @show
@@ -26,8 +26,21 @@
     <!-- /.navbar-header -->
 
     @yield('content')
-
-    <script src="{{ asset("/src/js/jQuery.min.2.2.4.js") }}" ></script>
+<div ng-app="myapp">
+ 	<p id="abc">Name : <input type="text" ng-model="name"></p>
+ 	<h1>Hello <% name %> </h1>
+</div>
+    @include('layouts.footer')
+    <script src="{{ url('/src/js/jQuery.min.2.2.4.js') }}" ></script>
     <script src="{{ asset("src/assets/scripts/frontend.js") }}" type="text/javascript"></script>
+<script src="{{ url('/src/js/angular.min.js') }} " ></script>
+    <script>
+        jQuery('#abc').click(alert('hi'));
+        var sampleApp = angular.module('myapp', [], function($interpolateProvider) {
+            $interpolateProvider.startSymbol('<%');
+            $interpolateProvider.endSymbol('%>');
+        });
+    </script>
+    {{--<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.min.js"></script>--}}
 </body>
 </html>

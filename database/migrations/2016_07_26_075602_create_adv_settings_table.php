@@ -21,6 +21,7 @@ class CreateAdvSettingsTable extends Migration
             $table->dateTime('published_at');
             $table->dateTime('finished_at');
             $table->tinyInteger('order');
+            $table->tinyInteger('top');
             $table->integer('position_id')->references('id')->on('adv_positions')->onDelete('cascade');
             $table->integer('type_id')->references('id')->on('adv_types')->onDelete('cascade');
             $table->integer('displaytime');

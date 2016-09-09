@@ -27,7 +27,7 @@ class ArticleController extends Controller
     //website
     $authuser = $request->user();
 
-    $categories = Category::where('category_id','<>', 0)->get();
+    $categories = Category::where('last_category', 1)->get();
     $types = ArticleTypes::all();
     $tags = Tags::all();
     $currentAction = false;
@@ -39,6 +39,25 @@ class ArticleController extends Controller
           $articles = Article::where('created_by', $authuser->id)->orderBy('created_at', 'desc')->paginate(15);
       }
     return view('articles/index', ['articles'=>$articles, 'categories'=>$categories, 'types'=>$types, 'tags'=>$tags, 'currentAction'=>$currentAction]);
+  }
+
+  public function activedList(Request $request)
+  {
+    //website
+    $authuser = $request->user();
+
+    $categories = Category::where('last_category', 1)->get();
+    $types = ArticleTypes::all();
+    $tags = Tags::all();
+    $currentAction = false;
+
+      if ($authuser->hasAnyRole(['super_admin', 'admin', 'chef_editor', 'main_editor', 'adv_editor'])) {
+          $articles = Article::where('published', 3)->orderBy('created_at', 'desc')->paginate(15);
+//      } else ($authuser->hasAnyRole(['auth_editor', 'editor'])) {
+      } else  {
+          $articles = Article::where('created_by', $authuser->id)->orderBy('created_at', 'desc')->paginate(15);
+      }
+    return view('articles/actived', ['articles'=>$articles, 'categories'=>$categories, 'types'=>$types, 'tags'=>$tags, 'currentAction'=>$currentAction]);
   }
 
   // advertisment
@@ -162,13 +181,12 @@ class ArticleController extends Controller
 
     $article = Article::find($id);
 
-    $log['origin'] = 'Article Title: '. $article->title. '; ';
-    $log['origin'] .= 'Article Content: '. $article->content . '; ';
-    $log['origin'] .= 'Article Description: '. $article->description . '; ';
-    $log['origin'] .= 'Article Category: '. $article->categories->name . '; ';
-    $log['origin'] .= 'Article Published: '. $article->published . '; ';
+    $log['origin'] = '"article_title":'. $article->title . ';';
+    $log['origin'] .= '"article_content":'. $article->content . ';';
+    $log['origin'] .= '"article_description":'. $article->description . ';';
+    $log['origin'] .= '"article_category":'. $article->categories->name . ';';
+    $log['origin'] .= '"article_published":'. $article->published . ';';
     //type tag haven't been done
-
     $article->title = $title;
     $article->content = $content;
     $article->description = $description;
@@ -178,11 +196,11 @@ class ArticleController extends Controller
     $article->published = $published;
     $article->save();
 
-    $log['target'] = 'Article Title: '. $article->title. '; ';
-    $log['target'] .= 'Article Content: '. $article->content . '; ';
-    $log['target'] .= 'Article Description: '. $article->description . '; ';
-    $log['target'] .= 'Article Category: '. $article->categories->name . '; ';
-    $log['target'] .= 'Article Published: '. $article->published . '; ';
+    $log['target'] = '"article_title":'. $article->title. ';';
+    $log['target'] .= '"article_content":'. $article->content . ';';
+    $log['target'] .= '"article_description":'. $article->description . ';';
+    $log['target'] .= '"article_category":'. $article->categories->name . ';';
+    $log['target'] .= '"article_published":'. $article->published . ';';
 
     $currentTagIds = DB::table('article_tags')->where('article_id', $id)->lists('tag_id', 'id');
 
@@ -384,11 +402,11 @@ class ArticleController extends Controller
     $log['created_by'] = $authuser->id;
     $log['comment'] = 'comment';
 
-    $log['origin'] = 'Article Title: '. $article->title. '; ';
-    $log['origin'] .= 'Article Content: '. $article->content . '; ';
-    $log['origin'] .= 'Article Description: '. $article->description . '; ';
-    $log['origin'] .= 'Article Category: '. $article->categories->name . '; ';
-    $log['origin'] .= 'Article Published: '. $article->published . '; ';
+    $log['origin'] = '"article_title":'. $article->title. ';';
+    $log['origin'] .= '"article_content":'. $article->content . ';';
+    $log['origin'] .= '"article_description":'. $article->description . ';';
+    $log['origin'] .= '"article_category":'. $article->categories->name . ';';
+    $log['origin'] .= '"article_published":'. $article->published . ';';
 
     $log['target'] = $log['origin'];
 
