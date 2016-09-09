@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Article;
+use App\Comment;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -54,7 +55,7 @@ class InfoController extends Controller
         $info = Article::findorFail($id);
         $comments = $info->comments()->take(10)->get();
 //        $approved = $info->approved()->count();
-        $info['comment'] = $comments;
+        $info['comment'] = $this ->getCommentList($info['id'], 0, 1, 10);
 //        $info['approved'] = $approved;
         $zan = $info->zan()->count();
         $info['zan'] = $zan;
