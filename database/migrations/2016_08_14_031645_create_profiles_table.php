@@ -26,6 +26,7 @@ class CreateProfilesTable extends Migration
             $table->string('weibo_name');
             $table->string('weixin_name');
             $table->string('qq_name');
+            $table->string('icon_uri');
             $table->integer('updated_by')->references('id')->on('users')->onDelete('cascade');
             $table->integer('created_by')->references('id')->on('users')->onDelete('cascade');
             $table->timestamp('created_at')->default(\DB::raw('CURRENT_TIMESTAMP'));
