@@ -159,7 +159,8 @@ class InfoController extends Controller
         $from = ($page -1) * $limit;
 
         $articles = Comment::join('users', 'comments.created_by', '=', 'users.id')
-            ->select('comments.*', 'users.name as userName', 'users.icon as userIcon')
+            ->join('profiles', 'users.profile_id', '=', 'profiles.id')
+            ->select('comments.*', 'users.name as userName', 'profiles.icon_uri as userIcon')
             ->where('comments.article_id', '=', $articleid)
             ->where('comments.id', '<=', $lastid)
             ->where('comments.published', '=', 1)
