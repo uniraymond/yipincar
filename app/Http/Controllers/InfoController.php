@@ -16,6 +16,9 @@ class InfoController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+    private $likeKey = "";
+
     public function index()
     {
         $infolists = Article::all();
@@ -234,18 +237,26 @@ class InfoController extends Controller
     }
 
     public function searchArticles($key, $category) {
-        $likeKey = '%'.$key.'%';
+        $this -> likeKey = '%'.$key.'%';
 
         $articles = Article::join('categories', 'articles.category_id', '=', 'categories.id')
-//            ->join('article_resources', 'articles.id', '=', 'article_resources.article_id')
+            ->leftJoin('article_resources', 'articles.id', '=', 'article_resources.article_id')
+            ->leftJoin('resources', 'resources.id', '=', 'article_resources.resource_id')
             ->join('article_types', 'articles.type_id', '=', 'article_types.id')
-            ->select('articles.id', 'articles.title', 'categories.name as categoryName', 'article_types.name as articletypeName'
-                , 'articles.created_at')
+            ->join('users', 'users.id', '=', 'articles.created_by')
+            ->select('articles.id', 'articles.title', 'categories.name as categoryName', 'articles.category_id', 'article_types.name as articletypeName'
+                , 'articles.created_at' , 'resources.link as resourceLink', 'resources.name as resourceName', 'users.name as userName')
+            ->where(function($query){
+                $query->where('articles.title', 'like', $this -> likeKey)
+                    ->orWhere(function($query){
+                        $query->where('articles.content', 'like', $this -> likeKey);
+                    });
+            })
             ->where('articles.category_id', '=', $category)
             ->where('articles.published', '=', 0)
-            ->where('articles.title', 'like', $likeKey)
+//            ->where('articles.title'.'articles.content', 'like', $likeKey)
+//            ->orWhere('articles.content', 'like', $likeKey)
             ->where('articles.type_id', 1)
-            ->orWhere('articles.content', 'like', $likeKey)
             ->orderBy('articles.created_at', 'desc')
             ->take(10)
             ->get();
