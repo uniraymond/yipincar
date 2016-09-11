@@ -178,7 +178,7 @@ class ArticleController extends Controller
     $tags = explode(',', $tags);
     $tags = array_map('trim', $tags);
     $tags = array_unique($tags);
-dd($tags);
+
     $article = Article::find($id);
 
     $log['origin'] = '"article_title":'. $article->title . ';';
