@@ -1,6 +1,7 @@
 @extends('layouts.base')
-
-@include('articles.sidebarCategory',['categories'=>$categories, 'types'=>$types, 'tag'=>$tags, 'currentAction'=>$currentAction])
+<link rel="stylesheet" href="{{ asset("/src/css/jquery-ui.min.css") }}" />
+@include('layouts.contentSideBar')
+{{--@include('articles.sidebarCategory',['categories'=>$categories, 'types'=>$types, 'tag'=>$tags, 'currentAction'=>$currentAction])--}}
 @section('content')
     <div id="page-wrapper">
         <div class="row">
@@ -63,16 +64,16 @@
                             </div>
                         </div>
 
-                        <div>
-                            <label class="col-lg-12 col-md-12 col-sm-12">选择类型</label>
-                            <div class="col-md-12">
-                                <select class="col-lg-12 col-md-12 col-sm-12 form-control" name="type_id">
-                                    @foreach ($articletypes as $type)
-                                        <option value="{{$type->id}}">{{$type->name}}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
+                        {{--<div>--}}
+                            {{--<label class="col-lg-12 col-md-12 col-sm-12">选择类型</label>--}}
+                            {{--<div class="col-md-12">--}}
+                                {{--<select class="col-lg-12 col-md-12 col-sm-12 form-control" name="type_id">--}}
+                                    {{--@foreach ($articletypes as $type)--}}
+                                        {{--<option value="{{$type->id}}">{{$type->name}}</option>--}}
+                                    {{--@endforeach--}}
+                                {{--</select>--}}
+                            {{--</div>--}}
+                        {{--</div>--}}
 
                         <div>
                             <label class="col-lg-12 col-md-12 col-sm-12">选择标签</label>
@@ -100,135 +101,15 @@
             </div>
         </div>
     </div>
-
-
-    {{--<div ng-controller="DemoCtrl as ctrl" layout="column" ng-cloak="" class="autocompletedemoBasicUsage" ng-app="MyApp">--}}
-  {{--<md-content class="md-padding">--}}
-    {{--<form ng-submit="$event.preventDefault()">--}}
-      {{--<p>Use <code>md-autocomplete</code> to search for matches from local or remote data sources.</p>--}}
-      {{--<md-autocomplete ng-disabled="ctrl.isDisabled" md-no-cache="ctrl.noCache" md-selected-item="ctrl.selectedItem" md-search-text-change="ctrl.searchTextChange(ctrl.searchText)" md-search-text="ctrl.searchText" md-selected-item-change="ctrl.selectedItemChange(item)" md-items="item in ctrl.querySearch(ctrl.searchText)" md-item-text="item.display" md-min-length="0" placeholder="What is your favorite US state?">--}}
-        {{--<md-item-template>--}}
-          {{--<span md-highlight-text="ctrl.searchText" md-highlight-flags="^i"><%item.display%></span>--}}
-        {{--</md-item-template>--}}
-        {{--<md-not-found>--}}
-          {{--No states matching<%ctrl.searchText%>" were found.--}}
-          {{--<a ng-click="ctrl.newState(ctrl.searchText)">Create a new one!</a>--}}
-        {{--</md-not-found>--}}
-      {{--</md-autocomplete>--}}
-      {{--<br>--}}
-      {{--<md-checkbox ng-model="ctrl.simulateQuery">Simulate query for results?</md-checkbox>--}}
-      {{--<md-checkbox ng-model="ctrl.noCache">Disable caching of queries?</md-checkbox>--}}
-      {{--<md-checkbox ng-model="ctrl.isDisabled">Disable the input?</md-checkbox>--}}
-
-      {{--<p>By default, <code>md-autocomplete</code> will cache results when performing a query.  After the initial call is performed, it will use the cached results to eliminate unnecessary server requests or lookup logic. This can be disabled above.</p>--}}
-    {{--</form>--}}
-  {{--</md-content>--}}
-{{--</div>--}}
-
-<!--
-Copyright 2016 Google Inc. All Rights Reserved.
-Use of this source code is governed by an MIT-style license that can be foundin the LICENSE file at http://material.angularjs.org/HEAD/license.
--->
 @endsection
 
-<script src="/src/js/vendor/tinymce/js/tinymce/tinymce.min.js"></script>
+<script src="{{ url('/src/js/vendor/tinymce/js/tinymce/tinymce.min.js') }}"></script>
 <script>
-
-//(function () {
-//  'use strict';
-//  angular.module('MyApp',['ngMaterial', 'ngMessages', 'material.svgAssetsCache'])
-//      .controller('DemoCtrl', DemoCtrl).config(function ($interpolateProvider) {
-//            $interpolateProvider.startSymbol('<%');
-//            $interpolateProvider.endSymbol('%>');
-//        });
-//
-//  function DemoCtrl ($timeout, $q, $log) {
-//    var self = this;
-//
-//    self.simulateQuery = false;
-//    self.isDisabled    = false;
-//
-//    // list of `state` value/display objects
-//    self.states        = loadAll();
-//    self.querySearch   = querySearch;
-//    self.selectedItemChange = selectedItemChange;
-//    self.searchTextChange   = searchTextChange;
-//
-//    self.newState = newState;
-//
-//    function newState(state) {
-//      alert("Sorry! You'll need to create a Constitution for " + state + " first!");
-//    }
-//
-//    // ******************************
-//    // Internal methods
-//    // ******************************
-//
-//    /**
-//     * Search for states... use $timeout to simulate
-//     * remote dataservice call.
-//     */
-//    function querySearch (query) {
-//      var results = query ? self.states.filter( createFilterFor(query) ) : self.states,
-//          deferred;
-//      if (self.simulateQuery) {
-//        deferred = $q.defer();
-//        $timeout(function () { deferred.resolve( results ); }, Math.random() * 1000, false);
-//        return deferred.promise;
-//      } else {
-//        return results;
-//      }
-//    }
-//
-//    function searchTextChange(text) {
-//      $log.info('Text changed to ' + text);
-//    }
-//
-//    function selectedItemChange(item) {
-//      $log.info('Item changed to ' + JSON.stringify(item));
-//    }
-//
-//    /**
-//     * Build `states` list of key/value pairs
-//     */
-//    function loadAll() {
-//      var allStates = 'Alabama, Alaska, Arizona, Arkansas, California, Colorado, Connecticut, Delaware,\
-//              Florida, Georgia, Hawaii, Idaho, Illinois, Indiana, Iowa, Kansas, Kentucky, Louisiana,\
-//              Maine, Maryland, Massachusetts, Michigan, Minnesota, Mississippi, Missouri, Montana,\
-//              Nebraska, Nevada, New Hampshire, New Jersey, New Mexico, New York, North Carolina,\
-//              North Dakota, Ohio, Oklahoma, Oregon, Pennsylvania, Rhode Island, South Carolina,\
-//              South Dakota, Tennessee, Texas, Utah, Vermont, Virginia, Washington, West Virginia,\
-//              Wisconsin, Wyoming';
-//
-//      return allStates.split(/, +/g).map( function (state) {
-//        return {
-//          value: state.toLowerCase(),
-//          display: state
-//        };
-//      });
-//    }
-//
-//    /**
-//     * Create filter function for a query string
-//     */
-//    function createFilterFor(query) {
-//      var lowercaseQuery = angular.lowercase(query);
-//
-//      return function filterFn(state) {
-//        return (state.value.indexOf(lowercaseQuery) === 0);
-//      };
-//
-//    }
-//  }
-//})();
-//
-//
-///**
-//Copyright 2016 Google Inc. All Rights Reserved.
-//Use of this source code is governed by an MIT-style license that can be foundin the LICENSE file at http://material.angularjs.org/HEAD/license.
-//**/
+//    var sampleApp = angular.module('myapp', [], function($interpolateProvider) {
+//        $interpolateProvider.startSymbol('<%');
+//        $interpolateProvider.endSymbol('%>');
+//    });
 </script>
-
 <script src="{{ url('/src/js/jQuery.min.2.2.4.js') }}" ></script>
 <script>
     var editor_config = {
@@ -259,20 +140,20 @@ Use of this source code is governed by an MIT-style license that can be foundin 
                 resizable : "yes",
                 close_previous : "no"
             });
-        },
+        }
     };
 
     tinymce.init(editor_config);
 
     var changeFlag=false;
     //标识文本框值是否改变，为true，标识已变
-    $(document).ready(function(){
+    jQuery(document).ready(function(){
         //文本框值改变即触发
-        $("input[type='text']").change(function(){
+        jQuery("input[type='text']").change(function(){
             changeFlag=true;
         });
         //文本域改变即触发
-        $("textarea").change(function(){
+        jQuery("textarea").change(function(){
             changeFlag=true;
         });
     });
@@ -286,7 +167,6 @@ Use of this source code is governed by an MIT-style license that can be foundin 
     //        })
 </script>
 
-<script src="/src/js/jquery-ui.min.js" ></script>
 <script>
     //autocomplete
     jQuery( function() {
@@ -299,33 +179,32 @@ Use of this source code is governed by an MIT-style license that can be foundin 
         }
 
         jQuery('#tags').on( "keydown", function( event ) { console.log('click');
-                    if ( event.keyCode === jQuery.ui.keyCode.TAB &&
-                            jQuery( this ).autocomplete( "instance" ).menu.active ) {
-                        event.preventDefault();
-                    }
-                })
-                .autocomplete({
-                    minLength: 0,
-                    source: function( request, response ) {
-                        // delegate back to autocomplete, but extract the last term
-                        response( jQuery.ui.autocomplete.filter(
-                                availableTags, extractLast( request.term ) ) );
-                    },
-                    focus: function() {
-                        // prevent value inserted on focus
-                        return false;
-                    },
-                    select: function( event, ui ) {
-                        var terms = split( this.value );
-                        // remove the current input
-                        terms.pop();
-                        // add the selected item
-                        terms.push( ui.item.value );
-                        // add placeholder to get the comma-and-space at the end
-                        terms.push( "" );
-                        this.value = terms.join( ", " );
-                        return false;
-                    }
-                });
+            if ( event.keyCode === jQuery.ui.keyCode.TAB &&
+                    jQuery( this ).autocomplete( "instance" ).menu.active ) {
+                event.preventDefault();
+            }
+        }).autocomplete({
+            minLength: 0,
+            source: function( request, response ) {
+                // delegate back to autocomplete, but extract the last term
+                response( jQuery.ui.autocomplete.filter(
+                        availableTags, extractLast( request.term ) ) );
+            },
+            focus: function() {
+                // prevent value inserted on focus
+                return false;
+            },
+            select: function( event, ui ) {
+                var terms = split( this.value );
+                // remove the current input
+                terms.pop();
+                // add the selected item
+                terms.push( ui.item.value );
+                // add placeholder to get the comma-and-space at the end
+                terms.push( "" );
+                this.value = terms.join( ", " );
+                return false;
+            }
+        });
     } );
 </script>

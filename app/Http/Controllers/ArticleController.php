@@ -169,7 +169,7 @@ class ArticleController extends Controller
     $description = $request['description'] ? $request['description'] : trim(substr($content, 0, 20));
 //    $typeId = $request['type_id'];
     $categoryId = $request['category_id'];
-    $published = $request['published'] ? 1 : 0;
+//    $published = $request['published'] ? 1 : 0;
     $tags = preg_replace('/^(\w+)(\d+)(\x4E00-\x9FCF)/', ',', $request['tags']);
     $tags = preg_replace("/。/",",",$tags);
     $tags = preg_replace("/，/",",",$tags);
@@ -178,22 +178,25 @@ class ArticleController extends Controller
     $tags = explode(',', $tags);
     $tags = array_map('trim', $tags);
     $tags = array_unique($tags);
-
+dd($tags);
     $article = Article::find($id);
 
     $log['origin'] = '"article_title":'. $article->title . ';';
     $log['origin'] .= '"article_content":'. $article->content . ';';
     $log['origin'] .= '"article_description":'. $article->description . ';';
     $log['origin'] .= '"article_category":'. $article->categories->name . ';';
-    $log['origin'] .= '"article_published":'. $article->published . ';';
+//    $log['origin'] .= '"article_published":'. $article->published . ';';
     //type tag haven't been done
     $article->title = $title;
     $article->content = $content;
     $article->description = $description;
-    $article->created_by = $authuser->id;
+    $article->updated_by = $authuser->id;
 //    $article->type_id = $typeId;
+      if (!$article->type_id) {
+          $article->type_id = 1;
+      }
     $article->category_id = $categoryId;
-    $article->published = $published;
+//    $article->published = $published;
     $article->save();
 
     $log['target'] = '"article_title":'. $article->title. ';';
@@ -309,7 +312,7 @@ class ArticleController extends Controller
 
   public function create()
   {
-    $categories = Category::where('category_id','<>', 0)->get();
+    $categories = Category::where('last_category', 1)->get();
     $types = ArticleTypes::all();
     $tags = Tags::all();
     $currentAction = false;
@@ -323,7 +326,7 @@ class ArticleController extends Controller
             'articletypes' => $types,
             'categories' => $categories,
             'tags' => $tags,
-            'tagString' => $tagString, 'types'=>$types, 'tags'=>$tags, 'currentAction'=>$currentAction
+            'tagString' => $tagString, 'types'=>$types, 'currentAction'=>$currentAction
         ]);
   }
 
@@ -355,7 +358,9 @@ class ArticleController extends Controller
     $article->content = $content;
     $article->description = $description;
     $article->created_by = $authuser->id;
-    $article->type_id = $typeId;
+//    $article->type_id = $typeId;
+      //$typeId default is article and setup 1 as article
+    $article->type_id = 1;
     $article->category_id = $categoryId;
     $article->published = $published;
     $article->save();
