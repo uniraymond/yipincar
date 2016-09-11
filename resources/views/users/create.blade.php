@@ -1,5 +1,6 @@
 @extends('layouts.base')
-@include('users.side',['usergroups'=>$usergroups])
+@include('layouts.settingSideBar')
+{{--@include('users.side',['usergroups'=>$usergroups])--}}
 @section('content')
     <div id="page-wrapper">
         <div class="row">

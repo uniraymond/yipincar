@@ -1,6 +1,6 @@
-
 @extends('layouts.base')
 {{--@include('users.side',['usergroups'=>$usergroups])--}}
+@include('layouts.settingSideBar')
 @foreach($user->userrole as $ur)
     @php $userIds[] = $ur->role_id; @endphp
 @endforeach

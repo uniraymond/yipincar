@@ -1,5 +1,5 @@
 @extends('layouts.app')
-
+@include('layouts.settingSideBar')
 @section('content')
     <div id="page-wrapper">
         <div class="container">

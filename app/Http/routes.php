@@ -31,6 +31,7 @@ Route::group(['middleware'=>'auth', 'prefix'=>'admin'], function() {
     Route::resource('resource', 'ResourceController');
     Route::resource('comment', 'CommentController');
     Route::resource('user', 'UserController');
+    Route::resource('taboo', 'TabooController');
     Route::get('profile/{user_id}/editprofile', 'ProfileController@edit');
     Route::get('profile/{user_id}/create', 'ProfileController@create');
 
@@ -77,6 +78,8 @@ Route::group(['middleware'=>'auth', 'prefix'=>'admin'], function() {
     Route::get('/', 'ArticleController@index');
     Route::get('statistics', 'DashboardController@index');
     Route::put('article', 'ArticleController@store');
+    Route::get('history', 'HistoryController@index');
+    Route::get('articles/actived', 'ArticleController@activedList');
 });
 Route::group(['middleware' => 'auth'], function () {
     Route::get('/', 'ArticleController@index');

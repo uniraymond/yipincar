@@ -1,6 +1,7 @@
 @extends('layouts.base')
-
-@include('articles.sidebarCategory',['categories'=>$categories, 'types'=>$types, 'tag'=>$tags, 'currentAction'=>$currentAction])
+@include('layouts.contentSideBar')
+<link rel="stylesheet" href="{{ asset("/src/css/colorbox.css") }}" />
+{{--@include('articles.sidebarCategory',['categories'=>$categories, 'types'=>$types, 'tag'=>$tags, 'currentAction'=>$currentAction])--}}
 @section('content')
     <div id="page-wrapper">
         <div class="row">
@@ -36,7 +37,7 @@
                             <div>简述:</div>
                             <div> <p>{{ $article->description }}</p> </div>
                             <div class="clearfix"></div>
-                            <div>详细内容: </div>
+                            <div id="preview" >详细内容: </div>
                             <div> {!! $article->content !!} </div>
                             <div class="list-group">
                                 <div class="list-group-item list-group-item-action"> 栏目: {{ $article->categories->name }} </div>
@@ -54,25 +55,24 @@
                         </div>
                     </div>
                     @if ( Null !== Auth::user() && $article->created_by == Auth::user()->id || Auth::user()->hasAnyRole(['super_admin', 'admin', 'chef_editor', 'main_editor']) )
-                        <div class="col-lg-2 col-md-2 col-sm-2 edit_article pull-right clearfix">
-                            {{ link_to('admin/article/'.$article->id.'/edit', '编辑', ['class'=>'btn btn-primary']) }}
+                        <div class="col-lg-4 col-md-4 col-sm-4 edit_article pull-right clearfix">
+                            <a id="pv" class="inline cboxElement btn btn-primary" href="#preview">预览</a> {{ link_to('admin/article/'.$article->id.'/edit', '编辑', ['class'=>'btn btn-primary']) }}
                         </div>
                     @endif
-                </div>
 
+                </div>
+                <div class="clearfix"></div>
                 <div class="panel-body">
                     <div class="form-group  col-lg-12 col-md-12 col-sm-12" id="accordion">
                         @if (count($allStatusChecks) > 0 )
                             @foreach ($allStatusChecks as $statusName => $statusCheck)
-                                <div class="col-lg-12 col-md-12 col-sm-12 article_reviews" id="heading_edit_status_check_form">
-                                    @include('articles.reviewForm', [
+                                @include('articles.reviewForm', [
                                                                         'statusCheck'=>$statusCheck,
                                                                         'currentUser'=>Auth::user(),
                                                                         'statusName'=>$statusName,
                                                                         'article'=>$article
                                                                     ])
-                                </div>
-                                <div class="clearfix col-lg-12 col-md-12 col-sm-12"></div>
+                                <div class="clearfix"></div>
                             @endforeach
                         @endif
                     </div>
@@ -80,5 +80,10 @@
             </div>
         </div>
     </div>
+    <script src="{{ url('/src/js/jquery.min.2.2.4.js') }}"></script>
+    <script src="{{ url('/src/js/jquery.colorbox-min.js') }}"></script>
+    <script>
+        jQuery("#pv").colorbox({inline:true, href:"#preview", width:"376px", height: "667px"});
+    </script>
 @endsection
 
