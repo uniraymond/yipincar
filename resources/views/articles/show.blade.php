@@ -28,7 +28,10 @@
                             <small><span>完成日期: </span>{{ $article->created_at }}</small>
                         </div>
                         <div>
-                            <small><span>文章状态: </span>{{ count($article->article_status)>0 ? $article->article_status->title : '草稿' }}</small>
+                            <small><span>文章状态: </span>@if ($article->published == 1) 草稿
+                                @elseif($article->published == 2) 申请审查
+                                @elseif($article->published == 3) 已经审查
+                                @elseif($article->published == 4) 发布 @endif</small>
                         </div>
                     </div>
 
@@ -56,34 +59,37 @@
                     </div>
                     @if ( Null !== Auth::user() && $article->created_by == Auth::user()->id || Auth::user()->hasAnyRole(['super_admin', 'admin', 'chef_editor', 'main_editor']) )
                         <div class="col-lg-4 col-md-4 col-sm-4 edit_article pull-right clearfix">
-                            <a id="pv" class="inline cboxElement btn btn-primary" href="#preview">预览</a> {{ link_to('admin/article/'.$article->id.'/edit', '编辑', ['class'=>'btn btn-primary']) }}
-                        </div>
-                    @endif
+                            <a id="pv" class="inline cboxElement btn btn-primary" href="#preview">预览</a>
+                            @if ( Null !== Auth::user() && $article->created_by == Auth::user()->id && $article->published == 1 || Auth::user()->hasAnyRole(['super_admin', 'admin', 'chef_editor', 'main_editor']))
+                                {{ link_to('admin/article/'.$article->id.'/edit', '编辑', ['class'=>'btn btn-primary']) }}
+                            @endif
+</div>
+@endif
 
-                </div>
-                <div class="clearfix"></div>
-                <div class="panel-body">
-                    <div class="form-group  col-lg-12 col-md-12 col-sm-12" id="accordion">
-                        @if (count($allStatusChecks) > 0 )
-                            @foreach ($allStatusChecks as $statusName => $statusCheck)
-                                @include('articles.reviewForm', [
-                                                                        'statusCheck'=>$statusCheck,
-                                                                        'currentUser'=>Auth::user(),
-                                                                        'statusName'=>$statusName,
-                                                                        'article'=>$article
-                                                                    ])
-                                <div class="clearfix"></div>
-                            @endforeach
-                        @endif
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <script src="{{ url('/src/js/jquery.min.2.2.4.js') }}"></script>
-    <script src="{{ url('/src/js/jquery.colorbox-min.js') }}"></script>
-    <script>
-        jQuery("#pv").colorbox({inline:true, href:"#preview", width:"376px", height: "667px"});
-    </script>
+</div>
+<div class="clearfix"></div>
+<div class="panel-body">
+<div class="form-group  col-lg-12 col-md-12 col-sm-12" id="accordion">
+@if (count($allStatusChecks) > 0 )
+    @foreach ($allStatusChecks as $statusName => $statusCheck)
+        @include('articles.reviewForm', [
+                                                'statusCheck'=>$statusCheck,
+                                                'currentUser'=>Auth::user(),
+                                                'statusName'=>$statusName,
+                                                'article'=>$article
+                                            ])
+        <div class="clearfix"></div>
+    @endforeach
+@endif
+</div>
+</div>
+</div>
+</div>
+</div>
+<script src="{{ url('/src/js/jquery.min.2.2.4.js') }}"></script>
+<script src="{{ url('/src/js/jquery.colorbox-min.js') }}"></script>
+<script>
+jQuery("#pv").colorbox({inline:true, href:"#preview", width:"376px", height: "667px"});
+</script>
 @endsection
 

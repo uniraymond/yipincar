@@ -126,9 +126,14 @@ class ArticleController extends Controller
       $articletypes = ArticleTypes::all()
       ;
       $tagString = '';
-
+        $i = count($tags);
       foreach ($tags as $tag) {
-        $tagString .= '"' . $tag->name . '", ';
+          if ($i ==  0){
+              $tagString .= '"' . $tag->name . '" ';
+          } else {
+          }
+          $tagString .= '"' . $tag->name . '", ';
+        $i--;
       }
 
       $currentTags = array();
@@ -170,7 +175,9 @@ class ArticleController extends Controller
 //    $typeId = $request['type_id'];
     $categoryId = $request['category_id'];
 //    $published = $request['published'] ? 1 : 0;
+      if (trim($request['tags']) == '')
     $tags = preg_replace('/^(\w+)(\d+)(\x4E00-\x9FCF)/', ',', $request['tags']);
+      dd($tags);
     $tags = preg_replace("/。/",",",$tags);
     $tags = preg_replace("/，/",",",$tags);
     $tags = preg_replace("/；/",",",$tags);
@@ -452,20 +459,34 @@ class ArticleController extends Controller
     $articleStatusCheck->article_id = $articleId;
     $articleStatusCheck->article_status_id = $articleStatus->id;
     $articleStatusCheck->comment = $request['comment'];
-    if ($request['article_status'] == 'reject' && $request['published']) {
-      $articleStatusCheck->checked = 4;
-    } elseif ($request['article_status'] == 'reject' && !$request['published']) {
-      $articleStatusCheck->checked = 2;
-    } elseif ($request['published']) {
-      $articleStatusCheck->checked = $articleStatus->id;
-    } else {
-      $articleStatusCheck->checked = 1;
-    }
+    $articleStatusCheck->checked = 1;
+      switch($request['article_status']) {
+          case 'publish':
+              if($request['published']) {
+                  $articleStatusCheck->checked = 4;
+              }
+              break;
+          case 'review':
+              if($request['published']) {
+                  $articleStatusCheck->checked = 3;
+              }
+              break;
+          case 'review_apply':
+              if($request['published']) {
+                  $articleStatusCheck->checked = 2;
+              }
+              break;
+          default:
+              if($request['published']) {
+                  $articleStatusCheck->checked = 2;
+              }
+              break;
+      }
     $articleStatusCheck->created_by = $authuser->id;
     $articleStatusCheck->save();
 
     $article = Article::find($articleId);
-    $article->published = $articleStatus->id;
+    $article->published = $articleStatusCheck->checked;
     $article->save();
 
     $request->session()->flash('status', '添加了新的文章评估.');
@@ -486,21 +507,34 @@ class ArticleController extends Controller
     $articleStatusCheck = ArticleStatusCheck::find($id);
     $articleStatusCheck->comment = $request['comment'];
     $articleStatusCheck->updated_by = $authuser->id;
-    if ($request['article_status'] == 'reject' && $request['published']) {
-      $articleStatusCheck->checked = 4;
-    } elseif ($request['article_status'] == 'reject' && !$request['published']) {
-      $articleStatusCheck->checked = 2;
-    } elseif ($request['published']) {
-      $articleStatusCheck->checked = $articleStatusId;
-    }
+      $articleStatusCheck->checked = 1;
+      switch($request['article_status']) {
+          case 'publish':
+              if($request['published']) {
+                  $articleStatusCheck->checked = 4;
+              }
+              break;
+          case 'review':
+              if($request['published']) {
+                  $articleStatusCheck->checked = 3;
+              }
+              break;
+          case 'review_apply':
+              if($request['published']) {
+                  $articleStatusCheck->checked = 2;
+              }
+              break;
+          default:
+              if($request['published']) {
+                  $articleStatusCheck->checked = 2;
+              }
+              break;
+      }
+
     $articleStatusCheck->save();
 
     $article = Article::find($articleId);
-    if ($request['article_status'] == 'reject' && !$request['published']) {
-        $article->published = $statusReview;
-    } elseif ($request['published']) {
-        $article->published = $articleStatusId;
-    }
+      $article->published =  $articleStatusCheck->checked;
     $article->save();
 
     $request->session()->flash('status', '更新了文章评估.');

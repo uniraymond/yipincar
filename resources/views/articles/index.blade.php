@@ -77,7 +77,10 @@
                                     <td></td>
                                 @endif
                                 <td>
-                                    {{ count($article->article_status)>0 ? $article->article_status->title : '草稿' }}
+                                    @if ($article->published == 1) 草稿
+                                    @elseif($article->published == 2) 申请审查
+                                    @elseif($article->published == 3) 已经审查
+                                    @elseif($article->published == 4) 发布 @endif
                                 </td>
                             </tr>
                         @endforeach
