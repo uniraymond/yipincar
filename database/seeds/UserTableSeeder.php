@@ -110,7 +110,7 @@ class UserTableSeeder extends Seeder
         $user->status_id = 3;
         $user->pre_status_id = 3;
         $user->save();
-        $user->roles()->attach($role_advertisment_editor);
+        $user->roles()->attach($role_adv_editor);
 
         $user = new User();
         $user->name = 'technican';
