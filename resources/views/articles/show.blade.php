@@ -86,7 +86,7 @@
 </div>
 </div>
 </div>
-<script src="{{ url('/src/js/jquery.min.2.2.4.js') }}"></script>
+<script src="{{ url('/src/js/jQuery.min.2.2.4.js') }}"></script>
 <script src="{{ url('/src/js/jquery.colorbox-min.js') }}"></script>
 <script>
 jQuery("#pv").colorbox({inline:true, href:"#preview", width:"376px", height: "667px"});
