@@ -43,7 +43,7 @@ class RolesTableSeeder extends Seeder
         $role_user->save();
 
         $role_user = new Role();
-        $role_user->name = 'advertisment_editor';
+        $role_user->name = 'adv_editor';
         $role_user->description = '广告编辑';
         $role_user->save();
 
