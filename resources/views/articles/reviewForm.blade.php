@@ -21,7 +21,7 @@
           $radioLabel2 = '驳回';
           $currentStatusId = 3;
           break;
-   case 'review_apply':
+  default:
 if(Auth::user()->hasAnyRole(['editor', 'auth_editor']) && $article->created_by == Auth::user()->id && ($article->published == 1)) {
             $displayForm = true;
         }
@@ -31,17 +31,6 @@ if(Auth::user()->hasAnyRole(['editor', 'auth_editor']) && $article->created_by =
           $radioLabel2 = '草稿';
           $currentStatusId = 2;
           break;
-    default:
-if(Auth::user()->hasAnyRole(['editor', 'auth_editor']) && $article->created_by == Auth::user()->id && ($article->published == 0 || $article->published == 1)) {
-    $displayForm = true;
-    }
-$reviewTitle = '申请审核';
-$checkboxLabel = '申请审核';
-$radioLabel1 = '申请审核';
-$radioLabel2 = '草稿';
-$currentStatusId = 2;
-break;
-    
    }
 @endphp
 
