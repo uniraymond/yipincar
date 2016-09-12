@@ -97,7 +97,9 @@ Route::group(['prefix'=>'api'], function() {
     Route::post('upname/{userid?}/{name?}', 'InfoController@updateName');
     Route::put('collect/{userid?}/{articleid?}', 'InfoController@collectArticle');
     Route::delete('delcollect/{userid?}/{collectionid?}', 'InfoController@deleteCollection');
-    Route::any('subscribe/{userid?}/{authorid?}', 'InfoController@subscribe');
+//    Route::any('subscribe/userid/{userid?}/authorid/{authorid?}', 'InfoController@subscribe');
+    Route::any('subscribe', 'InfoController@subscribe');
+
     Route::delete('delsubscribe/{userid?}/{subscribid?}', 'InfoController@deleteSubscribe');
     Route::get('getadvert/{userid?}/{subscribid?}', 'InfoController@getAdvertSet');
     Route::post('upicon','infoController@updateMyIcon');

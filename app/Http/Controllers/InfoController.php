@@ -17,6 +17,20 @@ class InfoController extends Controller
      * @return \Illuminate\Http\Response
      */
 
+//    public function __construct()
+//    {
+//        $this->beforeFilter('csrf', array(
+//            'on' => 'post',
+//            'except' => array(
+//                'subscribe'
+//            )
+//        ));
+//
+//    }
+
+
+
+
     private $likeKey = "";
 
     public function index()
@@ -341,7 +355,26 @@ class InfoController extends Controller
         return ['delete' => $collection];
     }
 
+//    protected function excludedRoutes($request)
+//    {
+//        $routes = [
+//            'some/route/path',
+//            'users/non-protected-route'
+//        ];
+//
+//        foreach($routes as $route)
+//            if ($request->is($route))
+//                return true;
+//
+//        return false;
+//    }
+
     public function subscribe($userid, $authorid) {
+//        $this->excludedRoutes($request);
+//        $this->beforeFilter('csrf', array('on' => 'post',
+//            'except'=>array('methodName', 'anotherMethod')
+//        ));
+//        $this->beforeFilter('csrf', array('on' => 'post'));
         $subscribe = DB::table('user_subscribes')
             ->select('id')->where('user_id', $userid)
             ->where('created_by', $authorid)
