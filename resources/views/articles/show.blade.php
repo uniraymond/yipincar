@@ -57,7 +57,7 @@
                             </div>
                         </div>
                     </div>
-                    @if ( Null !== Auth::user() && $article->created_by == Auth::user()->id || Auth::user()->hasAnyRole(['super_admin', 'admin', 'chef_editor', 'main_editor']) )
+                    @if ( Null !== Auth::user() && $article->created_by == Auth::user()->id || Auth::user()->hasAnyRole(['super_admin', 'admin', 'chef_editor', 'main_editor', 'adv_editor']) )
                         <div class="col-lg-4 col-md-4 col-sm-4 edit_article pull-right clearfix">
                             <a id="pv" class="inline cboxElement btn btn-primary" href="#preview">预览</a>
                             @if ( Null !== Auth::user() && $article->created_by == Auth::user()->id && $article->published == 1 || Auth::user()->hasAnyRole(['super_admin', 'admin', 'chef_editor', 'main_editor']))
