@@ -21,7 +21,7 @@
           $radioLabel2 = '驳回';
           $currentStatusId = 3;
           break;
-  default:
+   case 'review_apply':
 if(Auth::user()->hasAnyRole(['editor', 'auth_editor']) && $article->created_by == Auth::user()->id && ($article->published == 1)) {
             $displayForm = true;
         }
@@ -31,6 +31,7 @@ if(Auth::user()->hasAnyRole(['editor', 'auth_editor']) && $article->created_by =
           $radioLabel2 = '草稿';
           $currentStatusId = 2;
           break;
+    case 'draft': break;
    }
 @endphp
 
