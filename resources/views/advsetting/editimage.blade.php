@@ -1,6 +1,7 @@
 @extends('layouts.base')
 
-@include('advsetting.sidebarType',['types'=>$types])
+@include('layouts.contentSideBar')
+{{--@include('advsetting.sidebarType',['types'=>$types])--}}
 @section('content')
     <div id="page-wrapper">
         <div class="row">
@@ -36,7 +37,7 @@
                     {!! Form::label('type_id', '选择类型', array('class'=>'col-md-12')) !!}
                     <select class="col-lg-12 col-md-12 col-sm-12 form-control" name="type_id">
                         @foreach ($types as $type)
-                            <option value="{{$type->id}}" {{ $type->id == $advSettings->type_id ? 'selected' : '' }}>{{$type->name}}</option>
+                            <option value="{{$type->id}}" @if($type->name == '视频') disabled @endif {{ $type->id == $advSettings->type_id ? 'selected' : '' }}>{{$type->name}}</option>
                         @endforeach
                     </select>
 <div class="clearfix"></div>

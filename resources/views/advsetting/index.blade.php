@@ -1,5 +1,6 @@
 @extends('layouts.base')
-@include('advsetting.sidebarType',['types'=>$types, 'positions'=>$positions])
+@include('layouts.contentSideBar')
+{{--@include('advsetting.sidebarType',['types'=>$types, 'positions'=>$positions])--}}
 @section('content')
     <div id="page-wrapper">
         <div class="row">

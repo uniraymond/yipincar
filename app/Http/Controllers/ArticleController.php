@@ -27,17 +27,37 @@ class ArticleController extends Controller
     //website
     $authuser = $request->user();
 
-    $categories = Category::where('category_id','<>', 0)->get();
+    $categories = Category::where('last_category', 1)->get();
     $types = ArticleTypes::all();
     $tags = Tags::all();
     $currentAction = false;
 
-      if ($authuser->hasRole('auth_editor')) {
-          $articles = Article::where('created_by', $authuser->id)->orderBy('created_at', 'desc')->paginate(15);
-      } else {
+      if ($authuser->hasAnyRole(['super_admin', 'admin', 'chef_editor', 'main_editor', 'adv_editor'])) {
           $articles = Article::orderBy('created_at', 'desc')->paginate(15);
+//      } else ($authuser->hasAnyRole(['auth_editor', 'editor'])) {
+      } else  {
+          $articles = Article::where('created_by', $authuser->id)->orderBy('created_at', 'desc')->paginate(15);
       }
     return view('articles/index', ['articles'=>$articles, 'categories'=>$categories, 'types'=>$types, 'tags'=>$tags, 'currentAction'=>$currentAction]);
+  }
+
+  public function activedList(Request $request)
+  {
+    //website
+    $authuser = $request->user();
+
+    $categories = Category::where('last_category', 1)->get();
+    $types = ArticleTypes::all();
+    $tags = Tags::all();
+    $currentAction = false;
+
+      if ($authuser->hasAnyRole(['super_admin', 'admin', 'chef_editor', 'main_editor', 'adv_editor'])) {
+          $articles = Article::where('published', 3)->orderBy('created_at', 'desc')->paginate(15);
+//      } else ($authuser->hasAnyRole(['auth_editor', 'editor'])) {
+      } else  {
+          $articles = Article::where('created_by', $authuser->id)->orderBy('created_at', 'desc')->paginate(15);
+      }
+    return view('articles/actived', ['articles'=>$articles, 'categories'=>$categories, 'types'=>$types, 'tags'=>$tags, 'currentAction'=>$currentAction]);
   }
 
   // advertisment
@@ -149,7 +169,7 @@ class ArticleController extends Controller
     $description = $request['description'] ? $request['description'] : trim(substr($content, 0, 20));
 //    $typeId = $request['type_id'];
     $categoryId = $request['category_id'];
-    $published = $request['published'] ? 1 : 0;
+//    $published = $request['published'] ? 1 : 0;
     $tags = preg_replace('/^(\w+)(\d+)(\x4E00-\x9FCF)/', ',', $request['tags']);
     $tags = preg_replace("/。/",",",$tags);
     $tags = preg_replace("/，/",",",$tags);
@@ -161,27 +181,29 @@ class ArticleController extends Controller
 
     $article = Article::find($id);
 
-    $log['origin'] = 'Article Title: '. $article->title. '; ';
-    $log['origin'] .= 'Article Content: '. $article->content . '; ';
-    $log['origin'] .= 'Article Description: '. $article->description . '; ';
-    $log['origin'] .= 'Article Category: '. $article->categories->name . '; ';
-    $log['origin'] .= 'Article Published: '. $article->published . '; ';
+    $log['origin'] = '"article_title":'. $article->title . ';';
+    $log['origin'] .= '"article_content":'. $article->content . ';';
+    $log['origin'] .= '"article_description":'. $article->description . ';';
+    $log['origin'] .= '"article_category":'. $article->categories->name . ';';
+//    $log['origin'] .= '"article_published":'. $article->published . ';';
     //type tag haven't been done
-
     $article->title = $title;
     $article->content = $content;
     $article->description = $description;
-    $article->created_by = $authuser->id;
+    $article->updated_by = $authuser->id;
 //    $article->type_id = $typeId;
+      if (!$article->type_id) {
+          $article->type_id = 1;
+      }
     $article->category_id = $categoryId;
-    $article->published = $published;
+//    $article->published = $published;
     $article->save();
 
-    $log['target'] = 'Article Title: '. $article->title. '; ';
-    $log['target'] .= 'Article Content: '. $article->content . '; ';
-    $log['target'] .= 'Article Description: '. $article->description . '; ';
-    $log['target'] .= 'Article Category: '. $article->categories->name . '; ';
-    $log['target'] .= 'Article Published: '. $article->published . '; ';
+    $log['target'] = '"article_title":'. $article->title. ';';
+    $log['target'] .= '"article_content":'. $article->content . ';';
+    $log['target'] .= '"article_description":'. $article->description . ';';
+    $log['target'] .= '"article_category":'. $article->categories->name . ';';
+    $log['target'] .= '"article_published":'. $article->published . ';';
 
     $currentTagIds = DB::table('article_tags')->where('article_id', $id)->lists('tag_id', 'id');
 
@@ -290,7 +312,7 @@ class ArticleController extends Controller
 
   public function create()
   {
-    $categories = Category::where('category_id','<>', 0)->get();
+    $categories = Category::where('last_category', 1)->get();
     $types = ArticleTypes::all();
     $tags = Tags::all();
     $currentAction = false;
@@ -304,7 +326,7 @@ class ArticleController extends Controller
             'articletypes' => $types,
             'categories' => $categories,
             'tags' => $tags,
-            'tagString' => $tagString, 'types'=>$types, 'tags'=>$tags, 'currentAction'=>$currentAction
+            'tagString' => $tagString, 'types'=>$types, 'currentAction'=>$currentAction
         ]);
   }
 
@@ -336,7 +358,9 @@ class ArticleController extends Controller
     $article->content = $content;
     $article->description = $description;
     $article->created_by = $authuser->id;
-    $article->type_id = $typeId;
+//    $article->type_id = $typeId;
+      //$typeId default is article and setup 1 as article
+    $article->type_id = 1;
     $article->category_id = $categoryId;
     $article->published = $published;
     $article->save();
@@ -383,11 +407,11 @@ class ArticleController extends Controller
     $log['created_by'] = $authuser->id;
     $log['comment'] = 'comment';
 
-    $log['origin'] = 'Article Title: '. $article->title. '; ';
-    $log['origin'] .= 'Article Content: '. $article->content . '; ';
-    $log['origin'] .= 'Article Description: '. $article->description . '; ';
-    $log['origin'] .= 'Article Category: '. $article->categories->name . '; ';
-    $log['origin'] .= 'Article Published: '. $article->published . '; ';
+    $log['origin'] = '"article_title":'. $article->title. ';';
+    $log['origin'] .= '"article_content":'. $article->content . ';';
+    $log['origin'] .= '"article_description":'. $article->description . ';';
+    $log['origin'] .= '"article_category":'. $article->categories->name . ';';
+    $log['origin'] .= '"article_published":'. $article->published . ';';
 
     $log['target'] = $log['origin'];
 

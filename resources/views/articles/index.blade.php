@@ -1,6 +1,6 @@
 @extends('layouts.base')
-
-@include('articles.sidebarCategory',['categories'=>$categories, 'types'=>$types, 'tag'=>$tags, 'currentAction'=>$currentAction])
+@include('layouts.contentSideBar')
+{{--@include('articles.sidebarCategory',['categories'=>$categories, 'types'=>$types, 'tag'=>$tags, 'currentAction'=>$currentAction])--}}
 @section('content')
     <div id="page-wrapper">
         <div class="row">
@@ -31,7 +31,7 @@
                             <th>关键字</th>
                             <th>作者</th>
                             <th>评论</th>
-                            @if ( Null !== Auth::user() )
+                            @if ( Null !== Auth::user() || Auth::user()->hasAnyRole(['super_admin', 'admin','chef_editor', 'main_editor', 'adv_editor']) )
                                 <th>编辑</th>
                                 <th>删除</th>
                             @endif
@@ -65,7 +65,7 @@
                                     @endif
                                 </td>
                                 <td><a href="{{ url('admin/articlecomment/'.$article->id) }}" id="commentBtn_{{ $article->id }}"><i class="fa fa-comments-o"></i> 评论({{ count($article->comments) }})</a></td>
-                                @if ( Null !== Auth::user() && $article->created_by == Auth::user()->id || Auth::user()->hasAnyRole(['main_editor']))
+                                @if ( Null !== Auth::user() || Auth::user()->hasAnyRole(['super_admin', 'admin','chef_editor', 'main_editor', 'adv_editor']))
                                     <td>
                                         <a href="{{ url('admin/article/'.$article->id.'/edit') }}" class="btn btn-default" id="editBtn_{{ $article->id }}">编辑</a>
                                     </td>

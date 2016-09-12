@@ -17,7 +17,7 @@ class CreateArticlesTable extends Migration
             $table->increments('id');
             $table->string('title');
             $table->string('description');
-            $table->string('content');
+            $table->text('content');
             $table->string('token');
             $table->string('uid');
             $table->boolean('top');

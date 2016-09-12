@@ -1,6 +1,7 @@
 @extends('layouts.base')
-
-@include('articles.sidebarCategory',['categories'=>$categories, 'types'=>$types, 'tag'=>$tags, 'currentAction'=>$currentAction])
+<link rel="stylesheet" href="{{ asset("/src/css/jquery-ui.min.css") }}" />
+@include('layouts.contentSideBar')
+{{--@include('articles.sidebarCategory',['categories'=>$categories, 'types'=>$types, 'tag'=>$tags, 'currentAction'=>$currentAction])--}}
 @section('content')
     <div id="page-wrapper">
         <div class="row">
@@ -63,21 +64,21 @@
                             </div>
                         </div>
 
-                        <div>
-                            <label class="col-lg-12 col-md-12 col-sm-12">选择类型</label>
-                            <div class="col-md-12">
-                                <select class="col-lg-12 col-md-12 col-sm-12 form-control" name="type_id">
-                                    @foreach ($articletypes as $type)
-                                        <option value="{{$type->id}}">{{$type->name}}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
+                        {{--<div>--}}
+                            {{--<label class="col-lg-12 col-md-12 col-sm-12">选择类型</label>--}}
+                            {{--<div class="col-md-12">--}}
+                                {{--<select class="col-lg-12 col-md-12 col-sm-12 form-control" name="type_id">--}}
+                                    {{--@foreach ($articletypes as $type)--}}
+                                        {{--<option value="{{$type->id}}">{{$type->name}}</option>--}}
+                                    {{--@endforeach--}}
+                                {{--</select>--}}
+                            {{--</div>--}}
+                        {{--</div>--}}
 
                         <div>
-                            <label class="col-lg-12 col-md-12 col-sm-12">选择标签</label>
+                            <label class="col-lg-12 col-md-12 col-sm-12">选择标签(多个关键字之间用逗号隔开)</label>
                             <div class="col-md-12">
-                                <input id="tags" name="tags" class="col-lg-12 col-md-12 col-sm-12 form-control" placeholder="选择标签" />
+                                <input id="tags" name="tags" class="col-lg-12 col-md-12 col-sm-12 form-control" placeholder="选择标签" required />
                                 <div class="col-lg-12 col-md-12 col-sm-12 highlight">
                                     <span><small>提示现有的标签: {!! $tagString !!}</small></span>
                                 </div>
@@ -102,10 +103,14 @@
     </div>
 @endsection
 
-<script src="/src/js/vendor/tinymce/js/tinymce/tinymce.min.js"></script>
+<script src="{{ url('/src/js/vendor/tinymce/js/tinymce/tinymce.min.js') }}"></script>
 <script>
-    var jQueryyp = jQuery.noConflict( true );
+//    var sampleApp = angular.module('myapp', [], function($interpolateProvider) {
+//        $interpolateProvider.startSymbol('<%');
+//        $interpolateProvider.endSymbol('%>');
+//    });
 </script>
+<script src="{{ url('/src/js/jQuery.min.2.2.4.js') }}" ></script>
 <script>
     var editor_config = {
         height: "350",
@@ -135,20 +140,20 @@
                 resizable : "yes",
                 close_previous : "no"
             });
-        },
+        }
     };
 
     tinymce.init(editor_config);
 
     var changeFlag=false;
     //标识文本框值是否改变，为true，标识已变
-    $(document).ready(function(){
+    jQuery(document).ready(function(){
         //文本框值改变即触发
-        $("input[type='text']").change(function(){
+        jQuery("input[type='text']").change(function(){
             changeFlag=true;
         });
         //文本域改变即触发
-        $("textarea").change(function(){
+        jQuery("textarea").change(function(){
             changeFlag=true;
         });
     });
@@ -162,7 +167,6 @@
     //        })
 </script>
 
-<script src="/src/js/jquery-ui.min.js" ></script>
 <script>
     //autocomplete
     jQuery( function() {
@@ -175,33 +179,32 @@
         }
 
         jQuery('#tags').on( "keydown", function( event ) { console.log('click');
-                    if ( event.keyCode === jQuery.ui.keyCode.TAB &&
-                            jQuery( this ).autocomplete( "instance" ).menu.active ) {
-                        event.preventDefault();
-                    }
-                })
-                .autocomplete({
-                    minLength: 0,
-                    source: function( request, response ) {
-                        // delegate back to autocomplete, but extract the last term
-                        response( jQuery.ui.autocomplete.filter(
-                                availableTags, extractLast( request.term ) ) );
-                    },
-                    focus: function() {
-                        // prevent value inserted on focus
-                        return false;
-                    },
-                    select: function( event, ui ) {
-                        var terms = split( this.value );
-                        // remove the current input
-                        terms.pop();
-                        // add the selected item
-                        terms.push( ui.item.value );
-                        // add placeholder to get the comma-and-space at the end
-                        terms.push( "" );
-                        this.value = terms.join( ", " );
-                        return false;
-                    }
-                });
+            if ( event.keyCode === jQuery.ui.keyCode.TAB &&
+                    jQuery( this ).autocomplete( "instance" ).menu.active ) {
+                event.preventDefault();
+            }
+        }).autocomplete({
+            minLength: 0,
+            source: function( request, response ) {
+                // delegate back to autocomplete, but extract the last term
+                response( jQuery.ui.autocomplete.filter(
+                        availableTags, extractLast( request.term ) ) );
+            },
+            focus: function() {
+                // prevent value inserted on focus
+                return false;
+            },
+            select: function( event, ui ) {
+                var terms = split( this.value );
+                // remove the current input
+                terms.pop();
+                // add the selected item
+                terms.push( ui.item.value );
+                // add placeholder to get the comma-and-space at the end
+                terms.push( "" );
+                this.value = terms.join( ", " );
+                return false;
+            }
+        });
     } );
 </script>

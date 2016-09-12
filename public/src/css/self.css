@@ -42,5 +42,15 @@ textarea.name {
 #auth_article_list {
     height: 400px;
     overflow-y: scroll;
+}
 
+#footer_contents{
+    margin: 0 auto;
+    text-align: center;
+    line-height: 75px;
+    height: 75px;
+}
+
+footer.navbar{
+    margin-bottom: 0;
 }

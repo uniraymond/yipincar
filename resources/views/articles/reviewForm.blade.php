@@ -94,10 +94,20 @@ $checkboxLabel = '申请审核';
                 </div>
                 {!! Form::text('article_status', $statusName, array('hidden')) !!}
                 <div class="form-check">
-                    <label for="published" class="col-lg-2 col-md-2 col-sm-2 form-check-label">
-                        <input type="checkbox" name="published" {{ $statusCheck[0]->checked == $currentStatusId ? 'checked' : '' }} class="col-lg-2 col-md-2 col-sm-2 form-check-input" /> {{ $checkboxLabel }}
-                    </label>
+                    @if ($currentUser->hasRole('chef_editor'))
+                        <label for="published" class="col-lg-2 col-md-2 col-sm-2 form-check-label">
+                            <input type="checkbox" name="published" {{ $statusCheck[0]->checked == $currentStatusId ? 'checked' : '' }} class="col-lg-2 col-md-2 col-sm-2 form-check-input" /> {{ $checkboxLabel }}
+                        </label>
+                    @else
+                        <label for="published" class="col-lg-2 col-md-2 col-sm-2 form-check-label">
+                            <input type="radio" name="published" {{ $statusCheck[0]->checked == 2 ? 'checked' : '' }} class="col-lg-2 col-md-2 col-sm-2 form-check-input" value="1" /> {{ $radioLabel1 }}
+                        </label>
+                        <label for="published" class="col-lg-2 col-md-2 col-sm-2 form-check-label">
+                            <input type="radio" name="published" {{ $statusCheck[0]->checked == 1 ? 'checked' : '' }} class="col-lg-2 col-md-2 col-sm-2 form-check-input" value="0" /> {{ $radioLabel2 }}
+                        </label>
+                    @endif
                 </div>
+                <div class="clearfix"></div>
                 {!! Form::submit('保存', array('class'=>'btn btn-primary col-lg-offset-8 col-md-offset-8 col-sm-offset-8')) !!}
                 {!! Form::token() !!}
                 {!! Form::close() !!}
@@ -121,9 +131,18 @@ $checkboxLabel = '申请审核';
                     {!! Form::textarea('comment', $statusCk->comment , array('class'=>'name col-lg-12 col-md-12 col-sm-12', 'placeholder' => '建议', 'rows'=> '3')) !!}
                     {!! Form::text('article_status', $statusName, array('hidden')) !!}
                     <div class="form-check">
-                        <label for="published" class="col-lg-2 col-md-2 col-sm-2 form-check-label">
-                            <input type="checkbox" name="published" {{ $statusCk->checked == $currentStatusId ? 'checked' : '' }} class="col-lg-2 col-md-2 col-sm-2 form-check-input" /> {{ $checkboxLabel }}
-                        </label>
+                        @if ($currentUser->hasRole('chef_editor'))
+                            <label for="published" class="col-lg-2 col-md-2 col-sm-2 form-check-label">
+                                <input type="checkbox" name="published" {{ $statusCk->checked == $currentStatusId ? 'checked' : '' }} class="col-lg-2 col-md-2 col-sm-2 form-check-input" /> {{ $checkboxLabel }}
+                            </label>
+                        @else
+                            <label for="published" class="col-lg-2 col-md-2 col-sm-2 form-check-label">
+                                <input type="radio" name="published" class="col-lg-2 col-md-2 col-sm-2 form-check-input" {{ $statusCk->checked == 2 ? 'checked' : '' }} value="1" /> {{ $radioLabel1 }}
+                            </label>
+                            <label for="published" class="col-lg-2 col-md-2 col-sm-2 form-check-label">
+                                <input type="radio" name="published" class="col-lg-2 col-md-2 col-sm-2 form-check-input" {{ $statusCk->checked == 1 ? 'checked' : '' }} value="0" /> {{ $radioLabel2 }}
+                            </label>
+                        @endif
                     </div>
                     {!! Form::submit('保存', array('class'=>'btn btn-primary col-lg-offset-8 col-md-offset-8 col-sm-offset-8')) !!}
                     {!! Form::token() !!}
