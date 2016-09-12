@@ -369,12 +369,10 @@ class InfoController extends Controller
 //        return false;
 //    }
 
-    public function subscribe($userid, $authorid) {
-//        $this->excludedRoutes($request);
-//        $this->beforeFilter('csrf', array('on' => 'post',
-//            'except'=>array('methodName', 'anotherMethod')
-//        ));
-//        $this->beforeFilter('csrf', array('on' => 'post'));
+    public function subscribe(Request $request) {
+        $userid = $request ->get('userid');
+        $authorid = $request ->get('authorid');
+
         $subscribe = DB::table('user_subscribes')
             ->select('id')->where('user_id', $userid)
             ->where('created_by', $authorid)
