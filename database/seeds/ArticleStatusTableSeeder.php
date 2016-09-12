@@ -20,10 +20,15 @@ class ArticleStatusTableSeeder extends Seeder
 
         $article_status = new ArticleStatus();
         $article_status->name = 'review';
-        $article_status->title = '审核中';
-        $article_status->comment = '审核中';
+        $article_status->title = '初审';
+        $article_status->comment = '初审';
         $article_status->save();
 
+        $article_status = new ArticleStatus();
+        $article_status->name = 'final_review';
+        $article_status->title = '终审';
+        $article_status->comment = '终审';
+        $article_status->save();
 
         $article_status = new ArticleStatus();
         $article_status->name = 'publish';
@@ -31,10 +36,10 @@ class ArticleStatusTableSeeder extends Seeder
         $article_status->comment = '发布';
         $article_status->save();
 
-        $article_status = new ArticleStatus();
-        $article_status->name = 'reject';
-        $article_status->title = '驳回';
-        $article_status->comment = '驳回';
-        $article_status->save();
+//        $article_status = new ArticleStatus();
+//        $article_status->name = 'reject';
+//        $article_status->title = '驳回';
+//        $article_status->comment = '驳回';
+//        $article_status->save();
     }
 }

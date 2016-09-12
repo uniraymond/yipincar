@@ -11,6 +11,14 @@ use DB;
 
 class InfoController extends Controller
 {
+    public function __construct(){
+        $this->beforeFilter('csrf', array(
+            'on' => 'post',
+            'except' => array(
+                'subscribe'
+            )
+        ));
+    }
     /**
      * Display a listing of the resource.
      *
