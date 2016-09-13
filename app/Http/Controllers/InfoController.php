@@ -4,21 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Article;
 use App\Comment;
+use App\User;
 use Illuminate\Http\Request;
+use Intervention\Image\Facades\Image;
 
 use App\Http\Requests;
 use DB;
 
 class InfoController extends Controller
 {
-    public function __construct(){
-        $this->beforeFilter('csrf', array(
-            'on' => 'post',
-            'except' => array(
-                'subscribe'
-            )
-        ));
-    }
     /**
      * Display a listing of the resource.
      *
@@ -416,169 +410,232 @@ class InfoController extends Controller
         }
     }
 
-//    public function updateMyIcon($userid, $image, $thumb) {
-//        if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
-//            exit; // finish preflight CORS requests here
-//        }
-//
-//
-//        if ( !empty($_REQUEST[ 'debug' ]) ) {
-//            $random = rand(0, intval($_REQUEST[ 'debug' ]) );
-//            if ( $random === 0 ) {
-//                header("HTTP/1.0 500 Internal Server Error");
-//                exit;
-//            }
-//        }
-//
-//        // header("HTTP/1.0 500 Internal Server Error");
-//        // exit;
-//
-//
-//        // 5 minutes execution time
-//        @set_time_limit(5 * 60);
-//
-//        // Uncomment this one to fake upload time
-//        usleep(5000);
-//
-//        // Settings
-//        // $targetDir = ini_get("upload_tmp_dir") . DIRECTORY_SEPARATOR . "plupload";
-//        $targetDir = 'uploads/images'; //上传临时地址,可能要更改
-//        $uploadDir = 'uploads/images'; //上传地址
-//
-//
-//        $cleanupTargetDir = true; // Remove old files
-//        $maxFileAge = 5 * 3600; // Temp file age in seconds
-//
-//
-//        // Create target dir
-//        if (!file_exists($targetDir)) {
-//            @mkdir($targetDir);
-//        }
-//
-//        // Create target dir
-//        if (!file_exists($uploadDir)) {
-//            @mkdir($uploadDir);
-//        }
-//
-//        // Get a file name
-//        // if (isset($_REQUEST["name"])) {
-//        //     $fileName = $_REQUEST["name"];
-//        // } elseif (!empty($_FILES)) {
-//        //     $upfile=@$_FILES[$inputName];
-//        //     $fileName = $_FILES["file"]["name"];
-//        // } else {
-//        //     $fileName = uniqid("file_");
-//        // }
-//        $fileName = @$_FILES["file"]["name"];
-//        $fileInfo=pathinfo($fileName);
-//        $extension=$fileInfo['extension'];
-//        $fileName=date("YmdHis").mt_rand(1000,9999).'.'.$extension;
-//
-//
-//        $md5File = @file('md5list.txt', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-//        $md5File = $md5File ? $md5File : array();
-//
-//        if (isset($_REQUEST["md5"]) && array_search($_REQUEST["md5"], $md5File ) !== FALSE ) {
-//            die('{"jsonrpc" : "2.0", "result" : null, "id" : "id", "exist": 1}');
-//        }
-//
-//        $filePath = $targetDir . DIRECTORY_SEPARATOR . $fileName;
-//        $uploadPath = $uploadDir . DIRECTORY_SEPARATOR . $fileName;
-//
-//        // Chunking might be enabled
-//        $chunk = isset($_REQUEST["chunk"]) ? intval($_REQUEST["chunk"]) : 0;
-//        $chunks = isset($_REQUEST["chunks"]) ? intval($_REQUEST["chunks"]) : 1;
-//
-//
-//        // Remove old temp files
-//        if ($cleanupTargetDir) {
-//            if (!is_dir($targetDir) || !$dir = opendir($targetDir)) {
-//                die('{"jsonrpc" : "2.0", "error" : {"code": 100, "message": "Failed to open temp directory."}, "id" : "id"}');
-//            }
-//
-//            while (($file = readdir($dir)) !== false) {
-//                $tmpfilePath = $targetDir . DIRECTORY_SEPARATOR . $file;
-//
-//                // If temp file is current file proceed to the next
-//                if ($tmpfilePath == "{$filePath}_{$chunk}.part" || $tmpfilePath == "{$filePath}_{$chunk}.parttmp") {
-//                    continue;
-//                }
-//
-//                // Remove temp file if it is older than the max age and is not the current file
-//                if (preg_match('/\.(part|parttmp)$/', $file) && (@filemtime($tmpfilePath) < time() - $maxFileAge)) {
-//                    @unlink($tmpfilePath);
-//                }
-//            }
-//            closedir($dir);
-//        }
-//
-//
-//        // Open temp file
-//        if (!$out = @fopen("{$filePath}_{$chunk}.parttmp", "wb")) {
-//            die('{"jsonrpc" : "2.0", "error" : {"code": 102, "message": "Failed to open output stream."}, "id" : "id"}');
-//        }
-//
-//        if (!empty($_FILES)) {
-//            if ($_FILES["file"]["error"] || !is_uploaded_file($_FILES["file"]["tmp_name"])) {
-//                die('{"jsonrpc" : "2.0", "error" : {"code": 103, "message": "Failed to move uploaded file."}, "id" : "id"}');
-//            }
-//
-//            // Read binary input stream and append it to temp file
-//            if (!$in = @fopen($_FILES["file"]["tmp_name"], "rb")) {
-//                die('{"jsonrpc" : "2.0", "error" : {"code": 101, "message": "Failed to open input stream."}, "id" : "id"}');
-//            }
-//        } else {
-//            if (!$in = @fopen("php://input", "rb")) {
-//                die('{"jsonrpc" : "2.0", "error" : {"code": 101, "message": "Failed to open input stream."}, "id" : "id"}');
-//            }
-//        }
-//
-//        while ($buff = fread($in, 4096)) {
-//            fwrite($out, $buff);
-//        }
-//
-//        @fclose($out);
-//        @fclose($in);
-//
-//        rename("{$filePath}_{$chunk}.parttmp", "{$filePath}_{$chunk}.part");
-//
-//        $index = 0;
-//        $done = true;
-//        for( $index = 0; $index < $chunks; $index++ ) {
-//            if ( !file_exists("{$filePath}_{$index}.part") ) {
-//                $done = false;
-//                break;
-//            }
-//        }
-//        if ( $done ) {
-//            if (!$out = @fopen($uploadPath, "wb")) {
-//                die('{"jsonrpc" : "2.0", "error" : {"code": 102, "message": "Failed to open output stream."}, "id" : "id"}');
-//            }
-//
-//            if ( flock($out, LOCK_EX) ) {
-//                for( $index = 0; $index < $chunks; $index++ ) {
-//                    if (!$in = @fopen("{$filePath}_{$index}.part", "rb")) {
-//                        break;
-//                    }
-//
-//                    while ($buff = fread($in, 4096)) {
-//                        fwrite($out, $buff);
-//                    }
-//
-//                    @fclose($in);
-//                    @unlink("{$filePath}_{$index}.part");
-//                }
-//
-//                flock($out, LOCK_UN);
-//            }
-//            @fclose($out);
-//        }
-//
-//        // Return Success JSON-RPC response
-//        // die('{"jsonrpc" : "2.0", "result" : null, "id" : "id");
-//        //向模板输出文件名
-//        // echo $fileName;
-//        $data=array('pic'=>$fileName);
-//        return response()->json($data); //不用框架就用echo json_encode()
-//    }
+
+    public function phoneSignUp(Request $request) {
+        $phone = $request ->get('phone');
+        $user = User::select('phone')
+            ->where('phone', $phone)
+            ->get();
+        if($user && count($user)) {
+            return ['result' => -1];
+        } else {
+            $signUp = User::insert ([
+                'name' => $request ->get('name'),
+                'uid' => $request ->get('uid'),
+                'password' => $request ->get('password'),
+                'phone' => $phone,
+                'role' => 10
+            ]);
+            return ['result' => $signUp ? 1 : 0];
+        }
+    }
+
+    public function phoneSignIn(Request $request) {
+        $phone = $request ->get('phone');
+        $user = User::select('phone')
+            ->where('phone', $phone)
+            ->where('password', $request ->get('password'))
+            ->get();
+        if($user && count($user)) {
+            User::where('phone', $phone) ->update([
+                    'uid' => $request ->get('uid')
+                ]);
+            return ['result' => 1];
+        } else {
+            return ['result' => -1];
+        }
+    }
+
+    public function userRename(Request $request) {
+        $name = $request ->get('name');
+        if($name) {
+            $user = User::where('id', $request ->get('userid')) ->update([
+                'name' => $name
+            ]);
+            return ['result' => $user];
+        }
+    }
+
+    public  function resetPassword(Request $request) {
+        $password = $request ->get('password');
+        if($password) {
+            $user = User::where('id', $request ->get('userid')) ->update([
+                'password' => $password
+            ]);
+            return ['result' => $user];
+        }
+    }
+
+    public function 
+    public function updateMyIcon(Request $request) {
+        $userid = $request ->get('userid');
+        if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
+            exit; // finish preflight CORS requests here
+        }
+
+
+        if ( !empty($_REQUEST[ 'debug' ]) ) {
+            $random = rand(0, intval($_REQUEST[ 'debug' ]) );
+            if ( $random === 0 ) {
+                header("HTTP/1.0 500 Internal Server Error");
+                exit;
+            }
+        }
+
+        // header("HTTP/1.0 500 Internal Server Error");
+        // exit;
+
+
+        // 5 minutes execution time
+        @set_time_limit(5 * 60);
+
+        // Uncomment this one to fake upload time
+        usleep(5000);
+
+        // Settings
+        // $targetDir = ini_get("upload_tmp_dir") . DIRECTORY_SEPARATOR . "plupload";
+        $targetDir = 'photos/icons/'.$userid; //上传临时地址,可能要更改
+        $uploadDir = 'photos/icons/'.$userid; //上传地址
+
+
+        $cleanupTargetDir = true; // Remove old files
+        $maxFileAge = 5 * 3600; // Temp file age in seconds
+
+
+        // Create target dir
+        if (!file_exists($targetDir)) {
+            @mkdir($targetDir);
+        }
+
+        // Create target dir
+        if (!file_exists($uploadDir)) {
+            @mkdir($uploadDir);
+        }
+
+        // Get a file name
+        // if (isset($_REQUEST["name"])) {
+        //     $fileName = $_REQUEST["name"];
+        // } elseif (!empty($_FILES)) {
+        //     $upfile=@$_FILES[$inputName];
+        //     $fileName = $_FILES["file"]["name"];
+        // } else {
+        //     $fileName = uniqid("file_");
+        // }
+
+        $name = @$_FILES["file"]["name"];
+        $fileInfo=pathinfo($name);
+        $extension=$fileInfo['extension'];
+        $fileName = $userid.'_icon.'.$extension;//date("YmdHis").mt_rand(1000,9999).'.'.$extension;
+        $thumbName = $userid.'_thumb.'.$extension;
+
+        $md5File = @file('md5list.txt', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+        $md5File = $md5File ? $md5File : array();
+
+        if (isset($_REQUEST["md5"]) && array_search($_REQUEST["md5"], $md5File ) !== FALSE ) {
+            die('{"jsonrpc" : "2.0", "result" : null, "id" : "id", "exist": 1}');
+        }
+
+        $filePath = $targetDir . DIRECTORY_SEPARATOR . $fileName;
+        $uploadPath = $uploadDir . DIRECTORY_SEPARATOR . $fileName;
+        $thumbPath = $targetDir . DIRECTORY_SEPARATOR . $thumbName;
+        // Chunking might be enabled
+        $chunk = isset($_REQUEST["chunk"]) ? intval($_REQUEST["chunk"]) : 0;
+        $chunks = isset($_REQUEST["chunks"]) ? intval($_REQUEST["chunks"]) : 1;
+
+
+        // Remove old temp files
+        if ($cleanupTargetDir) {
+            if (!is_dir($targetDir) || !$dir = opendir($targetDir)) {
+                die('{"jsonrpc" : "2.0", "error" : {"code": 100, "message": "Failed to open temp directory."}, "id" : "id"}');
+            }
+
+            while (($file = readdir($dir)) !== false) {
+                $tmpfilePath = $targetDir . DIRECTORY_SEPARATOR . $file;
+
+                // If temp file is current file proceed to the next
+                if ($tmpfilePath == "{$filePath}_{$chunk}.part" || $tmpfilePath == "{$filePath}_{$chunk}.parttmp") {
+                    continue;
+                }
+
+                // Remove temp file if it is older than the max age and is not the current file
+                if (preg_match('/\.(part|parttmp)$/', $file) && (@filemtime($tmpfilePath) < time() - $maxFileAge)) {
+                    @unlink($tmpfilePath);
+                }
+            }
+            closedir($dir);
+        }
+
+
+        // Open temp file
+        if (!$out = @fopen("{$filePath}_{$chunk}.parttmp", "wb")) {
+            die('{"jsonrpc" : "2.0", "error" : {"code": 102, "message": "Failed to open output stream."}, "id" : "id"}');
+        }
+
+        if (!empty($_FILES)) {
+            if ($_FILES["file"]["error"] || !is_uploaded_file($_FILES["file"]["tmp_name"])) {
+                die('{"jsonrpc" : "2.0", "error" : {"code": 103, "message": "Failed to move uploaded file."}, "id" : "id"}');
+            }
+
+            // Read binary input stream and append it to temp file
+            if (!$in = @fopen($_FILES["file"]["tmp_name"], "rb")) {
+                die('{"jsonrpc" : "2.0", "error" : {"code": 101, "message": "Failed to open input stream."}, "id" : "id"}');
+            }
+        } else {
+            if (!$in = @fopen("php://input", "rb")) {
+                die('{"jsonrpc" : "2.0", "error" : {"code": 101, "message": "Failed to open input stream."}, "id" : "id"}');
+            }
+        }
+
+        while ($buff = fread($in, 4096)) {
+            fwrite($out, $buff);
+        }
+
+        @fclose($out);
+        @fclose($in);
+
+        rename("{$filePath}_{$chunk}.parttmp", "{$filePath}_{$chunk}.part");
+
+        $index = 0;
+        $done = true;
+        for( $index = 0; $index < $chunks; $index++ ) {
+            if ( !file_exists("{$filePath}_{$index}.part") ) {
+                $done = false;
+                break;
+            }
+        }
+        if ( $done ) {
+            if (!$out = @fopen($uploadPath, "wb")) {
+                die('{"jsonrpc" : "2.0", "error" : {"code": 102, "message": "Failed to open output stream."}, "id" : "id"}');
+            }
+
+            if (flock($out, LOCK_EX) ) {
+                for( $index = 0; $index < $chunks; $index++ ) {
+                    if (!$in = @fopen("{$filePath}_{$index}.part", "rb")) {
+                        break;
+                    }
+
+                    while ($buff = fread($in, 4096)) {
+                        fwrite($out, $buff);
+                    }
+
+                    @fclose($in);
+                    @unlink("{$filePath}_{$index}.part");
+                }
+
+                flock($out, LOCK_UN);
+            }
+            @fclose($out);
+        }
+        $imageSize = GetImageSize($filePath);
+        // resizing an uploaded file
+        Image::make($filePath)->resize(80, (int)((80 * $imageSize[1]) / $imageSize[0]))->save($thumbPath);
+        // Return Success JSON-RPC response
+        // die('{"jsonrpc" : "2.0", "result" : null, "id" : "id");
+        //向模板输出文件名
+        // echo $fileName;
+        $data=array('pic'=>$fileName);
+//        $error=array('error'=>$photoError);
+        return response()->json($data); //不用框架就用echo json_encode()
+    }
+
 }

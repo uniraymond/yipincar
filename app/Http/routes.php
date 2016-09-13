@@ -106,6 +106,11 @@ Route::group(['prefix'=>'api'], function() {
     Route::delete('delsubscribe/{userid?}/{subscribid?}', 'InfoController@deleteSubscribe');
     Route::get('getadvert/{userid?}/{subscribid?}', 'InfoController@getAdvertSet');
     Route::post('upicon','infoController@updateMyIcon');
+
+    Route::post('signup', 'infoController@phoneSignUp');
+    Route::post('signin', 'infoController@phoneSignIn');
+    Route::post('rename', 'infoController@userRename');
+    Route::post('repass', 'infoController@resetPassword');
 });
 
 
