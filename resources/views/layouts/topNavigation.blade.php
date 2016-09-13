@@ -25,10 +25,12 @@
     <div class="collapse navbar-collapse navbar-toggleable-sm" id="app-navbar-collapse">
         <!-- Left Side Of Navbar -->
         <ul class="nav navbar-nav">
-            @if((null !== Auth::user()) && Auth::user()->hasAnyRole(['super_admin', 'admin', 'editor', 'main_editor', 'chef_editor', 'auth_editor']))
+            @if((null !== Auth::user()) && Auth::user()->hasAnyRole(['super_admin', 'admin', 'editor', 'main_editor', 'chef_editor', 'auth_editor', 'adv_editor']))
                 <li>{{link_to('admin/taboo', '设置')}}</li>
                 <li>{{link_to('admin/article', '内容管理')}}</li>
-                <li>{{link_to('admin/statistics', '数据统计')}}</li>
+                @if((null !== Auth::user()) && Auth::user()->hasAnyRole(['super_admin', 'admin', 'main_editor', 'chef_editor', 'adv_editor']))
+                    <li>{{link_to('admin/statistics', '数据统计')}}</li>
+                @endif
             @endif
             @if( (null !== Auth::user()) && Auth::user()->hasAnyRole(['super_admin', 'admin']))
                     <li>{{link_to('admin/user', '会员管理')}}</li>

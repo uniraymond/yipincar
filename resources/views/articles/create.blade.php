@@ -78,7 +78,7 @@
                         <div>
                             <label class="col-lg-12 col-md-12 col-sm-12">选择标签(多个关键字之间用逗号隔开)</label>
                             <div class="col-md-12">
-                                <input id="tags" name="tags" class="col-lg-12 col-md-12 col-sm-12 form-control" placeholder="选择标签" required />
+                                <input id="tags" name="tags" class="col-lg-12 col-md-12 col-sm-12 form-control" placeholder="选择标签"  />
                                 <div class="col-lg-12 col-md-12 col-sm-12 highlight">
                                     <span><small>提示现有的标签: {!! $tagString !!}</small></span>
                                 </div>

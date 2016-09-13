@@ -119,7 +119,7 @@ class ArticleController extends Controller
     $tags = Tags::all();
     $currentAction = false;
 
-    if ($article->created_by == $authuser->id || $authuser->hasAnyRole(['super_admin', 'admin', 'chef_editor', 'main_editor'])) {
+    if ($article->created_by == $authuser->id || $authuser->hasAnyRole(['super_admin', 'admin', 'chef_editor', 'main_editor', 'adv_editor'])) {
       $categories = Category::where('category_id', '<>', 0)->orderBy('category_id')->get();
 
       $tags = Tags::all();
@@ -174,10 +174,12 @@ class ArticleController extends Controller
     $description = $request['description'] ? $request['description'] : trim(substr($content, 0, 20));
 //    $typeId = $request['type_id'];
     $categoryId = $request['category_id'];
+      if ($request['published']) {
+          $published = 2;
+      }
 //    $published = $request['published'] ? 1 : 0;
       if (trim($request['tags']) == '')
     $tags = preg_replace('/^(\w+)(\d+)(\x4E00-\x9FCF)/', ',', $request['tags']);
-      dd($tags);
     $tags = preg_replace("/。/",",",$tags);
     $tags = preg_replace("/，/",",",$tags);
     $tags = preg_replace("/；/",",",$tags);
@@ -350,7 +352,7 @@ class ArticleController extends Controller
     $description = $request['description'] ? $request['description'] : trim(substr($content, 0, 20));
     $typeId = $request['type_id'];
     $categoryId = $request['category_id'];
-    $published = $request['published'] ? 1 : 0;
+    $published = $request['published'] ? 2 : 1;
     $tags = preg_replace('/^(\w+)(\d+)(\x4E00-\x9FCF)/', ',', $request['tags']);
     $tags = preg_replace("/。/",",",$tags);
     $tags = preg_replace("/，/",",",$tags);

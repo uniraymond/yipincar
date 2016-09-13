@@ -45,7 +45,7 @@
                     @if( (null !== Auth::user()) && Auth::user()->hasAnyRole(['super_admin', 'admin']))
                         <li class="list-group-item">{{link_to('admin/user', '用户')}}</li>
                     @endif
-                    @if((null !== Auth::user()) && Auth::user()->hasAnyRole(['super_admin', 'admin', 'editor', 'main_editor', 'chef_editor', 'auth_editor']))
+                    @if((null !== Auth::user()) && Auth::user()->hasAnyRole(['super_admin', 'admin', 'editor', 'main_editor', 'chef_editor', 'auth_editor', 'adv_editor']))
                         <li class="list-group-item">{{link_to('admin/tag', '标签')}}</li>
                         <li class="list-group-item">{{link_to('admin/article', '文章')}}</li>
                         <li class="list-group-item">{{link_to('admin/advsetting/list', '广告设置')}}</li>
@@ -59,7 +59,7 @@
                     @if( (null !== Auth::user()) && Auth::user()->hasAnyRole(['super_admin', 'admin']))
                         <li>{{link_to('admin/user', '用户')}}</li>
                     @endif
-                    @if((null !== Auth::user()) && Auth::user()->hasAnyRole(['super_admin', 'admin', 'editor', 'main_editor', 'chef_editor', 'auth_editor']))
+                    @if((null !== Auth::user()) && Auth::user()->hasAnyRole(['super_admin', 'admin', 'editor', 'main_editor', 'chef_editor', 'auth_editor', 'adv_editor']))
                             <li>{{link_to('admin/tag', '标签')}}</li>
                             <li>{{link_to('admin/article', '文章')}}</li>
                             <li>{{link_to('admin/advsetting/list', '广告设置')}}</li>

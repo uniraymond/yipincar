@@ -78,18 +78,20 @@
                         <div>
                             <label class="col-lg-12 col-md-12 col-sm-12">选择标签(多个关键字之间用逗号隔开)</label>
                             <div class="col-md-12">
-                                <input id="tags" name="tags" class="col-lg-12 col-md-12 col-sm-12 form-control" placeholder="选择标签" value="{!! $currentTagString !!}" required />
+                                <input id="tags" name="tags" class="col-lg-12 col-md-12 col-sm-12 form-control" placeholder="选择标签" value="{!! $currentTagString !!}"  />
                                 <div class="col-lg-12 col-md-12 col-sm-12 highlight">
                                     <span><small>提示现有的标签: {!! $tagString !!}</small></span>
                                 </div>
                             </div>
                         </div>
 
-                        {{--<div>--}}
-                            {{--<label class="col-md-3 published_label">--}}
-                                {{--<input class="published" type="checkbox" name="published"  /> 提交--}}
-                            {{--</label>--}}
-                        {{--</div>--}}
+                        @if( Auth::user()->hasAnyRole(['editor', 'auth_editor']) )
+                            <div>
+                                <label class="col-md-3 published_label">
+                                    <input class="published" type="checkbox" name="published"  /> 提交审查
+                                </label>
+                            </div>
+                        @endif
                     </div>
                     {!! Form::token() !!}
                     <div class=" col-lg-12 col-md-12 col-sm-12">

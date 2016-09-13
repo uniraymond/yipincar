@@ -31,28 +31,7 @@ if(Auth::user()->hasAnyRole(['editor', 'auth_editor']) && $article->created_by =
           $radioLabel2 = '草稿';
           $currentStatusId = 2;
           break;
-   case 'draft':
-        if(Auth::user()->hasAnyRole(['editor', 'auth_editor']) && $article->created_by == Auth::user()->id  && ($article->published == 0 || $article->published == 1)) {
-            $displayForm = true;
-        } {
-          $reviewTitle = '发表草稿';
-          $checkboxLabel = '申请审核';
-          $radioLabel1 = '申请审核';
-          $radioLabel2 = '草稿';
-          $currentStatusId = 1;
-          break;
-        }
-    default:
-if(Auth::user()->hasAnyRole(['editor', 'auth_editor']) && $article->created_by == Auth::user()->id && ($article->published == 0 || $article->published == 1)) {
-    $displayForm = true;
-    } {
-    $reviewTitle = '发表草稿';
-    $checkboxLabel = '申请审核';
-    $radioLabel1 = '申请审核';
-    $radioLabel2 = '草稿';
-    $currentStatusId = 1;
-    break;
-    }
+    case 'draft': break;
    }
 @endphp
 
