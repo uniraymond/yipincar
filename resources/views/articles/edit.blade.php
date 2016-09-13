@@ -85,7 +85,7 @@
                             </div>
                         </div>
 
-                        @if（ Auth::user()->hasAnyRole(['editor', 'auth_editor])）
+                        @if( Auth::user()->hasAnyRole(['editor', 'auth_editor']) )
                             <div>
                                 <label class="col-md-3 published_label">
                                     <input class="published" type="checkbox" name="published"  /> 提交审查
