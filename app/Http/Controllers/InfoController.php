@@ -7,6 +7,7 @@ use App\Comment;
 use App\User;
 use Illuminate\Http\Request;
 use Intervention\Image\Facades\Image;
+use Illuminate\Support\Facades\Input;
 
 use App\Http\Requests;
 use DB;
@@ -431,14 +432,14 @@ class InfoController extends Controller
     }
 
     public function phoneSignIn(Request $request) {
-        $phone = $request ->get('phone');
+        $phone = Input::get('phone');//$request ->get('phone');
         $user = User::select('phone')
             ->where('phone', $phone)
-            ->where('password', $request ->get('password'))
+            ->where('password', Input::get('password'))//$request ->get('password'))
             ->get();
         if($user && count($user)) {
             User::where('phone', $phone) ->update([
-                    'uid' => $request ->get('uid')
+                    'uid' => Input::get('uid')//$request ->get('uid')
                 ]);
             return ['result' => 1];
         } else {
