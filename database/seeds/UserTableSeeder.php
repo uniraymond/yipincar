@@ -19,7 +19,7 @@ class UserTableSeeder extends Seeder
         $role_main_editor = Role::where('name', 'main_editor')->first();
         $role_editor = Role::where('name', 'editor')->first();
         $role_auth_editor = Role::where('name', 'auth_editor')->first();
-        $role_advertisment_editor = Role::where('name', 'advertisment_editor')->first();
+        $role_adv_editor = Role::where('name', 'adv_editor')->first();
         $role_technican = Role::where('name', 'technican')->first();
         $role_user = Role::where('name', 'user')->first();
         $role_visitor = Role::where('name', 'visitor')->first();

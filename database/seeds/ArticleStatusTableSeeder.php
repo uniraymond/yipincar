@@ -19,15 +19,15 @@ class ArticleStatusTableSeeder extends Seeder
         $article_status->save();
 
         $article_status = new ArticleStatus();
-        $article_status->name = 'review';
-        $article_status->title = '初审';
-        $article_status->comment = '初审';
+        $article_status->name = 'review_apply';
+        $article_status->title = ' 申请审查';
+        $article_status->comment = '申请审查';
         $article_status->save();
 
         $article_status = new ArticleStatus();
-        $article_status->name = 'final_review';
-        $article_status->title = '终审';
-        $article_status->comment = '终审';
+        $article_status->name = 'review';
+        $article_status->title = '审查';
+        $article_status->comment = '审查';
         $article_status->save();
 
         $article_status = new ArticleStatus();
