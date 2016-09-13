@@ -466,7 +466,6 @@ class InfoController extends Controller
         }
     }
 
-    public function 
     public function updateMyIcon(Request $request) {
         $userid = $request ->get('userid');
         if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
