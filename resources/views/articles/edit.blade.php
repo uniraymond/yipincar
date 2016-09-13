@@ -80,7 +80,7 @@
                             <div class="col-md-12">
                                 <input id="tags" name="tags" class="col-lg-12 col-md-12 col-sm-12 form-control" placeholder="选择标签" value="{!! $currentTagString !!}"  />
                                 <div class="col-lg-12 col-md-12 col-sm-12 highlight">
-                                    <span><small>提示现有的标签: {!! $tagString !!}</small></span>
+                                    <span><small>提示现有的标签: {{ $tagString }}</small></span>
                                 </div>
                             </div>
                         </div>
@@ -157,7 +157,8 @@
 <script>
     //autocomplete
     jQuery( function() {
-        var availableTags = [ {!! $tagString !!} ];
+{{--        var availableTags = [ {!! $tagString !!} ];--}}
+        var availableTags = {!! json_encode($tagArray) !!}
         function split( val ) {
             return val.split( /,\s*/ );
         }

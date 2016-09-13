@@ -170,7 +170,7 @@
 <script>
     //autocomplete
     jQuery( function() {
-        var availableTags = [ {!! $tagString !!} ];
+        var availableTags = {!! json_encode($tagArray) !!}
         function split( val ) {
             return val.split( /,\s*/ );
         }
