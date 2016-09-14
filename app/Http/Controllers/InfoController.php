@@ -469,17 +469,17 @@ class InfoController extends Controller
             ->where('phone', $phone)
             ->where('password', $request ->get('password'))
             ->get();
-        if($user && count($user)) {
-//            if($user ->uid != $uid) {
-                User::where('phone', $phone) ->update([
-                    'uid' => $uid
-                ]);
-//            }
-//            return ['result' => $user];
-        }
-//        else {
-//            return ['result' => []];
+//        if($user && count($user)) {
+////            if($user ->uid != $uid) {
+//                User::where('phone', $phone) ->update([
+//                    'uid' => $uid
+//                ]);
+////            }
+////            return ['result' => $user];
 //        }
+////        else {
+////            return ['result' => []];
+////        }
         return ['result' => $user];
     }
 
