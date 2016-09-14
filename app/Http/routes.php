@@ -104,12 +104,12 @@ Route::group(['prefix'=>'api'], function() {
 
     Route::any('delsubscribe', 'InfoController@deleteSubscribe');
     Route::get('getadvert/{userid?}/{subscribid?}', 'InfoController@getAdvertSet');
-    Route::any('upicon','infoController@updateMyIcon');
+    Route::any('upicon','InfoController@updateMyIcon');
 
-    Route::any('signup', 'infoController@phoneSignUp');
-    Route::any('signin', 'infoController@phoneSignIn');
-    Route::any('rename', 'infoController@userRename');
-    Route::any('repass', 'infoController@resetPassword');
+    Route::any('signup', 'InfoController@phoneSignUp');
+    Route::any('signin', 'InfoController@phoneSignIn');
+    Route::any('rename', 'InfoController@userRename');
+    Route::any('repass', 'InfoController@resetPassword');
 });
 
 

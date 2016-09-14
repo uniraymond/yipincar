@@ -456,7 +456,7 @@ class InfoController extends Controller
                 $getID = User::select('*')
                     ->where('phone', $phone)
                     ->get();
-                return ['result' => 1];
+                return ['result' => $getID];
             }
             return ['result' => 0];
         }
