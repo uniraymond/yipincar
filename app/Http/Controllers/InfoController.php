@@ -441,13 +441,19 @@ class InfoController extends Controller
             return ['result' => -1];
         } else {
             $signUp = User::insert ([
-                'name' => $request ->get('name'),
+                'name' => $phone,
                 'uid' => $request ->get('uid'),
                 'password' => $request ->get('password'),
                 'phone' => $phone,
                 'role' => 10
             ]);
-            return ['result' => $signUp ? 1 : 0];
+            if($signUp) {
+                $getID = User::select('*')
+                    ->where('phone', $phone)
+                    ->get();
+                return ['result' => $getID];
+            }
+            return ['result' => 0];
         }
     }
 
@@ -514,8 +520,8 @@ class InfoController extends Controller
 
         // Settings
         // $targetDir = ini_get("upload_tmp_dir") . DIRECTORY_SEPARATOR . "plupload";
-        $targetDir = 'photos/icons/'.$userid; //上传临时地址,可能要更改
-        $uploadDir = 'photos/icons/'.$userid; //上传地址
+        $targetDir = 'photos/icons'; //上传临时地址,可能要更改
+        $uploadDir = 'photos/icons'; //上传地址
 
 
         $cleanupTargetDir = true; // Remove old files
