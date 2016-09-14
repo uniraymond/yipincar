@@ -93,24 +93,23 @@ Route::group(['prefix'=>'api'], function() {
     Route::get('recomments/{keys?}/{lastid?}', 'InfoController@getRecommendList');
     Route::get('subscribes/{userid?}/{lastid?}/{page?}/{limit?}', 'InfoController@getSubscribeList');
     Route::get('searcharticles/{key?}/{category?}', 'InfoController@searchArticles');
-    Route::put('comment/{userid?}/{articleid?}/{comment?}', 'InfoController@releaseComment');
-    Route::delete('delcomment/{commentid?}', 'InfoController@deleteComment');
-    Route::get('approvearticle/{uid?}/{articleid?}', 'InfoController@approveArticle');
-    Route::get('approvecomment/{uid?}/{commentid?}', 'InfoController@approveComment');
-    Route::post('upname/{userid?}/{name?}', 'InfoController@updateName');
-    Route::put('collect/{userid?}/{articleid?}', 'InfoController@collectArticle');
-    Route::delete('delcollect/{userid?}/{collectionid?}', 'InfoController@deleteCollection');
-//    Route::any('subscribe/userid/{userid?}/authorid/{authorid?}', 'InfoController@subscribe');
+    Route::any('comment', 'InfoController@releaseComment');
+    Route::any('delcomment', 'InfoController@deleteComment');
+    Route::any('approvearticle', 'InfoController@approveArticle');
+    Route::any('approvecomment', 'InfoController@approveComment');
+    Route::any('upname', 'InfoController@updateName');
+    Route::any('collect', 'InfoController@collectArticle');
+    Route::any('delcollect', 'InfoController@deleteCollection');
     Route::any('subscribe', 'InfoController@subscribe');
 
-    Route::delete('delsubscribe/{userid?}/{subscribid?}', 'InfoController@deleteSubscribe');
+    Route::any('delsubscribe', 'InfoController@deleteSubscribe');
     Route::get('getadvert/{userid?}/{subscribid?}', 'InfoController@getAdvertSet');
-    Route::post('upicon','infoController@updateMyIcon');
+    Route::any('upicon','infoController@updateMyIcon');
 
-    Route::post('signup', 'infoController@phoneSignUp');
-    Route::post('signin', 'infoController@phoneSignIn');
-    Route::post('rename', 'infoController@userRename');
-    Route::post('repass', 'infoController@resetPassword');
+    Route::any('signup', 'infoController@phoneSignUp');
+    Route::any('signin', 'infoController@phoneSignIn');
+    Route::any('rename', 'infoController@userRename');
+    Route::any('repass', 'infoController@resetPassword');
 });
 
 
