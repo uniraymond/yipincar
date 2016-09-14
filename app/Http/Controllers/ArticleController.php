@@ -123,19 +123,14 @@ class ArticleController extends Controller
       $categories = Category::where('category_id', '<>', 0)->orderBy('category_id')->get();
 
       $tags = Tags::all();
-      $articletypes = ArticleTypes::all()
-      ;
-      $tagString = '';
-        $i = count($tags);
-      foreach ($tags as $tag) {
-          if ($i ==  0){
-              $tagString .= '"' . $tag->name . '" ';
-          } else {
-          }
-          $tagString .= '"' . $tag->name . '", ';
-        $i--;
-      }
+      $articletypes = ArticleTypes::all();
 
+        $tagString = null;
+        $tagArray = array();
+        foreach ($tags as $tag) {
+            $tagArray[]= $tag->name;
+        }
+        $tagString = implode(', ', $tagArray);
       $currentTags = array();
       $currentTagString = '';
       foreach ($article->tags as $tag) {
@@ -150,6 +145,7 @@ class ArticleController extends Controller
           'tags' => $tags,
           'currentTags' => $currentTags,
           'tagString' => $tagString,
+          'tagArray' => $tagArray,
           'currentTagString' => $currentTagString,
            'types'=>$types, 'tags'=>$tags, 'currentAction'=>$currentAction
       ]);
@@ -178,15 +174,23 @@ class ArticleController extends Controller
           $published = 2;
       }
 //    $published = $request['published'] ? 1 : 0;
-      if (trim($request['tags']) == '')
-    $tags = preg_replace('/^(\w+)(\d+)(\x4E00-\x9FCF)/', ',', $request['tags']);
-    $tags = preg_replace("/。/",",",$tags);
-    $tags = preg_replace("/，/",",",$tags);
-    $tags = preg_replace("/；/",",",$tags);
-    $tags = rtrim(trim($tags), ',');
-    $tags = explode(',', $tags);
-    $tags = array_map('trim', $tags);
-    $tags = array_unique($tags);
+//      dd($request['tags']);
+      if (isset($request['tags'])){
+          $tags = trim($request['tags']);
+          if (strlen($tags) == 1) {
+              $tags = '';
+          } else {
+              $tags = preg_replace('/^(\w+)(\d+)(\x4E00-\x9FCF)/', ',', $tags);
+              $tags = preg_replace("/。/",",",$tags);
+              $tags = preg_replace("/，/",",",$tags);
+              $tags = preg_replace("/；/",",",$tags);
+//              $tags = rtrim(trim($tags), ',');
+              $tags = explode(',', $tags);
+              $tags = array_map('trim', $tags);
+              $tags = array_filter($tags);
+              $tags = array_unique($tags);
+          }
+      }
 
     $article = Article::find($id);
 
@@ -222,25 +226,27 @@ class ArticleController extends Controller
       $allTagArray[$allTag->id] = $allTag->name;
     }
     $tagIdArray = array();
-    foreach($tags as $tag) {
-      if (in_array($tag, $allTagArray)) {
-        $tagId = array_search($tag, $allTagArray);
-      } else {
-        $tagdb = new Tags();
-        $tagdb->name = $tag;
-        $tagdb->save();
-        $tagId = $tagdb->id;
+      if (isset($tags)) {
+          foreach($tags as $tag) {
+              if (in_array($tag, $allTagArray)) {
+                  $tagId = array_search($tag, $allTagArray);
+              } else {
+                  $tagdb = new Tags();
+                  $tagdb->name = $tag;
+                  $tagdb->save();
+                  $tagId = $tagdb->id;
+              }
+              // add new tags to article tags
+              if (!in_array($tagId, $currentTagIds)) {
+                  $article_tag = new ArticleTags();
+                  $article_tag->article_id = $article->id;
+                  $article_tag->tag_id = $tagId;
+                  $article_tag->created_by = $authuser->id;
+                  $article_tag->save();
+              }
+              $tagIdArray[] = $tagId;
+          }
       }
-      // add new tags to article tags
-        if (!in_array($tagId, $currentTagIds)) {
-          $article_tag = new ArticleTags();
-          $article_tag->article_id = $article->id;
-          $article_tag->tag_id = $tagId;
-          $article_tag->created_by = $authuser->id;
-          $article_tag->save();
-        }
-      $tagIdArray[] = $tagId;
-    }
 
     // remove tags from article tags
     foreach($currentTagIds as $currentId => $currentTagId) {
@@ -326,16 +332,20 @@ class ArticleController extends Controller
     $tags = Tags::all();
     $currentAction = false;
 
-    $tagString = '';
+      $tagString = null;
+      $tagArray = array();
+      foreach ($tags as $tag) {
+          $tagArray[]= $tag->name;
+      }
+      $tagString = implode(', ', $tagArray);
 
-    foreach ($tags as $tag) {
-      $tagString .= '"'.$tag->name . '", ';
-    }
     return view('articles/create', [
             'articletypes' => $types,
             'categories' => $categories,
             'tags' => $tags,
-            'tagString' => $tagString, 'types'=>$types, 'currentAction'=>$currentAction
+        'tagString' => $tagString,
+        'tagArray' => $tagArray,
+        'types'=>$types, 'currentAction'=>$currentAction
         ]);
   }
 
@@ -353,14 +363,23 @@ class ArticleController extends Controller
     $typeId = $request['type_id'];
     $categoryId = $request['category_id'];
     $published = $request['published'] ? 2 : 1;
-    $tags = preg_replace('/^(\w+)(\d+)(\x4E00-\x9FCF)/', ',', $request['tags']);
-    $tags = preg_replace("/。/",",",$tags);
-    $tags = preg_replace("/，/",",",$tags);
-    $tags = preg_replace("/；/",",",$tags);
-    $tags = rtrim(trim($tags), ',');
-    $tags = explode(',', $tags);
-    $tags = array_map('trim', $tags);
-    $tags = array_unique($tags);
+
+      if (isset($request['tags'])){
+          $tags = trim($request['tags']);
+          if (strlen($tags) == 1) {
+              $tags = '';
+          } else {
+              $tags = preg_replace('/^(\w+)(\d+)(\x4E00-\x9FCF)/', ',', $tags);
+              $tags = preg_replace("/。/",",",$tags);
+              $tags = preg_replace("/，/",",",$tags);
+              $tags = preg_replace("/；/",",",$tags);
+//              $tags = rtrim(trim($tags), ',');
+              $tags = explode(',', $tags);
+              $tags = array_map('trim', $tags);
+              $tags = array_filter($tags);
+              $tags = array_unique($tags);
+          }
+      }
 
     $article = new Article();
     $article->title = $title;
@@ -380,21 +399,23 @@ class ArticleController extends Controller
       $allTagArray[$allTag->id] = $allTag->name;
     }
 
-    foreach($tags as $tag) {
-      if (in_array($tag, $allTagArray)) {
-        $tagId = array_search($tag, $allTagArray);
-      } else {
-        $tagdb = new Tags();
-        $tagdb->name = $tag;
-        $tagdb->save();
-        $tagId = $tagdb->id;
+      if (isset($tags)) {
+          foreach ($tags as $tag) {
+              if (in_array($tag, $allTagArray)) {
+                  $tagId = array_search($tag, $allTagArray);
+              } else {
+                  $tagdb = new Tags();
+                  $tagdb->name = $tag;
+                  $tagdb->save();
+                  $tagId = $tagdb->id;
+              }
+              $article_tag = new ArticleTags();
+              $article_tag->article_id = $article->id;
+              $article_tag->tag_id = $tagId;
+              $article_tag->created_by = $authuser->id;
+              $article_tag->save();
+          }
       }
-      $article_tag = new ArticleTags();
-      $article_tag->article_id = $article->id;
-      $article_tag->tag_id = $tagId;
-      $article_tag->created_by = $authuser->id;
-      $article_tag->save();
-    }
 
     $files = Resource::all();
 

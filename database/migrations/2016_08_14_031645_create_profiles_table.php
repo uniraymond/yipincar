@@ -23,9 +23,9 @@ class CreateProfilesTable extends Migration
             $table->enum('gender', array('male', 'female'));
             $table->string('phone');
             $table->string('cellphone');
-            $table->string('weibo_name');
-            $table->string('weixin_name');
-            $table->string('qq_name');
+            $table->string('weibo_id');
+            $table->string('weixin_id');
+            $table->string('qq_id');
             $table->string('icon_uri');
             $table->integer('updated_by')->references('id')->on('users')->onDelete('cascade');
             $table->integer('created_by')->references('id')->on('users')->onDelete('cascade');
