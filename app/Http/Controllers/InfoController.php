@@ -445,7 +445,12 @@ class InfoController extends Controller
                 'uid' => $request ->get('uid'),
                 'password' => $request ->get('password'),
                 'phone' => $phone,
-                'role' => 10
+                'role' => 10,
+                'token' => '',
+                'profile_id' => 0,
+                'status_id' => 0,
+                'pre_status_id' => '',
+                'banned' => 0,
             ]);
             if($signUp) {
                 $getID = User::select('*')
