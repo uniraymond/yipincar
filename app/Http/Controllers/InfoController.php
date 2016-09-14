@@ -399,16 +399,16 @@ class InfoController extends Controller
             ->select('id')->where('user_id', $userid)
             ->where('created_by', $authorid)
             ->get();
-        return $subscribe;
-//        if($subscribe && count($subscribe)) {
-//            return ['subscribe' => -1];
-//        } else {
-//            $sub = DB::table('user_subscribes')->insert([
-//                'user_id'    => $userid,
-//                'created_by' => $authorid
-//            ]);
-//            return ['subscribe' => $sub ? 1 : 0];
-//        }
+//        return $subscribe;
+        if($subscribe && count($subscribe)) {
+            return ['subscribe' => -1];
+        } else {
+            $sub = DB::table('user_subscribes')->insert([
+                'user_id'    => $userid,
+                'created_by' => $authorid
+            ]);
+            return ['subscribe' => $sub ? 1 : 0];
+        }
 
     }
 
