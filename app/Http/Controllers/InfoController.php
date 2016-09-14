@@ -464,18 +464,23 @@ class InfoController extends Controller
 
     public function phoneSignIn(Request $request) {
         $phone = $request ->get('phone');
-        $user = DB::table('users') ->select('phone')
+        $uid = $request ->get('uid');
+        $user = User::select('*')
             ->where('phone', $phone)
             ->where('password', $request ->get('password'))
             ->get();
         if($user && count($user)) {
-            User::where('phone', $phone) ->update([
-                    'uid' => $request ->get('uid')
+            if($user['uid'] != $uid) {
+                User::where('phone', $phone) ->update([
+                    'uid' => $uid
                 ]);
-            return ['result' => 1];
-        } else {
-            return ['result' => -1];
+            }
+//            return ['result' => $user];
         }
+//        else {
+//            return ['result' => []];
+//        }
+        return ['result' => $user];
     }
 
     public function userRename(Request $request) {
