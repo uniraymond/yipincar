@@ -5,9 +5,13 @@ namespace App\Http\Controllers;
 use App\Article;
 use App\Comment;
 use App\User;
+use App\Zan;
+use App\Collection;
+use App\Taboo;
+
 use Illuminate\Http\Request;
 use Intervention\Image\Facades\Image;
-use Illuminate\Support\Facades\Input;
+//use Illuminate\Support\Facades\Input;
 
 use App\Http\Requests;
 use DB;
@@ -281,22 +285,33 @@ class InfoController extends Controller
         return $articles;
     }
 
-    public function releaseComment($userid, $articleid, $comment) {
+    public function releaseComment(Request $request) {
+        $comment = $request ->get('comment');
+        $taboos = Taboo::all()->get();
+        foreach($taboos as $taboo) {
+            if(strpos($comment, $taboo)) {
+                //set check status
+                break;
+            }
+        }
         $comment = Comment::insert(array(
             'comment' => $comment,
-            'article_id' => $articleid,
-            'created_by' => $userid,
-            'updated_by' => $userid
+            //set check status
+            'article_id' => $request ->get('articleid'),
+            'created_by' => $request ->get('userid'),
+            'updated_by' => $request ->get('userid')
         ));
         return ['comment' => $comment ? 1 : 0];
     }
 
-    public function deleteComment($commentid) {
-        $comment = Comment::where('id', $commentid)->delete();
+    public function deleteComment(Request $request) {
+        $comment = Comment::where('id', $request ->get('commentid'))->delete();
         return ['delete' => $comment];
     }
 
-    public function approveArticle($uid, $articleid) {
+    public function approveArticle(Request $request) {
+        $uid = $request ->get('uid');
+        $articleid = $request ->get('articleid');
         $approved = Zan::select('id', 'uid', 'article_id')
             ->where('uid', $uid)
             ->where('article_id', $articleid)
@@ -314,7 +329,9 @@ class InfoController extends Controller
         }
     }
 
-    public function approveComment($uid, $commentid) {
+    public function approveComment(Request $request) {
+        $uid = $request ->get('uid');
+        $commentid = $request ->get('commentid');
         $approved = Zan::select('id', 'uid', 'comment_id')
             ->where('uid', $uid)
             ->where('comment_id', $commentid)
@@ -331,20 +348,22 @@ class InfoController extends Controller
         }
     }
 
-    public function updateName($userid, $name) {
-        $user = User::where('id', $userid)->update(['name' => $name]);
-        return ['updated' => $user];
-    }
+//    public function updateName(Request $request) {
+//        $user = User::where('id', $request ->get('userid'))->update(['name' => $request ->get('name')]);
+//        return ['updated' => $user];
+//    }
 
-    public function collectArticle($userid, $articleid) {
-        $collection = DB::table('collections')
-            ->select('id')->where('user_id', $userid)
+    public function collectArticle(Request $request) {
+        $userid = $request ->get('userid');
+        $articleid = $request ->get('articleid');
+
+        $collection = Collection::select('*')->where('user_id', $userid)
             ->where('article_id', $articleid)
             ->get();
         if($collection && count($collection)) {
             return ['collection' => -1];
         } else {
-            $collect = DB::table('collections')->insert([
+            $collect = Collection::insert([
                 'user_id'    => $userid,
                 'article_id' => $articleid
             ]);
@@ -353,8 +372,8 @@ class InfoController extends Controller
 
     }
 
-    public function deleteCollection($usrid, $collctionid) {
-        $collection = DB::table('collections')->where('id', $collctionid)->where('user_id', $usrid)->delete();
+    public function deleteCollection(Request $request) {
+        $collection = Collection::where('id', $request ->get('collectionid'))->where('user_id', $request ->get('userid'))->delete();
         return ['delete' => $collection];
     }
 
@@ -380,6 +399,7 @@ class InfoController extends Controller
             ->select('id')->where('user_id', $userid)
             ->where('created_by', $authorid)
             ->get();
+//        return $subscribe;
         if($subscribe && count($subscribe)) {
             return ['subscribe' => -1];
         } else {
@@ -392,8 +412,8 @@ class InfoController extends Controller
 
     }
 
-    public function deleteSubscribe($usrid, $subscribeid) {
-        $subscribe = DB::table('user_subscribes')->where('id', $subscribeid)->where('user_id', $usrid)->delete();
+    public function deleteSubscribe(Request $request) {
+        $subscribe = DB::table('user_subscribes')->where('id', $request ->get('subid'))->where('user_id', $request ->get('userid'))->delete();
         return ['delete' => $subscribe];
     }
 
@@ -421,30 +441,46 @@ class InfoController extends Controller
             return ['result' => -1];
         } else {
             $signUp = User::insert ([
-                'name' => $request ->get('name'),
+                'name' => $phone,
                 'uid' => $request ->get('uid'),
                 'password' => $request ->get('password'),
                 'phone' => $phone,
-                'role' => 10
+                'role' => 10,
+                'token' => '',
+                'profile_id' => 0,
+                'status_id' => 0,
+                'pre_status_id' => '',
+                'banned' => 0,
             ]);
-            return ['result' => $signUp ? 1 : 0];
+            if($signUp) {
+                $getID = User::select('*')
+                    ->where('phone', $phone)
+                    ->get();
+                return ['result' => $getID];
+            }
+            return ['result' => 0];
         }
     }
 
     public function phoneSignIn(Request $request) {
-        $phone = Input::get('phone');//$request ->get('phone');
-        $user = User::select('phone')
+        $phone = $request ->get('phone');
+        $uid = $request ->get('uid');
+        $user = User::select('*')
             ->where('phone', $phone)
-            ->where('password', Input::get('password'))//$request ->get('password'))
+            ->where('password', $request ->get('password'))
             ->get();
-        if($user && count($user)) {
-            User::where('phone', $phone) ->update([
-                    'uid' => Input::get('uid')//$request ->get('uid')
-                ]);
-            return ['result' => 1];
-        } else {
-            return ['result' => -1];
-        }
+//        if($user && count($user)) {
+////            if($user ->uid != $uid) {
+//                User::where('phone', $phone) ->update([
+//                    'uid' => $uid
+//                ]);
+////            }
+////            return ['result' => $user];
+//        }
+////        else {
+////            return ['result' => []];
+////        }
+        return ['result' => $user];
     }
 
     public function userRename(Request $request) {
@@ -494,8 +530,8 @@ class InfoController extends Controller
 
         // Settings
         // $targetDir = ini_get("upload_tmp_dir") . DIRECTORY_SEPARATOR . "plupload";
-        $targetDir = 'photos/icons/'.$userid; //上传临时地址,可能要更改
-        $uploadDir = 'photos/icons/'.$userid; //上传地址
+        $targetDir = 'photos/icons'; //上传临时地址,可能要更改
+        $uploadDir = 'photos/icons'; //上传地址
 
 
         $cleanupTargetDir = true; // Remove old files
