@@ -1,0 +1,20 @@
+.article-preview {
+    width: 380px;
+    height:520px;
+    overflow-y: scroll;
+}
+
+.article-preview .title {
+    font-size: 19px;
+    font-weight: bold;
+    padding: 15px;
+}
+
+.article-preview .content p{
+    display: block;
+}
+
+.article-preview .category {
+    color: #c3b0b0;
+    padding-bottom: 15px;
+}

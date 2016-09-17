@@ -114,8 +114,13 @@
         selector: "textarea#content",
         plugins : 'link image imagetools preview',
         menubar: false,
-        toolbar: 'undo redo | image',
+        toolbar: 'undo redo | image | removeformat',
         relative_urls: false,
+        removeformat: [
+            {selector: 'b,strong,em,i,font,u,strike', remove : 'all', split : true, expand : false, block_expand: true, deep : true},
+            {selector: 'span', attributes : ['style', 'class'], remove : 'empty', split : true, expand : false, deep : true},
+            {selector: '*', attributes : ['style', 'class'], split : false, expand : false, deep : true}
+        ],
         file_browser_callback_types: 'image media',
         file_browser_callback : function(field_name, url, type, win) {
             var x = window.innerWidth || document.documentElement.clientWidth || document.getElementsByTagName('body')[0].clientWidth;
@@ -134,7 +139,12 @@
                 width : x * 0.8,
                 height : y * 0.8,
                 resizable : "yes",
-                close_previous : "no"
+                close_previous : "no",
+                removeformat: [
+                    {selector: 'b,strong,em,i,font,u,strike', remove : 'all', split : true, expand : false, block_expand: true, deep : true},
+                    {selector: 'span', attributes : ['style', 'class'], remove : 'empty', split : true, expand : false, deep : true},
+                    {selector: '*', attributes : ['style', 'class'], split : false, expand : false, deep : true}
+                ]
             });
         }
     };

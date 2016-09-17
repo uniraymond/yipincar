@@ -43,7 +43,7 @@
                         <tbody>
                         @foreach($articles as $article)
                             <tr>
-                                <td>{{ link_to('admin/article/'.$article->id, $article->title) }}</td>
+                                <td>{{ link_to('admin/article/'.$article->id, str_limit($article->title, 20)) }}</td>
                                 <td>{{ $article->categories->name }}</td>
                                 <td>{{ $article->article_types->name }}</td>
                                 <td>
