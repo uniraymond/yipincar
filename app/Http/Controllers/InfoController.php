@@ -675,7 +675,7 @@ class InfoController extends Controller
         $proUser = Profile::where('user_id', $userid) ->get();
         $inProfile = null;
         if($proUser && sizeof($proUser)) {
-            Profile::where('user_id', $userid) ->update([
+            $inProfile = Profile::where('user_id', $userid) ->update([
                 'icon_uri' => $filePath
             ]);
         } else {
@@ -695,7 +695,7 @@ class InfoController extends Controller
 
         }
         return ['result' => [
-            'image' => response()->json($data),
+            'image' => $data,
             'uri' => $inProfile
         ]];
 //        return response()->json($data); //不用框架就用echo json_encode()
