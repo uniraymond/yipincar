@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Article;
 use App\Comment;
+use App\Profile;
 use App\User;
 use App\Zan;
 use App\Collection;
@@ -458,7 +459,7 @@ class InfoController extends Controller
                     ->get();
                 return ['result' => $getID];
             }
-            return ['result' => 0];
+            return ['result' => "0"];
         }
     }
 
@@ -671,7 +672,33 @@ class InfoController extends Controller
         // echo $fileName;
         $data=array('pic'=>$fileName);
 //        $error=array('error'=>$photoError);
-        return response()->json($data); //不用框架就用echo json_encode()
+        $proUser = Profile::where('user_id', $userid) ->get();
+        $inProfile = null;
+        if($proUser && sizeof($proUser)) {
+            $inProfile = Profile::where('user_id', $userid) ->update([
+                'icon_uri' => $filePath
+            ]);
+        } else {
+            $inProfile = Profile::insert([
+                'user_id' => $userid,
+                'icon_uri' => $filePath,
+            ]);
+            if ($inProfile) {
+                $pro = Profile::select('id')
+                    ->where('user_id', $userid)
+                    ->get();
+
+                User::where('id', $userid) ->update([
+                    'profile_id' => $pro[0]['id']
+                ]);
+            }
+
+        }
+        return ['result' => [
+            'image' => $data,
+            'uri' => $inProfile
+        ]];
+//        return response()->json($data); //不用框架就用echo json_encode()
     }
 
 }
