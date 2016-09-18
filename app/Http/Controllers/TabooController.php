@@ -17,7 +17,8 @@ class TabooController extends Controller
     public function index()
     {
         $taboos = Taboo::paginate(10);
-        return view('taboo/index', ['taboos' => $taboos]);
+        $tabooCategories = Taboo::groupby('category')->distinct()->get();
+        return view('taboo/index', ['taboos' => $taboos, 'categories' => $tabooCategories]);
     }
 
     /**
@@ -28,7 +29,8 @@ class TabooController extends Controller
     public function create()
     {
         $taboo = new Taboo();
-        return view('taboo/create');
+        $tabooCategories = Taboo::groupby('category')->distinct()->get();
+        return view('taboo/create', ['categories' => $tabooCategories]);
     }
 
     /**
