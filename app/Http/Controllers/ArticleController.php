@@ -599,4 +599,11 @@ class ArticleController extends Controller
     return view('articles/index', ['articles'=>$articles, 'categories'=>$categories, 'types'=>$types, 'tags'=>$tags, 'currentAction'=>$currentAction]);
   }
 
+  public function preview($article_id)
+  {
+    $article = Article::find($article_id);
+    
+    return view('articles/preview', ['article'=>$article]);
+  }
+
 }

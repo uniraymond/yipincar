@@ -38,7 +38,7 @@
                             <tbody>
                                 @foreach($advsettings as $advsetting)
                                     <tr>
-                                        <td>{{ $advsetting->title }}</td>
+                                        <td>{{ str_limit($advsetting->title, 20) }}</td>
                                         <td><span>{{ $advsetting->adv_positions->name }}</span></td>
                                         <td><span>{{ $advsetting->adv_types->name }}</span></td>
                                         <td><span>{{ date('Y-m-d', strtotime($advsetting->published_at)) }}</span></td>

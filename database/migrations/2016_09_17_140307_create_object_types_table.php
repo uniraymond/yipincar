@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateZansTable extends Migration
+class CreateObjectTypesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,14 +12,15 @@ class CreateZansTable extends Migration
      */
     public function up()
     {
-        Schema::create('zans', function (Blueprint $table) {
+        Schema::create('object_types', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('article_id')->references('id')->on('zans')->onDelete('cascade');
-            $table->integer('comment_id')->references('id')->on('zans')->onDelete('cascade');
-            $table->string('token');
-            $table->tinyInteger('comfirmed');
+            $table->string('name');
+            $table->string('description');
+            $table->string('category');
             $table->timestamp('created_at')->default(\DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamp('updated_at');
+            $table->integer('updated_by')->references('id')->on('users')->onDelete('cascade');
+            $table->integer('created_by')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
@@ -30,6 +31,6 @@ class CreateZansTable extends Migration
      */
     public function down()
     {
-        Schema::drop('zans');
+        Schema::drop('object_types');
     }
 }

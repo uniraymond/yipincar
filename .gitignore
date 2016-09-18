@@ -8,3 +8,4 @@ Homestead.json
 .env
 .idea
 /config/database.php
+/laradock

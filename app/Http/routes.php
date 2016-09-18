@@ -80,6 +80,7 @@ Route::group(['middleware'=>'auth', 'prefix'=>'admin'], function() {
     Route::put('article', 'ArticleController@store');
     Route::get('history', 'HistoryController@index');
     Route::get('articles/actived', 'ArticleController@activedList');
+    Route::get('article/{id}/preview', 'ArticleController@preview');
 });
 Route::group(['middleware' => 'auth'], function () {
     Route::get('/', 'ArticleController@index');

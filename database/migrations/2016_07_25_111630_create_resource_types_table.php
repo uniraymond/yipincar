@@ -13,14 +13,27 @@ class CreateResourceTypesTable extends Migration
     public function up()
     {
         Schema::create('resource_types', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('name');
-            $table->text('descrition');
-            $table->string('position');
-            $table->timestamp('created_at')->default(\DB::raw('CURRENT_TIMESTAMP'));
-            $table->timestamp('updated_at');
-            $table->integer('updated_by')->references('id')->on('users')->onDelete('cascade');
-            $table->integer('created_by')->references('id')->on('users')->onDelete('cascade');
+            $table->integer('media_type_id')->references('id')->on('object_type');
+            $table->integer('prove_id')->references('id')->on('object_type');
+            $table->integer('recource_id')->references('id')->on('recource');
+            $table->integer('city_id')->references('id')->on('object_type');
+            $table->string('email');
+            $table->string('mobile');
+            $table->string('phone');
+            $table->string('auth_rource_id')->reference('id')->on('recource');
+            $table->string('ass_recouse');
+            $table->string('weixin_public_id');
+            $table->string('media_name');
+            $table->string('media_icon')->reference('id')->on('recource');
+            $table->text('media_description');
+            $table->tinyInteger('agree');
+            $table->string('orgnise_icon')->reference('id')->on('recource');
+            $table->string('contract_auth');
+            $table->string('self_url');
+            $table->string('ass_resource');
+            $table->string('weixin_public_id');
+            $table->string('self_media_name');
+            $table->string('self_icon')->reference('id')->on('recource');
         });
     }
 
