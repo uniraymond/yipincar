@@ -31,7 +31,6 @@ class CreateResourceTypesTable extends Migration
             $table->string('contract_auth');
             $table->string('self_url');
             $table->string('ass_resource');
-            $table->string('weixin_public_id');
             $table->string('self_media_name');
             $table->string('self_icon')->reference('id')->on('recource');
         });
