@@ -38,11 +38,11 @@
                             <div>
                                 {!! Form::label('gender', '性别', array('class'=>'col-md-6')) !!}
                                 <div class="col-md-12">
-                                    <select name="gender">
-                                        <option {{ ($profile->gender) ? 'selected="selected"' : '' }}> 男</option>
-                                        <option {{ (!$profile->gender) ? 'selected="selected"' : '' }}>女</option>
-                                    </select>
-                                    {!! Form::select('gender',['male'=>'Male','female'=>'Female']) !!}
+                                    {{--<select name="gender">--}}
+                                        {{--<option {{ ($profile->gender) ? 'selected="selected"' : '' }}> 男</option>--}}
+                                        {{--<option {{ (!$profile->gender) ? 'selected="selected"' : '' }}>女</option>--}}
+                                    {{--</select>--}}
+                                    {!! Form::select('gender',['male'=>'男','female'=>'女'], $profile->gender) !!}
                                 </div>
                             </div>
                             <div>
@@ -62,6 +62,7 @@
                             {!! Form::token() !!}
                             <div class=" col-lg-12 col-md-12 col-sm-12">
                                 {!! Form::submit('保存', array('class'=>'btn btn-primary')) !!}
+                                <a class="btn btn-default btn-close" href="{{ url('/admin/profile/'.$profile->user_id) }}">取消</a>
                             </div>
                         </div>
                     {!! Form::close() !!}

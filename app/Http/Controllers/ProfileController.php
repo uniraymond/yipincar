@@ -7,6 +7,7 @@ use App\User;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
+use Validator;
 
 class ProfileController extends Controller
 {
@@ -44,21 +45,20 @@ class ProfileController extends Controller
      */
     public function store(Request $request)
     {
-//        $validator = $this->validator($request->all(), $new=true);
-//
-//        if ($validator->fails()) {
-//            $this->throwValidationException(
-//                $request, $validator
-//            );
-//        }
+        $validator = $this->validator($request->all(), $new=true);
+
+        if ($validator->fails()) {
+            $this->throwValidationException(
+                $request, $validator
+            );
+        }
 
         $profile = new Profile();
-        $profile->fname = $request['fname'];
-        $profile->lname = $request['lname'];
-        $profile->dob = $request['dob'];
+        $profile->name = $request['name'];
+        $profile->dob = date('Y-m-d', strtotime($request['dob']));
         $profile->gender = $request['gender'];
         $profile->phone = $request['phone'];
-        $profile->address = $request['address'];
+        $profile->address = $request['address'] ? $request['address'] : '自我介绍';
         $profile->cellphone = $request['cellphone'];
         $profile->user_id = $request['user_id'];
         $profile->save();
@@ -122,8 +122,7 @@ class ProfileController extends Controller
     public function update(Request $request, $id)
     {
         $profile = Profile::where('user_id', $id)->first();
-        $profile->fname = $request['fname'];
-        $profile->lname = $request['lname'];
+        $profile->name = $request['name'];
         $profile->dob = $request['dob'];
         $profile->gender = $request['gender'];
         $profile->phone = $request['phone'];
@@ -145,5 +144,44 @@ class ProfileController extends Controller
     public function destroy($id)
     {
         //
+    }
+    /**
+     * Get a validator for an incoming registration request.
+     *
+     * @param  array  $data
+     * @return \Illuminate\Contracts\Validation\Validator
+     */
+    protected function validator(array $data, $new=false, $checkemail=true)
+    {
+        if ($new) {
+            return Validator::make($data, [
+                'name' => 'required|max:255',
+            ], $this->messages($new));
+        } elseif($checkemail){
+            return Validator::make($data, [
+                'name' => 'required|max:255',
+            ], $this->messages());
+        } else{
+            return Validator::make($data, [
+                'name' => 'required|max:255',
+            ], $this->messages());
+        }
+
+    }
+
+    public function messages($new=false)
+    {
+        if($new) {
+            return [
+                'name.required' => '名字是必填的',
+                'name.max' => '名字太长了',
+            ];
+        } else{
+            return [
+                'name.required' => '名字是必填的',
+                'name.max' => '名字太长了',
+
+            ];
+        }
     }
 }

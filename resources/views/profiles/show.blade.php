@@ -38,7 +38,7 @@
                                 生日：
                             </div>
                             <div class="col-md-6">
-                                {{ $profile->dob }}
+                                {{ date('Y-m-d', strtotime($profile->dob)) }}
                             </div>
                         </div>
 
@@ -47,7 +47,7 @@
                                电话 ：
                             </div>
                             <div class="col-md-6">
-                                {{ $profile->phone }}
+                                {{ $profile->phone ? $profile->phone : '无' }}
                             </div>
                         </div>
 
@@ -56,7 +56,7 @@
                                 手机：
                             </div>
                             <div class="col-md-6">
-                                {{ $profile->cellphone }}
+                                {{ $profile->cellphone ? $profile->cellphone : '无' }}
                             </div>
                         </div>
 
@@ -65,8 +65,20 @@
                                 自我介绍：
                             </div>
                             <div class="col-md-6">
-                                {{ $profile->address }}
+                                {{ $profile->address ? $profile->address : '无' }}
                             </div>
+                        </div>
+
+                        <div clas="clearfix">
+                            @if ( Null !== Auth::user() && (Auth::user()->hasAnyRole(['super_admin', 'admin']) || Auth::user()->id == $profile->user_id) )
+                                {{--<div class="col-lg-2 col-md-2 col-sm-2 edit_article pull-right">--}}
+                                    {{--{{ link_to('admin/user/'.$profile->user_id.'/edit', '更改密码', ['class'=>'btn btn-primary']) }}--}}
+                                {{--</div>--}}
+
+                                <div class="col-lg-2 col-md-2 col-sm-2 edit_article pull-right">
+                                    {{ link_to('admin/profile/'.$profile->user_id.'/edit', '编辑用户资料', ['class'=>'btn btn-primary']) }}
+                                </div>
+                            @endif
                         </div>
                 </div>
                 </div>

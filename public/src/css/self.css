@@ -54,3 +54,7 @@ textarea.name {
 footer.navbar{
     margin-bottom: 0;
 }
+
+img.captcha-img {
+    cursor: pointer;
+}
