@@ -48,7 +48,7 @@
                 </a>
             @else
                 <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                    <i class="fa fa-user fa-fw"></i> @if (null !== Auth::user()) {{ Auth::user()->name }} @endif <i class="fa fa-caret-down"></i>
+                    <i class="fa fa-user fa-fw"></i> @if (null !== Auth::user()) {{ isset(Auth::user()->profiles->name) ? Auth::user()->profiles->name : Auth::user()->name }} @endif <i class="fa fa-caret-down"></i>
                 </a>
                 <ul class="dropdown-menu dropdown-user">
                     <li>

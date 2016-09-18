@@ -38,6 +38,20 @@
                             </div>
                         </div>
 
+                        <div class="form-group{{ $errors->has('captcha') ? ' has-error' : ''}}">
+                            <label for="captcha" class="col-md-4 control-label">
+                                <img src="{{ captcha_src() }}" alt="captcha" class="captcha-img" data-refresh-config="default" >
+                            </label>
+                            <div class="col-md-6">
+                                <input type="text" name="captcha" />
+                                @if ($errors->has('captcha'))
+                                    <span class="help-block">
+                                    <strong>{{ $errors->first('captcha') }}</strong>
+                                </span>
+                                @endif
+                            </div>
+                        </div>
+
                         <div class="form-group">
                             <div class="col-md-6 col-md-offset-4">
                                 <button type="submit" class="btn btn-primary">
@@ -54,3 +68,19 @@
     </div>
 </div>
 @endsection
+
+<script src="{{ url('/src/js/jQuery.min.2.2.4.js') }}" ></script>
+<script>
+    jQuery( document ).ready(function() {
+        jQuery('img.captcha-img').on('click', function () {
+            var captcha = jQuery(this);
+            var config = captcha.data('refresh-config');
+            jQuery.ajax({
+                method: 'GET',
+                url: '/get_captcha/' + config,
+            }).done(function (response) {
+                captcha.prop('src', response);
+            });
+        });
+    });
+</script>

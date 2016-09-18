@@ -42,11 +42,14 @@
                             <div>作者一共有{{count( $articles )}}篇文章</div>
                         </div>
                     </div>
-                    @if ( Null !== Auth::user() && Auth::user()->hasAnyRole(['super_admin', 'admin']) )
+                    @if ( Null !== Auth::user() && (Auth::user()->hasAnyRole(['super_admin', 'admin'] || Auth::user()->id == $user->id)) )
                         <div class="col-lg-2 col-md-2 col-sm-2 edit_article pull-right clearfix">
                             {{ link_to('admin/user/'.$user->id.'/edit', '编辑', ['class'=>'btn btn-primary']) }}
                         </div>
                     @endif
+                    <div class="col-lg-2 col-md-2 col-sm-2 edit_article pull-right clearfix">
+                        <a class="btn btn-default btn-close" href="{{ url('/admin/user/'.$user->id) }}">取消</a>
+                    </div>
                 </div>
 
                 @if (count($articles) > 0 )

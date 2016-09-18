@@ -102,8 +102,10 @@
                             </div>
                         </div>
 
-                        <div class="form-group{{ $errors->has('roles') ? ' has-error' : ''}}">
-                            <label for="captcha" class="col-md-4 control-label">{!! captcha_img() !!}</label>
+                        <div class="form-group{{ $errors->has('captcha') ? ' has-error' : ''}}">
+                            <label for="captcha" class="col-md-4 control-label">
+                                <img src="{{ captcha_src() }}" alt="captcha" class="captcha-img" data-refresh-config="default" />
+                            </label>
                             <div class="col-md-6">
                                 <input type="text" name="captcha" />
                                 @if ($errors->has('captcha'))
@@ -116,6 +118,8 @@
 
                         <div class="clearfix"></div>
                         {!! Form::submit('保存', array('class'=>'btn btn-primary col-lg-offset-10 col-md-offset-10 col-sm-offset-10')) !!}
+                        {!! Form::cancel('取消', array('class'=>'btn btn-primary col-lg-offset-10 col-md-offset-10')) !!}
+
                         {!! Form::token() !!}
                         {!! Form::close() !!}
                     </div>
@@ -124,3 +128,19 @@
         </div>
     </div>
 @endsection
+
+<script src="{{ url('/src/js/jQuery.min.2.2.4.js') }}" ></script>
+<script>
+    jQuery( document ).ready(function() {
+        jQuery('img.captcha-img').on('click', function () {
+            var captcha = jQuery(this);
+            var config = captcha.data('refresh-config');
+            jQuery.ajax({
+                method: 'GET',
+                url: '/get_captcha/' + config,
+            }).done(function (response) {
+                captcha.prop('src', response);
+            });
+        });
+    });
+</script>
