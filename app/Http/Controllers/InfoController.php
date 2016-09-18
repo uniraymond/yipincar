@@ -288,21 +288,23 @@ class InfoController extends Controller
 
     public function releaseComment(Request $request) {
         $comment = $request ->get('comment');
-        $taboos = Taboo::all()->get();
+        $taboos = Taboo::select('*')->get();
         foreach($taboos as $taboo) {
             if(strpos($comment, $taboo)) {
                 //set check status
                 break;
             }
         }
-        $comment = Comment::insert(array(
+        $userid = $request ->get('userid');
+        Comment::Insert(array(
             'comment' => $comment,
             //set check status
             'article_id' => $request ->get('articleid'),
-            'created_by' => $request ->get('userid'),
-            'updated_by' => $request ->get('userid')
+            'created_by' => $userid,
+            'updated_by' => $userid
         ));
-        return ['comment' => $comment ? 1 : 0];
+        $comment = Comment::select('*') ->where('created_by', $userid) ->get() ->last();
+        return ['comment' => $comment];
     }
 
     public function deleteComment(Request $request) {
