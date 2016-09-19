@@ -233,7 +233,7 @@ class InfoController extends Controller
                 if($i == 5) break;
             }
         }
-        return ['recommand' => $recommands];
+        return ['recommand' => $artCollection];
     }
 
 //    //if lastid == 0, it should be first page requst,
