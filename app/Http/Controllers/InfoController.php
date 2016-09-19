@@ -8,12 +8,13 @@ use App\Comment;
 use App\Profile;
 use App\User;
 use App\Zan;
-use App\Collection;
+use App;
 use App\Taboo;
 
 use Illuminate\Http\Request;
 use Intervention\Image\Facades\Image;
 //use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Collection;
 
 use App\Http\Requests;
 use DB;
@@ -232,7 +233,7 @@ class InfoController extends Controller
                 if($i == 5) break;
             }
         }
-        return ['recommand' => $keys];
+        return ['recommand' => $recommands];
     }
 
 //    //if lastid == 0, it should be first page requst,
@@ -405,13 +406,13 @@ class InfoController extends Controller
         $userid = $request ->get('userid');
         $articleid = $request ->get('articleid');
 
-        $collection = Collection::select('*')->where('user_id', $userid)
+        $collection = App\Collection::select('*')->where('user_id', $userid)
             ->where('article_id', $articleid)
             ->get();
         if($collection && count($collection)) {
             return ['collection' => -1];
         } else {
-            $collect = Collection::insert([
+            $collect = App\Collection::insert([
                 'user_id'    => $userid,
                 'article_id' => $articleid
             ]);
@@ -421,7 +422,7 @@ class InfoController extends Controller
     }
 
     public function deleteCollection(Request $request) {
-        $collection = Collection::where('id', $request ->get('collectionid'))->where('user_id', $request ->get('userid'))->delete();
+        $collection = App\Collection::where('id', $request ->get('collectionid'))->where('user_id', $request ->get('userid'))->delete();
         return ['delete' => $collection];
     }
 
