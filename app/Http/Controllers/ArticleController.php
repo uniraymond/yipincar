@@ -424,7 +424,7 @@ class ArticleController extends Controller
     foreach ($files as $file) {
       $image_links[] = $file->link;
       $image_names[] = $file->name;
-      if (strpos($article->content, $file->link) !== 0 ) {
+      if (false !== strpos($article->content, $file->link) ) {
         $article->resources()->attach($file->id);
         break;
       }
