@@ -180,18 +180,18 @@ class InfoController extends Controller
         if (!$lastid) $lastid = 0;
         $from = ($page -1) * $limit;
 
-        $articles = Comment::join('users', 'comments.created_by', '=', 'users.id')
+        $comment = Comment::join('users', 'comments.created_by', '=', 'users.id')
             ->join('profiles', 'users.profile_id', '=', 'profiles.id')
             ->select('comments.*', 'users.name as userName', 'profiles.icon_uri as userIcon')
             ->where('comments.article_id', '=', $articleid)
-            ->where('comments.id', '<=', $lastid)
-            ->where('comments.published', '=', 1)
+            ->where('comments.banned', '=', 0)
             ->orderBy('created_at', 'desc')
             ->skip($from)
-            ->take($limit)
-            ->get();
-//        echo $articles;
-        return $articles;
+            ->take($limit);
+        if($lastid > 0)
+            $comment = $comment ->where('comments.id', '<=', $lastid);
+        $comment = $comment ->get();
+        return $comment;
     }
 
     //if lastid == 0, it should be first page requst,
