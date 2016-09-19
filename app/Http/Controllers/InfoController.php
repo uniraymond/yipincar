@@ -197,7 +197,8 @@ class InfoController extends Controller
 
     public function getRecommendList($articleid, $excludeids) {
         $keys = ArticleTags::select('tag_id') ->where('article_id', $articleid) ->get();
-//        $keysArray = explode(' ', $keys);
+        $exArray = explode(',', $excludeids);
+
         $limit = 5;
         $artCollection = new Collection([]);
         for ($i=0; $i < count($keys); $i++) {
@@ -210,12 +211,13 @@ class InfoController extends Controller
                         , 'articles.created_at', 'article_tags.id as tagid')
 //                  ->where('articles.published', '=', 0)
                     ->where('article_tags.tag_id', '=', $tagid)
-                ->whereNotIn('articles.id', [93, 94])
+                ->whereNotIn('articles.id', $exArray)
                 ->orderBy('articles.created_at', 'desc')
                     ->take($limit)
                     ->get();
             foreach($articles as $article) {
-                $excludeids = $excludeids.','.$article['id'];
+                array_push($exArray, $article['id']);
+//                $excludeids = $excludeids.','.$article['id'];
             }
             if(sizeof($articles))
                 $artCollection->push($articles);
