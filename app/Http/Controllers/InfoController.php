@@ -138,7 +138,7 @@ class InfoController extends Controller
             ->skip($from)
             ->take($limit);
 
-        if($category != 1)
+        if($category != 3)
             $articles = $articles ->where('articles.category_id', '=', $category);
 
         if($artlast && $artlast > 0)
