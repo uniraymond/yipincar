@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Article;
+use App\ArticleTags;
 use App\Comment;
 use App\Profile;
 use App\User;
@@ -16,6 +17,7 @@ use Intervention\Image\Facades\Image;
 
 use App\Http\Requests;
 use DB;
+use phpDocumentor\Reflection\DocBlock\Tag;
 
 class InfoController extends Controller
 {
@@ -141,7 +143,7 @@ class InfoController extends Controller
         if($category != 3)
             $articles = $articles ->where('articles.category_id', '=', $category);
 
-        if($artlast && $artlast > 0)
+        if($page != 1 && $artlast && $artlast > 0)
             $articles = $articles->where('articles.id', '<=', $artlast);
 
         $articles = $articles->get();
@@ -192,54 +194,99 @@ class InfoController extends Controller
         return $comment;
     }
 
-    //if lastid == 0, it should be first page requst,
-    // else there should only one key for more recommand
-    public function getRecommendList($keys, $lastid) {
-//        $articleArray = array();
-        if(!$lastid || $lastid == 0) {
-            $artCollection = new Collection([]);
-            $keysArray = explode(' ', $keys);
-            $countKeys = count($keysArray);
-            $limitLeft = 5;
-            for ($i=0; $i < $countKeys; $i++) {
-                $key = $keysArray[$i];
-//                $likeKey = '%'.$key.'%';
-                $limit = ceil($limitLeft/($countKeys - $i));//$countKeys >= (5 - $i) ? 1 : (5 - $countKeys + 1 - $i);
-                $limitLeft = $limitLeft - $limit;
-
-                $articles = Article::join('article_tags', 'article_tags.article_id', '=', 'articles.id')
-                    ->join('categories', 'articles.category_id', '=', 'categories.id')
-                    ->join('tags', 'article_tags.tag_id', '=', 'tags.id')
-                    ->join('article_types', 'articles.type_id', '=', 'article_types.id')
-                    ->select('articles.id', 'articles.title', 'categories.name as categoryName', 'article_types.name as articletypeName'
-                        , 'articles.created_at', 'article_tags.id as tagid')
-                    ->where('articles.published', '=', 0)
-                    ->where('tags.name', '=', $key)
-                    ->orderBy('articles.created_at', 'desc')
-                    ->take($limit)
-                    ->get();
-                if($articles && count($articles)) //$artCollection = get_class($articles);
-//                    $artCollection -> push($articles);
-                    foreach($articles as $article)
-                        $artCollection->push($article);
-                return $artCollection;
-            }
-        } else {
+    public function getRecommendList($articleid, $excludeids) {
+        $keys = ArticleTags::select('tag_id') ->where('article_id', $articleid) ->get();
+//        $keysArray = explode(' ', $keys);
+        $limit = 5;
+        $artCollection = new Collection([]);
+        for ($i=0; $i < count($keys); $i++) {
+            $tagid = $keys[$i]['tag_id'];
             $articles = Article::join('article_tags', 'article_tags.article_id', '=', 'articles.id')
                 ->join('categories', 'articles.category_id', '=', 'categories.id')
-                ->join('tags', 'article_tags.tag_id', '=', 'tags.id')
+//                    ->join('tags', 'article_tags.tag_id', '=', 'tags.id')
                 ->join('article_types', 'articles.type_id', '=', 'article_types.id')
                 ->select('articles.id', 'articles.title', 'categories.name as categoryName', 'article_types.name as articletypeName'
-                    , 'articles.created_at', 'article_tags.id as tagid')
-                ->where('articles.published', '=', 0)
-                ->where('tags.name', '=', $keys)
-                ->where('article_tags.id', '<', $lastid)
+                        , 'articles.created_at', 'article_tags.id as tagid')
+//                  ->where('articles.published', '=', 0)
+                    ->where('article_tags.tag_id', '=', $tagid)
+//                ->whereNotIn('articles.id', [$excludeids])
                 ->orderBy('articles.created_at', 'desc')
-                ->take(5)
-                ->get();
-            return $articles;
+                    ->take($limit)
+                    ->get();
+            foreach($articles as $article) {
+                $excludeids = $excludeids.','.$article['id'];
+            }
+            if(sizeof($articles))
+                $artCollection->push($articles);
         }
+        $recommands = new Collection([]);
+        if(sizeof($artCollection)) {
+            $i = 0;
+            for($j=0; $j < $limit; $j++) {
+                foreach($artCollection as $articles) {
+                    if(sizeof($articles) > $j) {
+                        $recommands ->push($articles[$j]);
+                        $i++;
+                    }
+                }
+                if($i == 5) break;
+            }
+        }
+        return ['recommand' => $keys];
     }
+
+//    //if lastid == 0, it should be first page requst,
+//    // else there should only one key for more recommand
+//    public function getRecommendList($keys, $lastid, $excludeids) {
+////        $articleArray = array();
+//
+//        if(!$lastid || $lastid == 0) {
+//            $artCollection = new Collection([]);
+//            $keysArray = explode(' ', $keys);
+//            $countKeys = count($keysArray);
+//            $limitLeft = 5;
+//            for ($i=0; $i < $countKeys; $i++) {
+//                $key = $keysArray[$i];
+////                $likeKey = '%'.$key.'%';
+//                $limit = ceil($limitLeft/($countKeys - $i));//$countKeys >= (5 - $i) ? 1 : (5 - $countKeys + 1 - $i);
+//                $limitLeft = $limitLeft - $limit;
+//
+//                $articles = Article::join('article_tags', 'article_tags.article_id', '=', 'articles.id')
+//                    ->join('categories', 'articles.category_id', '=', 'categories.id')
+//                    ->join('tags', 'article_tags.tag_id', '=', 'tags.id')
+//                    ->join('article_types', 'articles.type_id', '=', 'article_types.id')
+//                    ->select('articles.id', 'articles.title', 'categories.name as categoryName', 'article_types.name as articletypeName'
+//                        , 'articles.created_at', 'article_tags.id as tagid')
+//                    ->where('articles.published', '=', 0)
+//                    ->where('tags.name', '=', $key)
+//                    ->orderBy('articles.created_at', 'desc')
+//                    ->take($limit);
+//                if($excludeids && strlen($excludeids)) {
+//                    $articles = $articles ->whereNotIn('articles.id', [$excludeids]);
+//                }
+//                   $articles = $articles ->get();
+//                if($articles && count($articles)) //$artCollection = get_class($articles);
+////                    $artCollection -> push($articles);
+//                    foreach($articles as $article)
+//                        $artCollection->push($article);
+//                return $artCollection;
+//            }
+//        } else {
+//            $articles = Article::join('article_tags', 'article_tags.article_id', '=', 'articles.id')
+//                ->join('categories', 'articles.category_id', '=', 'categories.id')
+//                ->join('tags', 'article_tags.tag_id', '=', 'tags.id')
+//                ->join('article_types', 'articles.type_id', '=', 'article_types.id')
+//                ->select('articles.id', 'articles.title', 'categories.name as categoryName', 'article_types.name as articletypeName'
+//                    , 'articles.created_at', 'article_tags.id as tagid')
+//                ->where('articles.published', '=', 0)
+//                ->where('tags.name', '=', $keys)
+//                ->where('article_tags.id', '<', $lastid)
+//                ->orderBy('articles.created_at', 'desc')
+//                ->take(5)
+//                ->get();
+//            return $articles;
+//        }
+//    }
 
     public function getSubscribeList($userid, $lastid, $page, $limit) {
         $from = ($page -1) * $limit;
