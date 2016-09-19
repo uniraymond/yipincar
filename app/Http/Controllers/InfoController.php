@@ -206,9 +206,12 @@ class InfoController extends Controller
             $articles = Article::join('article_tags', 'article_tags.article_id', '=', 'articles.id')
                 ->join('categories', 'articles.category_id', '=', 'categories.id')
 //                    ->join('tags', 'article_tags.tag_id', '=', 'tags.id')
+                ->join('users', 'users.id', '=', 'articles.created_by')
+                ->leftJoin('article_resources', 'articles.id', '=', 'article_resources.article_id')
+                ->leftJoin('resources', 'resources.id', '=', 'article_resources.resource_id')
                 ->join('article_types', 'articles.type_id', '=', 'article_types.id')
-                ->select('articles.id', 'articles.title', 'categories.name as categoryName', 'article_types.name as articletypeName'
-                        , 'articles.created_at', 'article_tags.id as tagid')
+                ->select('articles.id', 'articles.title', 'categories.name as categoryName', 'articles.category_id', 'article_types.name as articletypeName'
+                    , 'articles.created_at' , 'resources.link as resourceLink', 'resources.name as resourceName', 'users.name as userName')
 //                  ->where('articles.published', '=', 0)
                     ->where('article_tags.tag_id', '=', $tagid)
                 ->whereNotIn('articles.id', $exArray)
