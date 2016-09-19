@@ -210,7 +210,7 @@ class InfoController extends Controller
                         , 'articles.created_at', 'article_tags.id as tagid')
 //                  ->where('articles.published', '=', 0)
                     ->where('article_tags.tag_id', '=', $tagid)
-                ->whereNotIn('articles.id', [$excludeids])
+                ->whereNotIn('articles.id', [93, 94])
                 ->orderBy('articles.created_at', 'desc')
                     ->take($limit)
                     ->get();
