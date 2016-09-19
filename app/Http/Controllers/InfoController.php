@@ -227,11 +227,12 @@ class InfoController extends Controller
         }
         $recommands = new Collection([]);
         if(sizeof($artCollection)) {
-            for($j=0; $j < $limit; $j++) {
+            for($j=0; $j < $limit ; $j++) {
                 foreach($artCollection as $articles) {
                     if(sizeof($articles) > $j) {
                         $recommands ->push($articles[$j]);
                     }
+                    if(sizeof($recommands) == 5) break;
                 }
                 if(sizeof($recommands) == 5) break;
             }
