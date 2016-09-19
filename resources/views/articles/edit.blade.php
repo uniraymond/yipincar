@@ -38,19 +38,6 @@
                             </div>
                         </div>
 
-                        <div class={{ isset($errors) && $errors->has('content') ? 'has-error clearfix' : 'clearfix' }}>
-                            <label class="col-lg-12 col-md-12 col-sm-12 clearfix">内容</label>
-                            <div class="clearfix"></div>
-                            <div class="col-md-12">
-                                <textarea class="col-lg-12 col-md-12 col-sm-12 form-control clearfix" id="content" name="content" height="50">{{ $article->content }}</textarea>
-                                @if ($errors->has('content'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('content') ? '内容不能为空' : ''}}</strong>
-                                    </span>
-                                @endif
-                            </div>
-                        </div>
-
                         <div>
                             <label class="col-lg-12 col-md-12 col-sm-12">选择栏目</label>
                             <div class="col-md-12">
@@ -61,6 +48,19 @@
                                         </option>
                                     @endforeach
                                 </select>
+                            </div>
+                        </div>
+
+                        <div class={{ isset($errors) && $errors->has('content') ? 'has-error clearfix' : 'clearfix' }}>
+                            <label class="col-lg-12 col-md-12 col-sm-12 clearfix">内容</label>
+                            <div class="clearfix"></div>
+                            <div class="col-md-12">
+                                <textarea class="col-lg-12 col-md-12 col-sm-12 form-control clearfix" id="content" name="content" height="50">{{ $article->content }}</textarea>
+                                @if ($errors->has('content'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('content') ? '内容不能为空' : ''}}</strong>
+                                    </span>
+                                @endif
                             </div>
                         </div>
 
