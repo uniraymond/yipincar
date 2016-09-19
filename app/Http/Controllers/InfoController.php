@@ -123,7 +123,7 @@ class InfoController extends Controller
     }
 
     public function getArticleList($category, $artlast, $advlast, $page) {
-        $limit = $category < 8 ? 7 :10;
+        $limit = 10;//$category < 8 ? 7 :10;
         $from = ($page -1) * $limit;
 
         $articles = Article::join('categories', 'articles.category_id', '=', 'categories.id')
@@ -133,46 +133,44 @@ class InfoController extends Controller
             ->join('users', 'users.id', '=', 'articles.created_by')
             ->select('articles.id', 'articles.title', 'categories.name as categoryName', 'articles.category_id', 'article_types.name as articletypeName'
                 , 'articles.created_at' , 'resources.link as resourceLink', 'resources.name as resourceName', 'users.name as userName')
-            ->where('articles.category_id', '=', $category)
-            ->where('articles.published', '=', 0)
+//            ->where('articles.published', '=', 0)
             ->orderBy('articles.created_at', 'desc')
             ->skip($from)
             ->take($limit);
 
+        if($category != 1)
+            $articles = $articles ->where('articles.category_id', '=', $category);
 
         if($artlast && $artlast > 0)
             $articles = $articles->where('articles.id', '<=', $artlast);
 
         $articles = $articles->get();
 
-//        $resources = DB::table('resources')
-//            ->join('article_resources', 'resources.id', '=', 'article_resources.resource_id');
-//        $articles['resource'] = $resources;
 
-        if($category < 8) {
-            $adverts = Article::join('categories', 'articles.category_id', '=', 'categories.id')
-//            ->join('article_resources', 'articles.id', '=', 'article_resources.article_id')
-                ->join('article_types', 'articles.type_id', '=', 'article_types.id')
-                ->select('articles.id', 'articles.title', 'categories.name as categoryName', 'articles.category_id', 'article_types.name as articletypeName'
-                    , 'articles.created_at')
-//                , 'article_resources.id as resourceid')
-                ->where('articles.category_id', '=', $category)
-                ->where('articles.published', '=', 0)
-                ->orderBy('articles.created_at', 'desc')
-                //            ->where('article_resources.displayorder', '=', 0)
-                ->skip($from)
-                ->take(10 - $limit);
-
-            if($advlast && $advlast > 0)
-                $adverts = $adverts->where('articles.id', '<=', $advlast);
-
-            $adverts = $adverts->get();
-
-            foreach($adverts as $advert) {
-                $articles->push($advert);
-            }
-
-        }
+//        if($category < 8) {
+//            $adverts = Article::join('categories', 'articles.category_id', '=', 'categories.id')
+////            ->join('article_resources', 'articles.id', '=', 'article_resources.article_id')
+//                ->join('article_types', 'articles.type_id', '=', 'article_types.id')
+//                ->select('articles.id', 'articles.title', 'categories.name as categoryName', 'articles.category_id', 'article_types.name as articletypeName'
+//                    , 'articles.created_at')
+////                , 'article_resources.id as resourceid')
+//                ->where('articles.category_id', '=', $category)
+//                ->where('articles.published', '=', 0)
+//                ->orderBy('articles.created_at', 'desc')
+//                //            ->where('article_resources.displayorder', '=', 0)
+//                ->skip($from)
+//                ->take(10 - $limit);
+//
+//            if($advlast && $advlast > 0)
+//                $adverts = $adverts->where('articles.id', '<=', $advlast);
+//
+//            $adverts = $adverts->get();
+//
+//            foreach($adverts as $advert) {
+//                $articles->push($advert);
+//            }
+//
+//        }
         return $articles;
     }
 
