@@ -2,14 +2,17 @@
 @include('layouts.contentSideBar')
 {{--@include('articles.sidebarCategory',['categories'=>$categories, 'types'=>$types, 'tag'=>$tags, 'currentAction'=>$currentAction])--}}
 @section('content')
+    {!! Form::open(array('url' => 'admin/article/groupupdate', 'class'=>'form', 'method'=>'POST')) !!}
+    {!! Form::token() !!}
     <div id="page-wrapper">
         <div class="row">
             <div class="col-lg-12">
                 <h1 class="page-header">文章</h1>
 
                 {{--new blog link--}}
-                <div class="col-lg-2 col-md-2 col-sm-2 pull-right clearfix">
+                <div class="col-lg-2 col-md-3 col-sm-4 pull-right clearfix">
                     {{ link_to('admin/article/create', '新建', ['class'=>'btn btn-default']) }}
+                    <input class="btn btn-primary" type="submit" value="保存" />
                 </div>
 
                 {{--flash alert--}}
@@ -38,8 +41,6 @@
                             <th>文章状态</th>
                         </tr>
                         </thead>
-                        {!! Form::open(array('url' => 'admin/article/groupupdate', 'class'=>'form', 'method'=>'POST')) !!}
-                        {!! Form::token() !!}
                         <tbody>
                         @foreach($articles as $article)
                             <tr>
@@ -86,14 +87,14 @@
                         @endforeach
                         @if ( Null !== Auth::user() )
                             <tr>
-                                <td colspan="7"> </td>
-                                <td>
+                                <td colspan="6"> </td>
+                                <td colspan="3">
+{{--                                    {{ link_to('admin/article/create', '新建', ['class'=>'btn btn-default']) }}--}}
                                     <input class="btn btn-primary" type="submit" value="保存" />
                                 </td>
                             </tr>
                         @endif
                         </tbody>
-                        {!! Form::close() !!}
                     </table>
                 @else
                     <div class="col-lg-12 col-md-12 col-sm-12 clearfix">
@@ -101,9 +102,10 @@
                     </div>
                 @endif
             </div>
-        </div>
-        <div class="col-lg-12 col-md-12 col-sm-12 clearfix">
-            {!! $articles->links() !!}
+            <div class="col-lg-12 col-md-12 col-sm-12 clearfix">
+               <span class="totalpage pagination">文章总数：{{ ($totalArticle) }}篇</span>   {!! $articles->links() !!}
+            </div>
         </div>
     </div>
+    {!! Form::close() !!}
 @endsection
