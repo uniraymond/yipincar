@@ -22,7 +22,7 @@
           $currentStatusId = 3;
           break;
    case 'review_apply':
-if(Auth::user()->hasAnyRole(['editor', 'auth_editor']) && $article->created_by == Auth::user()->id && ($article->published == 1)) {
+if(Auth::user()->hasAnyRole(['editor', 'auth_editor']) && $article->created_by == Auth::user()->id && ($article->published == 1 || $article->published == 0)) {
             $displayForm = true;
         }
           $reviewTitle = '申请审核';
