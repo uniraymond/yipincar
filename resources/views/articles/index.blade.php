@@ -102,7 +102,7 @@
                 @endif
             </div>
             <div class="col-lg-12 col-md-12 col-sm-12 clearfix">
-                {!! $articles->links() !!}
+               <span class="totalpage pagination">文章总数：{{ ($totalArticle) }}篇</span>   {!! $articles->links() !!}
             </div>
         </div>
     </div>

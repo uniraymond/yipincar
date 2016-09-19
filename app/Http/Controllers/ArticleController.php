@@ -34,10 +34,12 @@ class ArticleController extends Controller
 
       if ($authuser->hasAnyRole(['super_admin', 'admin', 'chef_editor', 'main_editor', 'adv_editor'])) {
           $articles = Article::orderBy('created_at', 'desc')->paginate(15);
+          $totalArticle = Article::count();
       } else  {
           $articles = Article::where('created_by', $authuser->id)->orderBy('created_at', 'desc')->paginate(15);
+          $totalArticle = Article::where('created_by', $authuser->id)->count();
       }
-    return view('articles/index', ['articles'=>$articles, 'categories'=>$categories, 'types'=>$types, 'tags'=>$tags, 'currentAction'=>$currentAction]);
+    return view('articles/index', ['articles'=>$articles, 'categories'=>$categories, 'types'=>$types, 'tags'=>$tags, 'currentAction'=>$currentAction, 'totalArticle'=>$totalArticle]);
   }
 
   public function activedList(Request $request)
