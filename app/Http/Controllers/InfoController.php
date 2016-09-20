@@ -197,7 +197,8 @@ class InfoController extends Controller
 
     public function getRecommendList($articleid, $excludeids) {
         $keys = ArticleTags::select('tag_id') ->where('article_id', $articleid) ->get();
-//        $keysArray = explode(' ', $keys);
+        $exArray = explode(',', $excludeids);
+
         $limit = 5;
         $artCollection = new Collection([]);
         for ($i=0; $i < count($keys); $i++) {
@@ -205,35 +206,38 @@ class InfoController extends Controller
             $articles = Article::join('article_tags', 'article_tags.article_id', '=', 'articles.id')
                 ->join('categories', 'articles.category_id', '=', 'categories.id')
 //                    ->join('tags', 'article_tags.tag_id', '=', 'tags.id')
+                ->join('users', 'users.id', '=', 'articles.created_by')
+                ->leftJoin('article_resources', 'articles.id', '=', 'article_resources.article_id')
+                ->leftJoin('resources', 'resources.id', '=', 'article_resources.resource_id')
                 ->join('article_types', 'articles.type_id', '=', 'article_types.id')
-                ->select('articles.id', 'articles.title', 'categories.name as categoryName', 'article_types.name as articletypeName'
-                        , 'articles.created_at', 'article_tags.id as tagid')
+                ->select('articles.id', 'articles.title', 'categories.name as categoryName', 'articles.category_id', 'article_types.name as articletypeName'
+                    , 'articles.created_at' , 'resources.link as resourceLink', 'resources.name as resourceName', 'users.name as userName')
 //                  ->where('articles.published', '=', 0)
                     ->where('article_tags.tag_id', '=', $tagid)
-                ->whereNotIn('articles.id', [93, 94])
+                ->whereNotIn('articles.id', $exArray)
                 ->orderBy('articles.created_at', 'desc')
                     ->take($limit)
                     ->get();
             foreach($articles as $article) {
-                $excludeids = $excludeids.','.$article['id'];
+                array_push($exArray, $article['id']);
+//                $excludeids = $excludeids.','.$article['id'];
             }
             if(sizeof($articles))
                 $artCollection->push($articles);
         }
         $recommands = new Collection([]);
         if(sizeof($artCollection)) {
-            $i = 0;
-            for($j=0; $j < $limit; $j++) {
+            for($j=0; $j < $limit ; $j++) {
                 foreach($artCollection as $articles) {
                     if(sizeof($articles) > $j) {
                         $recommands ->push($articles[$j]);
-                        $i++;
                     }
+                    if(sizeof($recommands) == 5) break;
                 }
-                if($i == 5) break;
+                if(sizeof($recommands) == 5) break;
             }
         }
-        return ['recommand' => $artCollection];
+        return ['recommand' => $recommands];
     }
 
 //    //if lastid == 0, it should be first page requst,
