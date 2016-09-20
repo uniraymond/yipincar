@@ -181,7 +181,8 @@ class InfoController extends Controller
         if (!$lastid) $lastid = 0;
         $from = ($page -1) * $limit;
 
-        $comment = Comment::join('users', 'comments.created_by', '=', 'users.id')
+        $comments = Comment::join('users', 'comments.created_by', '=', 'users.id')
+            ->leftJoin('zans', 'comments.id', '=', 'zans.comment_id')
             ->join('profiles', 'users.profile_id', '=', 'profiles.id')
             ->select('comments.*', 'users.name as userName', 'profiles.icon_uri as userIcon')
             ->where('comments.article_id', '=', $articleid)
@@ -190,9 +191,12 @@ class InfoController extends Controller
             ->skip($from)
             ->take($limit);
         if($lastid > 0)
-            $comment = $comment ->where('comments.id', '<=', $lastid);
-        $comment = $comment ->get();
-        return $comment;
+            $comments = $comments ->where('comments.id', '<=', $lastid);
+        $comments = $comments ->get();
+        foreach ($comments as $comment) {
+            $comment['zan'] = Zan::select('id')->where('comment_id', $comment['id'])->count();
+        }
+        return $comments;
     }
 
     public function getRecommendList($articleid, $excludeids) {
