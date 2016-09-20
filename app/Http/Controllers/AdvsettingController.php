@@ -68,7 +68,7 @@ class AdvsettingController extends Controller
   {
     $types = AdvType::all();
     $positions = AdvPosition::all();
-    $categories = Category::where('category_id', '<>', 0)->get();
+    $categories = Category::where('last_category', 1)->get();
     $advSettings = AdvSetting::findorFail($id);
     $displayorder = ArticleResources::where('resource_id', $id)->where('article_id', 0)->first();
 
@@ -79,7 +79,7 @@ class AdvsettingController extends Controller
   {
     $types = AdvType::all();
     $positions = AdvPosition::all();
-    $categories = Category::where('category_id', '<>', 0)->get();
+    $categories = Category::where('last_category', 1)->get();
     return view('advsetting/createimage', ['types'=>$types, 'positions'=>$positions, 'categories'=>$categories]);
   }
 
@@ -105,7 +105,7 @@ class AdvsettingController extends Controller
     $advSetting->description = $request['description'];
     $advSetting->order = $request['order'];
     $advSetting->links = $request['links'];
-    $advSetting->published_at = $request['published_at'];
+    $advSetting->published_at = date('Y-m-d');
     $advSetting->created_by = $authuser->id;
     $advSetting->save();
 
@@ -146,7 +146,7 @@ class AdvsettingController extends Controller
       $advSetting->description = $request['description'];
       $advSetting->order = $request['order'];
       $advSetting->links = $request['links'];
-      $advSetting->published_at = $request['published_at'];
+      $advSetting->published_at = date('Y-m-d');
       $advSetting->created_by = $authuser->id;
       $advSetting->save();
     }

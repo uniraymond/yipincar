@@ -49,8 +49,8 @@
                     </select>
 
                     <div class="clearfix"></div>
-                    {!! Form::label('title', '内容', array('class'=>'col-md-12')) !!}
-                    {!! Form::text('title', $advSettings->title, array('class' => 'input col-md-12 form-control', 'placeholder' => '内容')) !!}
+                    {!! Form::label('title', '标题', array('class'=>'col-md-12')) !!}
+                    {!! Form::text('title', $advSettings->title, array('class' => 'input col-md-12 form-control', 'placeholder' => '标题')) !!}
 
                     <div class="clearfix"></div>
                     {!! Form::label('description', '广告描述', array('class'=>'col-md-12')) !!}
@@ -68,9 +68,9 @@
                     {!! Form::label('links', '链接', array('class'=>'col-md-12')) !!}
                     {!! Form::text('links', $advSettings->links, array('class' => 'input col-md-12 form-control', 'placeholder' => '链接')) !!}
 
-                    <div class="clearfix"></div>
-                    {!! Form::label('published_at', '开始显示日期', array('class'=>'col-md-12')) !!}
-                    {!! Form::date('published_at', date('Y-m-d', strtotime($advSettings->published_at)), array('class'=>'col-md-12', 'placehold'=>'开始日期')) !!}
+                    {{--<div class="clearfix"></div>--}}
+{{--                    {!! Form::label('published_at', '开始显示日期', array('class'=>'col-md-12')) !!}--}}
+                    {!! Form::date('published_at', date('Y-m-d', strtotime($advSettings->published_at)), array('class'=>'col-md-12','hidden', 'placehold'=>'开始日期')) !!}
                     <div class="clearfix"></div>
                     {!! Form::label('category_id', '栏目', array('class'=>'col-md-12')) !!}
                     <select class="col-lg-12 col-md-12 col-sm-12 form-control" name="category_id">
