@@ -182,7 +182,7 @@ class InfoController extends Controller
         $from = ($page -1) * $limit;
 
         $comments = Comment::join('users', 'comments.created_by', '=', 'users.id')
-            ->leftJoin('zans', 'comments.id', '=', 'zans.comment_id')
+//            ->leftJoin('zans', 'comments.id', '=', 'zans.comment_id')
             ->join('profiles', 'users.profile_id', '=', 'profiles.id')
             ->select('comments.*', 'users.name as userName', 'profiles.icon_uri as userIcon')
             ->where('comments.article_id', '=', $articleid)
@@ -358,6 +358,7 @@ class InfoController extends Controller
             'updated_by' => $userid
         ));
         $comment = Comment::select('*') ->where('created_by', $userid) ->get() ->last();
+        $comment['zan'] = 0;
         return ['comment' => $comment];
     }
 
