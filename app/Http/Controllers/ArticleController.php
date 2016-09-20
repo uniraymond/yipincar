@@ -167,7 +167,7 @@ class ArticleController extends Controller
     ]);
 
     $title = $request->input('title');
-    $content = trim($request['content']);
+    $content = strip_tags(trim($request['content']), "<img><p><b><b/><b /><img");
     $description = $request['description'] ? $request['description'] : trim(substr($content, 0, 20));
 //    $typeId = $request['type_id'];
     $categoryId = $request['category_id'];
@@ -359,7 +359,7 @@ class ArticleController extends Controller
     ]);
 
     $title = $request->input('title');
-    $content = trim($request['content']);
+    $content = strip_tags(trim($request['content']), "<img><p><b><b/><b /><img");
     $description = $request['description'] ? $request['description'] : trim(substr($content, 0, 20));
     $typeId = $request['type_id'];
     $categoryId = $request['category_id'];
