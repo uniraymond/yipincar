@@ -468,7 +468,7 @@ class InfoController extends Controller
 
         $subscribe = DB::table('user_subscribes')
             ->select('id')->where('user_id', $userid)
-            ->where('created_by', $authorid)
+            ->where('subscribe_user_id', $authorid)
             ->get();
 //        return $subscribe;
         if($subscribe && count($subscribe)) {
@@ -476,7 +476,9 @@ class InfoController extends Controller
         } else {
             $sub = DB::table('user_subscribes')->insert([
                 'user_id'    => $userid,
-                'created_by' => $authorid
+                'subscribe_user_id' => $authorid,
+                'created_by'    => $userid,
+                'updated_by'    => $userid
             ]);
             return ['subscribe' => $sub ? 1 : 0];
         }
