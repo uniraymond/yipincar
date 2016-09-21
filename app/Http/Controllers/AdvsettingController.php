@@ -77,7 +77,7 @@ class AdvsettingController extends Controller
     return view('advsetting/editimage', ['advSettings' => $advSettings, 'types'=>$types, 'displayorder'=>$displayorder, 'positions'=>$positions, 'categories'=>$categories]);
   }
 
-    public function show($id)
+    public function show(Request $request, $id)
     {
         $allStatusChecks = array();
         $advsetting = AdvSetting::findorFail($id);

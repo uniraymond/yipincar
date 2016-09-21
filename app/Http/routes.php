@@ -81,7 +81,7 @@ Route::group(['middleware'=>'auth', 'prefix'=>'admin'], function() {
     Route::get('history', 'HistoryController@index');
     Route::get('articles/actived', 'ArticleController@activedList');
     Route::get('article/{id}/preview', 'ArticleController@preview');
-    Route::get('advsetting/{id}/show/', 'AdvSettingController@show');
+    Route::get('advsetting/{id}/show', 'AdvSettingController@show');
     Route::put('advsetting/review/{articleId}', 'AdvSettingController@newreview');
     Route::post('advsetting/review/{articleId}/edit/{id}', 'AdvSettingController@editreview');
 });
