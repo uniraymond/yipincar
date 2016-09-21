@@ -96,10 +96,6 @@
     <script src="{{ url('/src/js/jquery.colorbox-min.js') }}"></script>
     <script>
         jQuery("#pv").colorbox();
-
-        jQuery(function(){
-            jQuery('.article-content img').width(500);
-        });
     </script>
 @endsection
 

@@ -167,8 +167,18 @@ class ArticleController extends Controller
     ]);
 
     $title = $request->input('title');
-    $content = strip_tags(trim($request['content']), "<img><p><b><b/><b /><img");
-    $description = $request['description'] ? $request['description'] : trim(substr($content, 0, 20));
+    $content = strip_tags(trim($request['content']), "<img><p><b><b/><b />");
+
+      var_dump($content);
+
+      $xpath = new \DOMXPath(@\DOMDocument::loadHTML($content));
+
+      var_dump($xpath);
+
+      $src = $xpath->evaluate("string(//img/@src)");
+
+      var_dump($src); exit;
+      $description = $request['description'] ? $request['description'] : trim(substr($content, 0, 20));
 //    $typeId = $request['type_id'];
     $categoryId = $request['category_id'];
       if ($request['published']) {
@@ -194,6 +204,10 @@ class ArticleController extends Controller
       }
 
     $article = Article::find($id);
+
+      $content = preg_replace('width=', '', $content);
+      $content = preg_replace('height=', '', $content);
+      $content = preg_replace('<img', '<img width=500', $content);
 
     $log['origin'] = '"article_title":'. $article->title . ';';
     $log['origin'] .= '"article_content":'. $article->content . ';';
@@ -381,6 +395,10 @@ class ArticleController extends Controller
               $tags = array_unique($tags);
           }
       }
+
+      $content = preg_replace('width=', '', $content);
+      $content = preg_replace('height=', '', $content);
+      $content = preg_replace('<img', '<img width=500', $content);
 
     $article = new Article();
     $article->title = $title;
