@@ -64,3 +64,7 @@ img.captcha-img {
     line-height: 35px;
     margin-right: 20px;
 }
+
+.article-content img{
+    width: 500px;
+}
