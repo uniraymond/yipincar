@@ -360,7 +360,9 @@ class InfoController extends Controller
     }
 
 
-    public function searchArticles($key, $category) {
+    public function searchArticles(Request $request) {
+        $key = $request ->get('key');
+        $category = $request ->get('category');
         $this -> likeKey = '%'.$key.'%';
 
         $articles = Article::join('categories', 'articles.category_id', '=', 'categories.id')
@@ -376,14 +378,17 @@ class InfoController extends Controller
                         $query->where('articles.content', 'like', $this -> likeKey);
                     });
             })
-            ->where('articles.category_id', '=', $category)
-            ->where('articles.published', '=', 0)
+//            ->where('articles.category_id', '=', $category)
+//            ->where('articles.published', '=', 0)
 //            ->where('articles.title'.'articles.content', 'like', $likeKey)
 //            ->orWhere('articles.content', 'like', $likeKey)
-            ->where('articles.type_id', 1)
+//            ->where('articles.type_id', 1)
             ->orderBy('articles.created_at', 'desc')
-            ->take(10)
-            ->get();
+            ->take(10);
+        if($category != 3)
+            $articles = $articles ->where('articles.category_id', '=', $category);
+
+         $articles = $articles ->get();
         return $articles;
     }
 

@@ -93,7 +93,7 @@ Route::group(['prefix'=>'api'], function() {
     Route::get('comments/{articleid?}/{lastid?}/{page?}/{limit?}', 'InfoController@getCommentList');
     Route::get('recommands/{articleid?}/{excludeids?}', 'InfoController@getRecommendList');
     Route::get('subscribes/{userid?}/{lastid?}/{page?}/{limit?}', 'InfoController@getSubscribeList');
-    Route::get('searcharticles/{key?}/{category?}', 'InfoController@searchArticles');
+    Route::any('searcharticles', 'InfoController@searchArticles');
     Route::any('comment', 'InfoController@releaseComment');
     Route::any('delcomment', 'InfoController@deleteComment');
     Route::any('approvearticle', 'InfoController@approveArticle');
