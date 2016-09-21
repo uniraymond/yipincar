@@ -85,8 +85,8 @@ class InfoController extends Controller
 //        $approved = $info->approved()->count();
         $info['comment'] = $this ->getCommentList($info['id'], 0, 1, 10);
 //        $info['approved'] = $approved;
-        $zan = $info->zan()->count();
-        $info['zan'] = $zan;
+//        $zan = $info->zan()->count();
+        $info['zan'] = $this ->articleApprovedCount($id);
 
         return response()->json($info);
     }
@@ -194,7 +194,7 @@ class InfoController extends Controller
             $comments = $comments ->where('comments.id', '<=', $lastid);
         $comments = $comments ->get();
         foreach ($comments as $comment) {
-            $comment['zan'] = Zan::select('id')->where('comment_id', $comment['id'])->count();
+            $comment['zan'] = $this ->commentApprovedCount($comment['id']);//Zan::select('id')->where('comment_id', $comment['id'])->count();
         }
         return $comments;
     }
@@ -299,10 +299,11 @@ class InfoController extends Controller
 
     public function getSubscribeList($userid, $lastid, $page, $limit) {
         $from = ($page -1) * $limit;
-        $subscribe = DB::table('subscribes')
-            ->join('users', 'users.id', '=', 'subscribes.author_id')
-            ->select('users.id', 'users.name', 'users.description', 'users.icon')
-            ->where('subscribes.user_id', $userid)
+        $subscribe = DB::table('user_subscribes')
+            ->leftJoin('users', 'users.id', '=', 'user_subscribes.subscribe_user_id')
+            ->leftJoin('profiles','profiles.user_id' , '=', 'user_subscribes.subscribe_user_id')
+            ->select('users.id', 'users.name', 'profiles.aboutself as description', 'profiles.icon_uri')
+            ->where('user_subscribes.user_id', $userid)
             ->skip($from)
             ->take($limit);
 
@@ -313,7 +314,55 @@ class InfoController extends Controller
         return $subscribe;
     }
 
-    public function searchArticles($key, $category) {
+    public function getSubscribeArticleList($authorid, $lastid, $page, $limit) {
+        $from = ($page -1) * $limit;
+        $articles = Article::join('categories', 'articles.category_id', '=', 'categories.id')
+            ->leftJoin('article_resources', 'articles.id', '=', 'article_resources.article_id')
+            ->leftJoin('resources', 'resources.id', '=', 'article_resources.resource_id')
+            ->join('article_types', 'articles.type_id', '=', 'article_types.id')
+            ->join('users', 'users.id', '=', 'articles.created_by')
+            ->select('articles.id', 'articles.title', 'categories.name as categoryName', 'articles.category_id', 'article_types.name as articletypeName'
+                , 'articles.created_at' , 'resources.link as resourceLink', 'resources.name as resourceName', 'users.name as userName')
+//            ->where('articles.published', '=', 0)
+            ->where('articles.created_by', '=', $authorid)
+            ->orderBy('articles.created_at', 'desc')
+            ->skip($from)
+            ->take($limit);
+
+        if($page != 1 && $lastid && $lastid > 0)
+            $articles = $articles->where('articles.id', '<=', $lastid);
+
+        $articles = $articles->get();
+        return $articles;
+    }
+
+    public function getCollectArticleList($userid, $lastid, $page, $limit) {
+        $from = ($page -1) * $limit;
+        $articles = Article::join('collections', 'collections.article_id', '=', 'articles.id')
+            ->join('categories', 'articles.category_id', '=', 'categories.id')
+            ->leftJoin('article_resources', 'articles.id', '=', 'article_resources.article_id')
+            ->leftJoin('resources', 'resources.id', '=', 'article_resources.resource_id')
+            ->join('article_types', 'articles.type_id', '=', 'article_types.id')
+            ->join('users', 'users.id', '=', 'articles.created_by')
+            ->select('articles.id', 'articles.title', 'articles.category_id', 'article_types.name as articletypeName'
+                , 'articles.created_at' , 'resources.link as resourceLink', 'resources.name as resourceName', 'users.name as userName')
+//            ->where('articles.published', '=', 0)
+            ->where('collections.user_id', '=', $userid)
+            ->orderBy('articles.created_at', 'desc')
+            ->skip($from)
+            ->take($limit);
+
+        if($page != 1 && $lastid && $lastid > 0)
+            $articles = $articles->where('articles.id', '<=', $lastid);
+
+        $articles = $articles->get();
+        return $articles;
+    }
+
+
+    public function searchArticles(Request $request) {
+        $key = $request ->get('key');
+        $category = $request ->get('category');
         $this -> likeKey = '%'.$key.'%';
 
         $articles = Article::join('categories', 'articles.category_id', '=', 'categories.id')
@@ -329,14 +378,17 @@ class InfoController extends Controller
                         $query->where('articles.content', 'like', $this -> likeKey);
                     });
             })
-            ->where('articles.category_id', '=', $category)
-            ->where('articles.published', '=', 0)
+//            ->where('articles.category_id', '=', $category)
+//            ->where('articles.published', '=', 0)
 //            ->where('articles.title'.'articles.content', 'like', $likeKey)
 //            ->orWhere('articles.content', 'like', $likeKey)
-            ->where('articles.type_id', 1)
+//            ->where('articles.type_id', 1)
             ->orderBy('articles.created_at', 'desc')
-            ->take(10)
-            ->get();
+            ->take(10);
+        if($category != 3)
+            $articles = $articles ->where('articles.category_id', '=', $category);
+
+         $articles = $articles ->get();
         return $articles;
     }
 
@@ -377,14 +429,20 @@ class InfoController extends Controller
         if($approved != NULL && count($approved) > 0) {
 //            $id = $approved->first()->id;
             Zan::where('id', $approved->first()->id)->delete();
-            return ['approved' => '-1'];
+            return ['approved' => '-1',
+                    'count' => $this ->articleApprovedCount($articleid)];
         } else {
             Zan::insert([
                 'article_id' => $articleid,
                 'uid'        => $uid
             ]);
-            return ['approved' => '+1'];
+            return ['approved' => '+1',
+                'count' => $this ->articleApprovedCount($articleid)];
         }
+    }
+
+    public function articleApprovedCount($articleid) {
+        return Zan::select('id')->where('article_id', $articleid)->count();
     }
 
     public function approveComment(Request $request) {
@@ -396,14 +454,20 @@ class InfoController extends Controller
             ->get();
         if($approved != NULL && count($approved) > 0) {
             Zan::where('id', $approved->first()->id)->delete();
-            return ['approved' => '-1'];
+            return ['approved' => '-1',
+                'count' => $this ->commentApprovedCount($commentid)];
         } else {
             Zan::insert([
                 'comment_id' => $commentid,
                 'uid'        => $uid
             ]);
-            return ['approved' => '+1'];
+            return ['approved' => '+1',
+                'count' => $this ->commentApprovedCount($commentid)];
         }
+    }
+
+    public function commentApprovedCount($commentid) {
+        return Zan::select('id')->where('comment_id', $commentid)->count();
     }
 
 //    public function updateName(Request $request) {
@@ -455,7 +519,7 @@ class InfoController extends Controller
 
         $subscribe = DB::table('user_subscribes')
             ->select('id')->where('user_id', $userid)
-            ->where('created_by', $authorid)
+            ->where('subscribe_user_id', $authorid)
             ->get();
 //        return $subscribe;
         if($subscribe && count($subscribe)) {
@@ -463,7 +527,9 @@ class InfoController extends Controller
         } else {
             $sub = DB::table('user_subscribes')->insert([
                 'user_id'    => $userid,
-                'created_by' => $authorid
+                'subscribe_user_id' => $authorid,
+                'created_by'    => $userid,
+                'updated_by'    => $userid
             ]);
             return ['subscribe' => $sub ? 1 : 0];
         }
