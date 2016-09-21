@@ -81,6 +81,7 @@ Route::group(['middleware'=>'auth', 'prefix'=>'admin'], function() {
     Route::get('history', 'HistoryController@index');
     Route::get('articles/actived', 'ArticleController@activedList');
     Route::get('article/{id}/preview', 'ArticleController@preview');
+    Route::get('advsetting/{id}/show/', 'AdvSettingController@show');
 });
 Route::group(['middleware' => 'auth'], function () {
     Route::get('/', 'ArticleController@index');
