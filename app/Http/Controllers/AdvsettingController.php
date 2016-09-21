@@ -144,7 +144,7 @@ class AdvsettingController extends Controller
         $advsetting->save();
 
         $request->session()->flash('status', '添加了新的广告评估.');
-        return redirect('admin/advsetting/'.$advsettingid.'/show');
+        return redirect('admin/advsetting/show/'.$advsettingid);
     }
 
     public function editreview(Request $request, $advsettingid, $id)
@@ -192,7 +192,7 @@ class AdvsettingController extends Controller
         $article->save();
 
         $request->session()->flash('status', '更新了广告评估.');
-        return redirect('admin/advsetting/'.$advsettingid.'/show');
+        return redirect('admin/advsetting/show/'.$advsettingid);
     }
 
 
