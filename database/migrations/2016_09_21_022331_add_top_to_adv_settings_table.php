@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddTopToArticleStatusChecksTable extends Migration
+class AddTopToAdvSettingsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,8 +12,8 @@ class AddTopToArticleStatusChecksTable extends Migration
      */
     public function up()
     {
-        Schema::table('article_status_checks', function (Blueprint $table) {
-            //
+        Schema::table('adv_settings', function (Blueprint $table) {
+            $table->boolean('top');
         });
     }
 
@@ -24,8 +24,8 @@ class AddTopToArticleStatusChecksTable extends Migration
      */
     public function down()
     {
-        Schema::table('article_status_checks', function (Blueprint $table) {
-            //
+        Schema::table('adv_settings', function (Blueprint $table) {
+            $table->dropColumn('top');
         });
     }
 }
