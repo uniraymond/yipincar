@@ -299,10 +299,11 @@ class InfoController extends Controller
 
     public function getSubscribeList($userid, $lastid, $page, $limit) {
         $from = ($page -1) * $limit;
-        $subscribe = DB::table('subscribes')
-            ->join('users', 'users.id', '=', 'subscribes.author_id')
-            ->select('users.id', 'users.name', 'users.description', 'users.icon')
-            ->where('subscribes.user_id', $userid)
+        $subscribe = DB::table('user_subscribes')
+            ->leftJoin('users', 'users.id', '=', 'user_subscribes.subscribe_user_id')
+            ->leftJoin('profiles','profiles.user_id' , '=', 'user_subscribes.subscribe_user_id')
+            ->select('users.id', 'users.name', 'profiles.aboutself as description', 'profiles.icon_uri')
+            ->where('user_subscribes.user_id', $userid)
             ->skip($from)
             ->take($limit);
 
