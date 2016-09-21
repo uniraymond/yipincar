@@ -99,6 +99,7 @@ Route::group(['prefix'=>'api'], function() {
     Route::any('approvearticle', 'InfoController@approveArticle');
     Route::any('approvecomment', 'InfoController@approveComment');
     Route::get('subscribearticles/{authorid?}/{lastid?}/{page?}/{limit?}', 'InfoController@getSubscribeArticleList');
+    Route::get('collectarticles/{userid?}/{lastid?}/{page?}/{limit?}', 'InfoController@getCollectArticleList');
     Route::any('collect', 'InfoController@collectArticle');
     Route::any('delcollect', 'InfoController@deleteCollection');
     Route::any('subscribe', 'InfoController@subscribe');

@@ -336,6 +336,30 @@ class InfoController extends Controller
         return $articles;
     }
 
+    public function getCollectArticleList($userid, $lastid, $page, $limit) {
+        $from = ($page -1) * $limit;
+        $articles = Article::join('collections', 'collections.article_id', '=', 'articles.id')
+            ->join('categories', 'articles.category_id', '=', 'categories.id')
+            ->leftJoin('article_resources', 'articles.id', '=', 'article_resources.article_id')
+            ->leftJoin('resources', 'resources.id', '=', 'article_resources.resource_id')
+            ->join('article_types', 'articles.type_id', '=', 'article_types.id')
+            ->join('users', 'users.id', '=', 'articles.created_by')
+            ->select('articles.id', 'articles.title', 'articles.category_id', 'article_types.name as articletypeName'
+                , 'articles.created_at' , 'resources.link as resourceLink', 'resources.name as resourceName', 'users.name as userName')
+//            ->where('articles.published', '=', 0)
+            ->where('collections.user_id', '=', $userid)
+            ->orderBy('articles.created_at', 'desc')
+            ->skip($from)
+            ->take($limit);
+
+        if($page != 1 && $lastid && $lastid > 0)
+            $articles = $articles->where('articles.id', '<=', $lastid);
+
+        $articles = $articles->get();
+        return $articles;
+    }
+
+
     public function searchArticles($key, $category) {
         $this -> likeKey = '%'.$key.'%';
 
