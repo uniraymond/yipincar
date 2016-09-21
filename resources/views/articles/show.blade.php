@@ -43,8 +43,8 @@
                             <div>简述:</div>
                             <div><p>{{ $article->description }}</p></div>
                             <div class="clearfix"></div>
-                            <div id="preview">详细内容:</div>
-                            <div> {!! $article->content !!} </div>
+                            <div id="preview" >详细内容:</div>
+                            <div class="article-content"> {!! $article->content !!} </div>
                             <div class="list-group">
                                 <div class="list-group-item list-group-item-action">
                                     栏目: {{ $article->categories->name }} </div>
@@ -96,6 +96,10 @@
     <script src="{{ url('/src/js/jquery.colorbox-min.js') }}"></script>
     <script>
         jQuery("#pv").colorbox();
+
+        jQuery(function(){
+            jQuery('.article-content img').width(500);
+        });
     </script>
 @endsection
 
