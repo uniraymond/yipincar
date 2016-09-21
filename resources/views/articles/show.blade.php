@@ -16,8 +16,8 @@
                             {{ $success }}
                         </p>
                     </div>
+                    <div class="clearfix"></div>
                 @endif
-
                 <div class="panel panel-default">
                     <div class="panel-heading heading_block_title col-lg-9 col-md-8">
                         <h3>{{ $article->title }}</h3>
