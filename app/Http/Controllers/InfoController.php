@@ -85,8 +85,8 @@ class InfoController extends Controller
 //        $approved = $info->approved()->count();
         $info['comment'] = $this ->getCommentList($info['id'], 0, 1, 10);
 //        $info['approved'] = $approved;
-        $zan = $info->zan()->count();
-        $info['zan'] = $zan;
+//        $zan = $info->zan()->count();
+        $info['zan'] = $this ->articleApprovedCount($id);
 
         return response()->json($info);
     }
