@@ -71,4 +71,19 @@ class AdvSetting extends Model
     {
         return $this->belongsTo('App\User', 'created_by');
     }
+
+    public function article_statuses()
+    {
+        return $this->belongsToMany('App\ArticleStatus', 'article_status_checks', 'article_id', 'article_status_id');
+    }
+
+    public function article_status()
+    {
+        return $this->belongsTo('App\ArticleStatus', 'published');
+    }
+
+    public function article_status_checks()
+    {
+        return $this->hasMany('App\ArticleStatusCheck');
+    }
 }

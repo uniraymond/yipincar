@@ -38,7 +38,7 @@
                             <tbody>
                                 @foreach($advsettings as $advsetting)
                                     <tr>
-                                        <td>{{ str_limit($advsetting->title, 20) }}</td>
+                                        <td><a href="{{ url('/admin/advsetting/'.$advsetting->id.'/show') }}" class="">{{ str_limit($advsetting->title, 20) }}</a> </td>
                                         <td><span>{{ $advsetting->adv_positions->name }}</span></td>
                                         <td><span>{{ $advsetting->adv_types->name }}</span></td>
 {{--                                        <td><span>{{ date('Y-m-d', strtotime($advsetting->published_at)) }}</span></td>--}}

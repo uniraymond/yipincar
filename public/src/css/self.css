@@ -64,3 +64,12 @@ img.captcha-img {
     line-height: 35px;
     margin-right: 20px;
 }
+
+.top-header {
+    min-height: 85px;
+    background: #f5f5f5;
+}
+
+.bg-success {
+    padding: 10px;
+}

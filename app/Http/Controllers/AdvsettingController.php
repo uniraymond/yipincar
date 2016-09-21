@@ -6,6 +6,7 @@ use App\AdvPosition;
 use App\AdvType;
 use App\ArticleResources;
 use App\ArticleStatus;
+use App\ArticleStatusCheck;
 use App\Category;
 use App\Resource;
 use App\ResourceTypes;
@@ -79,14 +80,121 @@ class AdvsettingController extends Controller
     public function show($id)
     {
         $allStatusChecks = array();
-        $advSetting = AdvSetting::findorFail($id);
+        $advsetting = AdvSetting::findorFail($id);
 
-        $articleStatus = $advSetting->article_statuses;
-        $checks = $advSetting->article_status_checks;
+        $articleStatus = $advsetting->article_statuses;
+        $checks = $advsetting->article_status_checks;
         $allStatuses = ArticleStatus::orderBy('id', 'desc')->get();
 
-        return view('advsetting/show', ['advSetting'=>$advSetting, 'allStatusChecks'=>$allStatusChecks]);
+        foreach($allStatuses as $status) {
+            $allStatusChecks[$status->name] = $this->getAdvSettingStatusObject($status->id, $id);
+        }
+
+        return view('advsetting/show', ['advsetting'=>$advsetting, 'allStatusChecks'=>$allStatusChecks]);
     }
+
+    private function getAdvSettingStatusObject($status_id, $adv_setting_id) {
+        $article_status = ArticleStatusCheck::where('article_status_id', $status_id)->where('adv_setting_id', $adv_setting_id)->get();
+        return $article_status;
+    }
+
+    /*
+    *   articleStatusChecked
+     *  article_status_id is the process of review for example if main editor reviewed this value should be 3 - review
+     *  checked is current adv or article status 0,1 is reject; 2 is apply reivew 3. is final reviewed 4. is published
+    */
+    public function newreview(Request $request, $advsettingid)
+    {
+        $authuser = $request->user();
+        $articleStatus = ArticleStatus::where('name', $request['article_status'])->first();
+
+        $articleStatusCheck = new ArticleStatusCheck();
+        $articleStatusCheck->adv_setting_id = $advsettingid;
+        $articleStatusCheck->article_status_id = $articleStatus->id;
+        $articleStatusCheck->comment = $request['comment'];
+        $articleStatusCheck->checked = 1;
+        switch($request['article_status']) {
+            case 'publish':
+                if($request['status']) {
+                    $articleStatusCheck->checked = 4;
+                }
+                break;
+            case 'review':
+                if($request['status']) {
+                    $articleStatusCheck->checked = 3;
+                }
+                break;
+            case 'review_apply':
+                if($request['status']) {
+                    $articleStatusCheck->checked = 2;
+                }
+                break;
+            default:
+                if($request['status']) {
+                    $articleStatusCheck->checked = 2;
+                }
+                break;
+        }
+
+        $articleStatusCheck->created_by = $authuser->id;
+        $articleStatusCheck->save();
+
+        $advsetting = AdvSetting::find($advsettingid);
+        $advsetting->status = $articleStatusCheck->checked;
+        $advsetting->save();
+
+        $request->session()->flash('status', '添加了新的广告评估.');
+        return redirect('admin/advsetting/'.$advsettingid.'/show');
+    }
+
+    public function editreview(Request $request, $advsettingid, $id)
+    {
+        $allArticleStatus = ArticleStatus::all();
+        foreach ($allArticleStatus as $allAS) {
+            $allStatus[$allAS->id] = $allAS->name;
+        }
+        $authuser = $request->user();
+//    $articleStatus = ArticleStatus::where('name', $request['article_status'])->first();
+        $articleStatusId = array_search($request['article_status'], $allStatus);
+        $statusReview = array_search('review', $allStatus);
+
+        $articleStatusCheck = ArticleStatusCheck::find($id);
+        $articleStatusCheck->comment = $request['comment'];
+        $articleStatusCheck->updated_by = $authuser->id;
+        $articleStatusCheck->checked = 1;
+        switch($request['article_status']) {
+            case 'publish':
+                if($request['status']) {
+                    $articleStatusCheck->checked = 4;
+                }
+                break;
+            case 'review':
+                if($request['status']) {
+                    $articleStatusCheck->checked = 3;
+                }
+                break;
+            case 'review_apply':
+                if($request['status']) {
+                    $articleStatusCheck->checked = 2;
+                }
+                break;
+            default:
+                if($request['status']) {
+                    $articleStatusCheck->checked = 2;
+                }
+                break;
+        }
+
+        $articleStatusCheck->save();
+
+        $article = AdvSetting::find($advsettingid);
+        $article->status =  $articleStatusCheck->checked;
+        $article->save();
+
+        $request->session()->flash('status', '更新了广告评估.');
+        return redirect('admin/advsetting/'.$advsettingid.'/show');
+    }
+
 
   public function create(Request $request)
   {

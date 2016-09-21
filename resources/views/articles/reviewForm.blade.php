@@ -63,7 +63,6 @@ if(Auth::user()->hasAnyRole(['editor', 'auth_editor']) && $article->created_by =
                     Edit
                 </a>
             </div>
-            {{--<div id="edit_status_check_form_{{ $statusCheck[0]->id }}" style="display: none" >--}}
             <div id="edit_status_check_form_{{ $statusCheck[0]->id }}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading_edit_status_check_form">
                 {!! Form::open(array('url' => 'admin/article/review/'.$article->id.'/edit/'.$statusCheck[0]->id, 'class' => 'form', 'method'=>'post')) !!}
                 {!! Form::label('comment', '建议', array('class'=>'col-lg-12 col-md-12 col-sm-12')) !!}
