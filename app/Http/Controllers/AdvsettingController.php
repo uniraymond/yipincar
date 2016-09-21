@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\AdvPosition;
 use App\AdvType;
 use App\ArticleResources;
+use App\ArticleStatus;
 use App\Category;
 use App\Resource;
 use App\ResourceTypes;
@@ -74,6 +75,18 @@ class AdvsettingController extends Controller
 
     return view('advsetting/editimage', ['advSettings' => $advSettings, 'types'=>$types, 'displayorder'=>$displayorder, 'positions'=>$positions, 'categories'=>$categories]);
   }
+
+    public function show($id)
+    {
+        $allStatusChecks = array();
+        $advSetting = AdvSetting::findorFail($id);
+
+        $articleStatus = $advSetting->article_statuses;
+        $checks = $advSetting->article_status_checks;
+        $allStatuses = ArticleStatus::orderBy('id', 'desc')->get();
+
+        return view('advsetting/show', ['advSetting'=>$advSetting, 'allStatusChecks'=>$allStatusChecks]);
+    }
 
   public function create(Request $request)
   {

@@ -66,4 +66,9 @@ class AdvSetting extends Model
   {
     return $this->belongsTo('App\Resource', 'resource_id');
   }
+
+    public function users()
+    {
+        return $this->belongsTo('App\User', 'created_by');
+    }
 }
