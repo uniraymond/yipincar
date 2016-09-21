@@ -194,7 +194,7 @@ class InfoController extends Controller
             $comments = $comments ->where('comments.id', '<=', $lastid);
         $comments = $comments ->get();
         foreach ($comments as $comment) {
-            $comment['zan'] = Zan::select('id')->where('comment_id', $comment['id'])->count();
+            $comment['zan'] = $this ->commentApprovedCount($comment['id']);//Zan::select('id')->where('comment_id', $comment['id'])->count();
         }
         return $comments;
     }
@@ -377,14 +377,20 @@ class InfoController extends Controller
         if($approved != NULL && count($approved) > 0) {
 //            $id = $approved->first()->id;
             Zan::where('id', $approved->first()->id)->delete();
-            return ['approved' => '-1'];
+            return ['approved' => '-1',
+                    'count' => $this ->articleApprovedCount($articleid)];
         } else {
             Zan::insert([
                 'article_id' => $articleid,
                 'uid'        => $uid
             ]);
-            return ['approved' => '+1'];
+            return ['approved' => '+1',
+                'count' => $this ->articleApprovedCount($articleid)];
         }
+    }
+
+    public function articleApprovedCount($articleid) {
+        return Zan::select('id')->where('article_id', $articleid)->count();
     }
 
     public function approveComment(Request $request) {
@@ -396,14 +402,20 @@ class InfoController extends Controller
             ->get();
         if($approved != NULL && count($approved) > 0) {
             Zan::where('id', $approved->first()->id)->delete();
-            return ['approved' => '-1'];
+            return ['approved' => '-1',
+                'count' => $this ->commentApprovedCount($commentid)];
         } else {
             Zan::insert([
                 'comment_id' => $commentid,
                 'uid'        => $uid
             ]);
-            return ['approved' => '+1'];
+            return ['approved' => '+1',
+                'count' => $this ->commentApprovedCount($commentid)];
         }
+    }
+
+    public function commentApprovedCount($commentid) {
+        return Zan::select('id')->where('comment_id', $commentid)->count();
     }
 
 //    public function updateName(Request $request) {
