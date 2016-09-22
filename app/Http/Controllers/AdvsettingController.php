@@ -292,6 +292,5 @@ class AdvsettingController extends Controller
     $categories = Category::where('category_id', '<>', 0)->get();
     $advSettings = AdvSetting::where('position_id', $id)->paginate(15);
     return view('advsetting/index', ['advsettings' => $advSettings, 'types'=>$types, 'positions'=>$positions, 'categories'=>$categories]);
-
   }
 }

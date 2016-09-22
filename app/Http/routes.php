@@ -76,6 +76,7 @@ Route::group(['middleware'=>'auth', 'prefix'=>'admin'], function() {
     Route::put('advsetting/uploadimage', 'AdvsettingController@uploadImage');
     Route::put('advsetting/review/{articleId}', 'AdvsettingController@newreview');
     Route::post('advsetting/review/{articleId}/edit/{id}', 'AdvsettingController@editreview');
+    Route::get('advsetting/checktop', 'AdvsettingController@checktop');
 
     Route::get('api/category', 'CategoryController@index');
     Route::get('/', 'ArticleController@index');
