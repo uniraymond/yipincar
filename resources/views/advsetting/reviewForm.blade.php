@@ -12,17 +12,9 @@
           $currentStatusId = 4;
           break;
    case 'review':
-        if(Auth::user()->hasRole('main_editor')) {
-            $displayForm = true;
-        }
-          $reviewTitle = '审核广告';
-          $checkboxLabel = '初审';
-          $radioLabel1 = '通过';
-          $radioLabel2 = '驳回';
-          $currentStatusId = 3;
           break;
    case 'review_apply':
-        if(Auth::user()->hasAnyRole(['editor', 'auth_editor']) && $advsetting->created_by == Auth::user()->id && ($advsetting->status == 1 || $advsetting->status == 0)) {
+        if(Auth::user()->hasAnyRole(['adv_editor']) && $advsetting->created_by == Auth::user()->id && ($advsetting->status == 1 || $advsetting->status == 0)) {
             $displayForm = true;
         }
           $reviewTitle = '申请审核';
@@ -34,9 +26,9 @@
    case 'draft': break;
    }
 @endphp
-
+displaying not = {{ count($statusCheck) }}
 @if (count($statusCheck) <= 0 && $displayForm)
-{{--    @if (count($statusCheck) <= 0 && $currentUser->hasRole('chef_editor'))--}}
+    {{--@if (count($statusCheck) <= 0 && $currentUser->hasRole('adv_editor'))--}}
         <h3>{{ $reviewTitle }}:</h3>
         {!! Form::open(array('url' => 'admin/advsetting/review/'.$advsetting->id, 'class' => 'form', 'method'=>'put')) !!}
         {!! Form::label('comment', '建议', array('class'=>'col-lg-12 col-md-12 col-sm-12')) !!}
@@ -53,7 +45,8 @@
         {!! Form::submit('保存', array('class'=>'btn btn-primary col-lg-offset-8 col-md-offset-8 col-sm-offset-8')) !!}
         {!! Form::token() !!}
         {!! Form::close() !!}
-    @elseif (count($statusCheck) == 1)
+    {{--@endif--}}
+@elseif (count($statusCheck) == 1)
         <div class="{{ $statusCheck[0]->checked == $advsetting->status ? 'bs-callout bs-callout-primary' : '' }}" >
             <div class="col-lg-2 col-md-2 col-sm-2">{{ $statusCheck[0]->article_status->title }}</div>
             <div class="col-lg-9 col-md-9 col-sm-9">{{ $statusCheck[0]->comment }}</div>

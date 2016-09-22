@@ -230,11 +230,11 @@ class AdvsettingController extends Controller
     $advSetting->published_at = date('Y-m-d');
     $advSetting->created_by = $authuser->id;
       if (isset($request['status'])) {
-          $advSetting->status = $request['status'];
+          $advSetting->status = $request['status'] ? 2 : 1;
       }
 
       if (isset($request['top'])) {
-          $advSetting->top = $request['top'];
+          $advSetting->top = $request['top'] ? 1 : 0;
       }
     $advSetting->save();
 
@@ -275,11 +275,20 @@ class AdvsettingController extends Controller
       $advSetting->description = $request['description'];
       $advSetting->order = $request['order'];
       $advSetting->links = $request['links'];
-      $advSetting->status = $request['status'];
-      $advSetting->top = $request['top'];
+      $advSetting->status = $request['status'] ? 2 : 1;
+      $advSetting->top = $request['top'] ? 1 : 0;
       $advSetting->published_at = date('Y-m-d');
       $advSetting->created_by = $authuser->id;
       $advSetting->save();
+
+        if ($request['status']) {
+            $articleStatusCheck = new ArticleStatusCheck();
+            $articleStatusCheck->adv_setting_id = $advSetting->id;
+            $articleStatusCheck->article_status_id = 3;
+            $articleStatusCheck->checked = 2;
+            $articleStatusCheck->created_by = $authuser->id;
+            $articleStatusCheck->save();
+        }
     }
 
     $request->session()->flash('status', '图片上传成功.');

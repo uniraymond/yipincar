@@ -27,13 +27,16 @@
                         <div id="heading_block" class="panel-heading col-lg-3 col-md-4">
                             <div>
                                 <small><span>作者: </span>{{ $advsetting->created_by ? $advsetting->users->name : '无名' }}
-                                </small><br>
+                                </small>
                             </div>
                             <div>
                                 <small><span>广告状态: </span>@if ($advsetting->status == 1 || $advsetting->status == 0) 草稿
                                     @elseif( $advsetting->status == 2) 申请审查
                                     @elseif( $advsetting->status == 3) 已经审查
                                     @elseif( $advsetting->status == 4) 发布 @endif</small>
+                            </div>
+                            <div>
+                                <small><span>{{ $advsetting->top ? '置顶' : '' }}</span></small>
                             </div>
                         </div>
                     </div>
