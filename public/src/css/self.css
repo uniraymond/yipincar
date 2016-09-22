@@ -73,3 +73,8 @@ img.captcha-img {
 .bg-success {
     padding: 10px;
 }
+
+.top-title-block {
+    min-height: 85px;
+    background-color: #f5f5f5;
+}

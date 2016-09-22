@@ -19,22 +19,28 @@
                     <div class="clearfix"></div>
                 @endif
                 <div class="panel panel-default">
-                    <div class="panel-heading heading_block_title col-lg-9 col-md-8">
-                        <h3>{{ $article->title }}</h3>
-                    </div>
-                    <div id="heading_block" class="panel-heading col-lg-3 col-md-4">
-                        <div>
-                            <small><span>作者: </span>{{ $article->created_by ? $article->user_created_by->name : '无名' }}
-                            </small>
+                    <div class="top-title-block">
+                        <div class="panel-heading heading_block_title col-lg-9 col-md-8">
+                            <h3>{{ $article->title }}</h3>
                         </div>
-                        <div>
-                            <small><span>完成日期: </span>{{ $article->created_at }}</small>
-                        </div>
-                        <div>
-                            <small><span>文章状态: </span>@if ($article->published == 1 || $article->published == 0) 草稿
-                                @elseif($article->published == 2) 申请审查
-                                @elseif($article->published == 3) 已经审查
-                                @elseif($article->published == 4) 发布 @endif</small>
+                        <div id="heading_block" class="panel-heading col-lg-3 col-md-4">
+                            <div>
+                                <small>
+                                    <span>作者: </span>{{ $article->created_by ? $article->user_created_by->name : '无名' }}
+                                </small>
+                            </div>
+                            <div>
+                                <small><span>完成日期: </span>{{ $article->created_at }}</small>
+                            </div>
+                            <div>
+                                <small><span>文章状态: </span>@if ($article->published == 1 || $article->published == 0) 草稿
+                                    @elseif($article->published == 2) 申请审查
+                                    @elseif($article->published == 3) 已经审查
+                                    @elseif($article->published == 4) 发布 @endif</small>
+                            </div>
+                            <div>
+                                <small>{{ $article->top ? '置顶' : ''  }}</small>
+                            </div>
                         </div>
                     </div>
 
