@@ -26,7 +26,7 @@
    case 'draft': break;
    }
 @endphp
-displaying not = {{ count($statusCheck) }}
+
 @if (count($statusCheck) <= 0 && $displayForm)
     {{--@if (count($statusCheck) <= 0 && $currentUser->hasRole('adv_editor'))--}}
         <h3>{{ $reviewTitle }}:</h3>
