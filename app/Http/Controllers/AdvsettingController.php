@@ -293,4 +293,17 @@ class AdvsettingController extends Controller
     $advSettings = AdvSetting::where('position_id', $id)->paginate(15);
     return view('advsetting/index', ['advsettings' => $advSettings, 'types'=>$types, 'positions'=>$positions, 'categories'=>$categories]);
   }
+
+    public function checktop($id)
+    {
+        $totalTop = 0;
+        $advSettings = AdvSetting::where('top', 1)->get();
+        $articles = Article::where('top', 1)->get();
+        $totalTop = count($articles) + count($advSettings);
+
+        if ($totalTop > 6) {
+            return json_encode('error');
+        }
+        return json_encode('success');
+    }
 }

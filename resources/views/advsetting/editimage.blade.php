@@ -114,7 +114,7 @@
             jQuery('#settop').click(function(){
                 jQuery.ajax({
                     url: '/admin/advsetting/checktop',
-                    data: {{ $advSettings->id }} ,
+                    type: "GET",
                     success: function(data){
                         if (data.error) {
                             jQuery('#settop_error').html('文章或广告已达置顶上限.');
