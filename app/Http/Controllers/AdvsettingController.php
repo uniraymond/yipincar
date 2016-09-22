@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\AdvPosition;
 use App\AdvType;
+use App\Article;
 use App\ArticleResources;
 use App\ArticleStatus;
 use App\ArticleStatusCheck;
@@ -228,6 +229,13 @@ class AdvsettingController extends Controller
     $advSetting->links = $request['links'];
     $advSetting->published_at = date('Y-m-d');
     $advSetting->created_by = $authuser->id;
+      if (isset($request['status'])) {
+          $advSetting->status = $request['status'];
+      }
+
+      if (isset($request['top'])) {
+          $advSetting->top = $request['top'];
+      }
     $advSetting->save();
 
     $request->session()->flash('status', '成功更新广告');
@@ -267,6 +275,8 @@ class AdvsettingController extends Controller
       $advSetting->description = $request['description'];
       $advSetting->order = $request['order'];
       $advSetting->links = $request['links'];
+      $advSetting->status = $request['status'];
+      $advSetting->top = $request['top'];
       $advSetting->published_at = date('Y-m-d');
       $advSetting->created_by = $authuser->id;
       $advSetting->save();
@@ -294,7 +304,7 @@ class AdvsettingController extends Controller
     return view('advsetting/index', ['advsettings' => $advSettings, 'types'=>$types, 'positions'=>$positions, 'categories'=>$categories]);
   }
 
-    public function checktop($id)
+    public function checktop()
     {
         $totalTop = 0;
         $advSettings = AdvSetting::where('top', 1)->get();
@@ -302,8 +312,10 @@ class AdvsettingController extends Controller
         $totalTop = count($articles) + count($advSettings);
 
         if ($totalTop > 6) {
-            return json_encode('error');
+            $arr = array('status'=>'faild');
+            return response()->Json($arr);
         }
-        return json_encode('success');
+        $arr = array('status'=>'success');
+        return response()->Json($arr);
     }
 }

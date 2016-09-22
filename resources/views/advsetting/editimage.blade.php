@@ -87,10 +87,12 @@
                         </div>
                     @endif
 
+                    <div class="clearfix"></div>
 
                     <div>
+                        <div id="settop_error" class="alert-danger"></div>
+                        <div class="clearfix"></div>
                         <label class="col-md-3 published_label" for="top">
-                            <span id="settop_error"></span>
                             <input id="settop" class="top" type="checkbox" name="top" {{ $advSettings->top ? 'checked' : '' }} /> 置顶
                         </label>
                     </div>
@@ -116,9 +118,10 @@
                     url: '/admin/advsetting/checktop',
                     type: "GET",
                     success: function(data){
-                        if (data.error) {
-                            jQuery('#settop_error').html('文章或广告已达置顶上限.');
-                            jQuery('#settop').disable().val('0');
+                        console.log(data.status);
+                        if (data.status == 'faild') {
+                            jQuery('#settop_error').html('文章或广告已达置顶上限.').delay(3000).fadeOut('slow');;
+                            jQuery('#settop').prop("disabled", true).prop('checked', false).val(0);
                         }
                     }
                 });
