@@ -87,7 +87,7 @@
 
                         @if( Auth::user()->hasAnyRole(['editor', 'auth_editor']) )
                             <div>
-                                <label class="col-md-3 published_label">
+                                <label class="col-md-3 published_label" for="published">
                                     <input class="published" type="checkbox" name="published"  /> 提交审查
                                 </label>
                             </div>

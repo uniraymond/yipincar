@@ -61,11 +61,11 @@
                             </div>
                         </div>
                     </div>
-                    @if ( Null !== Auth::user() && $advsetting->created_by == Auth::user()->id || Auth::user()->hasAnyRole(['super_admin', 'admin', 'chef_editor', 'main_editor', 'adv_editor']) )
+                    @if ( Null !== Auth::user() && $advsetting->created_by == Auth::user()->id || Auth::user()->hasAnyRole(['super_admin', 'admin', 'chef_editor', 'adv_editor']) )
                         <div class="col-lg-4 col-md-4 col-sm-4 edit_article pull-right clearfix">
                             {{--<a id="pv" class="inline cboxElement btn btn-primary" href="{{ url('/admin/advsetting/'.$advsetting->id.'/preview') }}">预览</a>--}}
                             {{--<a id="pv" class="inline cboxElement btn btn-primary" href="#preview">预览</a>--}}
-                            @if ( Null !== Auth::user() && $advsetting->created_by == Auth::user()->id && ($advsetting->status == 1 || $advsetting->status == 0) || Auth::user()->hasAnyRole(['super_admin', 'admin', 'chef_editor', 'main_editor']))
+                            @if ( Null !== Auth::user() && $advsetting->created_by == Auth::user()->id && ($advsetting->status == 1 || $advsetting->status == 0) || Auth::user()->hasAnyRole(['super_admin', 'admin', 'chef_editor', 'adv_editor']))
                                 {{ link_to('/admin/advsetting/editimage/'.$advsetting->id, '编辑', ['class'=>'btn btn-primary']) }}
                             @endif
                         </div>

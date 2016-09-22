@@ -79,6 +79,21 @@
                         @endforeach
                     </select>
 
+                    @if( Auth::user()->hasAnyRole(['adv_editor']) )
+                        <div>
+                            <label class="col-md-3 published_label" for="status">
+                                <input class="status" type="checkbox" name="status" {{ $advSettings->status > 1 ? 'checked' : '' }} /> 提交审查
+                            </label>
+                        </div>
+                    @endif
+
+
+                    <div>
+                        <label class="col-md-3 published_label" for="top">
+                            <input id="settop" class="top" type="checkbox" name="top" {{ $advSettings->top ? 'checked' : '' }} /> 置顶
+                        </label>
+                    </div>
+
                     {!! Form::token() !!}
                     {!! Form::text('id', $advSettings->id, array('hidden', 'readonly')) !!}
                     <div class="clearfix"></div>
