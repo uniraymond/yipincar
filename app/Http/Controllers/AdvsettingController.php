@@ -30,7 +30,7 @@ class AdvsettingController extends Controller
     $types = AdvType::all();
     $positions = AdvPosition::all();
     $categories = Category::where('category_id', '<>', 0)->get();
-    $advSettings = AdvSetting::where('type_id', '<>', 0)->paginate(15);
+    $advSettings = AdvSetting::where('type_id', '<>', 0)->orderBy('top', 'desc')->orderBy('created_at', 'desc')->paginate(15);
       $totalAdvs = AdvSetting::count();
     return view('advsetting/index', ['advsettings' => $advSettings, 'types'=>$types, 'positions'=>$positions, 'categories'=>$categories, 'totalAdvs'=>$totalAdvs]);
   }

@@ -25,6 +25,7 @@
                     <table class="table">
                         <thead>
                             <tr>
+                                <th>置顶</th>
                                 <th>标题</th>
                                 <th>位置</th>
                                 <th>类型</th>
@@ -38,6 +39,7 @@
                             <tbody>
                                 @foreach($advsettings as $advsetting)
                                     <tr>
+                                        <td>{{ $advsetting->top ? '置顶' : '' }}</td>
                                         <td><a href="{{ url('/admin/advsetting/show/'.$advsetting->id) }}" class="">{{ str_limit($advsetting->title, 20) }}</a> </td>
                                         <td><span>{{ $advsetting->adv_positions->name }}</span></td>
                                         <td><span>{{ $advsetting->adv_types->name }}</span></td>
