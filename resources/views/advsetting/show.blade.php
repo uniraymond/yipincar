@@ -60,7 +60,7 @@
                                 <div class="list-group-item list-group-item-action">
                                     链接: {{ $advsetting->links }} </div>
                                 <div class="list-group-item list-group-item-action">
-                                    链接: {{ $advsetting->categories->name }} </div>
+                                    栏目: {{ $advsetting->categories->name }} </div>
                             </div>
                         </div>
                     </div>

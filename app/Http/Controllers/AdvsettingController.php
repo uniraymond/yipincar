@@ -31,7 +31,8 @@ class AdvsettingController extends Controller
     $positions = AdvPosition::all();
     $categories = Category::where('category_id', '<>', 0)->get();
     $advSettings = AdvSetting::where('type_id', '<>', 0)->paginate(15);
-    return view('advsetting/index', ['advsettings' => $advSettings, 'types'=>$types, 'positions'=>$positions, 'categories'=>$categories]);
+      $totalAdvs = AdvSetting::count();
+    return view('advsetting/index', ['advsettings' => $advSettings, 'types'=>$types, 'positions'=>$positions, 'categories'=>$categories, 'totalAdvs'=>$totalAdvs]);
   }
 
 //  public function type(Request $request, $typeId)
@@ -215,6 +216,7 @@ class AdvsettingController extends Controller
     $authuser = $request->user();
 
     $this->validate($request, [
+        'links' => 'required',
         'id' => 'required',
     ]);
 
@@ -245,6 +247,7 @@ class AdvsettingController extends Controller
   public function uploadimage(Request $request)
   {
     $this->validate($request, [
+        'links' => 'required',
         'images' => 'required',
     ]);
     $authuser = $request->user();

@@ -60,7 +60,7 @@
                     </table>
                 @endif
                 <div class="col-lg-12 col-md-12 col-sm-12 clearfix">
-                    {!! $advsettings->links() !!}
+                    <span class="totalpage pagination">广告总数：{{ ($totalAdvs) }}篇</span>  {!! $advsettings->links() !!}
                 </div>
             </div>
         </div>

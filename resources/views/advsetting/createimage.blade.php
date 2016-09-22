@@ -63,8 +63,13 @@
           </select>
           <div class="clearfix"></div>
 
-          {!! Form::label('links', '链接', array('class'=>'col-md-12')) !!}
-          {!! Form::text('links', '', array('class' => 'input col-md-12 form-control', 'placeholder' => '链接')) !!}
+            @if ($errors->has('links'))
+                <span class="help-block">
+                <strong>{{ $errors->first('links') ? '链接不能为空' : '' }}</strong>
+            </span>
+            @endif
+          {!! Form::label('links', '链接*', array('class'=>'col-md-12')) !!}
+          {!! Form::text('links', '', array('class' => 'input col-md-12 form-control', 'placeholder' => '链接', 'required'=>'required')) !!}
           <div class="clearfix"></div>
 
           {{--{!! Form::label('published_at', '开始显示日期', array('class'=>'col-md-12')) !!}--}}
