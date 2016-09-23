@@ -2,14 +2,17 @@
 @include('layouts.contentSideBar')
 {{--@include('articles.sidebarCategory',['categories'=>$categories, 'types'=>$types, 'tag'=>$tags, 'currentAction'=>$currentAction])--}}
 @section('content')
+    {!! Form::open(array('url' => 'admin/article/groupupdate', 'class'=>'form', 'method'=>'POST')) !!}
+    {!! Form::token() !!}
     <div id="page-wrapper">
         <div class="row">
             <div class="col-lg-12">
                 <h1 class="page-header">文章</h1>
 
                 {{--new blog link--}}
-                <div class="col-lg-2 col-md-2 col-sm-2 pull-right clearfix">
+                <div class="col-lg-2 col-md-3 col-sm-4 pull-right clearfix">
                     {{ link_to('admin/article/create', '新建', ['class'=>'btn btn-default']) }}
+                    <input class="btn btn-primary" type="submit" value="保存" />
                 </div>
 
                 {{--flash alert--}}
@@ -25,6 +28,7 @@
                     <table class="table table-striped">
                         <thead>
                         <tr>
+                            <th>置顶</th>
                             <th>文章</th>
                             <th>栏目</th>
                             <th>类型</th>
@@ -38,11 +42,10 @@
                             <th>文章状态</th>
                         </tr>
                         </thead>
-                        {!! Form::open(array('url' => 'admin/article/groupupdate', 'class'=>'form', 'method'=>'POST')) !!}
-                        {!! Form::token() !!}
                         <tbody>
                         @foreach($articles as $article)
                             <tr>
+                                <td>{{ $article->top ? '置顶' : '' }}</td>
                                 <td>{{ link_to('admin/article/'.$article->id, str_limit($article->title, 20)) }}</td>
                                 <td>{{ $article->categories->name }}</td>
                                 <td>{{ $article->article_types->name }}</td>
@@ -77,7 +80,7 @@
                                     <td></td>
                                 @endif
                                 <td>
-                                    @if ($article->published == 1) 草稿
+                                    @if ($article->published == 1 || $article->published == 0) 草稿
                                     @elseif($article->published == 2) 申请审查
                                     @elseif($article->published == 3) 已经审查
                                     @elseif($article->published == 4) 发布 @endif
@@ -86,14 +89,14 @@
                         @endforeach
                         @if ( Null !== Auth::user() )
                             <tr>
-                                <td colspan="7"> </td>
-                                <td>
+                                <td colspan="6"> </td>
+                                <td colspan="3">
+{{--                                    {{ link_to('admin/article/create', '新建', ['class'=>'btn btn-default']) }}--}}
                                     <input class="btn btn-primary" type="submit" value="保存" />
                                 </td>
                             </tr>
                         @endif
                         </tbody>
-                        {!! Form::close() !!}
                     </table>
                 @else
                     <div class="col-lg-12 col-md-12 col-sm-12 clearfix">
@@ -101,9 +104,10 @@
                     </div>
                 @endif
             </div>
-        </div>
-        <div class="col-lg-12 col-md-12 col-sm-12 clearfix">
-            {!! $articles->links() !!}
+            <div class="col-lg-12 col-md-12 col-sm-12 clearfix">
+               <span class="totalpage pagination">文章总数：{{ ($totalArticle) }}篇</span>   {!! $articles->links() !!}
+            </div>
         </div>
     </div>
+    {!! Form::close() !!}
 @endsection

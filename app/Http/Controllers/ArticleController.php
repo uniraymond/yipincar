@@ -33,12 +33,13 @@ class ArticleController extends Controller
     $currentAction = false;
 
       if ($authuser->hasAnyRole(['super_admin', 'admin', 'chef_editor', 'main_editor', 'adv_editor'])) {
-          $articles = Article::orderBy('created_at', 'desc')->paginate(15);
-//      } else ($authuser->hasAnyRole(['auth_editor', 'editor'])) {
+          $articles = Article::orderBy('top', 'desc')->orderBy('created_at', 'desc')->paginate(15);
+          $totalArticle = Article::count();
       } else  {
-          $articles = Article::where('created_by', $authuser->id)->orderBy('created_at', 'desc')->paginate(15);
+          $articles = Article::where('created_by', $authuser->id)->orderBy('top', 'desc')->orderBy('created_at', 'desc')->paginate(15);
+          $totalArticle = Article::where('created_by', $authuser->id)->count();
       }
-    return view('articles/index', ['articles'=>$articles, 'categories'=>$categories, 'types'=>$types, 'tags'=>$tags, 'currentAction'=>$currentAction]);
+    return view('articles/index', ['articles'=>$articles, 'categories'=>$categories, 'types'=>$types, 'tags'=>$tags, 'currentAction'=>$currentAction, 'totalArticle'=>$totalArticle]);
   }
 
   public function activedList(Request $request)
@@ -166,10 +167,11 @@ class ArticleController extends Controller
     ]);
 
     $title = $request->input('title');
-    $content = trim($request['content']);
+    $content = strip_tags(trim($request['content']), "<img><p><b><b/><b /><img");
     $description = $request['description'] ? $request['description'] : trim(substr($content, 0, 20));
 //    $typeId = $request['type_id'];
     $categoryId = $request['category_id'];
+
       if ($request['published']) {
           $published = 2;
       }
@@ -209,8 +211,18 @@ class ArticleController extends Controller
           $article->type_id = 1;
       }
     $article->category_id = $categoryId;
+      $article->top = $request['top'] ? 1 : 0;
 //    $article->published = $published;
     $article->save();
+
+      if ($request['published']) {
+          $articleStatusCheck = new ArticleStatusCheck();
+          $articleStatusCheck->article_id = $article->id;
+          $articleStatusCheck->article_status_id = 2;
+          $articleStatusCheck->checked = $published;
+          $articleStatusCheck->created_by = $authuser->id;
+          $articleStatusCheck->save();
+      }
 
     $log['target'] = '"article_title":'. $article->title. ';';
     $log['target'] .= '"article_content":'. $article->content . ';';
@@ -358,7 +370,7 @@ class ArticleController extends Controller
     ]);
 
     $title = $request->input('title');
-    $content = trim($request['content']);
+    $content = strip_tags(trim($request['content']), "<img><p><b><b/><b /><img");
     $description = $request['description'] ? $request['description'] : trim(substr($content, 0, 20));
     $typeId = $request['type_id'];
     $categoryId = $request['category_id'];
@@ -393,6 +405,15 @@ class ArticleController extends Controller
     $article->published = $published;
     $article->save();
 
+      if ($request['published']) {
+          $articleStatusCheck = new ArticleStatusCheck();
+          $articleStatusCheck->article_id = $article->id;
+          $articleStatusCheck->article_status_id = 2;
+          $articleStatusCheck->checked = $published;
+          $articleStatusCheck->created_by = $authuser->id;
+          $articleStatusCheck->save();
+      }
+
     $allTagArray = array();
     $allTags = Tags::all();
     foreach ($allTags as $allTag) {
@@ -425,7 +446,7 @@ class ArticleController extends Controller
     foreach ($files as $file) {
       $image_links[] = $file->link;
       $image_names[] = $file->name;
-      if (strpos($article->content, $file->link) !== 0 ) {
+      if (false !== strpos($article->content, $file->link) ) {
         $article->resources()->attach($file->id);
         break;
       }

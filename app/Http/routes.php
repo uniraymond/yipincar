@@ -67,14 +67,18 @@ Route::group(['middleware'=>'auth', 'prefix'=>'admin'], function() {
     
     Route::get('advsetting/list', 'AdvsettingController@index');
     Route::get('advsetting/type/{typeId}', 'AdvsettingController@type');
+    Route::get('advsetting/show/{id}', 'AdvsettingController@show');
     Route::get('advsetting/position/{positionId}', 'AdvsettingController@position');
-
-    Route::get('api/category', 'CategoryController@index');
     Route::get('advsetting/editimage/{id}', 'AdvsettingController@edit');
     Route::post('advsetting/update', 'AdvsettingController@update');
     Route::post('advsetting/updateimage', 'AdvsettingController@updateimage');
     Route::get('advsetting/createimage', 'AdvsettingController@create');
     Route::put('advsetting/uploadimage', 'AdvsettingController@uploadImage');
+    Route::put('advsetting/review/{articleId}', 'AdvsettingController@newreview');
+    Route::post('advsetting/review/{articleId}/edit/{id}', 'AdvsettingController@editreview');
+    Route::get('advsetting/checktop', 'AdvsettingController@checktop');
+
+    Route::get('api/category', 'CategoryController@index');
     Route::get('/', 'ArticleController@index');
     Route::get('statistics', 'DashboardController@index');
     Route::put('article', 'ArticleController@store');
@@ -88,17 +92,19 @@ Route::group(['middleware' => 'auth'], function () {
 
 Route::group(['prefix'=>'api'], function() {
     Route::resource('info', 'InfoController');
+    Route::get('initinfo/{userid?}/{uid?}', 'InfoController@loadInitInfo');
     Route::get('articlelist/{category?}/{artlast?}/{advlast?}/{page?}', 'InfoController@getArticleList');
-    Route::get('articlelist/{category?}/{$artlast?}/{$advlast}/{page?}', 'InfoController@getArticleList');
+    Route::get('advert/{uid?}', 'InfoController@getAdvert');
     Route::get('comments/{articleid?}/{lastid?}/{page?}/{limit?}', 'InfoController@getCommentList');
-    Route::get('recomments/{keys?}/{lastid?}', 'InfoController@getRecommendList');
+    Route::get('recommands/{articleid?}/{excludeids?}', 'InfoController@getRecommendList');
     Route::get('subscribes/{userid?}/{lastid?}/{page?}/{limit?}', 'InfoController@getSubscribeList');
-    Route::get('searcharticles/{key?}/{category?}', 'InfoController@searchArticles');
+    Route::any('searcharticles', 'InfoController@searchArticles');
     Route::any('comment', 'InfoController@releaseComment');
     Route::any('delcomment', 'InfoController@deleteComment');
     Route::any('approvearticle', 'InfoController@approveArticle');
     Route::any('approvecomment', 'InfoController@approveComment');
-//    Route::any('upname', 'InfoController@updateName');
+    Route::get('subscribearticles/{authorid?}/{lastid?}/{page?}/{limit?}', 'InfoController@getSubscribeArticleList');
+    Route::get('collectarticles/{userid?}/{lastid?}/{page?}/{limit?}', 'InfoController@getCollectArticleList');
     Route::any('collect', 'InfoController@collectArticle');
     Route::any('delcollect', 'InfoController@deleteCollection');
     Route::any('subscribe', 'InfoController@subscribe');

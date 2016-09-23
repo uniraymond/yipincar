@@ -27,7 +27,7 @@ class CreateArticlesTable extends Migration
             $table->date('publish_date');
             $table->date('close_date');
             $table->timestamp('created_at')->default(\DB::raw('CURRENT_TIMESTAMP'));
-            $table->timestamp('updated_at');
+            $table->timestamp('updated_at')->default(\DB::raw('CURRENT_TIMESTAMP'));
             $table->integer('updated_by')->references('id')->on('users')->onDelete('cascade');
             $table->integer('created_by')->references('id')->on('users')->onDelete('cascade');
         });

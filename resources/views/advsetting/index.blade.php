@@ -25,10 +25,11 @@
                     <table class="table">
                         <thead>
                             <tr>
+                                <th>置顶</th>
                                 <th>标题</th>
                                 <th>位置</th>
                                 <th>类型</th>
-                                <th>日期</th>
+                                {{--<th>日期</th>--}}
                                 <th>顺序</th>
                                 <th>删除</th>
                                 <th>编辑</th>
@@ -38,10 +39,11 @@
                             <tbody>
                                 @foreach($advsettings as $advsetting)
                                     <tr>
-                                        <td>{{ str_limit($advsetting->title, 20) }}</td>
+                                        <td>{{ $advsetting->top ? '置顶' : '' }}</td>
+                                        <td><a href="{{ url('/admin/advsetting/show/'.$advsetting->id) }}" class="">{{ str_limit($advsetting->title, 20) }}</a> </td>
                                         <td><span>{{ $advsetting->adv_positions->name }}</span></td>
                                         <td><span>{{ $advsetting->adv_types->name }}</span></td>
-                                        <td><span>{{ date('Y-m-d', strtotime($advsetting->published_at)) }}</span></td>
+{{--                                        <td><span>{{ date('Y-m-d', strtotime($advsetting->published_at)) }}</span></td>--}}
 {{--                                        <td>{{ $advsetting->order }}</td>--}}
                                         <td><input type="text" name="order[{{ $advsetting->id }}]" value="{{ $advsetting->order }}" style="width:30px;"/></td>
                                         <td><input type="checkbox" name="delete[{{ $advsetting->id }}]" ng-click="confirmDelete('{{ $advsetting->id }}')"/></td>
@@ -59,9 +61,9 @@
                         {!! Form::close() !!}
                     </table>
                 @endif
-            </div>
-            <div class="col-lg-12 col-md-12 col-sm-12 clearfix">
-                {!! $advsettings->links() !!}
+                <div class="col-lg-12 col-md-12 col-sm-12 clearfix">
+                    <span class="totalpage pagination">广告总数：{{ ($totalAdvs) }}篇</span>  {!! $advsettings->links() !!}
+                </div>
             </div>
         </div>
     </div>

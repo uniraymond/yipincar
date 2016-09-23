@@ -3,19 +3,22 @@
 namespace App\Http\Controllers;
 
 use App\Article;
+use App\ArticleTags;
 use App\Comment;
 use App\Profile;
 use App\User;
 use App\Zan;
-use App\Collection;
+use App;
 use App\Taboo;
 
 use Illuminate\Http\Request;
 use Intervention\Image\Facades\Image;
 //use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Collection;
 
 use App\Http\Requests;
 use DB;
+use phpDocumentor\Reflection\DocBlock\Tag;
 
 class InfoController extends Controller
 {
@@ -82,8 +85,8 @@ class InfoController extends Controller
 //        $approved = $info->approved()->count();
         $info['comment'] = $this ->getCommentList($info['id'], 0, 1, 10);
 //        $info['approved'] = $approved;
-        $zan = $info->zan()->count();
-        $info['zan'] = $zan;
+//        $zan = $info->zan()->count();
+        $info['zan'] = $this ->articleApprovedCount($id);
 
         return response()->json($info);
     }
@@ -122,8 +125,34 @@ class InfoController extends Controller
         //
     }
 
+    public function loadInitInfo($userid, $uid) {
+        $user = array();
+        if($userid) {
+            $user = User::select('*')
+                ->where('id', $userid)
+                ->get();
+        } else {
+            $user = User::select('*')
+                ->where('uid', $uid)
+                ->orderBy('id', 'desc')
+                ->take(1)
+                ->get();
+        }
+        return ['user' => $user,
+                'advert' => $this ->getAdvert(1, 1)];
+    }
+
+    public function getAdvert($position, $limit) {
+        $advert = App\AdvSetting::join('resources', 'resources.id', '=', 'adv_settings.resource_id')
+            ->select('adv_settings.*', 'resources.name as resourceName', 'resources.link as resourceLink')
+            ->where('position_id', $position)
+            ->orderBy('published_at', 'desc')
+            ->take($limit) ->get();
+        return $advert;
+    }
+
     public function getArticleList($category, $artlast, $advlast, $page) {
-        $limit = $category < 8 ? 7 :10;
+        $limit = 10;//$category < 8 ? 7 :10;
         $from = ($page -1) * $limit;
 
         $articles = Article::join('categories', 'articles.category_id', '=', 'categories.id')
@@ -133,21 +162,19 @@ class InfoController extends Controller
             ->join('users', 'users.id', '=', 'articles.created_by')
             ->select('articles.id', 'articles.title', 'categories.name as categoryName', 'articles.category_id', 'article_types.name as articletypeName'
                 , 'articles.created_at' , 'resources.link as resourceLink', 'resources.name as resourceName', 'users.name as userName')
-            ->where('articles.category_id', '=', $category)
-            ->where('articles.published', '=', 0)
+//            ->where('articles.published', '=', 0)
             ->orderBy('articles.created_at', 'desc')
             ->skip($from)
             ->take($limit);
 
+        if($category != 3)
+            $articles = $articles ->where('articles.category_id', '=', $category);
 
-        if($artlast && $artlast > 0)
+        if($page != 1 && $artlast && $artlast > 0)
             $articles = $articles->where('articles.id', '<=', $artlast);
 
         $articles = $articles->get();
 
-//        $resources = DB::table('resources')
-//            ->join('article_resources', 'resources.id', '=', 'article_resources.resource_id');
-//        $articles['resource'] = $resources;
 
         if($category < 8) {
             $adverts = Article::join('categories', 'articles.category_id', '=', 'categories.id')
@@ -180,75 +207,129 @@ class InfoController extends Controller
         if (!$lastid) $lastid = 0;
         $from = ($page -1) * $limit;
 
-        $articles = Comment::join('users', 'comments.created_by', '=', 'users.id')
+        $comments = Comment::join('users', 'comments.created_by', '=', 'users.id')
+//            ->leftJoin('zans', 'comments.id', '=', 'zans.comment_id')
             ->join('profiles', 'users.profile_id', '=', 'profiles.id')
             ->select('comments.*', 'users.name as userName', 'profiles.icon_uri as userIcon')
             ->where('comments.article_id', '=', $articleid)
-            ->where('comments.id', '<=', $lastid)
-            ->where('comments.published', '=', 1)
+            ->where('comments.banned', '=', 0)
             ->orderBy('created_at', 'desc')
             ->skip($from)
-            ->take($limit)
-            ->get();
-//        echo $articles;
-        return $articles;
+            ->take($limit);
+        if($lastid > 0)
+            $comments = $comments ->where('comments.id', '<=', $lastid);
+        $comments = $comments ->get();
+        foreach ($comments as $comment) {
+            $comment['zan'] = $this ->commentApprovedCount($comment['id']);//Zan::select('id')->where('comment_id', $comment['id'])->count();
+        }
+        return $comments;
     }
 
-    //if lastid == 0, it should be first page requst,
-    // else there should only one key for more recommand
-    public function getRecommendList($keys, $lastid) {
-//        $articleArray = array();
-        if(!$lastid || $lastid == 0) {
-            $artCollection = new Collection([]);
-            $keysArray = explode(' ', $keys);
-            $countKeys = count($keysArray);
-            $limitLeft = 5;
-            for ($i=0; $i < $countKeys; $i++) {
-                $key = $keysArray[$i];
-//                $likeKey = '%'.$key.'%';
-                $limit = ceil($limitLeft/($countKeys - $i));//$countKeys >= (5 - $i) ? 1 : (5 - $countKeys + 1 - $i);
-                $limitLeft = $limitLeft - $limit;
+    public function getRecommendList($articleid, $excludeids) {
+        $keys = ArticleTags::select('tag_id') ->where('article_id', $articleid) ->get();
+        $exArray = explode(',', $excludeids);
 
-                $articles = Article::join('article_tags', 'article_tags.article_id', '=', 'articles.id')
-                    ->join('categories', 'articles.category_id', '=', 'categories.id')
-                    ->join('tags', 'article_tags.tag_id', '=', 'tags.id')
-                    ->join('article_types', 'articles.type_id', '=', 'article_types.id')
-                    ->select('articles.id', 'articles.title', 'categories.name as categoryName', 'article_types.name as articletypeName'
-                        , 'articles.created_at', 'article_tags.id as tagid')
-                    ->where('articles.published', '=', 0)
-                    ->where('tags.name', '=', $key)
-                    ->orderBy('articles.created_at', 'desc')
-                    ->take($limit)
-                    ->get();
-                if($articles && count($articles)) //$artCollection = get_class($articles);
-//                    $artCollection -> push($articles);
-                    foreach($articles as $article)
-                        $artCollection->push($article);
-                return $artCollection;
-            }
-        } else {
+        $limit = 5;
+        $artCollection = new Collection([]);
+        for ($i=0; $i < count($keys); $i++) {
+            $tagid = $keys[$i]['tag_id'];
             $articles = Article::join('article_tags', 'article_tags.article_id', '=', 'articles.id')
                 ->join('categories', 'articles.category_id', '=', 'categories.id')
-                ->join('tags', 'article_tags.tag_id', '=', 'tags.id')
+//                    ->join('tags', 'article_tags.tag_id', '=', 'tags.id')
+                ->join('users', 'users.id', '=', 'articles.created_by')
+                ->leftJoin('article_resources', 'articles.id', '=', 'article_resources.article_id')
+                ->leftJoin('resources', 'resources.id', '=', 'article_resources.resource_id')
                 ->join('article_types', 'articles.type_id', '=', 'article_types.id')
-                ->select('articles.id', 'articles.title', 'categories.name as categoryName', 'article_types.name as articletypeName'
-                    , 'articles.created_at', 'article_tags.id as tagid')
-                ->where('articles.published', '=', 0)
-                ->where('tags.name', '=', $keys)
-                ->where('article_tags.id', '<', $lastid)
+                ->select('articles.id', 'articles.title', 'categories.name as categoryName', 'articles.category_id', 'article_types.name as articletypeName'
+                    , 'articles.created_at' , 'resources.link as resourceLink', 'resources.name as resourceName', 'users.name as userName')
+//                  ->where('articles.published', '=', 0)
+                    ->where('article_tags.tag_id', '=', $tagid)
+                ->whereNotIn('articles.id', $exArray)
                 ->orderBy('articles.created_at', 'desc')
-                ->take(5)
-                ->get();
-            return $articles;
+                    ->take($limit)
+                    ->get();
+            foreach($articles as $article) {
+                array_push($exArray, $article['id']);
+//                $excludeids = $excludeids.','.$article['id'];
+            }
+            if(sizeof($articles))
+                $artCollection->push($articles);
         }
+        $recommands = new Collection([]);
+        if(sizeof($artCollection)) {
+            for($j=0; $j < $limit ; $j++) {
+                foreach($artCollection as $articles) {
+                    if(sizeof($articles) > $j) {
+                        $recommands ->push($articles[$j]);
+                    }
+                    if(sizeof($recommands) == 5) break;
+                }
+                if(sizeof($recommands) == 5) break;
+            }
+        }
+        return ['recommand' => $recommands];
     }
+
+//    //if lastid == 0, it should be first page requst,
+//    // else there should only one key for more recommand
+//    public function getRecommendList($keys, $lastid, $excludeids) {
+////        $articleArray = array();
+//
+//        if(!$lastid || $lastid == 0) {
+//            $artCollection = new Collection([]);
+//            $keysArray = explode(' ', $keys);
+//            $countKeys = count($keysArray);
+//            $limitLeft = 5;
+//            for ($i=0; $i < $countKeys; $i++) {
+//                $key = $keysArray[$i];
+////                $likeKey = '%'.$key.'%';
+//                $limit = ceil($limitLeft/($countKeys - $i));//$countKeys >= (5 - $i) ? 1 : (5 - $countKeys + 1 - $i);
+//                $limitLeft = $limitLeft - $limit;
+//
+//                $articles = Article::join('article_tags', 'article_tags.article_id', '=', 'articles.id')
+//                    ->join('categories', 'articles.category_id', '=', 'categories.id')
+//                    ->join('tags', 'article_tags.tag_id', '=', 'tags.id')
+//                    ->join('article_types', 'articles.type_id', '=', 'article_types.id')
+//                    ->select('articles.id', 'articles.title', 'categories.name as categoryName', 'article_types.name as articletypeName'
+//                        , 'articles.created_at', 'article_tags.id as tagid')
+//                    ->where('articles.published', '=', 0)
+//                    ->where('tags.name', '=', $key)
+//                    ->orderBy('articles.created_at', 'desc')
+//                    ->take($limit);
+//                if($excludeids && strlen($excludeids)) {
+//                    $articles = $articles ->whereNotIn('articles.id', [$excludeids]);
+//                }
+//                   $articles = $articles ->get();
+//                if($articles && count($articles)) //$artCollection = get_class($articles);
+////                    $artCollection -> push($articles);
+//                    foreach($articles as $article)
+//                        $artCollection->push($article);
+//                return $artCollection;
+//            }
+//        } else {
+//            $articles = Article::join('article_tags', 'article_tags.article_id', '=', 'articles.id')
+//                ->join('categories', 'articles.category_id', '=', 'categories.id')
+//                ->join('tags', 'article_tags.tag_id', '=', 'tags.id')
+//                ->join('article_types', 'articles.type_id', '=', 'article_types.id')
+//                ->select('articles.id', 'articles.title', 'categories.name as categoryName', 'article_types.name as articletypeName'
+//                    , 'articles.created_at', 'article_tags.id as tagid')
+//                ->where('articles.published', '=', 0)
+//                ->where('tags.name', '=', $keys)
+//                ->where('article_tags.id', '<', $lastid)
+//                ->orderBy('articles.created_at', 'desc')
+//                ->take(5)
+//                ->get();
+//            return $articles;
+//        }
+//    }
 
     public function getSubscribeList($userid, $lastid, $page, $limit) {
         $from = ($page -1) * $limit;
-        $subscribe = DB::table('subscribes')
-            ->join('users', 'users.id', '=', 'subscribes.author_id')
-            ->select('users.id', 'users.name', 'users.description', 'users.icon')
-            ->where('subscribes.user_id', $userid)
+        $subscribe = DB::table('user_subscribes')
+            ->leftJoin('users', 'users.id', '=', 'user_subscribes.subscribe_user_id')
+            ->leftJoin('profiles','profiles.user_id' , '=', 'user_subscribes.subscribe_user_id')
+            ->select('users.id', 'users.name', 'profiles.aboutself as description', 'profiles.icon_uri')
+            ->where('user_subscribes.user_id', $userid)
             ->skip($from)
             ->take($limit);
 
@@ -259,7 +340,55 @@ class InfoController extends Controller
         return $subscribe;
     }
 
-    public function searchArticles($key, $category) {
+    public function getSubscribeArticleList($authorid, $lastid, $page, $limit) {
+        $from = ($page -1) * $limit;
+        $articles = Article::join('categories', 'articles.category_id', '=', 'categories.id')
+            ->leftJoin('article_resources', 'articles.id', '=', 'article_resources.article_id')
+            ->leftJoin('resources', 'resources.id', '=', 'article_resources.resource_id')
+            ->join('article_types', 'articles.type_id', '=', 'article_types.id')
+            ->join('users', 'users.id', '=', 'articles.created_by')
+            ->select('articles.id', 'articles.title', 'categories.name as categoryName', 'articles.category_id', 'article_types.name as articletypeName'
+                , 'articles.created_at' , 'resources.link as resourceLink', 'resources.name as resourceName', 'users.name as userName')
+//            ->where('articles.published', '=', 0)
+            ->where('articles.created_by', '=', $authorid)
+            ->orderBy('articles.created_at', 'desc')
+            ->skip($from)
+            ->take($limit);
+
+        if($page != 1 && $lastid && $lastid > 0)
+            $articles = $articles->where('articles.id', '<=', $lastid);
+
+        $articles = $articles->get();
+        return $articles;
+    }
+
+    public function getCollectArticleList($userid, $lastid, $page, $limit) {
+        $from = ($page -1) * $limit;
+        $articles = Article::join('collections', 'collections.article_id', '=', 'articles.id')
+            ->join('categories', 'articles.category_id', '=', 'categories.id')
+            ->leftJoin('article_resources', 'articles.id', '=', 'article_resources.article_id')
+            ->leftJoin('resources', 'resources.id', '=', 'article_resources.resource_id')
+            ->join('article_types', 'articles.type_id', '=', 'article_types.id')
+            ->join('users', 'users.id', '=', 'articles.created_by')
+            ->select('articles.id', 'articles.title', 'articles.category_id', 'article_types.name as articletypeName'
+                , 'articles.created_at' , 'resources.link as resourceLink', 'resources.name as resourceName', 'users.name as userName')
+//            ->where('articles.published', '=', 0)
+            ->where('collections.user_id', '=', $userid)
+            ->orderBy('articles.created_at', 'desc')
+            ->skip($from)
+            ->take($limit);
+
+        if($page != 1 && $lastid && $lastid > 0)
+            $articles = $articles->where('articles.id', '<=', $lastid);
+
+        $articles = $articles->get();
+        return $articles;
+    }
+
+
+    public function searchArticles(Request $request) {
+        $key = $request ->get('key');
+        $category = $request ->get('category');
         $this -> likeKey = '%'.$key.'%';
 
         $articles = Article::join('categories', 'articles.category_id', '=', 'categories.id')
@@ -275,34 +404,40 @@ class InfoController extends Controller
                         $query->where('articles.content', 'like', $this -> likeKey);
                     });
             })
-            ->where('articles.category_id', '=', $category)
-            ->where('articles.published', '=', 0)
+//            ->where('articles.category_id', '=', $category)
+//            ->where('articles.published', '=', 0)
 //            ->where('articles.title'.'articles.content', 'like', $likeKey)
 //            ->orWhere('articles.content', 'like', $likeKey)
-            ->where('articles.type_id', 1)
+//            ->where('articles.type_id', 1)
             ->orderBy('articles.created_at', 'desc')
-            ->take(10)
-            ->get();
+            ->take(10);
+        if($category != 3)
+            $articles = $articles ->where('articles.category_id', '=', $category);
+
+         $articles = $articles ->get();
         return $articles;
     }
 
     public function releaseComment(Request $request) {
         $comment = $request ->get('comment');
-        $taboos = Taboo::all()->get();
+        $taboos = Taboo::select('*')->get();
         foreach($taboos as $taboo) {
             if(strpos($comment, $taboo)) {
                 //set check status
                 break;
             }
         }
-        $comment = Comment::insert(array(
+        $userid = $request ->get('userid');
+        Comment::Insert(array(
             'comment' => $comment,
             //set check status
             'article_id' => $request ->get('articleid'),
-            'created_by' => $request ->get('userid'),
-            'updated_by' => $request ->get('userid')
+            'created_by' => $userid,
+            'updated_by' => $userid
         ));
-        return ['comment' => $comment ? 1 : 0];
+        $comment = Comment::select('*') ->where('created_by', $userid) ->get() ->last();
+        $comment['zan'] = 0;
+        return ['comment' => $comment];
     }
 
     public function deleteComment(Request $request) {
@@ -320,14 +455,20 @@ class InfoController extends Controller
         if($approved != NULL && count($approved) > 0) {
 //            $id = $approved->first()->id;
             Zan::where('id', $approved->first()->id)->delete();
-            return ['approved' => '-1'];
+            return ['approved' => '-1',
+                    'count' => $this ->articleApprovedCount($articleid)];
         } else {
             Zan::insert([
                 'article_id' => $articleid,
                 'uid'        => $uid
             ]);
-            return ['approved' => '+1'];
+            return ['approved' => '+1',
+                'count' => $this ->articleApprovedCount($articleid)];
         }
+    }
+
+    public function articleApprovedCount($articleid) {
+        return Zan::select('id')->where('article_id', $articleid)->count();
     }
 
     public function approveComment(Request $request) {
@@ -339,14 +480,20 @@ class InfoController extends Controller
             ->get();
         if($approved != NULL && count($approved) > 0) {
             Zan::where('id', $approved->first()->id)->delete();
-            return ['approved' => '-1'];
+            return ['approved' => '-1',
+                'count' => $this ->commentApprovedCount($commentid)];
         } else {
             Zan::insert([
                 'comment_id' => $commentid,
                 'uid'        => $uid
             ]);
-            return ['approved' => '+1'];
+            return ['approved' => '+1',
+                'count' => $this ->commentApprovedCount($commentid)];
         }
+    }
+
+    public function commentApprovedCount($commentid) {
+        return Zan::select('id')->where('comment_id', $commentid)->count();
     }
 
 //    public function updateName(Request $request) {
@@ -358,13 +505,13 @@ class InfoController extends Controller
         $userid = $request ->get('userid');
         $articleid = $request ->get('articleid');
 
-        $collection = Collection::select('*')->where('user_id', $userid)
+        $collection = App\Collection::select('*')->where('user_id', $userid)
             ->where('article_id', $articleid)
             ->get();
         if($collection && count($collection)) {
             return ['collection' => -1];
         } else {
-            $collect = Collection::insert([
+            $collect = App\Collection::insert([
                 'user_id'    => $userid,
                 'article_id' => $articleid
             ]);
@@ -374,7 +521,7 @@ class InfoController extends Controller
     }
 
     public function deleteCollection(Request $request) {
-        $collection = Collection::where('id', $request ->get('collectionid'))->where('user_id', $request ->get('userid'))->delete();
+        $collection = App\Collection::where('id', $request ->get('collectionid'))->where('user_id', $request ->get('userid'))->delete();
         return ['delete' => $collection];
     }
 
@@ -398,7 +545,7 @@ class InfoController extends Controller
 
         $subscribe = DB::table('user_subscribes')
             ->select('id')->where('user_id', $userid)
-            ->where('created_by', $authorid)
+            ->where('subscribe_user_id', $authorid)
             ->get();
 //        return $subscribe;
         if($subscribe && count($subscribe)) {
@@ -406,7 +553,9 @@ class InfoController extends Controller
         } else {
             $sub = DB::table('user_subscribes')->insert([
                 'user_id'    => $userid,
-                'created_by' => $authorid
+                'subscribe_user_id' => $authorid,
+                'created_by'    => $userid,
+                'updated_by'    => $userid
             ]);
             return ['subscribe' => $sub ? 1 : 0];
         }
