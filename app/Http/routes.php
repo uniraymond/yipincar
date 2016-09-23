@@ -92,6 +92,7 @@ Route::group(['middleware' => 'auth'], function () {
 
 Route::group(['prefix'=>'api'], function() {
     Route::resource('info', 'InfoController');
+    Route::get('initinfo/{userid?}/{uid?}', 'InfoController@loadInitInfo');
     Route::get('articlelist/{category?}/{artlast?}/{advlast?}/{page?}', 'InfoController@getArticleList');
     Route::get('splashadvert/{uid?}', 'InfoController@getSplashAdvert');
     Route::get('comments/{articleid?}/{lastid?}/{page?}/{limit?}', 'InfoController@getCommentList');

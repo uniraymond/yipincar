@@ -125,6 +125,23 @@ class InfoController extends Controller
         //
     }
 
+    public function loadInitInfo($userid, $uid) {
+        $user = array();
+        if($userid) {
+            $user = User::select('*')
+                ->where('id', $userid)
+                ->get();
+        } else {
+            $user = User::select('*')
+                ->where('uid', $uid)
+                ->orderBy('id', 'desc')
+                ->take(1)
+                ->get();
+        }
+        return ['user' => $user,
+                'advert' => $this ->getSplashAdvert($uid)];
+    }
+
     public function getSplashAdvert($uid) {
         $advert = array();
         if($uid) {
