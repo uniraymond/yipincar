@@ -129,7 +129,7 @@ class InfoController extends Controller
         $advert = array();
         if($uid) {
             $advert = App\AdvSetting::join('resources', 'resources.id', '=', 'adv_settings.resource_id')
-                ->select('title', 'links', 'resources.name as resourceName', 'resources.link as resourceLink')
+                ->select('*', 'resources.name as resourceName', 'resources.link as resourceLink')
                 ->orderBy('published_at', 'desc')
                 ->take(1) ->get();
         }
