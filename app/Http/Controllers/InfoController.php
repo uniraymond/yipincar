@@ -139,17 +139,15 @@ class InfoController extends Controller
                 ->get();
         }
         return ['user' => $user,
-                'advert' => $this ->getSplashAdvert($uid)];
+                'advert' => $this ->getAdvert(1, 1)];
     }
 
-    public function getSplashAdvert($uid) {
-        $advert = array();
-        if($uid) {
-            $advert = App\AdvSetting::join('resources', 'resources.id', '=', 'adv_settings.resource_id')
-                ->select('adv_settings.*', 'resources.name as resourceName', 'resources.link as resourceLink')
-                ->orderBy('published_at', 'desc')
-                ->take(1) ->get();
-        }
+    public function getAdvert($position, $limit) {
+        $advert = App\AdvSetting::join('resources', 'resources.id', '=', 'adv_settings.resource_id')
+            ->select('adv_settings.*', 'resources.name as resourceName', 'resources.link as resourceLink')
+            ->where('position_id', $position)
+            ->orderBy('published_at', 'desc')
+            ->take($limit) ->get();
         return $advert;
     }
 
