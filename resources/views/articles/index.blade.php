@@ -28,6 +28,7 @@
                     <table class="table table-striped">
                         <thead>
                         <tr>
+                            <th>置顶</th>
                             <th>文章</th>
                             <th>栏目</th>
                             <th>类型</th>
@@ -44,6 +45,7 @@
                         <tbody>
                         @foreach($articles as $article)
                             <tr>
+                                <td>{{ $article->top ? '置顶' : '' }}</td>
                                 <td>{{ link_to('admin/article/'.$article->id, str_limit($article->title, 20)) }}</td>
                                 <td>{{ $article->categories->name }}</td>
                                 <td>{{ $article->article_types->name }}</td>

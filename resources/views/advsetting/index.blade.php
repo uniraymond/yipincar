@@ -25,6 +25,7 @@
                     <table class="table">
                         <thead>
                             <tr>
+                                <th>置顶</th>
                                 <th>标题</th>
                                 <th>位置</th>
                                 <th>类型</th>
@@ -38,7 +39,8 @@
                             <tbody>
                                 @foreach($advsettings as $advsetting)
                                     <tr>
-                                        <td>{{ str_limit($advsetting->title, 20) }}</td>
+                                        <td>{{ $advsetting->top ? '置顶' : '' }}</td>
+                                        <td><a href="{{ url('/admin/advsetting/show/'.$advsetting->id) }}" class="">{{ str_limit($advsetting->title, 20) }}</a> </td>
                                         <td><span>{{ $advsetting->adv_positions->name }}</span></td>
                                         <td><span>{{ $advsetting->adv_types->name }}</span></td>
 {{--                                        <td><span>{{ date('Y-m-d', strtotime($advsetting->published_at)) }}</span></td>--}}
@@ -60,7 +62,7 @@
                     </table>
                 @endif
                 <div class="col-lg-12 col-md-12 col-sm-12 clearfix">
-                    {!! $advsettings->links() !!}
+                    <span class="totalpage pagination">广告总数：{{ ($totalAdvs) }}篇</span>  {!! $advsettings->links() !!}
                 </div>
             </div>
         </div>

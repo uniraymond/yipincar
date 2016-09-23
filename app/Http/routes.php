@@ -67,14 +67,18 @@ Route::group(['middleware'=>'auth', 'prefix'=>'admin'], function() {
     
     Route::get('advsetting/list', 'AdvsettingController@index');
     Route::get('advsetting/type/{typeId}', 'AdvsettingController@type');
+    Route::get('advsetting/show/{id}', 'AdvsettingController@show');
     Route::get('advsetting/position/{positionId}', 'AdvsettingController@position');
-
-    Route::get('api/category', 'CategoryController@index');
     Route::get('advsetting/editimage/{id}', 'AdvsettingController@edit');
     Route::post('advsetting/update', 'AdvsettingController@update');
     Route::post('advsetting/updateimage', 'AdvsettingController@updateimage');
     Route::get('advsetting/createimage', 'AdvsettingController@create');
     Route::put('advsetting/uploadimage', 'AdvsettingController@uploadImage');
+    Route::put('advsetting/review/{articleId}', 'AdvsettingController@newreview');
+    Route::post('advsetting/review/{articleId}/edit/{id}', 'AdvsettingController@editreview');
+    Route::get('advsetting/checktop', 'AdvsettingController@checktop');
+
+    Route::get('api/category', 'CategoryController@index');
     Route::get('/', 'ArticleController@index');
     Route::get('statistics', 'DashboardController@index');
     Route::put('article', 'ArticleController@store');

@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use App\AdvPosition;
 use App\AdvType;
+use App\Article;
 use App\ArticleResources;
+use App\ArticleStatus;
+use App\ArticleStatusCheck;
 use App\Category;
 use App\Resource;
 use App\ResourceTypes;
@@ -27,8 +30,9 @@ class AdvsettingController extends Controller
     $types = AdvType::all();
     $positions = AdvPosition::all();
     $categories = Category::where('category_id', '<>', 0)->get();
-    $advSettings = AdvSetting::where('type_id', '<>', 0)->paginate(15);
-    return view('advsetting/index', ['advsettings' => $advSettings, 'types'=>$types, 'positions'=>$positions, 'categories'=>$categories]);
+    $advSettings = AdvSetting::where('type_id', '<>', 0)->orderBy('top', 'desc')->orderBy('created_at', 'desc')->paginate(15);
+      $totalAdvs = AdvSetting::count();
+    return view('advsetting/index', ['advsettings' => $advSettings, 'types'=>$types, 'positions'=>$positions, 'categories'=>$categories, 'totalAdvs'=>$totalAdvs]);
   }
 
 //  public function type(Request $request, $typeId)
@@ -75,6 +79,125 @@ class AdvsettingController extends Controller
     return view('advsetting/editimage', ['advSettings' => $advSettings, 'types'=>$types, 'displayorder'=>$displayorder, 'positions'=>$positions, 'categories'=>$categories]);
   }
 
+    public function show(Request $request, $id)
+    {
+        $allStatusChecks = array();
+        $advsetting = AdvSetting::findorFail($id);
+
+        $articleStatus = $advsetting->article_statuses;
+        $checks = $advsetting->article_status_checks;
+        $allStatuses = ArticleStatus::orderBy('id', 'desc')->get();
+
+        foreach($allStatuses as $status) {
+            $allStatusChecks[$status->name] = $this->getAdvSettingStatusObject($status->id, $id);
+        }
+
+        return view('advsetting/show', ['advsetting'=>$advsetting, 'allStatusChecks'=>$allStatusChecks]);
+    }
+
+    private function getAdvSettingStatusObject($status_id, $adv_setting_id) {
+        $article_status = ArticleStatusCheck::where('article_status_id', $status_id)->where('adv_setting_id', $adv_setting_id)->get();
+        return $article_status;
+    }
+
+    /*
+    *   articleStatusChecked
+     *  article_status_id is the process of review for example if main editor reviewed this value should be 3 - review
+     *  checked is current adv or article status 0,1 is reject; 2 is apply reivew 3. is final reviewed 4. is published
+    */
+    public function newreview(Request $request, $advsettingid)
+    {
+        $authuser = $request->user();
+        $articleStatus = ArticleStatus::where('name', $request['article_status'])->first();
+
+        $articleStatusCheck = new ArticleStatusCheck();
+        $articleStatusCheck->adv_setting_id = $advsettingid;
+        $articleStatusCheck->article_status_id = $articleStatus->id;
+        $articleStatusCheck->comment = $request['comment'];
+        $articleStatusCheck->checked = 1;
+        switch($request['article_status']) {
+            case 'publish':
+                if($request['status']) {
+                    $articleStatusCheck->checked = 4;
+                }
+                break;
+            case 'review':
+                if($request['status']) {
+                    $articleStatusCheck->checked = 3;
+                }
+                break;
+            case 'review_apply':
+                if($request['status']) {
+                    $articleStatusCheck->checked = 2;
+                }
+                break;
+            default:
+                if($request['status']) {
+                    $articleStatusCheck->checked = 2;
+                }
+                break;
+        }
+
+        $articleStatusCheck->created_by = $authuser->id;
+        $articleStatusCheck->save();
+
+        $advsetting = AdvSetting::find($advsettingid);
+        $advsetting->status = $articleStatusCheck->checked;
+        $advsetting->save();
+
+        $request->session()->flash('status', '添加了新的广告评估.');
+        return redirect('admin/advsetting/show/'.$advsettingid);
+    }
+
+    public function editreview(Request $request, $advsettingid, $id)
+    {
+        $allArticleStatus = ArticleStatus::all();
+        foreach ($allArticleStatus as $allAS) {
+            $allStatus[$allAS->id] = $allAS->name;
+        }
+        $authuser = $request->user();
+//    $articleStatus = ArticleStatus::where('name', $request['article_status'])->first();
+        $articleStatusId = array_search($request['article_status'], $allStatus);
+        $statusReview = array_search('review', $allStatus);
+
+        $articleStatusCheck = ArticleStatusCheck::find($id);
+        $articleStatusCheck->comment = $request['comment'];
+        $articleStatusCheck->updated_by = $authuser->id;
+        $articleStatusCheck->checked = 1;
+        switch($request['article_status']) {
+            case 'publish':
+                if($request['status']) {
+                    $articleStatusCheck->checked = 4;
+                }
+                break;
+            case 'review':
+                if($request['status']) {
+                    $articleStatusCheck->checked = 3;
+                }
+                break;
+            case 'review_apply':
+                if($request['status']) {
+                    $articleStatusCheck->checked = 2;
+                }
+                break;
+            default:
+                if($request['status']) {
+                    $articleStatusCheck->checked = 2;
+                }
+                break;
+        }
+
+        $articleStatusCheck->save();
+
+        $article = AdvSetting::find($advsettingid);
+        $article->status =  $articleStatusCheck->checked;
+        $article->save();
+
+        $request->session()->flash('status', '更新了广告评估.');
+        return redirect('admin/advsetting/show/'.$advsettingid);
+    }
+
+
   public function create(Request $request)
   {
     $types = AdvType::all();
@@ -93,6 +216,7 @@ class AdvsettingController extends Controller
     $authuser = $request->user();
 
     $this->validate($request, [
+        'links' => 'required',
         'id' => 'required',
     ]);
 
@@ -107,6 +231,13 @@ class AdvsettingController extends Controller
     $advSetting->links = $request['links'];
     $advSetting->published_at = date('Y-m-d');
     $advSetting->created_by = $authuser->id;
+      if (isset($request['status'])) {
+          $advSetting->status = $request['status'] ? 2 : 1;
+      }
+
+      if (isset($request['top'])) {
+          $advSetting->top = $request['top'] ? 1 : 0;
+      }
     $advSetting->save();
 
     $request->session()->flash('status', '成功更新广告');
@@ -116,6 +247,7 @@ class AdvsettingController extends Controller
   public function uploadimage(Request $request)
   {
     $this->validate($request, [
+        'links' => 'required',
         'images' => 'required',
     ]);
     $authuser = $request->user();
@@ -146,9 +278,20 @@ class AdvsettingController extends Controller
       $advSetting->description = $request['description'];
       $advSetting->order = $request['order'];
       $advSetting->links = $request['links'];
+      $advSetting->status = $request['status'] ? 2 : 1;
+      $advSetting->top = $request['top'] ? 1 : 0;
       $advSetting->published_at = date('Y-m-d');
       $advSetting->created_by = $authuser->id;
       $advSetting->save();
+
+        if ($request['status']) {
+            $articleStatusCheck = new ArticleStatusCheck();
+            $articleStatusCheck->adv_setting_id = $advSetting->id;
+            $articleStatusCheck->article_status_id = 3;
+            $articleStatusCheck->checked = 2;
+            $articleStatusCheck->created_by = $authuser->id;
+            $articleStatusCheck->save();
+        }
     }
 
     $request->session()->flash('status', '图片上传成功.');
@@ -171,6 +314,20 @@ class AdvsettingController extends Controller
     $categories = Category::where('category_id', '<>', 0)->get();
     $advSettings = AdvSetting::where('position_id', $id)->paginate(15);
     return view('advsetting/index', ['advsettings' => $advSettings, 'types'=>$types, 'positions'=>$positions, 'categories'=>$categories]);
-
   }
+
+    public function checktop()
+    {
+        $totalTop = 0;
+        $advSettings = AdvSetting::where('top', 1)->get();
+        $articles = Article::where('top', 1)->get();
+        $totalTop = count($articles) + count($advSettings);
+
+        if ($totalTop > 6) {
+            $arr = array('status'=>'faild');
+            return response()->Json($arr);
+        }
+        $arr = array('status'=>'success');
+        return response()->Json($arr);
+    }
 }

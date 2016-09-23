@@ -63,8 +63,13 @@
           </select>
           <div class="clearfix"></div>
 
-          {!! Form::label('links', '链接', array('class'=>'col-md-12')) !!}
-          {!! Form::text('links', '', array('class' => 'input col-md-12 form-control', 'placeholder' => '链接')) !!}
+            @if ($errors->has('links'))
+                <span class="help-block">
+                <strong>{{ $errors->first('links') ? '链接不能为空' : '' }}</strong>
+            </span>
+            @endif
+          {!! Form::label('links', '链接*', array('class'=>'col-md-12')) !!}
+          {!! Form::text('links', '', array('class' => 'input col-md-12 form-control', 'placeholder' => '链接', 'required'=>'required')) !!}
           <div class="clearfix"></div>
 
           {{--{!! Form::label('published_at', '开始显示日期', array('class'=>'col-md-12')) !!}--}}
@@ -77,6 +82,25 @@
               <option value="{{$category->id}}">{{$category->name}}</option>
             @endforeach
           </select>
+
+          @if( Auth::user()->hasAnyRole(['adv_editor']) )
+            <div>
+              <label class="col-md-3 published_label" for="status">
+                <input class="status" type="checkbox" name="status"  /> 提交审查
+              </label>
+            </div>
+          @endif
+
+          <div class="clearfix"></div>
+
+          <div>
+            <div id="settop_error" class="alert-danger"></div>
+            <div class="clearfix"></div>
+            <label class="col-md-3 published_label" for="top">
+              <input id="settop" class="top" type="checkbox" name="top"  /> 置顶
+            </label>
+          </div>
+
           <div class="clearfix"></div>
 
           {!! Form::label('images', '上传图片*', array('class'=>'col-md-12')) !!}
@@ -99,6 +123,26 @@
       </div>
     </div>
   </div>
+
+  <script src="{{ url('/src/js/jQuery.min.2.2.4.js') }}"></script>
+  <script>
+    jQuery(document).ready(function(){
+      jQuery('#settop').click(function(){
+        jQuery.ajax({
+          url: '/admin/advsetting/checktop',
+          type: "GET",
+          success: function(data){
+            console.log(data.status);
+            if (data.status == 'faild') {
+              jQuery('#settop_error').html('文章或广告已达置顶上限.').delay(3000).fadeOut('slow');;
+              jQuery('#settop').prop("disabled", true).prop('checked', false).val(0);
+            }
+          }
+        });
+      });
+    });
+  </script>
+
 <script>
   document.getElementById("images").onchange = function () {
     var reader = new FileReader();
