@@ -25,6 +25,7 @@
                 @endif
 
                 @if(count($articles)>0)
+                    <div class="col-md-12">还可以再置顶{{ ($totalTop - 6) > 0 ? $totalTop - 6 : 0 }}篇文章</div>
                     <table class="table table-striped">
                         <thead>
                         <tr>
@@ -45,7 +46,13 @@
                         <tbody>
                         @foreach($articles as $article)
                             <tr>
-                                <td>{{ $article->top ? '置顶' : '' }}</td>
+                                <td><input class="articl_top" id="article_{{ $article->id }}" type="checkbox"
+                                           @if ($article->top)
+                                                checked
+                                           @elseif ($totalTop >= 6)
+                                                disabled
+                                           @endif
+                                            name="top[{{ $article->id }}]" /></td>
                                 <td>{{ link_to('admin/article/'.$article->id, str_limit($article->title, 20)) }}</td>
                                 <td>{{ $article->categories->name }}</td>
                                 <td>{{ $article->article_types->name }}</td>

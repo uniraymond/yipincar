@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\AdvSetting;
 use App\ArticleStatus;
 use App\ArticleStatusCheck;
 use App\Tags;
@@ -31,6 +32,7 @@ class ArticleController extends Controller
     $types = ArticleTypes::all();
     $tags = Tags::all();
     $currentAction = false;
+    $totalTop = $this->getTotalTop();
 
       if ($authuser->hasAnyRole(['super_admin', 'admin', 'chef_editor', 'main_editor', 'adv_editor'])) {
           $articles = Article::orderBy('top', 'desc')->orderBy('created_at', 'desc')->paginate(15);
@@ -39,7 +41,17 @@ class ArticleController extends Controller
           $articles = Article::where('created_by', $authuser->id)->orderBy('top', 'desc')->orderBy('created_at', 'desc')->paginate(15);
           $totalArticle = Article::where('created_by', $authuser->id)->count();
       }
-    return view('articles/index', ['articles'=>$articles, 'categories'=>$categories, 'types'=>$types, 'tags'=>$tags, 'currentAction'=>$currentAction, 'totalArticle'=>$totalArticle]);
+    return view('articles/index', ['articles'=>$articles, 'categories'=>$categories, 'types'=>$types, 'tags'=>$tags, 'currentAction'=>$currentAction, 'totalArticle'=>$totalArticle, 'totalTop'=>$totalTop]);
+  }
+
+  public function getTotalTop()
+  {
+    $totalTop = 0;
+    $advSettings = AdvSetting::where('top', 1)->get();
+    $articles = Article::where('top', 1)->get();
+    $totalTop = count($articles) + count($advSettings);
+
+    return ($totalTop);
   }
 
   public function activedList(Request $request)
@@ -317,12 +329,15 @@ class ArticleController extends Controller
     $articleIds = $request['id'];
     $publisheds = $request['published'];
     $deletes = $request['delete'];
+    $tops = $request['top'];
+
 
     foreach($articleIds as $id) {
       $article = Article::find($id);
       $articleName = $article->title;
       $article->updated_by = $authuser->id;
       $article->published = isset($publisheds[$id]) && $publisheds[$id] ? 1 : 0;
+      $article->top = isset($tops[$id]) && $tops[$id] ? 1 : 0;
       if (isset($deletes[$id]) && $deletes[$id]) {
         $article->article_tags()->delete(); //remove article_tags record
         $article->delete(); //remove the artile

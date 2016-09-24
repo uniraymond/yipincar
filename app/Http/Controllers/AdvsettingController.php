@@ -32,7 +32,8 @@ class AdvsettingController extends Controller
     $categories = Category::where('category_id', '<>', 0)->get();
     $advSettings = AdvSetting::where('type_id', '<>', 0)->orderBy('top', 'desc')->orderBy('created_at', 'desc')->paginate(15);
       $totalAdvs = AdvSetting::count();
-    return view('advsetting/index', ['advsettings' => $advSettings, 'types'=>$types, 'positions'=>$positions, 'categories'=>$categories, 'totalAdvs'=>$totalAdvs]);
+    $totalTop = $this->getTotalTop();
+    return view('advsetting/index', ['advsettings' => $advSettings, 'types'=>$types, 'positions'=>$positions, 'categories'=>$categories, 'totalAdvs'=>$totalAdvs, 'totalTop'=>$totalTop]);
   }
 
 //  public function type(Request $request, $typeId)
@@ -42,16 +43,27 @@ class AdvsettingController extends Controller
 //    return view('advsetting/index', ['images' => $images, 'types'=>$types]);
 //  }
 
+  public function getTotalTop()
+  {
+    $totalTop = 0;
+    $advSettings = AdvSetting::where('top', 1)->get();
+    $articles = Article::where('top', 1)->get();
+    $totalTop = count($articles) + count($advSettings);
+
+    return ($totalTop);
+  }
 
   public function update(Request $request)
   {
     $authuser = $request->user();
 
     $orders = $request['order'];
+    $tops = $request['top'];
     foreach ($orders as $advId => $order) {
       $oimage = AdvSetting::findorFail($advId);
       if($oimage) {
         $oimage->order = $order;
+        $oimage->top = isset($tops[$advId]) && $tops[$advId] ? 1 : 0;
         $oimage->save();
       }
     }
@@ -323,7 +335,7 @@ class AdvsettingController extends Controller
         $articles = Article::where('top', 1)->get();
         $totalTop = count($articles) + count($advSettings);
 
-        if ($totalTop > 6) {
+        if ($totalTop >= 6) {
             $arr = array('status'=>'faild');
             return response()->Json($arr);
         }

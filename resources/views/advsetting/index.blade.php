@@ -22,6 +22,7 @@
                 @endif
 
                 @if(count($advsettings)>0)
+                    <div class="col-md-12">还可以再置顶{{ ($totalTop - 6) > 0 ? $totalTop - 6 : 0 }}篇广告</div>
                     <table class="table">
                         <thead>
                             <tr>
@@ -39,7 +40,14 @@
                             <tbody>
                                 @foreach($advsettings as $advsetting)
                                     <tr>
-                                        <td>{{ $advsetting->top ? '置顶' : '' }}</td>
+                                        <td><input class="articl_top" id="article_{{ $advsetting->id }}" type="checkbox"
+                                                   @if ($advsetting->top)
+                                                   checked
+                                                   @elseif ($totalTop >= 6)
+                                                   disabled
+                                                   @endif
+                                                   name="top[{{ $advsetting->id }}]" />
+                                        </td>
                                         <td><a href="{{ url('/admin/advsetting/show/'.$advsetting->id) }}" class="">{{ str_limit($advsetting->title, 20) }}</a> </td>
                                         <td><span>{{ $advsetting->adv_positions->name }}</span></td>
                                         <td><span>{{ $advsetting->adv_types->name }}</span></td>
