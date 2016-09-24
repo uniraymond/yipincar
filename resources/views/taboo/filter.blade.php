@@ -1,26 +1,11 @@
 @extends('layouts.base')
 @include('layouts.settingSideBar')
 @section('content')
-
-    {{--{{ dd($categories) }}--}}
     <div id="page-wrapper">
         <div class="row">
             <div class="col-lg-12">
                 <h1 class="page-header">敏感词列表</h1>
 
-                <div class="col-md-3">
-                    <input id="filter" placeholder="查询敏感词" />
-                </div>
-                <div class="col-md-3">
-                    <select>
-                        <option value="0">Select a Category</option>
-                        @foreach ($categories as $cg)
-                            <option value="{{ $cg->id }}">
-                                {{ $cg->category }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
                 @if ($fail = Session::get('warning'))
                     <div class="col-md-12 bs-example-bg-classes" >
                         <p class="bg-danger">

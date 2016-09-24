@@ -18,7 +18,8 @@ class TabooController extends Controller
     {
         $taboos = Taboo::paginate(10);
         $tabooCategories = Taboo::groupby('category')->distinct()->get();
-        return view('taboo/index', ['taboos' => $taboos, 'categories' => $tabooCategories]);
+        $totalTaboos = Taboo::count();
+        return view('taboo/index', ['taboos' => $taboos, 'categories' => $tabooCategories, 'totalTaboos' => $totalTaboos]);
     }
 
     /**
@@ -116,5 +117,19 @@ class TabooController extends Controller
 
         $request->session()->flash('status', '敏感字修改成功.');
         return view('taboo/index');
+    }
+
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function filter($name)
+    {
+        $taboos = Taboo::paginate(10);
+        $tabooCategories = Taboo::groupby('category')->distinct()->get();
+        $totalTaboos = Taboo::count();
+        return view('taboo/index', ['taboos' => $taboos, 'categories' => $tabooCategories, 'totalTaboos' => $totalTaboos]);
     }
 }
