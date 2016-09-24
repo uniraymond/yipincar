@@ -22,7 +22,7 @@
                 @endif
 
                 @if(count($advsettings)>0)
-                    <div class="col-md-12">还可以再置顶{{ ($totalTop - 6) > 0 ? $totalTop - 6 : 0 }}篇广告</div>
+                    <div class="col-md-12">还可以再置顶{{ (6 - $totalTop) > 0 ? (6 - $totalTop) : 0 }}篇广告</div>
                     <table class="table">
                         <thead>
                             <tr>
