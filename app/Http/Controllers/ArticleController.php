@@ -65,7 +65,7 @@ class ArticleController extends Controller
     $currentAction = false;
 
       if ($authuser->hasAnyRole(['super_admin', 'admin', 'chef_editor', 'main_editor', 'adv_editor'])) {
-          $articles = Article::where('published', 3)->orderBy('created_at', 'desc')->paginate(15);
+          $articles = Article::where('published', 4)->orderBy('created_at', 'desc')->paginate(15);
 //      } else ($authuser->hasAnyRole(['auth_editor', 'editor'])) {
       } else  {
           $articles = Article::where('created_by', $authuser->id)->orderBy('created_at', 'desc')->paginate(15);
