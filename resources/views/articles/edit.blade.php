@@ -95,7 +95,7 @@
 
 
                         <div class="clearfix"></div>
-                        @if( Auth::user()->hasAnyRole(['super_admin', 'admin', 'chef_editor', 'main_editor']))
+                        @if( Auth::user()->hasAnyRole(['super_admin', 'admin', 'chef_editor', 'main_editor', 'adv_editor']) && $article->published == 4)
                            <div>
                                <div id="settop_error" class="alert-danger"></div>
                                <div class="clearfix"></div>

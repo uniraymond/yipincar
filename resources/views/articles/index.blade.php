@@ -46,13 +46,17 @@
                         <tbody>
                         @foreach($articles as $article)
                             <tr>
-                                <td><input class="articl_top" id="article_{{ $article->id }}" type="checkbox"
+                                <td>
+                                    @if ($article->published == 4)
+                                    <input class="articl_top" id="article_{{ $article->id }}" type="checkbox"
                                            @if ($article->top)
                                                 checked
                                            @elseif ($totalTop >= 6)
                                                 disabled
                                            @endif
-                                            name="top[{{ $article->id }}]" /></td>
+                                            name="top[{{ $article->id }}]" />
+                                    @endif
+                                </td>
                                 <td>{{ link_to('admin/article/'.$article->id, str_limit($article->title, 20)) }}</td>
                                 <td>{{ $article->categories->name }}</td>
                                 <td>{{ $article->article_types->name }}</td>

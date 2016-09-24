@@ -95,11 +95,13 @@
                     <div class="clearfix"></div>
 
                     <div>
-                        <div id="settop_error" class="alert-danger"></div>
-                        <div class="clearfix"></div>
-                        <label class="col-md-3 published_label" for="top">
-                            <input id="settop" class="top" type="checkbox" name="top" {{ $advSettings->top ? 'checked' : '' }} /> 置顶
-                        </label>
+                        @if (Auth::user()->hasAnyRole(['super_admin', 'admin', 'chef_editor', 'adv_editor']) && $advSettings->status == 4)
+                            <div id="settop_error" class="alert-danger"></div>
+                            <div class="clearfix"></div>
+                            <label class="col-md-3 published_label" for="top">
+                                <input id="settop" class="top" type="checkbox" name="top" {{ $advSettings->top ? 'checked' : '' }} /> 置顶
+                            </label>
+                        @endif
                     </div>
 
                     {!! Form::token() !!}

@@ -40,13 +40,16 @@
                             <tbody>
                                 @foreach($advsettings as $advsetting)
                                     <tr>
-                                        <td><input class="articl_top" id="article_{{ $advsetting->id }}" type="checkbox"
+                                        <td>
+                                            @if ($advsetting->status == 4)
+                                            <input class="articl_top" id="article_{{ $advsetting->id }}" type="checkbox"
                                                    @if ($advsetting->top)
                                                    checked
                                                    @elseif ($totalTop >= 6)
                                                    disabled
                                                    @endif
                                                    name="top[{{ $advsetting->id }}]" />
+                                            @endif
                                         </td>
                                         <td><a href="{{ url('/admin/advsetting/show/'.$advsetting->id) }}" class="">{{ str_limit($advsetting->title, 20) }}</a> </td>
                                         <td><span>{{ $advsetting->adv_positions->name }}</span></td>
