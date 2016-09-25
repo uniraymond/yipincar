@@ -148,7 +148,7 @@ class InfoController extends Controller
             ->select('adv_settings.*', 'resources.name as resourceName', 'resources.link as resourceLink')
             ->where('position_id', $position);
 
-        if($category > 0)
+        if($category > 0 && $top < 0)
             $advert = $advert ->where('category_id', $category);
         if($top >= 0)
             $advert = $advert ->where('adv_settings.top', $top);
