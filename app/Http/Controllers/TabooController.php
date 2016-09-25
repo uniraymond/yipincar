@@ -154,6 +154,20 @@ class TabooController extends Controller
             $tabooSelects[$category->category] = $mgzs;
         }
         return view('taboo/index', ['taboo'=>$taboo, 'taboos' => $taboos, 'categories' => $tabooCategories, 'totalTaboos' => $totalTaboos, 'tabooSelects' => $tabooSelects]);
+    }
 
+    public function searchcontent($id)
+    {
+        $taboo = Taboo::findorFail($id);
+
+        return view('taboo/searchcontent', ['taboo'=>$taboo]);
+    }
+
+    public function searchcategory($name)
+    {
+        $taboos = Taboo::where('category', $name)->paginate(10);
+
+        $totalTaboos = Taboo::where('category', $name)->count();
+        return view('taboo/searchcategory', ['taboos'=>$taboos, 'totalTaboos'=>$totalTaboos]);
     }
 }

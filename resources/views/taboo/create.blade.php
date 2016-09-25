@@ -35,7 +35,7 @@
                             <div class="col-md-12">
                                 <select>
                                     @foreach ($categories as $category)
-                                        <option value="{{ $category }}" >{{ $category }}</option>
+                                        <option value="{{ $category->category }}" >{{ $category->category }}</option>
                                     @endforeach
                                 </select>
                             </div>

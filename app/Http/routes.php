@@ -80,6 +80,8 @@ Route::group(['middleware'=>'auth', 'prefix'=>'admin'], function() {
 
     Route::get('taboo/filter/{name}', 'TabooController@filter');
     Route::get('taboo/search', 'TabooController@search');
+    Route::get('taboo/searchcontent/{id}', 'TabooController@searchcontent');
+    Route::get('taboo/searchcategory/{name}', 'TabooController@searchcategory');
 
     Route::resource('article', 'ArticleController');
     Route::resource('category', 'CategoryController');

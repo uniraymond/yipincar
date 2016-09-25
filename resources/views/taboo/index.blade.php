@@ -8,7 +8,7 @@
                 <h1 class="page-header">敏感词列表</h1>
 
                 <div class="col-md-6">
-                    <form action="/admin/taboo/search" method="get">
+                    {{--<form action="/admin/taboo/search" method="get">--}}
                     <select class="js-example-basic-single" name="content" id="searchContent">
                         @foreach ($tabooSelects as $tsCategory => $ts)
                             <option value="0">查询敏感词</option>
@@ -19,19 +19,19 @@
                             </optgroup>
                         @endforeach
                     </select>
-                    <button type="submit" id="search_word" value="查找">查找</button>
+                    <button id="search_word" value="查找" class="btn btn-default">查找</button>
                     </form>
                 </div>
                 <div class="col-md-5">
                     <select id="select-category" name="category">
-                        <option value="0">Select a Category</option>
+                        <option value="0">选择类别</option>
                         @foreach ($categories as $cg)
-                            <option value="{{ $cg->id }}">
+                            <option value="{{ $cg->category }}">
                                 {{ $cg->category }}
                             </option>
                         @endforeach
                     </select>
-                    <button id="search_category" value="查找">查找</button>
+                    <button id="search_category" value="查找"  class="btn btn-default">查找</button>
                 </div>
                 @if ($fail = Session::get('warning'))
                     <div class="col-md-12 bs-example-bg-classes" >
@@ -106,17 +106,14 @@
         $(document).ready(function(){
             $('#search_word').click(function(){
                 var searchdata = $('#searchContent').val();
-                $.ajax({
-                    type:'get',
-                    url: '/admin/taboo/search?content='+searchdata,
-                    data: {},
-                    success: function(data) {
-                        $.load({
-                            '/admin/taboo/showcontent/'+data.id
-                        });
-                    }
-                }
-                );
+                console.log($.get('/admin/taboo/searchcontent/'+searchdata));
+                $('#search_result').load('/admin/taboo/searchcontent/'+searchdata);
+            });
+
+            $('#search_category').click(function(){
+                var searchdata = $('#select-category').val();
+                console.log($.get('/admin/taboo/searchcategory/'+searchdata));
+                $('#search_result').load('/admin/taboo/searchcategory/'+searchdata);
             });
         });
     </script>
