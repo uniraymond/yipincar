@@ -140,17 +140,20 @@ class InfoController extends Controller
                 ->get();
         }
         return ['user' => $user,
-                'advert' => $this ->getAdvert(1, 1, -1)];
+                'advert' => $this ->getAdvert(1, 1, -1, -1)];
     }
 
-    public function getAdvert($position, $limit, $top) {
+    public function getAdvert($position, $limit, $top, $category) {
         $advert = AdvSetting::join('resources', 'resources.id', '=', 'adv_settings.resource_id')
             ->select('adv_settings.*', 'resources.name as resourceName', 'resources.link as resourceLink')
             ->where('position_id', $position);
+
+        if($category > 0)
+            $advert = $advert ->where('category_id', $category);
         if($top >= 0)
             $advert = $advert ->where('adv_settings.top', $top);
 
-        $advert = $advert ->orderBy('published_at', 'desc')
+        $advert = $advert ->orderBy('order', 'asc')
             ->take($limit) ->get();
         return $advert;
     }
@@ -197,11 +200,10 @@ class InfoController extends Controller
         $topArticles = array();
         $topAdverts = array();
         if($page == 1) {
-            $listAdverts = $this ->getAdvert(2, 3, 0);
+            $listAdverts = $this ->getAdvert(2, 3, 0, $category);
             if($category == 3) {
                 $topArticles = $this->getArticleListContent() ->where('articles.top', 1)->get();
-                $topAdverts = $this ->getAdvert(2, 6, 1);
-
+                $topAdverts = $this ->getAdvert(2, 6, 1, $category);
             }
 
         }
