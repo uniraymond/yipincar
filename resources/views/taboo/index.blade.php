@@ -8,8 +8,8 @@
                 <h1 class="page-header">敏感词列表</h1>
 
                 <div class="col-md-6">
-                    <form action="/admin/taboo/filter" method="get">
-                    <select class="js-example-basic-single" name="content">
+                    <form action="/admin/taboo/search" method="get">
+                    <select class="js-example-basic-single" name="content" id="searchContent">
                         @foreach ($tabooSelects as $tsCategory => $ts)
                             <option value="0">查询敏感词</option>
                             <optgroup label="{{ $tsCategory }}">
@@ -54,7 +54,7 @@
                 @endif
 
                 <div class="panel-body">
-                    <div class="form-group  col-lg-12 col-md-12 col-sm-12" >
+                    <div class="form-group  col-lg-12 col-md-12 col-sm-12" id="search_result">
                         @if(isset($taboos) && count($taboos)>0)
                             <table class="table">
                                 <thead>
@@ -102,5 +102,22 @@
     <script type="text/javascript">
         $(".js-example-basic-single").select2();
         $('#select-category').select2();
+
+        $(document).ready(function(){
+            $('#search_word').click(function(){
+                var searchdata = $('#searchContent').val();
+                $.ajax({
+                    type:'get',
+                    url: '/admin/taboo/search?content='+searchdata,
+                    data: {},
+                    success: function(data) {
+                        $.load({
+                            '/admin/taboo/showcontent/'+data.id
+                        });
+                    }
+                }
+                );
+            });
+        });
     </script>
 @endsection

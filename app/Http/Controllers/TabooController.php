@@ -144,8 +144,16 @@ class TabooController extends Controller
 
     public function search(Request $request)
     {
-        dd('search');
-        dd($request);
+        $tabooSelects = array();
+        $taboo = Taboo::findorFail($request['content']);
+        $taboos = Taboo::paginate(10);
+        $tabooCategories = Taboo::groupby('category')->distinct()->get();
+        $totalTaboos = Taboo::count();
+        foreach ($tabooCategories as $category) {
+            $mgzs = Taboo::where('category', $category->category)->get();
+            $tabooSelects[$category->category] = $mgzs;
+        }
+        return view('taboo/index', ['taboo'=>$taboo, 'taboos' => $taboos, 'categories' => $tabooCategories, 'totalTaboos' => $totalTaboos, 'tabooSelects' => $tabooSelects]);
 
     }
 }
