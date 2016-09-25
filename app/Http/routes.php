@@ -87,6 +87,7 @@ Route::group(['middleware'=>'auth', 'prefix'=>'admin'], function() {
     Route::get('article/{id}/preview', 'ArticleController@preview');
 
     Route::get('taboo/filter/{name}', 'TabooController@filter');
+    Route::get('taboo/search', 'TabooController@search');
 });
 Route::group(['middleware' => 'auth'], function () {
     Route::get('/', 'ArticleController@index');

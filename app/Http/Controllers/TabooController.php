@@ -6,6 +6,7 @@ use App\Taboo;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
+use Illuminate\Support\Facades\DB;
 
 class TabooController extends Controller
 {
@@ -16,10 +17,15 @@ class TabooController extends Controller
      */
     public function index()
     {
+        $tabooSelects = array();
         $taboos = Taboo::paginate(10);
         $tabooCategories = Taboo::groupby('category')->distinct()->get();
         $totalTaboos = Taboo::count();
-        return view('taboo/index', ['taboos' => $taboos, 'categories' => $tabooCategories, 'totalTaboos' => $totalTaboos]);
+        foreach ($tabooCategories as $category) {
+            $mgzs = Taboo::where('category', $category->category)->get();
+            $tabooSelects[$category->category] = $mgzs;
+        }
+        return view('taboo/index', ['taboos' => $taboos, 'categories' => $tabooCategories, 'totalTaboos' => $totalTaboos, 'tabooSelects' => $tabooSelects]);
     }
 
     /**
@@ -125,11 +131,21 @@ class TabooController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function filter($name)
+    public function filter(Request $request, $name)
     {
+        dd('filter');
+        dd($request);
+
         $taboos = Taboo::paginate(10);
         $tabooCategories = Taboo::groupby('category')->distinct()->get();
         $totalTaboos = Taboo::count();
         return view('taboo/index', ['taboos' => $taboos, 'categories' => $tabooCategories, 'totalTaboos' => $totalTaboos]);
+    }
+
+    public function search(Request $request)
+    {
+        dd('search');
+        dd($request);
+
     }
 }
