@@ -27,6 +27,7 @@ class CreateAdvSettingsTable extends Migration
             $table->integer('displaytime');
             $table->string('links');
             $table->integer('category_id')->references('id')->on('categories')->onDelete('cascade');
+            $table->tinyInteger('status')->references('id')->on('article_statuses')->onDelete('cascade');
             $table->timestamp('created_at')->default(\DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamp('updated_at');
             $table->integer('updated_by')->references('id')->on('users')->onDelete('cascade');

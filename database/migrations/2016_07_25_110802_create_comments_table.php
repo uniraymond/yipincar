@@ -14,7 +14,7 @@ class CreateCommentsTable extends Migration
     {
         Schema::create('comments', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('article_id')->references('id')->on('articles');
+            $table->integer('article_id')->references('id')->on('articles')->onDelete('cascade');
             $table->string('comment');
             $table->tinyInteger('published');
             $table->boolean('banned');

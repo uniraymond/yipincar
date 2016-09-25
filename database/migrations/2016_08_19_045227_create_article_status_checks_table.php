@@ -15,6 +15,7 @@ class CreateArticleStatusChecksTable extends Migration
         Schema::create('article_status_checks', function(Blueprint $table) {
             $table->increments('id');
             $table->integer('article_id')->references('id')->on('articles')->onDelete('cascade');
+            $table->integer('adv_setting_id')->references('id')->on('adv_settings')->onDelete('cascade');
             $table->integer('article_status_id')->references('id')->on('article_status')->onDelete('cascade');
             $table->text('comment');
             $table->boolean('checked');

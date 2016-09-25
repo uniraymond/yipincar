@@ -24,14 +24,6 @@ Route::auth();
 //Route::get('/home', 'HomeController@index');
 
 Route::group(['middleware'=>'auth', 'prefix'=>'admin'], function() {
-    Route::resource('article', 'ArticleController');
-    Route::resource('category', 'CategoryController');
-    Route::resource('articletypes', 'ArticleTypesController');
-    Route::resource('tag', 'TagsController');
-    Route::resource('resource', 'ResourceController');
-    Route::resource('comment', 'CommentController');
-    Route::resource('user', 'UserController');
-    Route::resource('taboo', 'TabooController');
     Route::get('profile/{user_id}/editprofile', 'ProfileController@edit');
     Route::get('profile/{user_id}/create', 'ProfileController@create');
 
@@ -85,6 +77,20 @@ Route::group(['middleware'=>'auth', 'prefix'=>'admin'], function() {
     Route::get('history', 'HistoryController@index');
     Route::get('articles/actived', 'ArticleController@activedList');
     Route::get('article/{id}/preview', 'ArticleController@preview');
+
+    Route::get('taboo/filter/{name}', 'TabooController@filter');
+    Route::get('taboo/search', 'TabooController@search');
+    Route::get('taboo/searchcontent/{id}', 'TabooController@searchcontent');
+    Route::get('taboo/searchcategory/{name}', 'TabooController@searchcategory');
+
+    Route::resource('article', 'ArticleController');
+    Route::resource('category', 'CategoryController');
+    Route::resource('articletypes', 'ArticleTypesController');
+    Route::resource('tag', 'TagsController');
+    Route::resource('resource', 'ResourceController');
+    Route::resource('comment', 'CommentController');
+    Route::resource('user', 'UserController');
+    Route::resource('taboo', 'TabooController');
 });
 Route::group(['middleware' => 'auth'], function () {
     Route::get('/', 'ArticleController@index');
