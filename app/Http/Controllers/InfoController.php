@@ -155,7 +155,7 @@ class InfoController extends Controller
         return $advert;
     }
 
-    private function getArticleContent() {
+    private function getArticleListContent() {
         return Article::join('categories', 'articles.category_id', '=', 'categories.id')
                 ->leftJoin('article_resources', 'articles.id', '=', 'article_resources.article_id')
                 ->leftJoin('resources', 'resources.id', '=', 'article_resources.resource_id')
@@ -171,7 +171,7 @@ class InfoController extends Controller
         //$limit = 10;//$category < 8 ? 7 :10;
         $from = ($page -1) * $limit;
 
-        $articles = $this ->getArticleContent()->skip($from) ->take($limit);
+        $articles = $this ->getArticleListContent()->skip($from) ->take($limit);
 //            Article::join('categories', 'articles.category_id', '=', 'categories.id')
 //            ->leftJoin('article_resources', 'articles.id', '=', 'article_resources.article_id')
 //            ->leftJoin('resources', 'resources.id', '=', 'article_resources.resource_id')
@@ -199,7 +199,7 @@ class InfoController extends Controller
         if($page == 1) {
             $listAdverts = $this ->getAdvert(2, 3, 0);
             if($category == 3) {
-                $topArticles = $this->getArticleContent() ->where('articles.top', 1)->get();
+                $topArticles = $this->getArticleListContent() ->where('articles.top', 1)->get();
                 $topAdverts = $this ->getAdvert(2, 6, 1);
 
             }
