@@ -81,15 +81,17 @@ class InfoController extends Controller
      */
     public function show($id)
     {
-        $info = Article::findorFail($id);
-        $comments = $info->comments()->take(10)->get();
+        $article = Article::findorFail($id);
+//        $comments = $article->comments()->take(10)->get();
 //        $approved = $info->approved()->count();
-        $info['comment'] = $this ->getCommentList($info['id'], 0, 1, 10);
+        $article['comment'] = $this ->getCommentList($article['id'], 0, 1, 10);
 //        $info['approved'] = $approved;
 //        $zan = $info->zan()->count();
-        $info['zan'] = $this ->articleApprovedCount($id);
-
-        return response()->json($info);
+        $article['zan'] = $this ->articleApprovedCount($id);
+        $advert = $this ->getAdvert(3, 1, -1, $article['category_id']);
+        return ['article' => $article,
+                'advert'  => $advert
+                ];
     }
 
     /**
