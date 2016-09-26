@@ -26,6 +26,7 @@ Route::auth();
 Route::group(['middleware'=>'auth', 'prefix'=>'admin'], function() {
     Route::get('profile/{user_id}/editprofile', 'ProfileController@edit');
     Route::get('profile/{user_id}/create', 'ProfileController@create');
+    Route::get('profile/{user_id}', 'ProfileController@index');
 
     Route::resource('profile', 'ProfileController');
 

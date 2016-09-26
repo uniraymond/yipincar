@@ -18,7 +18,7 @@ class ProfileController extends Controller
      */
     public function index()
     {
-        //
+        return view('profiles/index');
     }
 
     /**
@@ -85,7 +85,7 @@ class ProfileController extends Controller
             if ($auth && ($auth->hasAnyRole(['super_admin', 'admin']) || $auth->id == $id)) {
                 return view('profiles/create', ['user'=>$user]);
             }
-            return  redirect('/');
+            return  redirect('/admin/profile/'.id);
         }
     }
 
