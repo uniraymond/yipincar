@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.base')
 @include('layouts.settingSideBar')
 @section('content')
     <div id="page-wrapper">

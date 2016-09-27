@@ -102,17 +102,32 @@ class UserController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+ * Display the specified resource.
+ *
+ * @param  int  $id
+ * @return \Illuminate\Http\Response
+ */
     public function show(Request $request, $id)
     {
         $auth = $request->user();
         $user = User::findorFail($id);
         $articles = User::find($id)->articles()->orderBy('created_at', 'desc')->get();
-        
+
+        return view('users/show', ['user'=>$user, 'articles'=>$articles]);
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function detail(Request $request, $id)
+    {
+        $auth = $request->user();
+        $user = User::findorFail($auth->id);
+        $articles = User::find($auth->id)->articles()->orderBy('created_at', 'desc')->get();
+
         return view('users/show', ['user'=>$user, 'articles'=>$articles]);
     }
 
@@ -336,10 +351,25 @@ class UserController extends Controller
             $roles = Role::all();
 
             $users = Role::find($role_id)->users()->paginate(10);
-            return view('users/index', ['users'=>$users, 'usergroups'=>$roles]);
+            return view('users/role', ['users'=>$users, 'usergroups'=>$roles]);
         }
 
         return redirect('/');
+    }
+    public function rolemanage(Request $request)
+    {
+        $auth = $request->user();
+//        $authView = $auth->hasAnyRole(['super_admin', 'admin']);
+////        if ($authView) {
+//            $roles = Role::all();
+//
+//            $users = User::paginate(10);
+//            return view('users/rolemanager', ['users'=>$users, 'usergroups'=>$roles]);
+//        }
+//
+//        return redirect('/');
+
+        return view('users/rolemanage');
     }
 
     public function side(Request $request)
@@ -364,4 +394,35 @@ class UserController extends Controller
         return view('users/listAutheditor', ['authUsers'=> $authUsers]);
     }
 
+    public function editpw(Request $request, $user_id)
+    {
+        $auth = $request->user();
+        $statuses = UserStatus::all();
+        $roles = Role::where('name','<>', 'super_admin')->get();
+        $authView = $auth->hasAnyRole(['super_admin', 'admin']);
+        if ($authView || $auth->id == $user_id) {
+            return view('users/editpw', ['roles'=>$roles, 'usergroups'=>$roles, 'statuses'=>$statuses]);
+        }
+        return redirect('/');
+        return view('users/editpw', ['user'=>$user]);
+    }
+
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function authEditorList(Request $request)
+    {
+        $auth = $request->user();
+        $authView = $auth->hasAnyRole(['super_admin', 'admin']);
+//        if ($authView) {
+            $roles = Role::all();
+            $users = User::paginate(10);
+            return view('users/authEditorList', ['users'=>$users, 'usergroups'=>$roles]);
+//        }
+//
+//        return redirect('/');
+    }
 }
