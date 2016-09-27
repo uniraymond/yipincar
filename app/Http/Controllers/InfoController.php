@@ -189,9 +189,9 @@ class InfoController extends Controller
 //         $articles = $articles ->skip($from) ->take($limit);
 
         if($category != 3) {
-            $articles = $articles ->where('articles.category_id', '=', $category)
-                ->where('articles.top', '=', 0);
-        }
+            $articles = $articles ->where('articles.category_id', '=', $category);
+        } else
+            $articles = $articles ->where('articles.top', '=', 0);
 
         if($page != 1 && $lastid && $lastid > 0)
             $articles = $articles->where('articles.id', '<=', $lastid);
