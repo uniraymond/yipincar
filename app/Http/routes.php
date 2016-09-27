@@ -31,6 +31,7 @@ Route::group(['middleware'=>'auth', 'prefix'=>'admin'], function() {
     Route::resource('profile', 'ProfileController');
 
     Route::get('user/role/{roleId}', 'UserController@role');
+    Route::get('user/rolemanage', 'UserController@rolemanage');
     Route::put('user/{userId}/banned', 'UserController@banned');
     Route::put('user/{userId}/active', 'UserController@active');
     Route::get('article/category/{categoryId}', 'ArticleController@category');
@@ -72,7 +73,7 @@ Route::group(['middleware'=>'auth', 'prefix'=>'admin'], function() {
     Route::get('advsetting/checktop', 'AdvsettingController@checktop');
 
     Route::get('api/category', 'CategoryController@index');
-    Route::get('/', 'ArticleController@index');
+    Route::get('/', 'ProfileController@detail');
     Route::get('statistics', 'DashboardController@index');
     Route::put('article', 'ArticleController@store');
     Route::get('history', 'HistoryController@index');
@@ -84,6 +85,8 @@ Route::group(['middleware'=>'auth', 'prefix'=>'admin'], function() {
     Route::get('taboo/searchcontent/{id}', 'TabooController@searchcontent');
     Route::get('taboo/searchcategory/{name}', 'TabooController@searchcategory');
     Route::get('user/listAutheditor/{role_id}', 'UserController@listAutheditor');
+    Route::get('user/authEditorList', 'UserController@authEditorList');
+    Route::get('user/{user_id}/editpw', 'UserController@editpw');
 
     Route::resource('article', 'ArticleController');
     Route::resource('category', 'CategoryController');
@@ -95,7 +98,8 @@ Route::group(['middleware'=>'auth', 'prefix'=>'admin'], function() {
     Route::resource('taboo', 'TabooController');
 });
 Route::group(['middleware' => 'auth'], function () {
-    Route::get('/', 'ArticleController@index');
+//    Route::get('/', 'ArticleController@index');
+    Route::get('/', 'ProfileController@detail');
 });
 
 Route::group(['prefix'=>'api'], function() {

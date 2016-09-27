@@ -89,6 +89,30 @@ class ProfileController extends Controller
         }
     }
 
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function detail(Request $request)
+    {
+        $auth = $request->user();
+        $id = $auth->id;
+        $user = User::findorFail($id);
+        $userProfile = Profile::where('user_id', $id)->first();
+        if (isset($userProfile) && $userProfile) {
+            return view('profiles/show', ['user'=>$user, 'profile' => $userProfile]);
+        } else {
+            $request->session()->flash('warning', '还没有创建用户资料，请创建用户资料');
+            if ($auth && ($auth->hasAnyRole(['super_admin', 'admin']) || $auth->id == $id)) {
+                return view('profiles/index', ['user'=>$user]);
+//                return view('profiles/create', ['user'=>$user]);
+            }
+            return  redirect('/admin/profile/'.id);
+        }
+    }
     /**
      * Show the form for editing the specified resource.
      *
