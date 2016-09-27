@@ -18,7 +18,6 @@
             @endif
             @if( (null !== Auth::user()) && Auth::user()->hasAnyRole(['super_admin', 'admin']))
                     <li class="list-group-item">{{link_to('admin/user', '会员管理')}}</li>
-                <li class="list-group-item">{{link_to('admin/user', '用户')}}</li>
             @endif
         </ul>
     </div>
@@ -34,7 +33,6 @@
             @endif
             @if( (null !== Auth::user()) && Auth::user()->hasAnyRole(['super_admin', 'admin']))
                     <li>{{link_to('admin/user', '会员管理')}}</li>
-                <li>{{link_to('admin/user', '用户')}}</li>
             @endif
         </ul>
     </div>
