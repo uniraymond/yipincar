@@ -10,7 +10,9 @@
                 <select class="js-example-basic-single" name="role" id="select_role">
                     <option value="0">用户权限查询</option>
                     @foreach ($usergroups as $role)
-                        <option value="{{ $role->id }}" > {{ $role->description }}</option>
+                        @if ($role->name != 'super_admin')
+                            <option value="{{ $role->id }}" > {{ $role->description }}</option>
+                        @endif
                     @endforeach
                 </select>
                 <button id="search_role" value="查找" class="btn btn-default">查找</button>
