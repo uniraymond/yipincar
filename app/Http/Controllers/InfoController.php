@@ -459,10 +459,12 @@ class InfoController extends Controller
 
     public function releaseComment(Request $request) {
         $comment = $request ->get('comment');
-        $taboos = Taboo::select('*')->get();
+        $published = 4;
+        $taboos = Taboo::select('content')->get();
         foreach($taboos as $taboo) {
-            if(strpos($comment, $taboo)) {
+            if(strpos($comment, $taboo['content'])) {
                 //set check status
+                $published = 2;
                 break;
             }
         }
@@ -472,7 +474,8 @@ class InfoController extends Controller
             //set check status
             'article_id' => $request ->get('articleid'),
             'created_by' => $userid,
-            'updated_by' => $userid
+            'updated_by' => $userid,
+            'published'  => $published
         ));
         $comment = Comment::select('*') ->where('created_by', $userid) ->get() ->last();
         $comment['zan'] = 0;
