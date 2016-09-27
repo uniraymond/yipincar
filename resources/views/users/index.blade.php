@@ -1,10 +1,19 @@
 @extends('layouts.base')
 @include('layouts.settingSideBar')
+<link rel="stylesheet" href="{{ asset("/src/css/select2.min.css") }}" />
 @section('content')
     <div id="page-wrapper">
         <div class="row">
             <div class="col-lg-12">
                 <h1 class="page-header">用户</h1>
+
+                <select class="js-example-basic-single" name="role" id="select_role">
+                    <option value="0">用户权限查询</option>
+                    @foreach ($usergroups as $role)
+                        <option value="{{ $role->id }}" > {{ $role->description }}</option>
+                    @endforeach
+                </select>
+                <button id="search_role" value="查找" class="btn btn-default">查找</button>
 
                 @if (Auth::user()->hasAnyRole(['super_admin', 'admin']))
                     <div class="col-lg-2 col-md-2 col-sm-2 pull-right clearfix">
@@ -20,7 +29,7 @@
                         </p>
                     </div>
                 @endif
-
+<div id="search_result">
                 @if(count($users)>0)
                     <table class="table table-striped">
                         <thead>
@@ -74,12 +83,27 @@
                     </table>
                 @endif
 
+                    @if ( Null !== Auth::user()->hasRole('super_admin', 'admin') )
+                        <div class="col-lg-12 col-md-12 col-sm-12 clearfix">
+                            {!! $users->links() !!}
+                        </div>
+                    @endif
             </div>
-            @if ( Null !== Auth::user()->hasRole('super_admin', 'admin') )
-                <div class="col-lg-12 col-md-12 col-sm-12 clearfix">
-                    {!! $users->links() !!}
                 </div>
-            @endif
         </div>
     </div>
+
+
+    <script src="{{ url('/src/js/jQuery.min.2.2.4.js') }}" ></script>
+    <script src="{{ url('/src/js/select2/select2.full.min.js') }}" ></script>
+    <script type="text/javascript">
+        $('.js-example-basic-single').select2();
+        $(document).ready(function(){
+            $('#search_role').click(function(){
+                var searchdata = $('#select_role').val();
+                console.log($.get('/admin/user/listAutheditor/'+searchdata));
+                $('#search_result').load('/admin/user/listAutheditor/'+searchdata);
+            });
+        });
+    </script>
 @endsection

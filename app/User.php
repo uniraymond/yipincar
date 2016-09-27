@@ -82,4 +82,9 @@ class User extends Authenticatable
     {
         return $this->hasMany('App\Article', 'created_by');
     }
+
+    public function filterUserByRoleId($roleId){
+        $roles = $this->roles()->where('id', $roleId)->get();
+        return $roles;
+    }
 }
