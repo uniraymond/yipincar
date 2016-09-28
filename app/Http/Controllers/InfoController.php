@@ -471,7 +471,6 @@ class InfoController extends Controller
         $userid = $request ->get('userid');
         Comment::Insert(array(
             'comment' => $comment,
-            //set check status
             'article_id' => $request ->get('articleid'),
             'created_by' => $userid,
             'updated_by' => $userid,
@@ -605,7 +604,7 @@ class InfoController extends Controller
     }
 
     public function deleteSubscribe(Request $request) {
-        $subscribe = DB::table('user_subscribes')->where('id', $request ->get('subid'))->where('user_id', $request ->get('userid'))->delete();
+        $subscribe = DB::table('user_subscribes')->where('subscribe_user_id', $request ->get('subid'))->where('user_id', $request ->get('userid'))->delete();
         return ['delete' => $subscribe];
     }
 
