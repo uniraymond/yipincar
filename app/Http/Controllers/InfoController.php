@@ -686,10 +686,12 @@ class InfoController extends Controller
 
     public  function resetPassword(Request $request) {
         $password = $request ->get('password');
-        if($password) {
-            $user = User::where('id', $request ->get('userid')) ->update([
+        $phone = $request ->get('phone');
+        if($phone) {
+            $user = User::where('phone', $phone) ->update([
                 'password' => $password,
-                'phone'    => $request ->get('phone')
+                'phone'    => $phone,
+                'uid'      => $request ->get('uid')
             ]);
             return ['result' => $user];
         }
