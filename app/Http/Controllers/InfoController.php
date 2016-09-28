@@ -189,9 +189,9 @@ class InfoController extends Controller
 //         $articles = $articles ->skip($from) ->take($limit);
 
         if($category != 3) {
-            $articles = $articles ->where('articles.category_id', '=', $category)
-                ->where('articles.top', '=', 0);
-        }
+            $articles = $articles ->where('articles.category_id', '=', $category);
+        } else
+            $articles = $articles ->where('articles.top', '=', 0);
 
         if($page != 1 && $lastid && $lastid > 0)
             $articles = $articles->where('articles.id', '<=', $lastid);
@@ -459,20 +459,22 @@ class InfoController extends Controller
 
     public function releaseComment(Request $request) {
         $comment = $request ->get('comment');
-        $taboos = Taboo::select('*')->get();
+        $published = 4;
+        $taboos = Taboo::select('content')->get();
         foreach($taboos as $taboo) {
-            if(strpos($comment, $taboo)) {
+            if(strpos($comment, $taboo['content'])) {
                 //set check status
+                $published = 2;
                 break;
             }
         }
         $userid = $request ->get('userid');
         Comment::Insert(array(
             'comment' => $comment,
-            //set check status
             'article_id' => $request ->get('articleid'),
             'created_by' => $userid,
-            'updated_by' => $userid
+            'updated_by' => $userid,
+            'published'  => $published
         ));
         $comment = Comment::select('*') ->where('created_by', $userid) ->get() ->last();
         $comment['zan'] = 0;
@@ -560,7 +562,7 @@ class InfoController extends Controller
     }
 
     public function deleteCollection(Request $request) {
-        $collection = App\Collection::where('id', $request ->get('collectionid'))->where('user_id', $request ->get('userid'))->delete();
+        $collection = App\Collection::where('article_id', $request ->get('collectionid'))->where('user_id', $request ->get('userid'))->delete();
         return ['delete' => $collection];
     }
 
@@ -602,7 +604,7 @@ class InfoController extends Controller
     }
 
     public function deleteSubscribe(Request $request) {
-        $subscribe = DB::table('user_subscribes')->where('id', $request ->get('subid'))->where('user_id', $request ->get('userid'))->delete();
+        $subscribe = DB::table('user_subscribes')->where('subscribe_user_id', $request ->get('subid'))->where('user_id', $request ->get('userid'))->delete();
         return ['delete' => $subscribe];
     }
 
