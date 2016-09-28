@@ -562,7 +562,7 @@ class InfoController extends Controller
     }
 
     public function deleteCollection(Request $request) {
-        $collection = App\Collection::where('id', $request ->get('collectionid'))->where('user_id', $request ->get('userid'))->delete();
+        $collection = App\Collection::where('article_id', $request ->get('collectionid'))->where('user_id', $request ->get('userid'))->delete();
         return ['delete' => $collection];
     }
 
