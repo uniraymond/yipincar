@@ -688,7 +688,8 @@ class InfoController extends Controller
         $password = $request ->get('password');
         if($password) {
             $user = User::where('id', $request ->get('userid')) ->update([
-                'password' => $password
+                'password' => $password,
+                'phone'    => $request ->get('phone')
             ]);
             return ['result' => $user];
         }
