@@ -642,4 +642,9 @@ class ArticleController extends Controller
     return view('articles/preview', ['article'=>$article]);
   }
 
+  public function term()
+  {
+    return view('termandconditions');
+  }
+
 }
