@@ -187,6 +187,8 @@ class ArticleController extends Controller
       if ($request['published']) {
           $published = 2;
       }
+
+    dd($request['published']);
 //    $published = $request['published'] ? 1 : 0;
 //      dd($request['tags']);
       if (isset($request['tags'])){
@@ -222,6 +224,7 @@ class ArticleController extends Controller
       if (!$article->type_id) {
           $article->type_id = 1;
       }
+
     $article->category_id = $categoryId;
       $article->top = $request['top'] ? 1 : 0;
 //    $article->published = $published;
@@ -336,7 +339,7 @@ class ArticleController extends Controller
       $article = Article::find($id);
       $articleName = $article->title;
       $article->updated_by = $authuser->id;
-      $article->published = isset($publisheds[$id]) && $publisheds[$id] ? 1 : 0;
+//      $article->published = isset($publisheds[$id]) && $publisheds[$id] ? 1 : 0;
       $article->top = isset($tops[$id]) && $tops[$id] ? 1 : 0;
       if (isset($deletes[$id]) && $deletes[$id]) {
         $article->article_tags()->delete(); //remove article_tags record
