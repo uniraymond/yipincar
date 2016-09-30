@@ -15,6 +15,7 @@ Route::get('/', ['middleware' => 'auth', function () {
     return view('welcome');
 }]);
 
+Route::get('authregister', 'Auth\AuthController@authregister');
 Route::auth();
 
 //Route::resource('post', 'PostController');

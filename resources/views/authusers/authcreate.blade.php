@@ -80,7 +80,7 @@
                         </div>
 
                         <div>
-                            {!! Form::label('', '个人授权书pid*', array('class'=>'col-md-12')) !!}
+                            {!! Form::label('', '个人授权书*', array('class'=>'col-md-12')) !!}
                             @if ($errors->has('images'))
                                 <span class="help-block">
                                     <strong>{{ $errors->first('images') ? '图片不能为空' : '' }}</strong>

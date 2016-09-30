@@ -150,8 +150,8 @@ class AuthController extends Controller
         
     }
     
-    public function authRegistt(Request $request)
+    public function authregister()
     {
-        
+        return view('authusers.authregister');
     }
 }
