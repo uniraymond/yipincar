@@ -149,4 +149,9 @@ class AuthController extends Controller
     {
         
     }
+    
+    public function authRegistt(Request $request)
+    {
+        
+    }
 }

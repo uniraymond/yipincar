@@ -169,6 +169,38 @@ class ProfileController extends Controller
     {
         //
     }
+
+    public function authindex()
+    {
+        
+        return view('profiles/authindex');
+    }
+
+    public function authcreate(Request $request, $userId)
+    {
+
+    }
+
+    public function authedit(Request $request, $userId)
+    {
+
+    }
+
+    public function authshow(Request $request, $userId)
+    {
+
+    }
+
+    public function authstore(Request $request, $userId)
+    {
+
+    }
+
+    public function authupdate(Request $request, $userId)
+    {
+
+    }
+    
     /**
      * Get a validator for an incoming registration request.
      *

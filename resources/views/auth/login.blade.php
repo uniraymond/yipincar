@@ -67,7 +67,6 @@
         </div>
     </div>
 </div>
-@endsection
 
 <script src="{{ url('/src/js/jQuery.min.2.2.4.js') }}" ></script>
 <script>
@@ -84,3 +83,4 @@
         });
     });
 </script>
+@endsection
