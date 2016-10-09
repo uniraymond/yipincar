@@ -92,8 +92,8 @@
                                 @endif
                                 <td>
                                     @if ($article->published == 1 || $article->published == 0) 草稿
-                                    @elseif($article->published == 2) 申请审查
-                                    @elseif($article->published == 3) 已经审查
+                                    @elseif($article->published == 2) 初审
+                                    @elseif($article->published == 3) 终审
                                     @elseif($article->published == 4) 发布 @endif
                                 </td>
                             </tr>
