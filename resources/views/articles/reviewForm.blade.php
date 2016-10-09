@@ -57,7 +57,7 @@ if(Auth::user()->hasAnyRole(['editor', 'auth_editor']) && $article->created_by =
     <div class="{{ $statusCheck[0]->checked == $article->published ? 'bs-callout bs-callout-primary' : '' }}" >
         <div class="col-lg-2 col-md-2 col-sm-2">{{ $statusCheck[0]->article_status->title }}</div>
         <div class="col-lg-9 col-md-9 col-sm-9">{{ $statusCheck[0]->comment }}</div>
-        @if($statusCheck[0]->created_by == $currentUser->id && $displayForm)
+        @if($statusCheck[0]->created_by == $currentUser->id && $displayForm && $statusCheck[0]->checked < 3)
             <div class="col-lg-1 col-md-1 col-sm-1">
                 <a class="collapsed" data-toggle="collapse" href="#edit_status_check_form_{{ $statusCheck[0]->id }}" aria-expanded="false" aria-controls="edit_status_check_form_{{ $statusCheck[0]->id }}">
                     审核
@@ -90,7 +90,7 @@ if(Auth::user()->hasAnyRole(['editor', 'auth_editor']) && $article->created_by =
         <div class="{{ $statusCk->checked == $currentStatusId ? 'bs-callout bs-callout-primary' : '' }}" >
             <div class="col-lg-2 col-md-2 col-sm-2">{{ $statusCk->article_status->title }}</div>
             <div class="col-lg-9 col-md-9 col-sm-9">{{ $statusCk->comment }}</div>
-            @if($statusCk->created_by == $currentUser->id && $displayForm)
+            @if($statusCk->created_by == $currentUser->id && $displayForm && $statusCk->checked < 3 )
                 <div class="col-lg-1 col-md-1 col-sm-1">
                     <a class="collapsed" data-toggle="collapse" href="#edit_status_check_form_{{ $statusCk->id }}" aria-expanded="false" aria-controls="edit_status_check_form_{{ $statusCk->id }}">
                         审核
