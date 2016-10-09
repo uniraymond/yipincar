@@ -108,7 +108,7 @@ class ArticleController extends Controller
           $articles = Article::where('published', 4)->orderBy('created_at', 'desc')->paginate(15);
 //      } else ($authuser->hasAnyRole(['auth_editor', 'editor'])) {
       } else  {
-          $articles = Article::where('created_by', $authuser->id)->orderBy('created_at', 'desc')->paginate(15);
+          $articles = Article::where('published', 4)->where('created_by', $authuser->id)->orderBy('created_at', 'desc')->paginate(15);
       }
     return view('articles/actived', ['articles'=>$articles, 'categories'=>$categories, 'types'=>$types, 'tags'=>$tags, 'currentAction'=>$currentAction, 'totalTop'=>$totalTop]);
   }
@@ -387,11 +387,13 @@ class ArticleController extends Controller
 
         $request->session()->flash('status', '文章: '. $articleName .' 已经被删除.');
       } else {
-
-        $request->session()->flash('status', '文章: '. $articleName .' 已经被 '. $article->published ? 'published ' : 'unpublished ' .'!');
+        $request->session()->flash('status', '文章: '. $articleName .' 已被修改.');
         $article->save(); //published the article
       }
     }
+      if ($request['groupstatus'] = 'actived') {
+          return redirect('admin/articles/actived');
+      }
     return redirect('admin/article');
   }
 

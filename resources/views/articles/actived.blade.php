@@ -41,6 +41,7 @@
                         </thead>
                         {!! Form::open(array('url' => 'admin/article/groupupdate', 'class'=>'form', 'method'=>'POST')) !!}
                         {!! Form::token() !!}
+                        <input type="input" value="actived" name="groupstatus" readonly hidden="hidden" />
                         <tbody>
                         @foreach($articles as $article)
                             <tr>
