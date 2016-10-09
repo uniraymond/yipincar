@@ -594,6 +594,9 @@ class ArticleController extends Controller
     $article = Article::find($articleId);
       if($request['published'] >= 1) {
             $article->published =  $articleStatusCheck->checked;
+          if ($articleStatusCheck->checked == 4) {
+              $article->publish_date = date('Y-m-d');
+          }
         }
     $article->save();
 
@@ -645,6 +648,9 @@ class ArticleController extends Controller
     $article = Article::find($articleId);
       if($request['published'] >= 1) {
           $article->published =  $articleStatusCheck->checked;
+          if ($articleStatusCheck->checked == 4) {
+              $article->publish_date =  date('Y-m-d');
+          }
       }
     $article->save();
 

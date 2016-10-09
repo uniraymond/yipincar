@@ -32,7 +32,7 @@
                             {{--<th>置顶</th>--}}
                             <th>文章</th>
                             <th>栏目</th>
-                            <th>类型</th>
+                            {{--<th>类型</th>--}}
                             <th>关键字</th>
                             <th>作者</th>
                             <th>评论</th>
@@ -59,7 +59,7 @@
                                 {{--</td>--}}
                                 <td>{{ link_to('admin/article/'.$article->id, str_limit($article->title, 20)) }}</td>
                                 <td>{{ $article->categories->name }}</td>
-                                <td>{{ $article->article_types->name }}</td>
+{{--                                <td>{{ $article->article_types->name }}</td>--}}
                                 <td>
                                     @foreach ($article->tags as $t)
                                         {{ $t->name }},
