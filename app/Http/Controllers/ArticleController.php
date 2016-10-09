@@ -44,7 +44,41 @@ class ArticleController extends Controller
     return view('articles/index', ['articles'=>$articles, 'categories'=>$categories, 'types'=>$types, 'tags'=>$tags, 'currentAction'=>$currentAction, 'totalArticle'=>$totalArticle, 'totalTop'=>$totalTop]);
   }
 
-  public function getTotalTop()
+    public function myarticle(Request $request)
+    {
+        //website
+        $authuser = $request->user();
+
+        $categories = Category::where('last_category', 1)->get();
+        $types = ArticleTypes::all();
+        $tags = Tags::all();
+        $currentAction = false;
+        $totalTop = $this->getTotalTop();
+
+        $articles = Article::where('created_by', $authuser->id)->orderBy('top', 'desc')->orderBy('created_at', 'desc')->paginate(15);
+        $totalArticle = Article::where('created_by', $authuser->id)->count();
+
+        return view('articles/myarticle', ['articles'=>$articles, 'categories'=>$categories, 'types'=>$types, 'tags'=>$tags, 'currentAction'=>$currentAction, 'totalArticle'=>$totalArticle, 'totalTop'=>$totalTop]);
+    }
+
+    public function articlereview(Request $request)
+    {
+        //website
+        $authuser = $request->user();
+
+        $categories = Category::where('last_category', 1)->get();
+        $types = ArticleTypes::all();
+        $tags = Tags::all();
+        $currentAction = false;
+        $totalTop = $this->getTotalTop();
+
+        $articles = Article::where('published', 2)->orWhere('published', 3)->orderBy('top', 'desc')->orderBy('created_at', 'desc')->paginate(15);
+        $totalArticle = Article::where('published', 2)->orWhere('published', 3)->count();
+
+        return view('articles/articlereview', ['articles'=>$articles, 'categories'=>$categories, 'types'=>$types, 'tags'=>$tags, 'currentAction'=>$currentAction, 'totalArticle'=>$totalArticle, 'totalTop'=>$totalTop]);
+    }
+
+    public function getTotalTop()
   {
     $totalTop = 0;
     $advSettings = AdvSetting::where('top', 1)->get();
