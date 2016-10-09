@@ -576,22 +576,22 @@ class ArticleController extends Controller
       $articleStatusCheck->checked = 1;
       switch($request['article_status']) {
           case 'publish':
-              if($request['published']) {
+              if($request['published'] == 2) {
                   $articleStatusCheck->checked = 4;
               }
               break;
           case 'review':
-              if($request['published']) {
+              if($request['published'] == 2) {
                   $articleStatusCheck->checked = 3;
               }
               break;
           case 'review_apply':
-              if($request['published']) {
+              if($request['published'] == 2) {
                   $articleStatusCheck->checked = 2;
               }
               break;
           default:
-              if($request['published']) {
+              if($request['published'] == 2) {
                   $articleStatusCheck->checked = 2;
               }
               break;
@@ -600,7 +600,7 @@ class ArticleController extends Controller
     $articleStatusCheck->save();
 
     $article = Article::find($articleId);
-      if($request['published']) {
+      if($request['published'] >= 1) {
           $article->published =  $articleStatusCheck->checked;
       }
     $article->save();

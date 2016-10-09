@@ -180,22 +180,22 @@ class AdvsettingController extends Controller
         $articleStatusCheck->checked = 1;
         switch($request['article_status']) {
             case 'publish':
-                if($request['status']) {
+                if($request['status'] == 2) {
                     $articleStatusCheck->checked = 4;
                 }
                 break;
             case 'review':
-                if($request['status']) {
+                if($request['status'] == 2) {
                     $articleStatusCheck->checked = 3;
                 }
                 break;
             case 'review_apply':
-                if($request['status']) {
+                if($request['status'] == 2) {
                     $articleStatusCheck->checked = 2;
                 }
                 break;
             default:
-                if($request['status']) {
+                if($request['status'] == 2) {
                     $articleStatusCheck->checked = 2;
                 }
                 break;
@@ -204,7 +204,9 @@ class AdvsettingController extends Controller
         $articleStatusCheck->save();
 
         $article = AdvSetting::find($advsettingid);
-        $article->status =  $articleStatusCheck->checked;
+        if ($request['status'] >= 1){
+            $article->status =  $articleStatusCheck->checked;
+        }
         $article->save();
 
         $request->session()->flash('status', '更新了广告评估.');
