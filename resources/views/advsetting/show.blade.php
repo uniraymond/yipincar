@@ -47,7 +47,7 @@
                             <div><p>{{ $advsetting->description }}</p></div>
                             <div>图片</div>
                             <div>
-                                <img src="/{{ $advsetting->resources->link }}" alt="{{ $advsetting->description }}" width="300px"/>
+                                <img src="{{ url($advsetting->resources->link) }}" alt="{{ $advsetting->description }}" width="300px"/>
                             </div>
                             <div class="clearfix"></div>
                             <div class="list-group">
