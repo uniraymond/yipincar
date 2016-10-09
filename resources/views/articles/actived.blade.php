@@ -25,27 +25,42 @@
                     <table class="table table-striped">
                         <thead>
                         <tr>
+                            <th>置顶</th>
                             <th>文章</th>
                             <th>栏目</th>
-                            <th>类型</th>
+                            {{--<th>类型</th>--}}
                             <th>关键字</th>
                             <th>作者</th>
                             <th>评论</th>
-                            @if ( Null !== Auth::user() )
-                                <th>编辑</th>
-                                <th>删除</th>
-                            @endif
                             <th>文章状态</th>
+                            <th>发布日期</th>
+                            @if ( Null !== Auth::user() )
+                                <th>屏蔽</th>
+                                <th>编辑</th>
+                            @endif
                         </tr>
                         </thead>
                         {!! Form::open(array('url' => 'admin/article/groupupdate', 'class'=>'form', 'method'=>'POST')) !!}
                         {!! Form::token() !!}
+                        <input type="input" value="actived" name="groupstatus" readonly hidden="hidden" />
                         <tbody>
                         @foreach($articles as $article)
                             <tr>
+                                <td>
+                                    @if ($article->published == 4)
+                                        <input class="articl_top" id="article_{{ $article->id }}" type="checkbox"
+                                        @if ($article->top)
+                                               checked
+                                                @elseif ($totalTop >= 6)
+                                               disabled
+                                               @endif
+                                               name="top[{{ $article->id }}]" />
+                                    @endif
+                                </td>
+
                                 <td>{{ link_to('admin/article/'.$article->id, $value = str_limit($article->title, 20)) }}</td>
                                 <td>{{ $article->categories->name }}</td>
-                                <td>{{ $article->article_types->name }}</td>
+{{--                                <td>{{ $article->article_types->name }}</td>--}}
                                 <td>
                                     @foreach ($article->tags as $t)
                                         {{ $t->name }},
@@ -65,27 +80,32 @@
                                     @endif
                                 </td>
                                 <td><a href="{{ url('admin/articlecomment/'.$article->id) }}" id="commentBtn_{{ $article->id }}"><i class="fa fa-comments-o"></i> 评论({{ count($article->comments) }})</a></td>
-                                @if ( Null !== Auth::user() && $article->created_by == Auth::user()->id || Auth::user()->hasAnyRole(['main_editor']))
+
+                                <td>
+                                    {{ count($article->article_status)>0 ? $article->article_status->title : '草稿' }}
+                                </td>
+                                <td>
+                                    {{ date('Y-m-d', strtotime($article->created_at)) }}
+                                </td>
+                                
+                                @if ( (Null !== Auth::user() && $article->created_by == Auth::user()->id) || Auth::user()->hasAnyRole(['super_admin', 'admin','chef_editor', 'main_editor', 'adv_editor']))
                                     <td>
-                                        <a href="{{ url('admin/article/'.$article->id.'/edit') }}" class="btn btn-default" id="editBtn_{{ $article->id }}">编辑</a>
+                                        <input type="checkbox" name="banned[{{ $article->id }}]" {{ $article->banned ? 'checked' : '' }} />
                                     </td>
                                     <td>
-                                        <input type="checkbox" name="delete[{{ $article->id }}]" ng-checked="delete_{{$article->id}}" ng-click="confirmDelete('{{ $article->id }}')"/>
+                                        <a href="{{ url('admin/article/'.$article->id.'/edit') }}" class="btn btn-default" id="editBtn_{{ $article->id }}">编辑</a>
                                     </td>
                                 @else
                                     <td></td>
                                     <td></td>
                                 @endif
-                                <td>
-                                    {{ count($article->article_status)>0 ? $article->article_status->title : '草稿' }}
-                                </td>
                             </tr>
                         @endforeach
                         @if ( Null !== Auth::user() )
                             <tr>
                                 <td colspan="7"> </td>
                                 <td>
-                                    <input class="btn btn-primary" type="submit" value="保存" />
+                                    <input class="btn btn-primary" type="submit" value="提交" />
                                 </td>
                             </tr>
                         @endif

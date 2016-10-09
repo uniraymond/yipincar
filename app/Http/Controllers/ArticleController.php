@@ -44,7 +44,46 @@ class ArticleController extends Controller
     return view('articles/index', ['articles'=>$articles, 'categories'=>$categories, 'types'=>$types, 'tags'=>$tags, 'currentAction'=>$currentAction, 'totalArticle'=>$totalArticle, 'totalTop'=>$totalTop]);
   }
 
-  public function getTotalTop()
+    public function myarticle(Request $request)
+    {
+        //website
+        $authuser = $request->user();
+
+        $categories = Category::where('last_category', 1)->get();
+        $types = ArticleTypes::all();
+        $tags = Tags::all();
+        $currentAction = false;
+        $totalTop = $this->getTotalTop();
+
+        $articles = Article::where('created_by', $authuser->id)->orderBy('top', 'desc')->orderBy('created_at', 'desc')->paginate(15);
+        $totalArticle = Article::where('created_by', $authuser->id)->count();
+
+        return view('articles/myarticle', ['articles'=>$articles, 'categories'=>$categories, 'types'=>$types, 'tags'=>$tags, 'currentAction'=>$currentAction, 'totalArticle'=>$totalArticle, 'totalTop'=>$totalTop]);
+    }
+
+    public function articlereview(Request $request)
+    {
+        //website
+        $authuser = $request->user();
+
+        $categories = Category::where('last_category', 1)->get();
+        $types = ArticleTypes::all();
+        $tags = Tags::all();
+        $currentAction = false;
+        $totalTop = $this->getTotalTop();
+
+        if ($request['statusfilter']) {
+            $articles = Article::where('published', $request['statusfilter'])->orderBy('top', 'desc')->orderBy('created_at', 'desc')->paginate(15);
+            $totalArticle = Article::where('published',$request['statusfilter'])->count();
+        } else {
+            $articles = Article::where('published', 2)->orWhere('published', 3)->orderBy('top', 'desc')->orderBy('created_at', 'desc')->paginate(15);
+            $totalArticle = Article::where('published', 2)->orWhere('published', 3)->count();
+        }
+
+        return view('articles/articlereview', ['articles'=>$articles, 'categories'=>$categories, 'types'=>$types, 'tags'=>$tags, 'currentAction'=>$currentAction, 'totalArticle'=>$totalArticle, 'totalTop'=>$totalTop]);
+    }
+
+    public function getTotalTop()
   {
     $totalTop = 0;
     $advSettings = AdvSetting::where('top', 1)->get();
@@ -63,14 +102,15 @@ class ArticleController extends Controller
     $types = ArticleTypes::all();
     $tags = Tags::all();
     $currentAction = false;
+      $totalTop = $this->getTotalTop();
 
       if ($authuser->hasAnyRole(['super_admin', 'admin', 'chef_editor', 'main_editor', 'adv_editor'])) {
           $articles = Article::where('published', 4)->orderBy('created_at', 'desc')->paginate(15);
 //      } else ($authuser->hasAnyRole(['auth_editor', 'editor'])) {
       } else  {
-          $articles = Article::where('created_by', $authuser->id)->orderBy('created_at', 'desc')->paginate(15);
+          $articles = Article::where('published', 4)->where('created_by', $authuser->id)->orderBy('created_at', 'desc')->paginate(15);
       }
-    return view('articles/actived', ['articles'=>$articles, 'categories'=>$categories, 'types'=>$types, 'tags'=>$tags, 'currentAction'=>$currentAction]);
+    return view('articles/actived', ['articles'=>$articles, 'categories'=>$categories, 'types'=>$types, 'tags'=>$tags, 'currentAction'=>$currentAction, 'totalTop'=>$totalTop]);
   }
 
   // advertisment
@@ -189,7 +229,7 @@ class ArticleController extends Controller
           $published = 2;
       }
 
-    dd($request['published']);
+//    dd($request['published']);
 //    $published = $request['published'] ? 1 : 0;
 //      dd($request['tags']);
       if (isset($request['tags'])){
@@ -332,9 +372,9 @@ class ArticleController extends Controller
 
     $articleIds = $request['id'];
     $publisheds = $request['published'];
-    $deletes = $request['delete'];
+//    $deletes = $request['delete'];
+    $banned = $request['banned'];
     $tops = $request['top'];
-
 
     foreach($articleIds as $id) {
       $article = Article::find($id);
@@ -342,17 +382,21 @@ class ArticleController extends Controller
       $article->updated_by = $authuser->id;
 //      $article->published = isset($publisheds[$id]) && $publisheds[$id] ? 1 : 0;
       $article->top = isset($tops[$id]) && $tops[$id] ? 1 : 0;
-      if (isset($deletes[$id]) && $deletes[$id]) {
-        $article->article_tags()->delete(); //remove article_tags record
-        $article->delete(); //remove the artile
-
+      if (isset($banned[$id]) && $banned[$id]) {
+//        $article->article_tags()->delete(); //remove article_tags record
+        $article->banned = 1; //remove the artile
+        //$article->article_tags()->delete(); //remove article_tags record
+//        $article->delete(); //remove the artile
         $request->session()->flash('status', '文章: '. $articleName .' 已经被删除.');
       } else {
-
-        $request->session()->flash('status', '文章: '. $articleName .' 已经被 '. $article->published ? 'published ' : 'unpublished ' .'!');
-        $article->save(); //published the article
+          $article->banned = 0;
+        $request->session()->flash('status', '文章: '. $articleName .' 已被修改.');
       }
+        $article->save(); //published the article
     }
+      if ($request['groupstatus'] = 'actived') {
+          return redirect('admin/articles/actived');
+      }
     return redirect('admin/article');
   }
 
@@ -525,22 +569,22 @@ class ArticleController extends Controller
     $articleStatusCheck->checked = 1;
       switch($request['article_status']) {
           case 'publish':
-              if($request['published']) {
+              if($request['published'] == 2) {
                   $articleStatusCheck->checked = 4;
               }
               break;
           case 'review':
-              if($request['published']) {
+              if($request['published'] == 2) {
                   $articleStatusCheck->checked = 3;
               }
               break;
           case 'review_apply':
-              if($request['published']) {
+              if($request['published'] == 2) {
                   $articleStatusCheck->checked = 2;
               }
               break;
           default:
-              if($request['published']) {
+              if($request['published'] == 2) {
                   $articleStatusCheck->checked = 2;
               }
               break;
@@ -549,10 +593,16 @@ class ArticleController extends Controller
     $articleStatusCheck->save();
 
     $article = Article::find($articleId);
-    $article->published = $articleStatusCheck->checked;
+      if($request['published'] >= 1) {
+            $article->published =  $articleStatusCheck->checked;
+          if ($articleStatusCheck->checked == 4) {
+              $article->publish_date = date('Y-m-d');
+          }
+        }
     $article->save();
 
     $request->session()->flash('status', '添加了新的文章评估.');
+
     return redirect('admin/article/'.$articleId);
   }
 
@@ -573,22 +623,22 @@ class ArticleController extends Controller
       $articleStatusCheck->checked = 1;
       switch($request['article_status']) {
           case 'publish':
-              if($request['published']) {
+              if($request['published'] == 2) {
                   $articleStatusCheck->checked = 4;
               }
               break;
           case 'review':
-              if($request['published']) {
+              if($request['published'] == 2) {
                   $articleStatusCheck->checked = 3;
               }
               break;
           case 'review_apply':
-              if($request['published']) {
+              if($request['published'] == 2) {
                   $articleStatusCheck->checked = 2;
               }
               break;
           default:
-              if($request['published']) {
+              if($request['published'] == 2) {
                   $articleStatusCheck->checked = 2;
               }
               break;
@@ -597,7 +647,12 @@ class ArticleController extends Controller
     $articleStatusCheck->save();
 
     $article = Article::find($articleId);
-      $article->published =  $articleStatusCheck->checked;
+      if($request['published'] >= 1) {
+          $article->published =  $articleStatusCheck->checked;
+          if ($articleStatusCheck->checked == 4) {
+              $article->publish_date =  date('Y-m-d');
+          }
+      }
     $article->save();
 
     $request->session()->flash('status', '更新了文章评估.');

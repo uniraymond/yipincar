@@ -34,8 +34,8 @@
                             </div>
                             <div>
                                 <small><span>文章状态: </span>@if ($article->published == 1 || $article->published == 0) 草稿
-                                    @elseif($article->published == 2) 申请审查
-                                    @elseif($article->published == 3) 已经审查
+                                    @elseif($article->published == 2) 初审
+                                    @elseif($article->published == 3) 终审
                                     @elseif($article->published == 4) 发布 @endif</small>
                             </div>
                             <div>
@@ -72,7 +72,7 @@
                         <div class="col-lg-4 col-md-4 col-sm-4 edit_article pull-right clearfix">
                             <a id="pv" class="inline cboxElement btn btn-primary" href="{{ url('/admin/article/'.$article->id.'/preview') }}">预览</a>
                             {{--<a id="pv" class="inline cboxElement btn btn-primary" href="#preview">预览</a>--}}
-                            @if ( Null !== Auth::user() && $article->created_by == Auth::user()->id && ($article->published == 1 || $article->published == 0) || Auth::user()->hasAnyRole(['super_admin', 'admin', 'chef_editor', 'main_editor']))
+                            @if ( Null !== Auth::user() && $article->created_by == Auth::user()->id && ($article->published == 1 || $article->published == 0) || Auth::user()->hasAnyRole(['super_admin', 'admin', 'chef_editor', 'main_editor', 'adv_editor']))
                                 {{ link_to('admin/article/'.$article->id.'/edit', '编辑', ['class'=>'btn btn-primary']) }}
                             @endif
                         </div>

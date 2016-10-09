@@ -9,6 +9,18 @@
             <div class="col-lg-12">
                 <h1 class="page-header">文章</h1>
 
+                <div class="col-md-6">
+                    {{--{!! Form::open(array('url' => '/admin/article/articlereview', 'class' => 'form', 'method'=>'get')) !!}--}}
+                    {{--{!! Form::token() !!}--}}
+                        <select class="js-example-basic-single" name="statusfilter" id="statusfilter">
+                            <option value="0">选择状态</option>
+                            <option value="2">初审</option>
+                            <option value="3">终审</option>
+                        </select>
+                    {{--{!! Form::submit('过滤', array('class'=>'btn btn-default')) !!}--}}
+                    {{--{!! Form::close() !!}--}}
+                </div>
+
                 {{--new blog link--}}
                 <div class="col-lg-2 col-md-3 col-sm-4 pull-right clearfix">
                     {{ link_to('admin/article/create', '新建', ['class'=>'btn btn-default']) }}
@@ -25,14 +37,14 @@
                 @endif
 
                 @if(count($articles)>0)
-                    <div class="col-md-12">还可以再置顶{{ (6 - $totalTop) > 0 ? (6 - $totalTop) : 0 }}篇文章</div>
+{{--                    <div class="col-md-12">还可以再置顶{{ (6 - $totalTop) > 0 ? (6 - $totalTop) : 0 }}篇文章</div>--}}
                     <table class="table table-striped">
                         <thead>
                         <tr>
                             {{--<th>置顶</th>--}}
                             <th>文章</th>
                             <th>栏目</th>
-                            {{--<th>类型</th>--}}
+                            <th>类型</th>
                             <th>关键字</th>
                             <th>作者</th>
                             <th>评论</th>
@@ -59,7 +71,7 @@
                                 {{--</td>--}}
                                 <td>{{ link_to('admin/article/'.$article->id, str_limit($article->title, 20)) }}</td>
                                 <td>{{ $article->categories->name }}</td>
-{{--                                <td>{{ $article->article_types->name }}</td>--}}
+                                <td>{{ $article->article_types->name }}</td>
                                 <td>
                                     @foreach ($article->tags as $t)
                                         {{ $t->name }},
@@ -121,4 +133,12 @@
         </div>
     </div>
     {!! Form::close() !!}
+    <script src="{{ url('/src/js/jQuery.min.2.2.4.js') }}" ></script>
+    <script type="text/javascript">
+        jQuery('#statusfilter').change(function(){
+            console.log($("#statusfilter").val());
+            var statusfilterurl = "/admin/article/articlereview?statusfilter="+$("#statusfilter").val();
+            jQuery(window.location).attr('href', statusfilterurl);
+        });
+    </script>
 @endsection

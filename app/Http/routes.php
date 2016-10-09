@@ -48,6 +48,8 @@ Route::group(['middleware'=>'auth', 'prefix'=>'admin'], function() {
     Route::get('article/category/{categoryId}', 'ArticleController@category');
     Route::get('article/type/{typeId}', 'ArticleController@type');
     Route::get('article/tag/{tagId}', 'ArticleController@tag');
+    Route::get('article/myarticle', 'ArticleController@myarticle');
+    Route::get('article/articlereview', 'ArticleController@articlereview');
 
     Route::get('articlecomment/{articleId}', 'CommentController@articlecomment');
     Route::get('zan/{commentId}', 'CommentController@zan');

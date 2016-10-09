@@ -20,7 +20,7 @@
                         @endforeach
                     </select>
                     <button id="search_word" value="查找" class="btn btn-default">查找</button>
-                    </form>
+                    {{--</form>--}}
                 </div>
                 <div class="col-md-5">
                     <select id="select-category" name="category">

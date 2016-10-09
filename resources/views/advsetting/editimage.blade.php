@@ -79,6 +79,7 @@
                     <div class="clearfix"></div>
                     {!! Form::label('category_id', '栏目', array('class'=>'col-md-12')) !!}
                     <select class="col-lg-12 col-md-12 col-sm-12 form-control" name="category_id">
+                        <option value="3">动态</option>
                         @foreach ($categories as $category)
                             <option value="{{$category->id}}" {{ $category->id == $advSettings->category_id ? 'selected' : '' }}>{{$category->name}}</option>
                         @endforeach

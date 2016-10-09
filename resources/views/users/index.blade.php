@@ -1,5 +1,5 @@
 @extends('layouts.base')
-@include('layouts.userSideBar')
+@include('layouts.settingSideBar')
 <link rel="stylesheet" href="{{ asset("/src/css/select2.min.css") }}" />
 @section('content')
     <div id="page-wrapper">
