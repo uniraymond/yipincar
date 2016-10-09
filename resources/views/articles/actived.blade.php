@@ -34,9 +34,10 @@
                             <th>评论</th>
                             @if ( Null !== Auth::user() )
                                 <th>编辑</th>
-                                <th>删除</th>
+                                <th>屏蔽</th>
                             @endif
                             <th>文章状态</th>
+                            <th>发布日期</th>
                         </tr>
                         </thead>
                         {!! Form::open(array('url' => 'admin/article/groupupdate', 'class'=>'form', 'method'=>'POST')) !!}
@@ -84,7 +85,7 @@
                                         <a href="{{ url('admin/article/'.$article->id.'/edit') }}" class="btn btn-default" id="editBtn_{{ $article->id }}">编辑</a>
                                     </td>
                                     <td>
-                                        <input type="checkbox" name="delete[{{ $article->id }}]" ng-checked="delete_{{$article->id}}" ng-click="confirmDelete('{{ $article->id }}')"/>
+                                        <input type="checkbox" name="banned[{{ $article->id }}]" {{ $article->banned ? 'checked' : '' }} />
                                     </td>
                                 @else
                                     <td></td>
@@ -92,6 +93,9 @@
                                 @endif
                                 <td>
                                     {{ count($article->article_status)>0 ? $article->article_status->title : '草稿' }}
+                                </td>
+                                <td>
+
                                 </td>
                             </tr>
                         @endforeach
