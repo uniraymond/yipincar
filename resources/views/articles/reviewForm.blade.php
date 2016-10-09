@@ -50,7 +50,7 @@ if(Auth::user()->hasAnyRole(['editor', 'auth_editor']) && $article->created_by =
             <input type="radio" name="published" class="col-lg-2 col-md-2 col-sm-2 form-check-input" value="1" /> {{ $radioLabel2 }}
         </label>
     </div>
-    {!! Form::submit('保存', array('class'=>'btn btn-primary col-lg-offset-8 col-md-offset-8 col-sm-offset-8')) !!}
+    {!! Form::submit('确定', array('class'=>'btn btn-primary col-lg-offset-8 col-md-offset-8 col-sm-offset-8')) !!}
     {!! Form::token() !!}
     {!! Form::close() !!}
 @elseif (count($statusCheck) == 1)
@@ -79,7 +79,7 @@ if(Auth::user()->hasAnyRole(['editor', 'auth_editor']) && $article->created_by =
                         </label>
                 </div>
                 <div class="clearfix"></div>
-                {!! Form::submit('提交', array('class'=>'btn btn-primary col-lg-offset-8 col-md-offset-8 col-sm-offset-8')) !!}
+                {!! Form::submit('确定', array('class'=>'btn btn-primary col-lg-offset-8 col-md-offset-8 col-sm-offset-8')) !!}
                 {!! Form::token() !!}
                 {!! Form::close() !!}
             </div>
@@ -109,7 +109,7 @@ if(Auth::user()->hasAnyRole(['editor', 'auth_editor']) && $article->created_by =
                                 <input type="radio" name="published" class="col-lg-2 col-md-2 col-sm-2 form-check-input" {{ ($statusCk->checked == 1 || $statusCk->checked == 0) ? 'checked' : '' }} value="1" /> {{ $radioLabel2 }}
                             </label>
                     </div>
-                    {!! Form::submit('提交', array('class'=>'btn btn-primary col-lg-offset-8 col-md-offset-8 col-sm-offset-8')) !!}
+                    {!! Form::submit('确定', array('class'=>'btn btn-primary col-lg-offset-8 col-md-offset-8 col-sm-offset-8')) !!}
                     {!! Form::token() !!}
                     {!! Form::close() !!}
                 </div>
