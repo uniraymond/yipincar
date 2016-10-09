@@ -29,6 +29,7 @@
                                 <th>置顶</th>
                                 <th>标题</th>
                                 <th>位置</th>
+                                <th>状态</th>
                                 <th>类型</th>
                                 {{--<th>日期</th>--}}
                                 <th>顺序</th>
@@ -54,6 +55,13 @@
                                         <td><a href="{{ url('/admin/advsetting/show/'.$advsetting->id) }}" class="">{{ str_limit($advsetting->title, 20) }}</a> </td>
                                         <td><span>{{ $advsetting->adv_positions->name }}</span></td>
                                         <td><span>{{ $advsetting->adv_types->name }}</span></td>
+                                        <td><span>
+                                            @if ($advsetting->status == 1 || $advsetting->status == 0) 草稿
+                                                @elseif($advsetting->status == 2) 初审
+                                                @elseif($advsetting->status == 3) 终审
+                                                @elseif($advsetting->status == 4) 发布
+                                                @endif
+                                            </span></td>
 {{--                                        <td><span>{{ date('Y-m-d', strtotime($advsetting->published_at)) }}</span></td>--}}
 {{--                                        <td>{{ $advsetting->order }}</td>--}}
                                         <td><input type="text" name="order[{{ $advsetting->id }}]" value="{{ $advsetting->order }}" style="width:30px;"/></td>
