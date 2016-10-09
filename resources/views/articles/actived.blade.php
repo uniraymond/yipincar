@@ -98,7 +98,7 @@
                             <tr>
                                 <td colspan="7"> </td>
                                 <td>
-                                    <input class="btn btn-primary" type="submit" value="保存" />
+                                    <input class="btn btn-primary" type="submit" value="提交" />
                                 </td>
                             </tr>
                         @endif
