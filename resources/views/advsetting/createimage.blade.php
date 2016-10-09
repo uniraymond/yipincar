@@ -79,6 +79,7 @@
           {!! Form::label('category_id', '栏目', array('class'=>'col-md-12')) !!}
           <select class="col-lg-12 col-md-12 col-sm-12 form-control" name="category_id">
             @foreach ($categories as $category)
+              <option value="3">动态</option>
               <option value="{{$category->id}}">{{$category->name}}</option>
             @endforeach
           </select>
