@@ -548,7 +548,9 @@ class ArticleController extends Controller
     $articleStatusCheck->save();
 
     $article = Article::find($articleId);
-    $article->published = $articleStatusCheck->checked;
+      if($request['published']) {
+            $article->published =  $articleStatusCheck->checked;
+        }
     $article->save();
 
     $request->session()->flash('status', '添加了新的文章评估.');
@@ -596,7 +598,9 @@ class ArticleController extends Controller
     $articleStatusCheck->save();
 
     $article = Article::find($articleId);
-      $article->published =  $articleStatusCheck->checked;
+      if($request['published']) {
+          $article->published =  $articleStatusCheck->checked;
+      }
     $article->save();
 
     $request->session()->flash('status', '更新了文章评估.');

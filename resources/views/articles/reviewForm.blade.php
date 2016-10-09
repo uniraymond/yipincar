@@ -60,7 +60,7 @@ if(Auth::user()->hasAnyRole(['editor', 'auth_editor']) && $article->created_by =
         @if($statusCheck[0]->created_by == $currentUser->id && $displayForm)
             <div class="col-lg-1 col-md-1 col-sm-1">
                 <a class="collapsed" data-toggle="collapse" href="#edit_status_check_form_{{ $statusCheck[0]->id }}" aria-expanded="false" aria-controls="edit_status_check_form_{{ $statusCheck[0]->id }}">
-                    Edit
+                    审核
                 </a>
             </div>
             <div id="edit_status_check_form_{{ $statusCheck[0]->id }}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading_edit_status_check_form">
@@ -93,7 +93,7 @@ if(Auth::user()->hasAnyRole(['editor', 'auth_editor']) && $article->created_by =
             @if($statusCk->created_by == $currentUser->id && $displayForm)
                 <div class="col-lg-1 col-md-1 col-sm-1">
                     <a class="collapsed" data-toggle="collapse" href="#edit_status_check_form_{{ $statusCk->id }}" aria-expanded="false" aria-controls="edit_status_check_form_{{ $statusCk->id }}">
-                        Edit
+                        审核
                     </a>
                 </div>
                 <div id="edit_status_check_form_{{ $statusCk->id }}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading_edit_status_check_form">
