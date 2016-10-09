@@ -520,7 +520,7 @@ class UserController extends Controller
         $username = $request['phone'];
         $password = $request['password'];
 
-        if (Auth::attempt(array('name'=>$username, 'password' => $password, false))) {
+        if (Auth::attempt(array('name'=>$username, 'password' => $password), false)) {
             return Redirect::to('/');
         } else {
             return Redirect::to('authlogin')->with('login_errors', "用户名或密码不正确");

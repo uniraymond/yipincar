@@ -82,12 +82,19 @@ class ProfileController extends Controller
         $user = User::findorFail($id);
         $userProfile = Profile::where('user_id', $id)->first();
         if (isset($userProfile) && $userProfile) {
+            if ($auth && $auth->hasAnyRole(['auth_editor'])) {
+                echo 'test';
+                return view('profiles/authshow', ['user'=>$user, 'profile' => $userProfile]);
+            }
             return view('profiles/show', ['user'=>$user, 'profile' => $userProfile]);
         } else {
             $request->session()->flash('warning', '还没有创建用户资料，请创建用户资料');
             if ($auth && ($auth->hasAnyRole(['super_admin', 'admin']) || $auth->id == $id)) {
                 return view('profiles/create', ['user'=>$user]);
             }
+//            if ($auth && ($auth->hasAnyRole(['auth_user']))) {
+//                return view('authprofile/'.id.'/create');
+//            }
             return  redirect('/admin/profile/'.id);
         }
     }
