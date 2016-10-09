@@ -12,7 +12,7 @@
                 {{--new blog link--}}
                 <div class="col-lg-2 col-md-3 col-sm-4 pull-right clearfix">
                     {{ link_to('admin/article/create', '新建', ['class'=>'btn btn-default']) }}
-                    <input class="btn btn-primary" type="submit" value="保存" />
+                    <input class="btn btn-primary" type="submit" value="提交" />
                 </div>
 
                 {{--flash alert--}}
@@ -103,7 +103,7 @@
                                 <td colspan="6"> </td>
                                 <td colspan="3">
 {{--                                    {{ link_to('admin/article/create', '新建', ['class'=>'btn btn-default']) }}--}}
-                                    <input class="btn btn-primary" type="submit" value="保存" />
+                                    <input class="btn btn-primary" type="submit" value="提交" />
                                 </td>
                             </tr>
                         @endif
