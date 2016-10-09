@@ -188,7 +188,7 @@ class ArticleController extends Controller
           $published = 2;
       }
 
-    dd($request['published']);
+//    dd($request['published']);
 //    $published = $request['published'] ? 1 : 0;
 //      dd($request['tags']);
       if (isset($request['tags'])){
