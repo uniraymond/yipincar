@@ -72,8 +72,13 @@ class ArticleController extends Controller
         $currentAction = false;
         $totalTop = $this->getTotalTop();
 
-        $articles = Article::where('published', 2)->orWhere('published', 3)->orderBy('top', 'desc')->orderBy('created_at', 'desc')->paginate(15);
-        $totalArticle = Article::where('published', 2)->orWhere('published', 3)->count();
+        if ($request['statusfilter']) {
+            $articles = Article::where('published', $request['statusfilter'])->orderBy('top', 'desc')->orderBy('created_at', 'desc')->paginate(15);
+            $totalArticle = Article::where('published',$request['statusfilter'])->count();
+        } else {
+            $articles = Article::where('published', 2)->orWhere('published', 3)->orderBy('top', 'desc')->orderBy('created_at', 'desc')->paginate(15);
+            $totalArticle = Article::where('published', 2)->orWhere('published', 3)->count();
+        }
 
         return view('articles/articlereview', ['articles'=>$articles, 'categories'=>$categories, 'types'=>$types, 'tags'=>$tags, 'currentAction'=>$currentAction, 'totalArticle'=>$totalArticle, 'totalTop'=>$totalTop]);
     }

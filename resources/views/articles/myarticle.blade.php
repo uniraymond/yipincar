@@ -25,7 +25,7 @@
                 @endif
 
                 @if(count($articles)>0)
-                    <div class="col-md-12">还可以再置顶{{ (6 - $totalTop) > 0 ? (6 - $totalTop) : 0 }}篇文章</div>
+                    {{--<div class="col-md-12">还可以再置顶{{ (6 - $totalTop) > 0 ? (6 - $totalTop) : 0 }}篇文章</div>--}}
                     <table class="table table-striped">
                         <thead>
                         <tr>

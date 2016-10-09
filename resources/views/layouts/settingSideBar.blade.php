@@ -9,7 +9,7 @@
             @endif
             @if((null !== Auth::user()) && Auth::user()->hasAnyRole(['super_admin', 'admin']))
                 <li class="list-group-item {{ (Request::is('*user') || Request::is('*profile') ? 'active' : '') }}"><a href="{{ url('admin/user') }}"> <i class="fa fa-files-o fa-fw"></i> 用户管理</a></li>
-                    <li class="list-group-item {{ (Request::is('*user') || Request::is('*profile') ? 'active' : '') }}"><a href="{{ url('admin/user/rolemanage') }}"> <i class="fa fa-files-o fa-fw"></i> 用户角色权限</a></li>
+                    <li class="list-group-item {{ (Request::is('*user/rolemanage') || Request::is('*profile') ? 'active' : '') }}"><a href="{{ url('admin/user/rolemanage') }}"> <i class="fa fa-files-o fa-fw"></i> 用户角色权限</a></li>
             @endif
             <li class="list-group-item {{ (Request::is('*tag') ? 'active' : '') }}" ><a href="{{ url('admin/tag') }}"> <i class="fa fa-files-o fa-fw"></i> 标签管理</a></li>
         </ul>
