@@ -20,7 +20,7 @@
                 <li class="list-group-item">{{link_to('admin/tag', '设置')}}</li>
                 <li class="list-group-item">{{link_to('admin/article', '内容管理')}}</li>
                 @if( (null !== Auth::user()) && Auth::user()->hasAnyRole(['super_admin', 'admin']))
-                    <li class="list-group-item">{{link_to('admin/user', '会员管理')}}</li>
+                    <li class="list-group-item">{{link_to('admin/user/authEditorList', '会员管理')}}</li>
                 @endif
                 @if((null !== Auth::user()) && Auth::user()->hasAnyRole(['super_admin', 'admin', 'main_editor', 'chef_editor', 'adv_editor']))
                     <li class="list-group-item">{{link_to('admin/statistics', '数据统计')}}</li>
