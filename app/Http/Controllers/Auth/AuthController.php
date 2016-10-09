@@ -154,4 +154,9 @@ class AuthController extends Controller
     {
         return view('authusers.authregister');
     }
+
+    public function authlogin()
+    {
+        return view('auth.authlogin');
+    }
 }

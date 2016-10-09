@@ -8,15 +8,14 @@ use App\UserStatus;
 use Illuminate\Support\Facades\DB as DB;
 use App\UserRoles;
 use Illuminate\Http\Request;
-
 use App\Http\Requests;
-
-
 use App\User;
 use App\Profile;
 //use Illuminate\Validation\Validator;
+use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Redirect;
 use Validator;
-use App\Http\Controllers\Auth;
+use Illuminate\Support\Facades\Auth as Auth;
 
 class UserController extends Controller
 {
@@ -67,8 +66,8 @@ class UserController extends Controller
 //        $data['email'] = $request['email'];
 //        $data['password'] = $request['password'];
 //        $data['roles'] = $request['roles'];
-
-        $validator = $this->validator($request->all(), $new=true);
+        $valideType = 'new';
+        $validator = $this->validator($request->all(), $valideType);
 
         if ($validator->fails()) {
             $this->throwValidationException(
@@ -164,7 +163,8 @@ class UserController extends Controller
         if (isset($checkemail) && $id == $checkemail->id)  {
             $emailChanges = false;
         }
-        $validator = $this->validator($request->all(), $new=false, $emailChanges);
+        $valideType = 'checkemail';
+        $validator = $this->validator($request->all(), $valideType);
 
         if ($validator->fails()) {
             $this->throwValidationException(
@@ -280,66 +280,125 @@ class UserController extends Controller
      * @param  array  $data
      * @return \Illuminate\Contracts\Validation\Validator
      */
-    protected function validator(array $data, $new=false, $checkemail=true)
+    protected function validator(array $data,$valideType)
     {
-        if ($new) {
-            return Validator::make($data, [
-                'name' => 'required|max:255',
-                'email' => 'required|email|max:255|unique:users',
-                'password' => 'required|min:6|confirmed',
-                'password_confirmation' => 'required|min:6',
-                'roles' => 'required',
-                'captcha' => 'required|captcha'
-            ], $this->messages($new));
-        } elseif($checkemail){
-            return Validator::make($data, [
-                'name' => 'required|max:255',
-                'email' => 'required|email|max:255|unique:users',
-                'password' => 'confirmed',
-                'roles' => 'required',
-            ], $this->messages());
-        } else{
-            return Validator::make($data, [
-                'name' => 'required|max:255',
-                'email' => 'required|email|max:255',
-                'password' => 'confirmed',
-                'roles' => 'required'
-            ], $this->messages());
+        switch($valideType) {
+            case 'new':
+                return Validator::make($data, [
+                    'name' => 'required|max:255',
+                    'email' => 'required|email|max:255|unique:users',
+                    'password' => 'required|min:6|confirmed',
+                    'password_confirmation' => 'required|min:6',
+                    'roles' => 'required',
+                    'captcha' => 'required|captcha'
+                ], $this->messages($valideType));
+                break;
+            case 'checkemail':
+                return Validator::make($data, [
+                    'name' => 'required|max:255',
+                    'email' => 'required|email|max:255|unique:users',
+                    'password' => 'confirmed',
+                    'roles' => 'required',
+                ], $this->messages($valideType));
+                break;
+            case 'authuser':
+                return Validator::make($data, [
+                    'phone' => 'required|max:14|min:11',
+                    'password' => 'required|min:6|confirmed',
+                    'password_confirmation' => 'required|min:6',
+                    'captcha' => 'required|captcha',
+                    'confirmterm' => 'required'
+                ], $this->messages($valideType));
+                break;
+            case 'login':
+                return Validator::make($data, [
+                    'phone' => 'required|max:14|min:11',
+                    'password' => 'required',
+                    'captcha' => 'required|captcha',
+                ], $this->messages($valideType));
+                break;
+            default:
+                return Validator::make($data, [
+                    'name' => 'required|max:255',
+                    'email' => 'required|email|max:255',
+                    'password' => 'confirmed',
+                    'roles' => 'required'
+                ], $this->messages($valideType));
+                break;
         }
-
     }
 
-    public function messages($new=false)
+    public function messages($valideType)
     {
-        if($new) {
-            return [
-                'name.required' => '名字是必填的',
-                'name.max' => '名字太长了',
-                'email.required'  => '电子邮件是必填的',
-                'email.email'  => '电子邮件格式不正确',
-                'email.max'  => '电子邮件太长了',
-                'email.unique'  => '电子邮件已经被注册过了',
-                'password.required'  => '密码是必填的,最少6个字符',
-                'password.min'  => '密码最少6个字符',
-                'password_confirmation.required'  => '确定密码是必填的,最少6个字符',
-                'password_confirmation.min'  => '确定密码最少是6个字符',
-                'password_confirmation.confirmed'  => '两个密码不一样',
-                'roles.required'  => '角色是必选的',
-                'captcha.required' => '请输入验证码',
-                'captcha.captcha' => '输入的验证码错误',
-            ];
-        } else{
-            return [
-                'name.required' => '名字是必填的',
-                'name.max' => '名字太长了',
-                'email.required'  => '电子邮件是必填的',
-                'email.email'  => '电子邮件格式不正确',
-                'email.max'  => '电子邮件太长了',
-                'email.unique'  => '电子邮件已经被注册过了',
-                'password_confirmation.confirmed'  => '两个密码不一样',
-                'roles.required'  => '角色是必选的',
+        switch($valideType) {
+            case 'new':
+                return [
+                    'name.required' => '名字是必填的',
+                    'name.max' => '名字太长了',
+                    'email.required'  => '电子邮件是必填的',
+                    'email.email'  => '电子邮件格式不正确',
+                    'email.max'  => '电子邮件太长了',
+                    'email.unique'  => '电子邮件已经被注册过了',
+                    'password.required'  => '密码是必填的,最少6个字符',
+                    'password.min'  => '密码最少6个字符',
+                    'password_confirmation.required'  => '确定密码是必填的,最少6个字符',
+                    'password_confirmation.min'  => '确定密码最少是6个字符',
+                    'password_confirmation.confirmed'  => '两个密码不一样',
+                    'roles.required'  => '角色是必选的',
+                    'captcha.required' => '请输入验证码',
+                    'captcha.captcha' => '输入的验证码错误',
+                ];
+                break;
+            case 'checkemail':
+                return [
+                    'name.required' => '名字是必填的',
+                    'name.max' => '名字太长了',
+                    'email.required'  => '电子邮件是必填的',
+                    'email.email'  => '电子邮件格式不正确',
+                    'email.max'  => '电子邮件太长了',
+                    'email.unique'  => '电子邮件已经被注册过了',
+                    'password_confirmation.confirmed'  => '两个密码不一样',
+                    'roles.required'  => '角色是必选的',
 
-            ];
+                ];
+                break;
+            case 'authuser':
+                return [
+                    'phone.required' => '电话是必填的',
+                    'phone.max' => '电话号码太长',
+                    'phone.min' => '电话号码太短',
+                    'password.required'  => '密码是必填的,最少6个字符',
+                    'password.min'  => '密码最少6个字符',
+                    'password_confirmation.required'  => '确定密码是必填的,最少6个字符',
+                    'password_confirmation.min'  => '确定密码最少是6个字符',
+                    'password_confirmation.confirmed'  => '两个密码不一样',
+                    'roles.required'  => '角色是必选的',
+                    'captcha.required' => '请输入验证码',
+                    'captcha.captcha' => '输入的验证码错误',
+                    'confirmterm.required'=>'需要同意用户协议'
+                ];
+                break;
+            case 'login':
+                return [
+                    'phone.required' => '号码必填',
+                    'phone.max' => '号码太长',
+                    'password.required'  => '密码必填',
+                    'captcha.required' => '请输入验证码',
+                    'captcha.captcha' => '输入的验证码错误',
+                ];
+                break;
+            default:
+                return [
+                    'name.required' => '名字是必填的',
+                    'name.max' => '名字太长了',
+                    'email.required'  => '电子邮件是必填的',
+                    'email.email'  => '电子邮件格式不正确',
+                    'email.max'  => '电子邮件太长了',
+                    'email.unique'  => '电子邮件已经被注册过了',
+                    'password_confirmation.confirmed'  => '两个密码不一样',
+                    'roles.required'  => '角色是必选的',
+                ];
+                break;
         }
     }
 
@@ -424,5 +483,47 @@ class UserController extends Controller
 //        }
 //
 //        return redirect('/');
+    }
+
+
+    public function autheditorStore(Request $request)
+    {
+        $valideType = 'authuser';
+        $validator = $this->validator($request->all(), $valideType);
+
+        if ($validator->fails()) {
+            $this->throwValidationException(
+                $request, $validator
+            );
+        }
+        $user = new User();
+        $user->name = $request['phone'];
+        $user->email = $request['phone'];
+        $user->phone = $request['phone'];
+        $user->password = bcrypt($request['password']);
+        $user->save();
+        $user->roles()->attach(Role::where('name', 'auth_editor')->first());
+        return redirect()->route('welcome');
+    }
+
+    public function authlogin(Request $request){
+        $valideType = 'login';
+//        dd($request->all());
+        $validator = $this->validator($request->all(), $valideType);
+
+        if ($validator->fails()) {
+            $this->throwValidationException(
+                $request, $validator
+            );
+        }
+
+        $username = $request['phone'];
+        $password = $request['password'];
+
+        if (Auth::attempt(array('name'=>$username, 'password' => $password, false))) {
+            return Redirect::to('/');
+        } else {
+            return Redirect::to('authlogin')->with('login_errors', "用户名或密码不正确");
+        }
     }
 }
