@@ -166,7 +166,7 @@ class InfoController extends Controller
                 ->leftJoin('resources', 'resources.id', '=', 'article_resources.resource_id')
                 ->join('article_types', 'articles.type_id', '=', 'article_types.id')
                 ->join('users', 'users.id', '=', 'articles.created_by')
-                ->select('articles.id', 'articles.title', 'categories.name as categoryName', 'articles.category_id', 'article_types.name as articletypeName'
+                ->select('articles.id', 'articles.title', 'articles.message', 'categories.name as categoryName', 'articles.category_id', 'article_types.name as articletypeName'
                     , 'articles.created_at' , 'resources.link as resourceLink', 'resources.name as resourceName', 'users.name as userName')
     //            ->where('articles.published', '=', 0)
                 ->orderBy('articles.created_at', 'desc');
