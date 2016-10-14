@@ -17,7 +17,7 @@
 <script src="{{ url('/src/js/jQuery.min.2.2.4.js') }}" ></script>
 <script>
     jQuery(document).ready(function(){
-        var width = (window.innerWidth > 0) ? window.innerWidth : screen.width;
+        var width = $(document.body).width();
         jQuery('.content p img').width(width-20);
     });
 </script>
