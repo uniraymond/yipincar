@@ -9,5 +9,7 @@
         <div class="comment col-xs-2">评论{{ count($article->comments) }}</div>
     </div>
     <div class="clearfix"></div>
+    <div class="description">导读： {{ $article->description }}</div>
+    <div class="clearfix"></div>
     <div class="content col-xs-12">{!! $article->content !!}</div>
 </div>
