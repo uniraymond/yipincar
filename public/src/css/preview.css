@@ -7,8 +7,6 @@ body {
     margin: 0 auto;
     padding: 0;
     text-align: left;
-
-    width: 414px;
 }
 
 .title {
@@ -54,7 +52,6 @@ p {
 
 .content p img {
     text-align: center;
-    width: 394px;
     height: auto;
 }
 .clearfix {
@@ -62,6 +59,6 @@ p {
 }
 
 .article-preview {
-    height: 736px;
+    /*height: 736px;*/
     overflow-y: scroll;
 }

@@ -13,3 +13,11 @@
     <div class="clearfix"></div>
     <div class="content col-xs-12">{!! $article->content !!}</div>
 </div>
+
+<script src="{{ url('/src/js/jQuery.min.2.2.4.js') }}" ></script>
+<script>
+    jQuery(document).ready(function(){
+        var width = (window.innerWidth > 0) ? window.innerWidth : screen.width;
+        jQuery('.content p img').width(width-20);
+    });
+</script>
