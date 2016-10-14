@@ -303,7 +303,9 @@ class UserController extends Controller
                 break;
             case 'authuser':
                 return Validator::make($data, [
-                    'phone' => 'required|max:14|min:11',
+//                    'phone' => 'required|digits:11|regex:^0?(13[0-9]|15[012356789]|18[0-9]|14[57])[0-9]{8}$',
+//                    'phone' => 'required|digits:11|digits_between:13000000000,19000000000',
+                    'phone' => ['required', 'digits:11', 'regex:/^0?(13[0-9]|15[012356789]|18[0-9]|14[57])[0-9]{8}$/'],
                     'password' => 'required|min:6|confirmed',
                     'password_confirmation' => 'required|min:6',
                     'captcha' => 'required|captcha',
@@ -312,7 +314,7 @@ class UserController extends Controller
                 break;
             case 'login':
                 return Validator::make($data, [
-                    'phone' => 'required|max:14|min:11',
+                    'phone' => ['required', 'digits:11', 'regex:/^0?(13[0-9]|15[012356789]|18[0-9]|14[57])[0-9]{8}$/'],
                     'password' => 'required',
                     'captcha' => 'required|captcha',
                 ], $this->messages($valideType));
@@ -367,6 +369,9 @@ class UserController extends Controller
                     'phone.required' => '电话是必填的',
                     'phone.max' => '电话号码太长',
                     'phone.min' => '电话号码太短',
+                    'phone.digits' => '请输入11位电话号码',
+//                    'phone.digits_between' => '请输入正确的手机号码，目前只支持中国大陆手机号码',
+                    'phone.regex' => '请输入正确的手机号码，目前只支持中国大陆手机号码',
                     'password.required'  => '密码是必填的,最少6个字符',
                     'password.min'  => '密码最少6个字符',
                     'password_confirmation.required'  => '确定密码是必填的,最少6个字符',
@@ -382,6 +387,8 @@ class UserController extends Controller
                 return [
                     'phone.required' => '号码必填',
                     'phone.max' => '号码太长',
+                    'phone.regex' => '电话号码不正确',
+                    'phone.digits_between' => '请输入正确的手机号码，目前只支持中国大陆手机号码',
                     'password.required'  => '密码必填',
                     'captcha.required' => '请输入验证码',
                     'captcha.captcha' => '输入的验证码错误',
@@ -501,6 +508,7 @@ class UserController extends Controller
         $user->email = $request['phone'];
         $user->phone = $request['phone'];
         $user->password = bcrypt($request['password']);
+        $user->status = 2;
         $user->save();
         $user->roles()->attach(Role::where('name', 'auth_editor')->first());
         Auth::attempt(array('name'=>$user->name, 'password' => $request['password']), false);
