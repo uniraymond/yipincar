@@ -58,6 +58,9 @@
                                     <i class="fa fa-btn fa-sign-in"></i> 登录
                                 </button>
 
+                                <a href="{{ url('authregister') }}" class="btn btn-primary">
+                                    <i class="fa fa-btn fa-sign-in"></i> 注册
+                                </a>
 {{--                                <a class="btn btn-link" href="{{ url('/password/reset') }}">忘记密码?</a>--}}
                             </div>
                         </div>

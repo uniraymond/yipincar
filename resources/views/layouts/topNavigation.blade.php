@@ -32,11 +32,11 @@
         <!-- Left Side Of Navbar -->
         <ul class="nav navbar-nav">
             @if ((null == Auth::user()) && Auth::guest())
-                <li>
-                    <a href="{{ url('admin/profile/' . Auth::user()->id) }}" >
-                        <i class="fa fa-user fa-fw"></i>我的信息
-                    </a>
-                </li>
+                {{--<li>--}}
+                    {{--<a href="{{ url('admin/profile/' . Auth::user()->id) }}" >--}}
+                        {{--<i class="fa fa-user fa-fw"></i>我的信息--}}
+                    {{--</a>--}}
+                {{--</li>--}}
             @elseif ((null != Auth::user()) && Auth::user()->hasAnyRole(['auth_editor']))
                 <li>
                     <a href="{{ url('authshow') }}" >

@@ -185,7 +185,15 @@ class ProfileController extends Controller
 
     public function authindex()
     {
-        return view('profiles/authindex');
+        $auth = $request->user();
+        $userId = $auth->id;
+        $profile = Profile::where('user_id',$userId)->first();
+
+        if (count($profile)>0) {
+            return view('profiles/authindex', ['profile'=>$profile]);
+        } else {
+            return view('profiles/authindex', ['profile'=>false] );
+        }
     }
 
     public function authcreate(Request $request)
