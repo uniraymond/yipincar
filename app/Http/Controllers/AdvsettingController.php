@@ -232,7 +232,7 @@ class AdvsettingController extends Controller
     $authuser = $request->user();
 
     $this->validate($request, [
-        'links' => 'required',
+//        'links' => 'required',
         'id' => 'required',
         'title' => 'max:23'
     ]);
@@ -264,7 +264,7 @@ class AdvsettingController extends Controller
   public function uploadimage(Request $request)
   {
     $this->validate($request, [
-        'links' => 'required',
+//        'links' => 'required',
         'images' => 'required',
         'title' => 'max:23'
     ]);
