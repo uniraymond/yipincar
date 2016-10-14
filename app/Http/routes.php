@@ -19,6 +19,7 @@ Route::get('authregister', 'Auth\AuthController@authregister');
 Route::get('authlogin', 'Auth\AuthController@authlogin');
 Route::post('postauthlogin', 'UserController@authlogin');
 Route::post('autheditorStore', 'UserController@autheditorStore');
+Route::get('authsendtxt/{phone}', 'UserController@cellphonevalidate');
 
 Route::get('authprofile/{uid}/show', 'ProfileController@authshow');
 //Route::get('authprofile/show', 'ProfileController@authshow');

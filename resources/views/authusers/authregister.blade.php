@@ -29,7 +29,7 @@
                             <label for="phone" class="col-md-4 control-label">手机号码</label>
 
                             <div class="col-md-6">
-                                <input id="phone" type="text" class="form-control" name="phone" ">
+                                <input id="phone" type="text" class="form-control" name="phone" >
 
                                 @if ($errors->has('phone'))
                                     <span class="help-block">
@@ -129,6 +129,23 @@
             }).done(function (response) {
                 captcha.prop('src', response);
             });
+        });
+
+        jQuery('#textReview').on('click', function(){
+            var mobile = jQuery('#phone').val();
+           jQuery.ajax({
+               method: 'POST',
+               url: '/authsendtxt/'+ mobile,
+               success: function(data){
+                   if(data.status == 100) {
+
+                   } else if(data.status == 400) {
+                       jQuery('#phone').append('<span class="help-block"><strong>手机号码已经存在</strong></span>');
+                   } else {
+                       jQuery('#textReview').append('<span class="help-block"><strong>短信发送失败</strong></span>')
+                   }
+               }
+           })
         });
     });
 </script>
