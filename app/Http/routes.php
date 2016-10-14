@@ -45,8 +45,6 @@ Route::group(['middleware'=>'auth', 'prefix'=>'admin'], function() {
     Route::get('zan/{commentId}', 'CommentController@zan');
     Route::post('zan/{commentId}', 'CommentController@zanupdate');
 
-
-
     Route::resource('otherarticle', 'OtherarticleController');
     Route::get('otherarticlelist', 'OtherarticleController@articlelist');
     Route::get('otherarticlelist/{articletype}', 'OtherarticleController@articlelist');
@@ -100,6 +98,7 @@ Route::group(['middleware'=>'auth', 'prefix'=>'admin'], function() {
     Route::resource('user', 'UserController');
     Route::resource('taboo', 'TabooController');
 });
+
 Route::group(['middleware' => 'auth'], function () {
 //    Route::get('/', 'ArticleController@index');
     Route::get('/', 'ProfileController@detail');
