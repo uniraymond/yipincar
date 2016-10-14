@@ -118,7 +118,7 @@
         selector: "textarea#content",
         plugins : 'link image imagetools preview',
         menubar: false,
-        toolbar: 'undo redo | image | removeformat',
+        toolbar: 'undo redo | image | removeformat | bold italic underline strikethrough | alignleft aligncenter alignright',
         relative_urls: false,
         removeformat: [
             {selector: 'b,strong,em,i,font,u,strike', remove : 'all', split : true, expand : false, block_expand: true, deep : true},
