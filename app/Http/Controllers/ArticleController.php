@@ -216,6 +216,7 @@ class ArticleController extends Controller
 
     $this->validate($request, [
       'title' => 'required|max:23',
+        'description' => 'max:140',
       'content'=> 'required'
     ], $this->messages());
 
@@ -429,6 +430,7 @@ class ArticleController extends Controller
     $authuser = $request->user();
     $this->validate($request, [
         'title' => 'required|max:23',
+        'description' => 'max:140',
         'content'=> 'required'
     ], $this->messages());
 
@@ -711,6 +713,7 @@ class ArticleController extends Controller
        return [
                     'title.required' => '标题是必填的',
                     'title.max' => '标题不能超过23个字',
+           'description' => '简介不能超过140个字',
                    'content' => '内容是必须的'
                 ];
     }
