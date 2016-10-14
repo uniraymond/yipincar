@@ -43,7 +43,7 @@
                                 <img src="{{ captcha_src() }}" alt="captcha" class="captcha-img" data-refresh-config="default" >
                             </label>
                             <div class="col-md-6">
-                                <input type="text" name="captcha" />
+                                <input id="captcha" type="text" name="captcha" />
                                 @if ($errors->has('captcha'))
                                     <span class="help-block">
                                     <strong>{{ $errors->first('captcha') }}</strong>
