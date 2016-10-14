@@ -226,6 +226,7 @@ class ArticleController extends Controller
 //    $content = strip_tags(trim($request['content']), "<img><p><b><b/><b /><img");
     $content = trim($request['content']);
     $description = $request['description'];
+      $authname = $request['authname'];
 //    $typeId = $request['type_id'];
     $categoryId = $request['category_id'];
 
@@ -265,6 +266,10 @@ class ArticleController extends Controller
     $article->content = $content;
     $article->description = $description;
     $article->updated_by = $authuser->id;
+      if($authname) {
+          $article->authname = $authname;
+      }
+
 //    $article->type_id = $typeId;
       if (!$article->type_id) {
           $article->type_id = 1;
@@ -443,6 +448,7 @@ class ArticleController extends Controller
     $typeId = $request['type_id'];
     $categoryId = $request['category_id'];
     $published = $request['published'] ? 2 : 1;
+      $authname = $request['authname'];
 
       if (isset($request['tags'])){
           $tags = trim($request['tags']);
@@ -471,6 +477,9 @@ class ArticleController extends Controller
     $article->type_id = 1;
     $article->category_id = $categoryId;
     $article->published = $published;
+      if($authname) {
+              $article->authname = $authname;
+          }
     $article->save();
 
       if ($request['published']) {

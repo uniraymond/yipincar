@@ -72,8 +72,8 @@
 {{--                                        <input type="checkbox" name="published[{{ $article->id }}]" {{ $article->published ? 'checked' : '' }}/>--}}
                                     {{--@endif--}}
                                     {{--{{ link_to('admin/user/'.$article->user_created_by->id, $article->user_created_by->name) }}--}}
-                                    @if ($article->user_created_by)
-                                        <a href="{{ url('admin/user/'.$article->user_created_by->id) }}"> <i class="fa fa-user"></i> {{ $article->user_created_by->name }}</a>
+                                    @if ($article->user_created_by || $article->authname)
+                                        <a href="{{ url('admin/user/'.$article->user_created_by->id) }}"> <i class="fa fa-user"></i> {{ $article->authname ? $article->authname : $article->user_created_by->name }}</a>
                                     @else
 
                                     @endif

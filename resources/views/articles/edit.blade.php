@@ -31,6 +31,13 @@
                             </div>
                         </div>
 
+                        <div class="{{ isset($errors) && $errors->has('authname') ? 'has-error clearfix' : 'clearfix' }}" style="margin-bottom: 5px" >
+                            <label class="col-lg-12 col-md-12 col-sm-12">作者</label>
+                            <div class="col-md-12">
+                                <input class="col-lg-12 col-md-12 col-sm-12 form-control" type="text" id="authname" name="authname" value="{{ $article->authname }}"  />
+                            </div>
+                        </div>
+
                         <div>
                             <label class="col-lg-12 col-md-12 col-sm-12">简介</label>
                             <div class="col-md-12">
