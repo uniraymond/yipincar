@@ -37,23 +37,24 @@
                         <i class="fa fa-user fa-fw"></i>我的信息
                     </a>
                 </li>
-            @elseif ((null !== Auth::user()) && Auth::user()->hasAnyRole(['auth_admin']))
+            @elseif ((null != Auth::user()) && Auth::user()->hasAnyRole(['auth_editor']))
                 <li>
-                    <a href="{{ url('authusers/authprofileshow') }}" >
+                    <a href="{{ url('authshow') }}" >
                         <i class="fa fa-user fa-fw"></i>我的信息
-
                     </a>
                 </li>
             @endif
-            @if((null !== Auth::user()) && Auth::user()->hasAnyRole(['super_admin', 'admin', 'editor', 'main_editor', 'chef_editor', 'auth_editor', 'adv_editor']))
+            @if((null != Auth::user()) && Auth::user()->hasAnyRole(['super_admin', 'admin', 'editor', 'main_editor', 'chef_editor', 'adv_editor']))
                 <li>{{link_to('admin/tag', '设置')}}</li>
                 <li>{{link_to('admin/article', '内容管理')}}</li>
-                @if( (null !== Auth::user()) && Auth::user()->hasAnyRole(['super_admin', 'admin']))
+                @if( (null != Auth::user()) && Auth::user()->hasAnyRole(['super_admin', 'admin']))
                     <li>{{link_to('admin/user/authEditorList', '会员管理')}}</li>
                 @endif
-                @if((null !== Auth::user()) && Auth::user()->hasAnyRole(['super_admin', 'admin', 'main_editor', 'chef_editor', 'adv_editor']))
+                @if((null != Auth::user()) && Auth::user()->hasAnyRole(['super_admin', 'admin', 'main_editor', 'chef_editor', 'adv_editor']))
                     <li>{{link_to('admin/statistics', '数据统计')}}</li>
                 @endif
+            @elseif((null != Auth::user()) && Auth::user()->hasAnyRole(['auth_editor']))
+                <li>{{link_to('admin/article', '内容管理')}}</li>
             @endif
         </ul>
     </div>

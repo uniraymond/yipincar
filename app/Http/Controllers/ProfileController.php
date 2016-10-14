@@ -210,11 +210,17 @@ class ProfileController extends Controller
         }
     }
 
-    public function authshow(Request $request, $userId)
+    public function authshow(Request $request)
     {
+        $auth = $request->user();
+        $userId = $auth->id;
         $profile = Profile::where('user_id', $userId)->first();
         $defaultImage = url('/photos/default.png');
-        return view('authusers/authprofileshow', ['profile'=>$profile, 'defaultImage'=>$defaultImage]);
+        if (count($profile)>0) {
+            return view('authusers/authprofileshow', ['profile'=>$profile, 'defaultImage'=>$defaultImage]);
+        } else {
+            return view('authusers/authprofilecreate', ['defaultImage'=>$defaultImage]);
+        }
     }
 
     public function authstore(Request $request)
