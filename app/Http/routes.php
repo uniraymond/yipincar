@@ -26,6 +26,7 @@ Route::get('authprofile/{uid}/edit', 'ProfileController@authedit');
 Route::put('authprofile/{uid}/store', 'ProfileController@authstore');
 Route::post('authprofile/{uid}/update', 'ProfileController@authupdate');
 Route::get('authprofile/{uid}/show', 'ProfileController@authshow');
+//Route::get('authprofile/show', 'ProfileController@authshow');
 Route::auth();
 
 //Route::resource('post', 'PostController');
