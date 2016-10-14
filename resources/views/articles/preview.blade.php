@@ -5,7 +5,7 @@
     <div class="subtitle">
         <div class="category col-xs-10">{{ $article->categories->name }}
             <span class="authname" >{{ $article->authname ? $article->authname : $article->user_created_by->name }}</span>
-            <span class="article_publish_date">{{ $article->created_at }}</span> </div>
+            <span class="article_publish_date">{{ date('Y-m-d H:i', strtotime($article->created_at)) }}</span> </div>
         <div class="comment col-xs-2">评论{{ count($article->comments) }}</div>
     </div>
     <div class="clearfix"></div>
