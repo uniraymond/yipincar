@@ -22,6 +22,8 @@ Route::post('autheditorStore', 'UserController@autheditorStore');
 Route::get('authsendtxt/{phone}', 'UserController@cellphonevalidate');
 
 Route::get('authprofile/{uid}/show', 'ProfileController@authshow');
+Route::get('preview/{id}', 'ArticleController@preview');
+
 //Route::get('authprofile/show', 'ProfileController@authshow');
 Route::auth();
 

@@ -221,7 +221,10 @@ class ArticleController extends Controller
     ], $this->messages());
 
     $title = $request->input('title');
-    $content = strip_tags(trim($request['content']), "<img><p><b><b/><b /><img");
+
+      //remove content format
+//    $content = strip_tags(trim($request['content']), "<img><p><b><b/><b /><img");
+    $content = trim($request['content']);
     $description = $request['description'];
 //    $typeId = $request['type_id'];
     $categoryId = $request['category_id'];
@@ -435,7 +438,7 @@ class ArticleController extends Controller
     ], $this->messages());
 
     $title = $request->input('title');
-    $content = strip_tags(trim($request['content']), "<img><p><b><b/><b /><img");
+    $content = trim($request['content']);
     $description = $request['description'];
     $typeId = $request['type_id'];
     $categoryId = $request['category_id'];
