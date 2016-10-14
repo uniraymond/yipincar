@@ -16,7 +16,7 @@
                     <i class="fa fa-user fa-fw"></i>我的信息
                 {{--</a>--}}
             </li>
-            @if((null !== Auth::user()) && Auth::user()->hasAnyRole(['super_admin', 'admin', 'editor', 'main_editor', 'chef_editor', 'auth_editor', 'adv_editor']))
+            @if((null !== Auth::user()) && Auth::user()->hasAnyRole(['super_admin', 'admin', 'editor', 'main_editor', 'chef_editor', 'adv_editor']))
                 <li class="list-group-item">{{link_to('admin/tag', '设置')}}</li>
                 <li class="list-group-item">{{link_to('admin/article', '内容管理')}}</li>
                 @if( (null !== Auth::user()) && Auth::user()->hasAnyRole(['super_admin', 'admin']))
@@ -32,12 +32,18 @@
         <!-- Left Side Of Navbar -->
         <ul class="nav navbar-nav">
             @if ((null == Auth::user()) && Auth::guest())
-            @else
-            <li>
-                <a href="{{ url('admin/profile/' . Auth::user()->id) }}" >
-                    <i class="fa fa-user fa-fw"></i>我的信息
-                </a>
-            </li>
+                <li>
+                    <a href="{{ url('admin/profile/' . Auth::user()->id) }}" >
+                        <i class="fa fa-user fa-fw"></i>我的信息
+                    </a>
+                </li>
+            @elseif ((null !== Auth::user()) && Auth::user()->hasAnyRole(['auth_admin']))
+                <li>
+                    <a href="{{ url('authusers/authprofileshow') }}" >
+                        <i class="fa fa-user fa-fw"></i>我的信息
+
+                    </a>
+                </li>
             @endif
             @if((null !== Auth::user()) && Auth::user()->hasAnyRole(['super_admin', 'admin', 'editor', 'main_editor', 'chef_editor', 'auth_editor', 'adv_editor']))
                 <li>{{link_to('admin/tag', '设置')}}</li>

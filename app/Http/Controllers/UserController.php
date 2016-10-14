@@ -504,7 +504,7 @@ class UserController extends Controller
         $user->save();
         $user->roles()->attach(Role::where('name', 'auth_editor')->first());
         Auth::attempt(array('name'=>$user->name, 'password' => $request['password']), false);
-        return redirect()->route('authprofile/create');
+        return redirect()->to('authprofile/create');
 //        return view('authprofile.create');
     }
 

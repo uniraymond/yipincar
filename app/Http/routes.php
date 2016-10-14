@@ -17,7 +17,6 @@ Route::get('/', ['middleware' => 'auth', function () {
 
 Route::get('authregister', 'Auth\AuthController@authregister');
 Route::get('authlogin', 'Auth\AuthController@authlogin');
-Route::get('authshow', 'ProfileController@authshow');
 Route::post('postauthlogin', 'UserController@authlogin');
 Route::post('autheditorStore', 'UserController@autheditorStore');
 
@@ -115,6 +114,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('authprofile/{uid}/edit', 'ProfileController@authedit');
     Route::put('authprofile/store', 'ProfileController@authstore');
     Route::post('authprofile/{uid}/update', 'ProfileController@authupdate');
+    Route::get('authshow', 'ProfileController@authshow');
 });
 
 

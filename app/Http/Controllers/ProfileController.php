@@ -185,7 +185,6 @@ class ProfileController extends Controller
 
     public function authindex()
     {
-        
         return view('profiles/authindex');
     }
 
@@ -204,7 +203,11 @@ class ProfileController extends Controller
     public function authedit(Request $request, $userId)
     {
         $profile = Profile::where('user_id', $userId)->first();
-        return view('authusers/authprofileedit', ['profile'=>$profile]);
+        if ($profile) {
+            return view('authusers/authprofileedit', ['profile'=>$profile]);
+        } else {
+            return view('authusers/authprofilecreate');
+        }
     }
 
     public function authshow(Request $request, $userId)
