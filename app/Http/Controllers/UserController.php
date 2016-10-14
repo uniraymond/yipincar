@@ -286,7 +286,6 @@ class UserController extends Controller
             case 'new':
                 return Validator::make($data, [
                     'name' => 'required|max:255',
-                    'email' => 'required|email|max:255|unique:users',
                     'password' => 'required|min:6|confirmed',
                     'password_confirmation' => 'required|min:6',
                     'roles' => 'required',
@@ -296,7 +295,7 @@ class UserController extends Controller
             case 'checkemail':
                 return Validator::make($data, [
                     'name' => 'required|max:255',
-                    'email' => 'required|email|max:255|unique:users',
+                    'email' => 'required|email|max:255',
                     'password' => 'confirmed',
                     'roles' => 'required',
                 ], $this->messages($valideType));
@@ -505,10 +504,10 @@ class UserController extends Controller
         }
         $user = new User();
         $user->name = $request['phone'];
-        $user->email = $request['phone'];
+//        $user->email = $request['phone'];
         $user->phone = $request['phone'];
         $user->password = bcrypt($request['password']);
-        $user->status = 2;
+        $user->status_id = 2;
         $user->save();
         $user->roles()->attach(Role::where('name', 'auth_editor')->first());
         Auth::attempt(array('name'=>$user->name, 'password' => $request['password']), false);

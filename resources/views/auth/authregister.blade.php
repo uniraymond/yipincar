@@ -42,7 +42,7 @@
                         <div class="form-group{{ $errors->has('message') ? ' has-error' : '' }}">
                             <label for="message" class="col-md-4 control-label">短信验证码</label>
 
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <input id="message" type="message" class="form-control" name="message" >
 
                                 @if ($errors->has('message'))

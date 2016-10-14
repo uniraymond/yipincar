@@ -53,7 +53,7 @@
                 @if((null != Auth::user()) && Auth::user()->hasAnyRole(['super_admin', 'admin', 'main_editor', 'chef_editor', 'adv_editor']))
                     <li>{{link_to('admin/statistics', '数据统计')}}</li>
                 @endif
-            @elseif((null != Auth::user()) && Auth::user()->hasAnyRole(['auth_editor']))
+            @elseif((null != Auth::user()) && Auth::user()->hasAnyRole(['auth_editor']) && Auth::user()->status_id == 3)
                 <li>{{link_to('admin/article', '内容管理')}}</li>
             @endif
         </ul>
