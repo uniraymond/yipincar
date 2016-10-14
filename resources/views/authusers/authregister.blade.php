@@ -7,7 +7,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading">注册一品汽车通行证</div>
                 <div class="panel-body">
-                    <form class="form-horizontal" role="form" method="POST" action="{{ url('/authregister') }}">
+                    <form class="form-horizontal" role="form" method="POST" action="{{ url('/autheditorStore') }}">
                         {{ csrf_field() }}
 
                         <div class="form-group{{ $errors->has('captcha') ? ' has-error' : ''}}">
@@ -26,7 +26,7 @@
 
 
                         <div class="form-group{{ $errors->has('phone') ? ' has-error' : '' }}">
-                            <label for="phone" class="col-md-4 control-label">名字</label>
+                            <label for="phone" class="col-md-4 control-label">手机号码</label>
 
                             <div class="col-md-6">
                                 <input id="phone" type="text" class="form-control" name="phone" ">
@@ -81,11 +81,21 @@
                             </div>
                         </div>
 
-                        <div>
-                            <label for="confirmterm">
-                                <input id="confirmterm" type="checkbox" name="confirmterm" />
-                                我已经阅读并且同意<a href="{{ url('termandconditions') }}" ><<一品汽车用户协议>></a>
-                            </label>
+                        <div class="form-group{{ $errors->has('confirmterm') ? ' has-error' : '' }}">
+                            <label for="confirmterm" class="col-md-4 control-label"></label>
+
+                            <div class="col-md-6">
+                                <label for="confirmterm">
+                                    <input id="confirmterm" type="checkbox" name="confirmterm" />
+                                    我已经阅读并且同意<<<a href="{{ url('termandconditions') }}" >一品汽车用户协议</a>>>
+                                </label>
+
+                                @if ($errors->has('confirmterm'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('confirmterm') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
                         </div>
 
                         <div class="form-group">

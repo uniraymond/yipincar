@@ -16,6 +16,17 @@ Route::get('/', ['middleware' => 'auth', function () {
 }]);
 
 Route::get('authregister', 'Auth\AuthController@authregister');
+Route::get('authlogin', 'Auth\AuthController@authlogin');
+Route::get('authshow', 'ProfileController@authshow');
+Route::post('postauthlogin', 'UserController@authlogin');
+Route::post('autheditorStore', 'UserController@autheditorStore');
+
+Route::get('authprofile/{uid}/create', 'ProfileController@authcreate');
+Route::get('authprofile/{uid}/edit', 'ProfileController@authedit');
+Route::put('authprofile/{uid}/store', 'ProfileController@authstore');
+Route::post('authprofile/{uid}/update', 'ProfileController@authupdate');
+Route::get('authprofile/{uid}/show', 'ProfileController@authshow');
+//Route::get('authprofile/show', 'ProfileController@authshow');
 Route::auth();
 
 //Route::resource('post', 'PostController');
@@ -90,6 +101,7 @@ Route::group(['middleware'=>'auth', 'prefix'=>'admin'], function() {
     Route::get('user/listAutheditor/{role_id}', 'UserController@listAutheditor');
     Route::get('user/authEditorList', 'UserController@authEditorList');
     Route::get('user/{user_id}/editpw', 'UserController@editpw');
+    Route::get('authprofile/store', 'ProfileController@authstore');
 
     Route::resource('article', 'ArticleController');
     Route::resource('category', 'CategoryController');
@@ -104,6 +116,7 @@ Route::group(['middleware' => 'auth'], function () {
 //    Route::get('/', 'ArticleController@index');
     Route::get('/', 'ProfileController@detail');
 });
+
 
 Route::group(['prefix'=>'api'], function() {
     Route::resource('info', 'InfoController');

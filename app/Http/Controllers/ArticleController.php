@@ -181,7 +181,7 @@ class ArticleController extends Controller
         $tagString = null;
         $tagArray = array();
         foreach ($tags as $tag) {
-            $tagArray[]= $tag->name;
+            $tagArray[$tag->id]= $tag->name;
         }
         $tagString = implode(', ', $tagArray);
       $currentTags = array();
@@ -200,7 +200,8 @@ class ArticleController extends Controller
           'tagString' => $tagString,
           'tagArray' => $tagArray,
           'currentTagString' => $currentTagString,
-           'types'=>$types, 'tags'=>$tags, 'currentAction'=>$currentAction
+          'types'=>$types,
+          'currentAction'=>$currentAction
       ]);
     } else {
       $request->session()->flash('status', '您不是文章的作者,不能编辑此文章.');
