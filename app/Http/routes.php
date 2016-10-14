@@ -21,10 +21,6 @@ Route::get('authshow', 'ProfileController@authshow');
 Route::post('postauthlogin', 'UserController@authlogin');
 Route::post('autheditorStore', 'UserController@autheditorStore');
 
-Route::get('authprofile/{uid}/create', 'ProfileController@authcreate');
-Route::get('authprofile/{uid}/edit', 'ProfileController@authedit');
-Route::put('authprofile/{uid}/store', 'ProfileController@authstore');
-Route::post('authprofile/{uid}/update', 'ProfileController@authupdate');
 Route::get('authprofile/{uid}/show', 'ProfileController@authshow');
 //Route::get('authprofile/show', 'ProfileController@authshow');
 Route::auth();
@@ -115,6 +111,10 @@ Route::group(['middleware'=>'auth', 'prefix'=>'admin'], function() {
 Route::group(['middleware' => 'auth'], function () {
 //    Route::get('/', 'ArticleController@index');
     Route::get('/', 'ProfileController@detail');
+    Route::get('authprofile/create', 'ProfileController@authcreate');
+    Route::get('authprofile/{uid}/edit', 'ProfileController@authedit');
+    Route::put('authprofile/store', 'ProfileController@authstore');
+    Route::post('authprofile/{uid}/update', 'ProfileController@authupdate');
 });
 
 

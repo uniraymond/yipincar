@@ -503,7 +503,9 @@ class UserController extends Controller
         $user->password = bcrypt($request['password']);
         $user->save();
         $user->roles()->attach(Role::where('name', 'auth_editor')->first());
-        return redirect()->route('welcome');
+        Auth::attempt(array('name'=>$user->name, 'password' => $request['password']), false);
+        return redirect()->route('authprofile/create');
+//        return view('authprofile.create');
     }
 
     public function authlogin(Request $request){

@@ -189,8 +189,10 @@ class ProfileController extends Controller
         return view('profiles/authindex');
     }
 
-    public function authcreate(Request $request, $userId)
+    public function authcreate(Request $request)
     {
+        $auth = $request->user();
+        $userId = $auth->id;
         $profile = Profile::where('user_id',$userId)->first();
         if (count($profile)<1) {
             return view('authusers/authprofilecreate');
@@ -214,6 +216,9 @@ class ProfileController extends Controller
 
     public function authstore(Request $request)
     {
+        $auth = $request->user();
+        $userId = $auth->id;
+
         $validator = $this->validator($request->all(), $authuser=true);
 
         if ($validator->fails()) {
@@ -238,6 +243,7 @@ class ProfileController extends Controller
         $mediaIcon = $this->uploadfile($media_icon);
 
         $profile = new Profile();
+        $profile->user_id = $userId;
         $profile->name = $request['name'];
         $profile->media_type_id = $request['mediatype'];
         $profile->prove_type = $request['prove_type'];
