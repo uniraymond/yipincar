@@ -232,8 +232,9 @@ class AdvsettingController extends Controller
     $authuser = $request->user();
 
     $this->validate($request, [
-        'links' => 'required',
+//        'links' => 'required',
         'id' => 'required',
+        'title' => 'max:23'
     ]);
 
     $advSetting = AdvSetting::findorFail($request['id']);
@@ -263,8 +264,9 @@ class AdvsettingController extends Controller
   public function uploadimage(Request $request)
   {
     $this->validate($request, [
-        'links' => 'required',
+//        'links' => 'required',
         'images' => 'required',
+        'title' => 'max:23'
     ]);
     $authuser = $request->user();
     $file = $request->file('images');

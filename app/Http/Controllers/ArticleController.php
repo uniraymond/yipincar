@@ -37,7 +37,7 @@ class ArticleController extends Controller
       if ($authuser->hasAnyRole(['super_admin', 'admin', 'chef_editor', 'main_editor', 'adv_editor'])) {
           $articles = Article::orderBy('top', 'desc')->orderBy('created_at', 'desc')->paginate(15);
           $totalArticle = Article::count();
-      } else  {
+      } else {
           $articles = Article::where('created_by', $authuser->id)->orderBy('top', 'desc')->orderBy('created_at', 'desc')->paginate(15);
           $totalArticle = Article::where('created_by', $authuser->id)->count();
       }
@@ -181,7 +181,7 @@ class ArticleController extends Controller
         $tagString = null;
         $tagArray = array();
         foreach ($tags as $tag) {
-            $tagArray[]= $tag->name;
+            $tagArray[$tag->id]= $tag->name;
         }
         $tagString = implode(', ', $tagArray);
       $currentTags = array();
@@ -200,7 +200,8 @@ class ArticleController extends Controller
           'tagString' => $tagString,
           'tagArray' => $tagArray,
           'currentTagString' => $currentTagString,
-           'types'=>$types, 'tags'=>$tags, 'currentAction'=>$currentAction
+          'types'=>$types,
+          'currentAction'=>$currentAction
       ]);
     } else {
       $request->session()->flash('status', '您不是文章的作者,不能编辑此文章.');
@@ -214,13 +215,18 @@ class ArticleController extends Controller
     $authuser = $request->user();
 
     $this->validate($request, [
-      'title' => 'required',
+      'title' => 'required|max:23',
+        'description' => 'max:140',
       'content'=> 'required'
-    ]);
+    ], $this->messages());
 
     $title = $request->input('title');
-    $content = strip_tags(trim($request['content']), "<img><p><b><b/><b /><img");
-    $description = $request['description'] ? $request['description'] : trim(substr($content, 0, 20));
+
+      //remove content format
+//    $content = strip_tags(trim($request['content']), "<img><p><b><b/><b /><img");
+    $content = trim($request['content']);
+    $description = $request['description'];
+      $authname = $request['authname'];
 //    $typeId = $request['type_id'];
     $categoryId = $request['category_id'];
 
@@ -260,6 +266,10 @@ class ArticleController extends Controller
     $article->content = $content;
     $article->description = $description;
     $article->updated_by = $authuser->id;
+      if($authname) {
+          $article->authname = $authname;
+      }
+
 //    $article->type_id = $typeId;
       if (!$article->type_id) {
           $article->type_id = 1;
@@ -427,16 +437,18 @@ class ArticleController extends Controller
   {
     $authuser = $request->user();
     $this->validate($request, [
-        'title' => 'required',
+        'title' => 'required|max:23',
+        'description' => 'max:140',
         'content'=> 'required'
-    ]);
+    ], $this->messages());
 
     $title = $request->input('title');
-    $content = strip_tags(trim($request['content']), "<img><p><b><b/><b /><img");
-    $description = $request['description'] ? $request['description'] : trim(substr($content, 0, 20));
+    $content = trim($request['content']);
+    $description = $request['description'];
     $typeId = $request['type_id'];
     $categoryId = $request['category_id'];
     $published = $request['published'] ? 2 : 1;
+      $authname = $request['authname'];
 
       if (isset($request['tags'])){
           $tags = trim($request['tags']);
@@ -465,6 +477,9 @@ class ArticleController extends Controller
     $article->type_id = 1;
     $article->category_id = $categoryId;
     $article->published = $published;
+      if($authname) {
+              $article->authname = $authname;
+          }
     $article->save();
 
       if ($request['published']) {
@@ -705,4 +720,13 @@ class ArticleController extends Controller
     return view('termandconditions');
   }
 
+    public function messages()
+    {
+       return [
+                    'title.required' => '标题是必填的',
+                    'title.max' => '标题不能超过23个字',
+           'description' => '简介不能超过140个字',
+                   'content' => '内容是必须的'
+                ];
+    }
 }

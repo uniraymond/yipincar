@@ -22,19 +22,26 @@
                         <div class="{{ isset($errors) && $errors->has('title') ? 'has-error clearfix' : 'clearfix' }}" style="margin-bottom: 5px" >
                             <label class="col-lg-12 col-md-12 col-sm-12">标题</label>
                             <div class="col-md-12">
-                                <input class="col-lg-12 col-md-12 col-sm-12 form-control" type="text" id="title" name="title" required  value="{{ $article->title }}"/>
+                                <input class="col-lg-12 col-md-12 col-sm-12 form-control" type="text" id="title" name="title" required  value="{{ $article->title }}" maxlength="23" />
                                 @if ($errors->has('title'))
                                     <span class="help-block">
-                                        <strong>{{ $errors->first('title') ? '标题不能为空' : ''}}</strong>
+                                        <strong>{{ $errors->first('title') }}</strong>
                                     </span>
                                 @endif
+                            </div>
+                        </div>
+
+                        <div class="{{ isset($errors) && $errors->has('authname') ? 'has-error clearfix' : 'clearfix' }}" style="margin-bottom: 5px" >
+                            <label class="col-lg-12 col-md-12 col-sm-12">作者</label>
+                            <div class="col-md-12">
+                                <input class="col-lg-12 col-md-12 col-sm-12 form-control" type="text" id="authname" name="authname" value="{{ $article->authname }}"  />
                             </div>
                         </div>
 
                         <div>
                             <label class="col-lg-12 col-md-12 col-sm-12">简介</label>
                             <div class="col-md-12">
-                                <textarea class="col-lg-12 col-md-12 col-sm-12 form-control" type="text" id="description" name="description" placeholder="简介" >{{ $article->description }}</textarea>
+                                <textarea class="col-lg-12 col-md-12 col-sm-12 form-control" type="text" id="description" name="description" placeholder="简介" maxlength="140">{{ $article->description }}</textarea>
                             </div>
                         </div>
 
@@ -58,7 +65,7 @@
                                 <textarea class="col-lg-12 col-md-12 col-sm-12 form-control clearfix" id="content" name="content" height="50">{{ $article->content }}</textarea>
                                 @if ($errors->has('content'))
                                     <span class="help-block">
-                                        <strong>{{ $errors->first('content') ? '内容不能为空' : ''}}</strong>
+                                        <strong>{{ $errors->first('content')}}</strong>
                                     </span>
                                 @endif
                             </div>
@@ -118,6 +125,15 @@
        <script src="{{ url('/src/js/jQuery.min.2.2.4.js') }}" ></script>
        <script>
            jQuery(document).ready(function(){
+               jQuery('#title').blur(function(){
+                   var title =  jQuery('#title').val();
+                   console.log(title.length);
+                   if (title.length > 23) {
+                       jQuery('#title').append('<span><strong>文章标题太长</strong></span>');
+                       alert('文章标题超过23个字');
+                       return false;
+                   }
+               });
                jQuery('#settop').click(function(){
                    jQuery.ajax({
                        url: '/admin/advsetting/checktop',
@@ -141,7 +157,7 @@
                selector: "textarea#content",
                plugins : 'link image imagetools preview',
                menubar: false,
-               toolbar: 'undo redo | image | removeformat',
+               toolbar: 'undo redo | image | removeformat | bold italic underline strikethrough | alignleft aligncenter alignright',
                relative_urls: false,
                removeformat: [
                    {selector: 'b,strong,em,i,font,u,strike', remove : 'all', split : true, expand : false, block_expand: true, deep : true},

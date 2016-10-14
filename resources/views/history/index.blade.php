@@ -32,13 +32,14 @@
                             @php
                                 $json = '{'.$history->target.'}';
                                 $article = json_decode($json, true);
+                            var_dump($article);
                                 echo $article["article_title"];
                             @endphp
                             <tr>
                                 <td>{{ $history->action }}</td>
                                 <td>{{ $history->origin }}</td>
                                 <td></td>
-                                <td>{{ $history->created_by }}</td>
+                                <td>{{ $history->created_by->user->name }}</td>
                                 <td>{{ $history->created_at }}</td>
                             </tr>
                         @endforeach

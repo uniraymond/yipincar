@@ -26,7 +26,7 @@
                         <div id="heading_block" class="panel-heading col-lg-3 col-md-4">
                             <div>
                                 <small>
-                                    <span>作者: </span>{{ $article->created_by ? $article->user_created_by->name : '无名' }}
+                                    <span>作者: </span>{{ $article->authname ? $article->authname : $article->user_created_by->name }}
                                 </small>
                             </div>
                             <div>

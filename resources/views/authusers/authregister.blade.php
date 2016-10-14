@@ -7,7 +7,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading">注册一品汽车通行证</div>
                 <div class="panel-body">
-                    <form class="form-horizontal" role="form" method="POST" action="{{ url('/authregister') }}">
+                    <form class="form-horizontal" role="form" method="POST" action="{{ url('/autheditorStore') }}">
                         {{ csrf_field() }}
 
                         <div class="form-group{{ $errors->has('captcha') ? ' has-error' : ''}}">
@@ -26,10 +26,10 @@
 
 
                         <div class="form-group{{ $errors->has('phone') ? ' has-error' : '' }}">
-                            <label for="phone" class="col-md-4 control-label">名字</label>
+                            <label for="phone" class="col-md-4 control-label">手机号码</label>
 
                             <div class="col-md-6">
-                                <input id="phone" type="text" class="form-control" name="phone" ">
+                                <input id="phone" type="text" class="form-control" name="phone" >
 
                                 @if ($errors->has('phone'))
                                     <span class="help-block">
@@ -42,7 +42,7 @@
                         <div class="form-group{{ $errors->has('message') ? ' has-error' : '' }}">
                             <label for="message" class="col-md-4 control-label">短信验证码</label>
 
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <input id="message" type="message" class="form-control" name="message" >
 
                                 @if ($errors->has('message'))
@@ -50,6 +50,9 @@
                                         <strong>{{ $errors->first('message') }}</strong>
                                     </span>
                                 @endif
+                            </div>
+                            <div class="col-md-2">
+                                <input type="button" class="btn btn-default" id="textReview" value="发送短信验证码"/>
                             </div>
                         </div>
 
@@ -81,11 +84,21 @@
                             </div>
                         </div>
 
-                        <div>
-                            <label for="confirmterm">
-                                <input id="confirmterm" type="checkbox" name="confirmterm" />
-                                我已经阅读并且同意<a href="{{ url('termandconditions') }}" ><<一品汽车用户协议>></a>
-                            </label>
+                        <div class="form-group{{ $errors->has('confirmterm') ? ' has-error' : '' }}">
+                            <label for="confirmterm" class="col-md-4 control-label"></label>
+
+                            <div class="col-md-6">
+                                <label for="confirmterm">
+                                    <input id="confirmterm" type="checkbox" name="confirmterm" />
+                                    我已经阅读并且同意<<<a href="{{ url('termandconditions') }}" >一品汽车用户协议</a>>>
+                                </label>
+
+                                @if ($errors->has('confirmterm'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('confirmterm') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
                         </div>
 
                         <div class="form-group">
@@ -116,6 +129,23 @@
             }).done(function (response) {
                 captcha.prop('src', response);
             });
+        });
+
+        jQuery('#textReview').on('click', function(){
+            var mobile = jQuery('#phone').val();
+           jQuery.ajax({
+               method: 'POST',
+               url: '/authsendtxt/'+ mobile,
+               success: function(data){
+                   if(data.status == 100) {
+
+                   } else if(data.status == 400) {
+                       jQuery('#phone').append('<span class="help-block"><strong>手机号码已经存在</strong></span>');
+                   } else {
+                       jQuery('#textReview').append('<span class="help-block"><strong>短信发送失败</strong></span>')
+                   }
+               }
+           })
         });
     });
 </script>

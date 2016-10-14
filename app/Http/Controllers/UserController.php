@@ -8,15 +8,14 @@ use App\UserStatus;
 use Illuminate\Support\Facades\DB as DB;
 use App\UserRoles;
 use Illuminate\Http\Request;
-
 use App\Http\Requests;
-
-
 use App\User;
 use App\Profile;
 //use Illuminate\Validation\Validator;
+use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Redirect;
 use Validator;
-use App\Http\Controllers\Auth;
+use Illuminate\Support\Facades\Auth as Auth;
 
 class UserController extends Controller
 {
@@ -67,8 +66,8 @@ class UserController extends Controller
 //        $data['email'] = $request['email'];
 //        $data['password'] = $request['password'];
 //        $data['roles'] = $request['roles'];
-
-        $validator = $this->validator($request->all(), $new=true);
+        $valideType = 'new';
+        $validator = $this->validator($request->all(), $valideType);
 
         if ($validator->fails()) {
             $this->throwValidationException(
@@ -164,7 +163,8 @@ class UserController extends Controller
         if (isset($checkemail) && $id == $checkemail->id)  {
             $emailChanges = false;
         }
-        $validator = $this->validator($request->all(), $new=false, $emailChanges);
+        $valideType = 'checkemail';
+        $validator = $this->validator($request->all(), $valideType);
 
         if ($validator->fails()) {
             $this->throwValidationException(
@@ -280,66 +280,131 @@ class UserController extends Controller
      * @param  array  $data
      * @return \Illuminate\Contracts\Validation\Validator
      */
-    protected function validator(array $data, $new=false, $checkemail=true)
+    protected function validator(array $data,$valideType)
     {
-        if ($new) {
-            return Validator::make($data, [
-                'name' => 'required|max:255',
-                'email' => 'required|email|max:255|unique:users',
-                'password' => 'required|min:6|confirmed',
-                'password_confirmation' => 'required|min:6',
-                'roles' => 'required',
-                'captcha' => 'required|captcha'
-            ], $this->messages($new));
-        } elseif($checkemail){
-            return Validator::make($data, [
-                'name' => 'required|max:255',
-                'email' => 'required|email|max:255|unique:users',
-                'password' => 'confirmed',
-                'roles' => 'required',
-            ], $this->messages());
-        } else{
-            return Validator::make($data, [
-                'name' => 'required|max:255',
-                'email' => 'required|email|max:255',
-                'password' => 'confirmed',
-                'roles' => 'required'
-            ], $this->messages());
+        switch($valideType) {
+            case 'new':
+                return Validator::make($data, [
+                    'name' => 'required|max:255',
+                    'password' => 'required|min:6|confirmed',
+                    'password_confirmation' => 'required|min:6',
+                    'roles' => 'required',
+                    'captcha' => 'required|captcha'
+                ], $this->messages($valideType));
+                break;
+            case 'checkemail':
+                return Validator::make($data, [
+                    'name' => 'required|max:255',
+                    'email' => 'required|email|max:255',
+                    'password' => 'confirmed',
+                    'roles' => 'required',
+                ], $this->messages($valideType));
+                break;
+            case 'authuser':
+                return Validator::make($data, [
+//                    'phone' => 'required|digits:11|regex:^0?(13[0-9]|15[012356789]|18[0-9]|14[57])[0-9]{8}$',
+//                    'phone' => 'required|digits:11|digits_between:13000000000,19000000000',
+                    'phone' => ['required', 'digits:11', 'regex:/^0?(13[0-9]|15[012356789]|18[0-9]|14[57])[0-9]{8}$/'],
+                    'password' => 'required|min:6|confirmed',
+                    'password_confirmation' => 'required|min:6',
+                    'captcha' => 'required|captcha',
+                    'confirmterm' => 'required'
+                ], $this->messages($valideType));
+                break;
+            case 'login':
+                return Validator::make($data, [
+                    'phone' => ['required', 'digits:11', 'regex:/^0?(13[0-9]|15[012356789]|18[0-9]|14[57])[0-9]{8}$/'],
+                    'password' => 'required',
+                    'captcha' => 'required|captcha',
+                ], $this->messages($valideType));
+                break;
+            default:
+                return Validator::make($data, [
+                    'name' => 'required|max:255',
+                    'email' => 'required|email|max:255',
+                    'password' => 'confirmed',
+                    'roles' => 'required'
+                ], $this->messages($valideType));
+                break;
         }
-
     }
 
-    public function messages($new=false)
+    public function messages($valideType)
     {
-        if($new) {
-            return [
-                'name.required' => '名字是必填的',
-                'name.max' => '名字太长了',
-                'email.required'  => '电子邮件是必填的',
-                'email.email'  => '电子邮件格式不正确',
-                'email.max'  => '电子邮件太长了',
-                'email.unique'  => '电子邮件已经被注册过了',
-                'password.required'  => '密码是必填的,最少6个字符',
-                'password.min'  => '密码最少6个字符',
-                'password_confirmation.required'  => '确定密码是必填的,最少6个字符',
-                'password_confirmation.min'  => '确定密码最少是6个字符',
-                'password_confirmation.confirmed'  => '两个密码不一样',
-                'roles.required'  => '角色是必选的',
-                'captcha.required' => '请输入验证码',
-                'captcha.captcha' => '输入的验证码错误',
-            ];
-        } else{
-            return [
-                'name.required' => '名字是必填的',
-                'name.max' => '名字太长了',
-                'email.required'  => '电子邮件是必填的',
-                'email.email'  => '电子邮件格式不正确',
-                'email.max'  => '电子邮件太长了',
-                'email.unique'  => '电子邮件已经被注册过了',
-                'password_confirmation.confirmed'  => '两个密码不一样',
-                'roles.required'  => '角色是必选的',
+        switch($valideType) {
+            case 'new':
+                return [
+                    'name.required' => '名字是必填的',
+                    'name.max' => '名字太长了',
+                    'email.required'  => '电子邮件是必填的',
+                    'email.email'  => '电子邮件格式不正确',
+                    'email.max'  => '电子邮件太长了',
+                    'email.unique'  => '电子邮件已经被注册过了',
+                    'password.required'  => '密码是必填的,最少6个字符',
+                    'password.min'  => '密码最少6个字符',
+                    'password_confirmation.required'  => '确定密码是必填的,最少6个字符',
+                    'password_confirmation.min'  => '确定密码最少是6个字符',
+                    'password_confirmation.confirmed'  => '两个密码不一样',
+                    'roles.required'  => '角色是必选的',
+                    'captcha.required' => '请输入验证码',
+                    'captcha.captcha' => '输入的验证码错误',
+                ];
+                break;
+            case 'checkemail':
+                return [
+                    'name.required' => '名字是必填的',
+                    'name.max' => '名字太长了',
+                    'email.required'  => '电子邮件是必填的',
+                    'email.email'  => '电子邮件格式不正确',
+                    'email.max'  => '电子邮件太长了',
+                    'email.unique'  => '电子邮件已经被注册过了',
+                    'password_confirmation.confirmed'  => '两个密码不一样',
+                    'roles.required'  => '角色是必选的',
 
-            ];
+                ];
+                break;
+            case 'authuser':
+                return [
+                    'phone.required' => '电话是必填的',
+                    'phone.max' => '电话号码太长',
+                    'phone.min' => '电话号码太短',
+                    'phone.digits' => '请输入11位电话号码',
+//                    'phone.digits_between' => '请输入正确的手机号码，目前只支持中国大陆手机号码',
+                    'phone.regex' => '请输入正确的手机号码，目前只支持中国大陆手机号码',
+                    'password.required'  => '密码是必填的,最少6个字符',
+                    'password.min'  => '密码最少6个字符',
+                    'password_confirmation.required'  => '确定密码是必填的,最少6个字符',
+                    'password_confirmation.min'  => '确定密码最少是6个字符',
+                    'password_confirmation.confirmed'  => '两个密码不一样',
+                    'roles.required'  => '角色是必选的',
+                    'captcha.required' => '请输入验证码',
+                    'captcha.captcha' => '输入的验证码错误',
+                    'confirmterm.required'=>'需要同意用户协议'
+                ];
+                break;
+            case 'login':
+                return [
+                    'phone.required' => '号码必填',
+                    'phone.max' => '号码太长',
+                    'phone.regex' => '电话号码不正确',
+                    'phone.digits_between' => '请输入正确的手机号码，目前只支持中国大陆手机号码',
+                    'password.required'  => '密码必填',
+                    'captcha.required' => '请输入验证码',
+                    'captcha.captcha' => '输入的验证码错误',
+                ];
+                break;
+            default:
+                return [
+                    'name.required' => '名字是必填的',
+                    'name.max' => '名字太长了',
+                    'email.required'  => '电子邮件是必填的',
+                    'email.email'  => '电子邮件格式不正确',
+                    'email.max'  => '电子邮件太长了',
+                    'email.unique'  => '电子邮件已经被注册过了',
+                    'password_confirmation.confirmed'  => '两个密码不一样',
+                    'roles.required'  => '角色是必选的',
+                ];
+                break;
         }
     }
 
@@ -419,10 +484,312 @@ class UserController extends Controller
         $authView = $auth->hasAnyRole(['super_admin', 'admin']);
 //        if ($authView) {
             $roles = Role::all();
-            $users = User::paginate(10);
+//            $users = User::with(['user_roles'])->where('role_id', 6)
+//            ->paginate(10);
+        $users = DB::table('users')
+            ->join('user_roles', 'users.id', '=', 'user_roles.user_id')
+            ->where('user_roles.role_id', '=', 6)
+            ->paginate(15);
+//            ->get();
+//        dd($users);
             return view('users/authEditorList', ['users'=>$users, 'usergroups'=>$roles]);
 //        }
 //
 //        return redirect('/');
+    }
+
+
+    public function autheditorStore(Request $request)
+    {
+        $valideType = 'authuser';
+        $validator = $this->validator($request->all(), $valideType);
+
+        if ($validator->fails()) {
+            $this->throwValidationException(
+                $request, $validator
+            );
+        }
+        $user = new User();
+        $user->name = $request['phone'];
+//        $user->email = $request['phone'];
+        $user->phone = $request['phone'];
+        $user->password = bcrypt($request['password']);
+        $user->status_id = 2;
+        $user->save();
+        $user->roles()->attach(Role::where('name', 'auth_editor')->first());
+        Auth::attempt(array('name'=>$user->name, 'password' => $request['password']), false);
+        return redirect()->to('authprofile/create');
+//        return view('authprofile.create');
+    }
+
+    public function authlogin(Request $request){
+        $valideType = 'login';
+//        dd($request->all());
+        $validator = $this->validator($request->all(), $valideType);
+
+        if ($validator->fails()) {
+            $this->throwValidationException(
+                $request, $validator
+            );
+        }
+
+        $username = $request['phone'];
+        $phone = $request['phone'];
+        $password = $request['password'];
+
+        if (Auth::attempt(array('phone'=>$phone, 'password' => $password), false)) {
+            return Redirect::to('/');
+        } else {
+            return Redirect::to('authlogin')->with('login_errors', "用户名或密码不正确");
+        }
+    }
+
+    /*--------------------------------
+功能:		使用smsapi.fun.php功能函数发送短信示例
+说明:		http://api.sms.cn/sms/?ac=send&uid=用户账号&pwd=MD5位32密码&mobile=号码&content=内容
+官网:		www.sms.cn
+状态:		{"stat":"100","message":"发送成功"}
+
+	100 发送成功
+	101 验证失败
+	102 短信不足
+	103 操作失败
+	104 非法字符
+	105 内容过多
+	106 号码过多
+	107 频率过快
+	108 号码内容空
+	109 账号冻结
+	112	号码错误
+	116 禁止接口发送
+	117 绑定IP不正确
+	161 未添加短信模板
+	162 模板格式不正确
+	163 模板ID不正确
+	164 全文模板不匹配
+--------------------------------*/
+    public function cellphonevalidate($phone){
+        //用户账号
+        $uid = 'testsms';
+//MD5密码
+        $pwd = '353447s535dd';
+
+        /*
+        * 变量模板发送示例
+        * 模板内容：您的验证码是：{$code}，对用户{$username}操作绑定手机号，有效期为5分钟。如非本人操作，可不用理会。【云信】
+        * 变量模板ID：100003
+        */
+
+//变量模板ID
+        $template = '100005';
+//6位随机验证码
+        $code = randNumber();
+
+        $user = User::where('phone', $phone)->first();
+        if (count($user)>0) {
+            $messageSent = array('phone'=>$phone, 'code'=>$code, 'status'=>400);
+            return json_encode($messageSent);
+        }
+//短信内容参数
+        $contentParam = array(
+            'code'		=> $code,
+            'username'	=> '您好'
+        );
+//即时发送
+        $res = sendSMS($uid,$pwd,$phone,array_to_json($contentParam),$template);
+        $messageSent = array();
+        $messageSent = array('phone'=>$phone, 'code'=>$code, 'status'=>$res['stat']);
+
+        return json_encode($messageSent);
+//        if( $res['stat']=='100' )
+//        {
+//            return json_encode()
+//            echo "发送成功!";
+//        }
+//        else
+//        {
+//            echo "发送失败! 状态：".$res['stat'].'|'.$res['message'];
+//        }
+    }
+
+    /**
+    SMS短信发送函数
+    @author		sms.cn
+    @link		http://www.sms.cn
+     */
+
+    /**
+     * 短信发送
+     *
+     * @param string $uid 短信账号
+     * @param string $pwd MD5接口密码
+     * @param string $mobile 手机号码
+     * @param string $content 短信内容
+     * @param string $template 短信模板ID
+     * @return array
+     */
+    function sendSMS($uid,$pwd,$mobile,$content,$template='')
+    {
+        $apiUrl = 'http://api.sms.cn/sms/';		//短信接口地址
+        $data = array(
+            'ac' =>		'send',
+            'uid'=>		$uid,					//用户账号
+            'pwd'=>		md5($pwd.$uid),					//MD5位32密码,密码和用户名拼接字符
+            'mobile'=>	$mobile,				//号码
+            'content'=>	$content,				//内容
+            'template'=>$template,				//变量模板ID 全文模板不用填写
+            'format' => 'json',					//接口返回信息格式 json\xml\txt
+        );
+
+        $result = postSMS($apiUrl,$data);			//POST方式提交
+        $re = json_to_array($result);			    //JSON数据转为数组
+        //$re = getSMS($apiUrl,$data);				//GET方式提交
+
+        return $re;
+        /*
+        if( $re['stat']=='100' )
+        {
+            return "发送成功!";
+        }
+        else if( $re['stat']=='101')
+        {
+            return "验证失败! 状态：".$re;
+        }
+        else
+        {
+            return "发送失败! 状态：".$re;
+        }
+        */
+    }
+
+    /*
+    //密码直接写的函数里
+
+    function sendSMS($mobile,$content,$template='')
+    {
+        $uid = 'test';
+        $pwd = 'testpass';
+        $apiUrl = 'http://api.sms.cn/sms/';		//短信接口地址
+        $data = array(
+            'ac' =>		'send',
+            'uid'=>		$uid,					//用户账号
+            'pwd'=>		md5($pwd.$uid),					//MD5位32密码,密码和用户名拼接字符
+            'mobile'=>	$mobile,				//号码
+            'content'=>	$content,				//内容
+            'template'=>$template,				//变量模板ID 全文模板不用填写
+            'format' => 'json',					//接口返回信息格式 json\xml\txt
+            );
+
+        $result = postSMS($apiUrl,$data);			//POST方式提交
+        $re = json_to_array($result);			    //JSON数据转为数组
+
+        if( $re['stat']=='100' )
+        {
+            return "发送成功";
+        }
+        else if( $re['stat']=='101')
+        {
+            return "验证失败! 状态：".$re;
+        }
+        else
+        {
+            return "发送失败! 状态：".$re;
+        }
+    }
+    */
+
+    /**
+     * POST方式HTTP请求
+     *
+     * @param string $url URL地址
+     * @param array $data POST参数
+     * @return string
+     */
+    function postSMS($url,$data='')
+    {
+        $row = parse_url($url);
+        $host = $row['host'];
+        $port='';
+        $port = $row['port'] ? $row['port']:80;
+        $file = $row['path'];
+        $post='';
+        while (list($k,$v) = each($data))
+        {
+            $post .= rawurlencode($k)."=".rawurlencode($v)."&";	//转URL标准码
+        }
+        $post = substr( $post , 0 , -1 );
+        $len = strlen($post);
+        $fp = @fsockopen( $host ,$port, $errno, $errstr, 10);
+        if (!$fp) {
+            return "$errstr ($errno)\n";
+        } else {
+            $receive = '';
+            $out = "POST $file HTTP/1.1\r\n";
+            $out .= "Host: $host\r\n";
+            $out .= "Content-type: application/x-www-form-urlencoded\r\n";
+            $out .= "Connection: Close\r\n";
+            $out .= "Content-Length: $len\r\n\r\n";
+            $out .= $post;
+            fwrite($fp, $out);
+            while (!feof($fp)) {
+                $receive .= fgets($fp, 128);
+            }
+            fclose($fp);
+            $receive = explode("\r\n\r\n",$receive);
+            unset($receive[0]);
+            return implode("",$receive);
+        }
+    }
+    /**
+     * GET方式HTTP请求
+     *
+     * @param string $url URL地址
+     * @param array $data POST参数
+     * @return string
+     */
+    function getSMS($url,$data='')
+    {
+        $get='';
+        while (list($k,$v) = each($data))
+        {
+            $get .= $k."=".urlencode($v)."&";	//转URL标准码
+        }
+        return file_get_contents($url.'?'.$get);
+    }
+//数字随机码
+    function randNumber($len = 6)
+    {
+        $chars = str_repeat('0123456789', 10);
+        $chars = str_shuffle($chars);
+        $str   = substr($chars, 0, $len);
+        return $str;
+    }
+//把数组转json字符串
+    function array_to_json($p)
+    {
+        return urldecode(json_encode(json_urlencode($p)));
+    }
+//url转码
+    function json_urlencode($p)
+    {
+        if( is_array($p) )
+        {
+            foreach( $p as $key => $value )$p[$key] = json_urlencode($value);
+        }
+        else
+        {
+            $p = urlencode($p);
+        }
+        return $p;
+    }
+
+//把json字符串转数组
+    function json_to_array($p)
+    {
+        if( mb_detect_encoding($p,array('ASCII','UTF-8','GB2312','GBK')) != 'UTF-8' )
+        {
+            $p = iconv('GBK','UTF-8',$p);
+        }
+        return json_decode($p, true);
     }
 }

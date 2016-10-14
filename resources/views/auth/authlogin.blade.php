@@ -7,18 +7,18 @@
             <div class="panel panel-default">
                 <div class="panel-heading">登陆</div>
                 <div class="panel-body">
-                    <form class="form-horizontal" role="form" method="POST" action="{{ url('/login') }}">
+                    <form class="form-horizontal" role="form" method="POST" action="{{ url('/postauthlogin') }}">
                         {{ csrf_field() }}
 
-                        <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
-                            <label for="email" class="col-md-4 control-label">邮件地址</label>
+                        <div class="form-group{{ $errors->has('phone') ? ' has-error' : '' }}">
+                            <label for="phone" class="col-md-4 control-label">电话</label>
 
                             <div class="col-md-6">
-                                <input id="email" type="email" class="form-control" name="email" value="{{ old('email') }}">
+                                <input id="phone" type="text" class="form-control" name="phone" value="{{ old('phone') }}">
 
-                                @if ($errors->has('email'))
+                                @if ($errors->has('phone'))
                                     <span class="help-block">
-                                        <strong>{{ $errors->first('email') }}</strong>
+                                        <strong>{{ $errors->first('phone') }}</strong>
                                     </span>
                                 @endif
                             </div>
@@ -43,7 +43,7 @@
                                 <img src="{{ captcha_src() }}" alt="captcha" class="captcha-img" data-refresh-config="default" >
                             </label>
                             <div class="col-md-6">
-                                <input id="captcha" type="text" name="captcha" />
+                                <input type="text" name="captcha" />
                                 @if ($errors->has('captcha'))
                                     <span class="help-block">
                                     <strong>{{ $errors->first('captcha') }}</strong>
@@ -58,6 +58,9 @@
                                     <i class="fa fa-btn fa-sign-in"></i> 登录
                                 </button>
 
+                                <a href="{{ url('authregister') }}" class="btn btn-primary">
+                                    <i class="fa fa-btn fa-sign-in"></i> 注册
+                                </a>
 {{--                                <a class="btn btn-link" href="{{ url('/password/reset') }}">忘记密码?</a>--}}
                             </div>
                         </div>

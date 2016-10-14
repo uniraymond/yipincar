@@ -46,7 +46,7 @@ class CreateProfilesTable extends Migration
             $table->string('orgnise_icon')->reference('id')->on('recource');
             $table->string('contract_auth');
             $table->string('self_url');
-            
+
             $table->integer('updated_by')->references('id')->on('users')->onDelete('cascade');
             $table->integer('created_by')->references('id')->on('users')->onDelete('cascade');
             $table->timestamp('created_at')->default(\DB::raw('CURRENT_TIMESTAMP'));
