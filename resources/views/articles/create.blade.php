@@ -22,10 +22,10 @@
                         <div class="{{ isset($errors) && $errors->has('title') ? 'has-error clearfix' : 'clearfix' }}" style="margin-bottom: 5px" >
                             <label class="col-lg-12 col-md-12 col-sm-12">标题</label>
                             <div class="col-md-12">
-                                <input class="col-lg-12 col-md-12 col-sm-12 form-control" type="text" id="title" name="title" required />
+                                <input class="col-lg-12 col-md-12 col-sm-12 form-control" type="text" id="title" name="title" required maxlength="23" />
                                 @if ($errors->has('title'))
                                     <span class="help-block">
-                                        <strong>{{ $errors->first('title') ? '标题不能为空' : ''}}</strong>
+                                        <strong>{{ $errors->first('title') }}</strong>
                                     </span>
                                 @endif
                             </div>
@@ -58,7 +58,7 @@
                                 <textarea class="col-lg-12 col-md-12 col-sm-12 form-control clearfix" id="content" name="content" height="50"></textarea>
                                 @if ($errors->has('content'))
                                     <span class="help-block">
-                                        <strong>{{ $errors->first('content') ? '内容不能为空' : ''}}</strong>
+                                        <strong>{{ $errors->first('content') }}</strong>
                                     </span>
                                 @endif
                             </div>
@@ -153,6 +153,17 @@
     var changeFlag=false;
     //标识文本框值是否改变，为true，标识已变
     jQuery(document).ready(function(){
+
+        jQuery('#title').blur(function(){
+            var title =  jQuery('#title').val();
+            console.log(title.length);
+            if (title.length > 23) {
+                jQuery('#title').append('<span><strong>文章标题太长</strong></span>');
+                alert('文章标题超过23个字');
+                return false;
+            }
+        });
+
         //文本框值改变即触发
         jQuery("input[type='text']").change(function(){
             changeFlag=true;

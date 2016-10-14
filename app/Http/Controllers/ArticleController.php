@@ -215,9 +215,9 @@ class ArticleController extends Controller
     $authuser = $request->user();
 
     $this->validate($request, [
-      'title' => 'required',
+      'title' => 'required|max:23',
       'content'=> 'required'
-    ]);
+    ], $this->messages());
 
     $title = $request->input('title');
     $content = strip_tags(trim($request['content']), "<img><p><b><b/><b /><img");
@@ -428,9 +428,9 @@ class ArticleController extends Controller
   {
     $authuser = $request->user();
     $this->validate($request, [
-        'title' => 'required',
+        'title' => 'required|max:23',
         'content'=> 'required'
-    ]);
+    ], $this->messages());
 
     $title = $request->input('title');
     $content = strip_tags(trim($request['content']), "<img><p><b><b/><b /><img");
@@ -706,4 +706,12 @@ class ArticleController extends Controller
     return view('termandconditions');
   }
 
+    public function messages()
+    {
+       return [
+                    'title.required' => '标题是必填的',
+                    'title.max' => '标题不能超过23个字',
+                   'content' => '内容是必须的'
+                ];
+    }
 }

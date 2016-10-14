@@ -234,6 +234,7 @@ class AdvsettingController extends Controller
     $this->validate($request, [
         'links' => 'required',
         'id' => 'required',
+        'title' => 'max:23'
     ]);
 
     $advSetting = AdvSetting::findorFail($request['id']);
@@ -265,6 +266,7 @@ class AdvsettingController extends Controller
     $this->validate($request, [
         'links' => 'required',
         'images' => 'required',
+        'title' => 'max:23'
     ]);
     $authuser = $request->user();
     $file = $request->file('images');
