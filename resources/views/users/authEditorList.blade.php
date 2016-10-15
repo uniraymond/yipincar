@@ -57,7 +57,7 @@
                                                 {{--{{ $ur->description }}--}}
                                             {{--@endforeach--}}
                                         </td>
-                                        <td><a class="btn btn-default" href="/admin/user/{{ $user->id }}/edit" id="editBtn_{{ $user->id }}">编辑</a></td>
+                                        <td><a class="btn btn-default" href="{{ url('admin/authprofile/'.$user->id.'/view') }}" id="editBtn_{{ $user->id }}">查看</a></td>
 
                                         <td>
                                             @if ($user->banned)

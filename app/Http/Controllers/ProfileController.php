@@ -235,6 +235,24 @@ class ProfileController extends Controller
         }
     }
 
+    public function authview(Request $request, $userId)
+    {
+        $auth = $request->user();
+//        $userId = $auth->id;
+        $city = null;
+        $profile = Profile::where('user_id', $userId)->first();
+        $defaultImage = 'photos/default.png';
+        if($profile){
+            $city = Province::where('id', $profile->city_id)->first();
+        }
+        $province = Province::all();
+        if (count($profile)>0) {
+            return view('authusers/authprofileview', ['profile'=>$profile, 'defaultImage'=>$defaultImage, 'province'=>$city]);
+        } else {
+            return redirect('admin/user/authEditorList');
+        }
+    }
+
     public function authshow(Request $request)
     {
         $auth = $request->user();
