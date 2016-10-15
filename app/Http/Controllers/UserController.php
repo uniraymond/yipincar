@@ -597,9 +597,7 @@ class UserController extends Controller
             'username'	=> '您好'
         );
 //即时发送
-        var_dump($contentParam);
         $res = $this->sendSMS($uid,$pwd,$phone,$this->array_to_json($contentParam),$template);
-        var_dump($res);
         $messageSent = array();
 //        $messageSent = array('phone'=>$phone, 'code'=>$code, 'status'=>100);
         $messageSent = array('phone'=>$phone, 'code'=>$code, 'status'=>$res['stat']);
