@@ -597,12 +597,14 @@ class UserController extends Controller
             'username'	=> '您好'
         );
 //即时发送
+        var_dump($contentParam);
         $res = $this->sendSMS($uid,$pwd,$phone,$this->array_to_json($contentParam),$template);
+        var_dump($res);
         $messageSent = array();
 //        $messageSent = array('phone'=>$phone, 'code'=>$code, 'status'=>100);
         $messageSent = array('phone'=>$phone, 'code'=>$code, 'status'=>$res['stat']);
 
-        return ($messageSent);
+        return response()->json($messageSent);
 //        if( $res['stat']=='100' )
 //        {
 //            return json_encode()
@@ -647,7 +649,7 @@ class UserController extends Controller
         $re = $this->json_to_array($result);			    //JSON数据转为数组
         //$re = getSMS($apiUrl,$data);				//GET方式提交
 
-        return response()->json($re);
+        return $re;
         /*
         if( $re['stat']=='100' )
         {
@@ -712,7 +714,7 @@ class UserController extends Controller
         $row = parse_url($url);
         $host = $row['host'];
         $port='';
-        $port = $row['port'] ? $row['port']:80;
+        $port = isset($row['port']) ? $row['port']:80;
         $file = $row['path'];
         $post='';
         while (list($k,$v) = each($data))
