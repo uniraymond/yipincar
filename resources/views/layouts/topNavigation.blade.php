@@ -7,7 +7,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="{{ url ('/admin/article') }}"><img src="{{ url('/src/images/toplogo.png') }}" /></a>
+        <a class="navbar-brand" href="{{ url ('/') }}"><img src="{{ url('/src/images/toplogo.png') }}" /></a>
     </div>
     <div class="hidden-sm-up navbar-toggleable-sm navbar-small-collapse collapse" aria-expanded="false" style="height: 0px;">
         <ul>
@@ -39,7 +39,11 @@
                 {{--</li>--}}
             @elseif ((null != Auth::user()) && Auth::user()->hasAnyRole(['auth_editor']))
                 <li>
-                    <a href="{{ url('authshow') }}" >
+                    @if (isset($profile) && count($profile)>0)
+                        <a href="{{  url('authshow') }}" >
+                    @else
+                        <a href="{{  url('authprofile/create') }}" >
+                    @endif
                         <i class="fa fa-user fa-fw"></i>我的信息
                     </a>
                 </li>

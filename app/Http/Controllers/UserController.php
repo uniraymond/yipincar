@@ -307,7 +307,7 @@ class UserController extends Controller
                     'phone' => ['required', 'digits:11', 'regex:/^0?(13[0-9]|15[012356789]|18[0-9]|14[57])[0-9]{8}$/'],
                     'password' => 'required|min:6|confirmed',
                     'password_confirmation' => 'required|min:6',
-                    'captcha' => 'required|captcha',
+//                    'captcha' => 'required|captcha',
                     'confirmterm' => 'required'
                 ], $this->messages($valideType));
                 break;
@@ -377,8 +377,8 @@ class UserController extends Controller
                     'password_confirmation.min'  => '确定密码最少是6个字符',
                     'password_confirmation.confirmed'  => '两个密码不一样',
                     'roles.required'  => '角色是必选的',
-                    'captcha.required' => '请输入验证码',
-                    'captcha.captcha' => '输入的验证码错误',
+//                    'captcha.required' => '请输入验证码',
+//                    'captcha.captcha' => '输入的验证码错误',
                     'confirmterm.required'=>'需要同意用户协议'
                 ];
                 break;
@@ -509,9 +509,10 @@ class UserController extends Controller
                 $request, $validator
             );
         }
+
         $user = new User();
         $user->name = $request['phone'];
-//        $user->email = $request['phone'];
+//        $user->email = null;
         $user->phone = $request['phone'];
         $user->password = bcrypt($request['password']);
         $user->status_id = 2;
@@ -570,9 +571,9 @@ class UserController extends Controller
 --------------------------------*/
     public function cellphonevalidate($phone){
         //用户账号
-        $uid = 'testsms';
+        $uid = 'yipincar';
 //MD5密码
-        $pwd = '353447s535dd';
+        $pwd = 'yipin123';
 
         /*
         * 变量模板发送示例
@@ -583,10 +584,10 @@ class UserController extends Controller
 //变量模板ID
         $template = '100005';
 //6位随机验证码
-        $code = randNumber();
+        $code = $this->randNumber();
 
         $user = User::where('phone', $phone)->first();
-        if (count($user)>0) {
+        if ($user && count($user)>0) {
             $messageSent = array('phone'=>$phone, 'code'=>$code, 'status'=>400);
             return json_encode($messageSent);
         }
@@ -596,11 +597,12 @@ class UserController extends Controller
             'username'	=> '您好'
         );
 //即时发送
-        $res = sendSMS($uid,$pwd,$phone,array_to_json($contentParam),$template);
+//        $res = sendSMS($uid,$pwd,$phone,array_to_json($contentParam),$template);
         $messageSent = array();
-        $messageSent = array('phone'=>$phone, 'code'=>$code, 'status'=>$res['stat']);
+        $messageSent = array('phone'=>$phone, 'code'=>$code, 'status'=>100);
+//        $messageSent = array('phone'=>$phone, 'code'=>$code, 'status'=>$res['stat']);
 
-        return json_encode($messageSent);
+        return ($messageSent);
 //        if( $res['stat']=='100' )
 //        {
 //            return json_encode()
@@ -645,7 +647,7 @@ class UserController extends Controller
         $re = json_to_array($result);			    //JSON数据转为数组
         //$re = getSMS($apiUrl,$data);				//GET方式提交
 
-        return $re;
+        return response()->json($re);
         /*
         if( $re['stat']=='100' )
         {

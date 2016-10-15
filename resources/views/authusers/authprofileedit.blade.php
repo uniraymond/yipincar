@@ -62,11 +62,16 @@
                             {!! Form::label('city_id', '所在地', array('class'=>'col-md-6')) !!}
                             <div class="col-md-12">
                                 <select name="city_id">
-                                    <option value="0" {{ $profile->city_id == 0 ? 'selected': '' }}>中国</option>
-                                    <option value="1" {{ $profile->city_id == 1 ? 'selected': '' }}>北京</option>
-                                    <option value="2" {{ $profile->city_id == 2 ? 'selected': '' }}>上海</option>
-                                    <option value="3" {{ $profile->city_id == 3 ? 'selected': '' }}>广州</option>
-                                    <option value="4" {{ $profile->city_id == 4 ? 'selected': '' }}>深圳</option>
+                                    <option value="0" >选择省,直辖市,特别行政区</option>
+                                    @foreach($province as $p)
+                                        {{--<optgroup label="{{ $p.name }}">--}}
+                                        {{--@foreach ($cities as $city)--}}
+                                        {{--@if($city->province_id == $p.id)--}}
+                                        <option value="{{ $p->id }}" {{ $p->id == $profile->city_id ? 'selected' : '' }}>{{ $p->name }}</option>
+                                        {{--@endif--}}
+                                        {{--@endforeach--}}
+                                        {{--</optgroup>--}}
+                                    @endforeach
                                 </select>
                             </div>
                         </div>
