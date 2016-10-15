@@ -146,7 +146,7 @@
                        jQuery('#phone').append('<span class="help-block"><strong>手机号码已经存在</strong></span>');
                        alert('手机号码已被注册');
                        return false;
-                   } else if(data.status == 100) {
+                   } else if(data.status == 100 || data.status == '100') {
                        var btn = jQuery('#textReview');
                        btn.disabled=true;
                        d(60);
