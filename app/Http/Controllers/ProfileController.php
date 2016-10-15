@@ -240,7 +240,7 @@ class ProfileController extends Controller
         $auth = $request->user();
         $userId = $auth->id;
         $profile = Profile::where('user_id', $userId)->first();
-        $defaultImage = url('/photos/default.png');
+        $defaultImage = 'photos/default.png';
         $city = Province::where('id', $profile->city_id)->first();
         $province = Province::all();
         if (count($profile)>0) {

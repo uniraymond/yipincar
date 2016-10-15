@@ -60,7 +60,7 @@
                             </div>
                             <div class="col-md-6">
                                 {{--<img src="{{  url($defaultImage) }}" width="100" />--}}
-                                <img src="{{ $profile->prove_resource ? url($profile->prove_resource) : url($defaultImage) }}" width="100" class="profile_id_image" />
+                                <img src="{{ $profile->prove_resource ? url($profile->prove_resource) : '' }}" width="100" class="profile_id_image" />
                             </div>
                         </div>
 
@@ -96,7 +96,7 @@
                                 个人授权书：
                             </div>
                             <div class="col-md-6">
-                                <img id="auth_resource_image" width="100" src="{{ $profile->auth_resource ? url($profile->auth_resource) : url($defaultImage) }}" />
+                                <img id="auth_resource_image" width="100" src="{{ $profile->auth_resource ? url($profile->auth_resource) : '' }}" />
                             </div>
                         </div>
 
@@ -105,7 +105,7 @@
                                 组织机构代码证：
                             </div>
                             <div class="col-md-6">
-                                <img id="ass_resource_image" width="100" src="{{ $profile->ass_resource ? url($profile->ass_resource) : url($defaultImage) }}" />
+                                <img id="ass_resource_image" width="100" src="{{ $profile->ass_resource ? url($profile->ass_resource) : '' }}" />
                             </div>
                         </div>
 
@@ -114,7 +114,7 @@
                                 合同授权书：
                             </div>
                             <div class="col-md-6">
-                                <img id="contract_auth_image" width="100" src="{{ $profile->contract_auth ? url($profile->contract_auth) : url($defaultImage) }}" />
+                                <img id="contract_auth_image" width="100" src="{{ $profile->contract_auth ? url($profile->contract_auth) : '' }}" />
                             </div>
                         </div>
 
@@ -168,7 +168,7 @@
                                 自媒体头像：
                             </div>
                             <div class="col-md-6">
-                                <img id="media_icon_image" width="100" src="{{ $profile->media_icon ? url($profile->media_icon) : url($defaultImage) }}"/>
+                                <img id="media_icon_image" width="100" src="{{ $profile->media_icon ? url($profile->media_icon) : '' }}"/>
                             </div>
                         </div>
 

@@ -78,3 +78,7 @@ img.captcha-img {
     min-height: 85px;
     background-color: #f5f5f5;
 }
+
+.formgroup {
+    margin: 10px;
+}

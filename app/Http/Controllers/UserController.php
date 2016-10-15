@@ -597,10 +597,10 @@ class UserController extends Controller
             'username'	=> '您好'
         );
 //即时发送
-//        $res = sendSMS($uid,$pwd,$phone,array_to_json($contentParam),$template);
+        $res = $this->sendSMS($uid,$pwd,$phone,$this->array_to_json($contentParam),$template);
         $messageSent = array();
-        $messageSent = array('phone'=>$phone, 'code'=>$code, 'status'=>100);
-//        $messageSent = array('phone'=>$phone, 'code'=>$code, 'status'=>$res['stat']);
+//        $messageSent = array('phone'=>$phone, 'code'=>$code, 'status'=>100);
+        $messageSent = array('phone'=>$phone, 'code'=>$code, 'status'=>$res['stat']);
 
         return ($messageSent);
 //        if( $res['stat']=='100' )
@@ -643,8 +643,8 @@ class UserController extends Controller
             'format' => 'json',					//接口返回信息格式 json\xml\txt
         );
 
-        $result = postSMS($apiUrl,$data);			//POST方式提交
-        $re = json_to_array($result);			    //JSON数据转为数组
+        $result = $this->postSMS($apiUrl,$data);			//POST方式提交
+        $re = $this->json_to_array($result);			    //JSON数据转为数组
         //$re = getSMS($apiUrl,$data);				//GET方式提交
 
         return response()->json($re);
@@ -769,14 +769,14 @@ class UserController extends Controller
 //把数组转json字符串
     function array_to_json($p)
     {
-        return urldecode(json_encode(json_urlencode($p)));
+        return urldecode(json_encode($this->json_urlencode($p)));
     }
 //url转码
     function json_urlencode($p)
     {
         if( is_array($p) )
         {
-            foreach( $p as $key => $value )$p[$key] = json_urlencode($value);
+            foreach( $p as $key => $value )$p[$key] = $this->json_urlencode($value);
         }
         else
         {
