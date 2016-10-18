@@ -274,6 +274,48 @@ class UserController extends Controller
         return redirect('admin/user');
     }
 
+    public function authbanned(Request $request, $id)
+    {
+        $auth = $request->user();
+
+        $user = User::findorFail($id);
+        if ($user) {
+            $status_id = $user->status_id;
+            $user->banned = 1;
+            $user->status_id = 4;
+            $user->pre_status_id = $status_id;
+            $user->save();
+        }
+        $request->session()->flash('status', '用户: '. $user->name .' 已被屏蔽.');
+        return redirect('admin/user/authEditorList');
+    }
+
+    public function authactive(Request $request, $id)
+    {
+        $auth = $request->user();
+
+        $user = User::findorFail($id);
+        if ($user) {
+            $status_id = $user->status_id;
+            $user->banned = 0;
+            $user->status_id = $user->pre_status_id;
+            $user->save();
+            $user->pre_status_id = $status_id;
+            $user->save();
+        }
+        $request->session()->flash('status', '被屏蔽的用户: '. $user->name .' 已被恢复.');
+        return redirect('admin/user/authEditorList');
+    }
+
+    public function authdestroy(Request $request, $id)
+    {
+        $user = User::find($id);
+        $userName = $user->name;
+        $user->delete();
+
+        $request->session()->flash('status', '用户: '. $userName .' 被成功删除了.');
+        return redirect('admin/user/authEditorList');
+    }
     /**
      * Get a validator for an incoming registration request.
      *
@@ -466,12 +508,14 @@ class UserController extends Controller
         $roles = Role::where('name','<>', 'super_admin')->get();
         $authView = $auth->hasAnyRole(['super_admin', 'admin']);
         if ($authView || $auth->id == $user_id) {
+            if ($auth->hasAnyRole(['auth_editor'])) {
+                return view('users/editpw');
+            }
             return view('users/editpw', ['roles'=>$roles, 'usergroups'=>$roles, 'statuses'=>$statuses]);
         }
         return redirect('/');
         return view('users/editpw', ['user'=>$user]);
     }
-
 
     /**
      * Display a listing of the resource.
@@ -793,5 +837,23 @@ class UserController extends Controller
             $p = iconv('GBK','UTF-8',$p);
         }
         return json_decode($p, true);
+    }
+
+    public function varifyStatus($user_id){
+        $user = User::findorFail($user_id);
+        $user->status_id = 3;
+        $user->save();
+
+        $messageSent = array('status'=>'actived');
+        return response()->json($messageSent);
+    }
+
+    public function devarifyStatus($user_id){
+        $user = User::findorFail($user_id);
+        $user->status_id = 0;
+        $user->save();
+
+        $messageSent = array('status'=>'unactived');
+        return response()->json($messageSent);
     }
 }

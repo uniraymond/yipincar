@@ -31,12 +31,14 @@
                             </div>
                         </div>
 
+                        @if( !Auth::user()->hasAnyRole([ 'auth_editor']))
                         <div class="{{ isset($errors) && $errors->has('authname') ? 'has-error clearfix' : 'clearfix' }}" style="margin-bottom: 5px" >
                             <label class="col-lg-12 col-md-12 col-sm-12">作者</label>
                             <div class="col-md-12">
                                 <input class="col-lg-12 col-md-12 col-sm-12 form-control" type="text" id="authname" name="authname" value="{{ $article->authname }}"  />
                             </div>
                         </div>
+                        @endif
 
                         <div>
                             <label class="col-lg-12 col-md-12 col-sm-12">简介</label>
@@ -62,7 +64,7 @@
                             <label class="col-lg-12 col-md-12 col-sm-12">首页图片</label>
                             <div class="col-md-12">
                                 {!! Form::file('images', '', array('class'=>'col-md-12 form-control-file form-control', 'id'=>'files', 'required'=>'required')) !!}
-                                <img id="image" width="100" src="/{{ $article->resources->link }}" alt="{{ $article->description }}" />
+{{--                                <img id="image" width="100" src="/{{ $article->resources->link  }}" alt="{{ $article->description }}" />--}}
                             </div>
                         </div>
 

@@ -10,6 +10,16 @@
                     <form class="form-horizontal" role="form" method="POST" action="{{ url('/postauthlogin') }}">
                         {{ csrf_field() }}
 
+{{--                        {!! var_dump($login_errors) !!}--}}
+                        @if (Session::has('login_errors'))
+                            <div>
+                            <span class="help-block">
+                                <strong>
+                                    {{ Session::get('login_errors') }}
+                                </strong>
+                            </span>
+                            </div>
+                        @endif
                         <div class="form-group{{ $errors->has('phone') ? ' has-error' : '' }}">
                             <label for="phone" class="col-md-4 control-label">电话</label>
 

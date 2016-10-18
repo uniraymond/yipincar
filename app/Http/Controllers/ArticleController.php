@@ -522,19 +522,19 @@ class ArticleController extends Controller
           $fileThumbsDir = "photos/thumbs";
           $fileDir = "photos";
 
-//          $fileOriginal->move($fileOriginalDir, $fileName);
-//          $fileThumbs->move($fileThumbsDir, $fileName);
+//          $fileOriginal->copy($fileOriginalDir, $fileName);
+//          $fileThumbs->copy($fileThumbsDir, $fileName);
           $file->move($fileDir, $fileName);
 
-//          $imageOriginalLink = $fileOriginalDir . '/' . $file->getClientOriginalName();
-//          $imageThumbsLink = $fileThumbsDir . '/' . $file->getClientOriginalName();
+          $imageOriginalLink = $fileOriginalDir . '/' . $file->getClientOriginalName();
+          $imageThumbsLink = $fileThumbsDir . '/' . $file->getClientOriginalName();
           $imageLink = $fileDir . '/' . $file->getClientOriginalName();
 
 //          $cell_img_size_thumbs = GetImageSize($imageThumbsLink); // need to caculate the file width and height to make the image same
           $cell_img_size = GetImageSize($imageLink); // need to caculate the file width and height to make the image same
 
-//          $imageOriginal = Image::make(sprintf('photos/original/%s', $fileOriginal->getClientOriginalName()))->save();
-//          $imageThumbs = Image::make(sprintf('photos/thumbs/%s', $fileThumbs->getClientOriginalName()))->resize(100, (int)((100 * $cell_img_size_thumbs[1]) / $cell_img_size_thumbs[0]))->save();
+          $imageOriginal = Image::make(sprintf('photos/original/%s', $file->getClientOriginalName()))->save();
+          $imageThumbs = Image::make(sprintf('photos/thumbs/%s', $file->getClientOriginalName()))->resize(100, (int)((100 *  $cell_img_size[1]) / $cell_img_size[0]))->save();
           $image = Image::make(sprintf('photos/%s', $file->getClientOriginalName()))->resize(800, (int)((800 * $cell_img_size[1]) / $cell_img_size[0]))->save();
 
           $resource = new Resource();

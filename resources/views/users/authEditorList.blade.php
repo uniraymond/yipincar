@@ -18,9 +18,9 @@
                 {{--<button id="search_role" value="查找" class="btn btn-default">查找</button>--}}
 
                 @if (Auth::user()->hasAnyRole(['super_admin', 'admin']))
-                    <div class="col-lg-2 col-md-2 col-sm-2 pull-right clearfix">
-                        {{ link_to('admin/user/create', '添加', ['class'=>'btn btn-default']) }}
-                    </div>
+                    {{--<div class="col-lg-2 col-md-2 col-sm-2 pull-right clearfix">--}}
+                        {{--{{ link_to('admin/user/create', '添加', ['class'=>'btn btn-default']) }}--}}
+                    {{--</div>--}}
                 @endif
 
                 @if ($success = Session::get('status'))
@@ -36,7 +36,7 @@
                             <thead>
                             <tr>
                                 <th>用户名</th>
-                                <th>电子邮件</th>
+                                <th>电话</th>
                                 <th>权限</th>
                                 <th>编辑</th>
                                 <th>屏蔽</th>
@@ -50,31 +50,39 @@
                                     @if($user->id == 1 || $user->id == 2)
                                     @else
                                     <tr>
-                                        <td>{{ $user->name }}</td>
-                                        <td><span id="email_{{ $user->id }}">{{ $user->email }}</span></td>
+                                        <td>
+                                            <a class="" href="{{ url('admin/authprofile/'.$user->user_id.'/view') }}" id="editBtn_{{ $user->id }}">
+                                                {{ $user->name }}
+                                            </a>
+                                        </td>
+                                        <td><span id="phone_{{ $user->id }}">{{ $user->phone }}</span></td>
                                         <td>入驻编辑
                                             {{--@foreach($user->roles as $ur)--}}
                                                 {{--{{ $ur->description }}--}}
                                             {{--@endforeach--}}
                                         </td>
-                                        <td><a class="btn btn-default" href="{{ url('admin/authprofile/'.$user->id.'/view') }}" id="editBtn_{{ $user->id }}">查看</a></td>
-
+                                        <td>
+                                            @if($user->status_id < 3)
+                                                <button type="button" value="" class="btn btn_default" id="btn_{{ $user->user_id }}" onclick="passValidate({{ $user->user_id }})" >通过审批</button>
+                                            @else
+                                                <button type="button" value="" class="btn btn_default" id="btn_{{ $user->user_id }}" onclick="stopValidate({{ $user->user_id }})" >返回重新审批</button>
+                                            @endif
                                         <td>
                                             @if ($user->banned)
-                                                {!! Form::open(array('url' => 'admin/user/'.$user->id.'/active', 'class' => 'form', 'method'=>'put', 'onsubmit'=>'return confirm("确定屏蔽这个账号?");')) !!}
-                                                {!! Form::text('id', $user->id, array('hidden'=>'hidden', 'readonly' => true)) !!}
+                                                {!! Form::open(array('url' => 'admin/user/'.$user->user_id.'/authactive', 'class' => 'form', 'method'=>'put', 'onsubmit'=>'return confirm("确定屏蔽这个账号?");')) !!}
+                                                {!! Form::text('id', $user->user_id, array('hidden'=>'hidden', 'readonly' => true)) !!}
                                                 {!! Form::submit('恢复', array('class'=>'btn btn-primary')) !!}
                                             @else
-                                                {!! Form::open(array('url' => 'admin/user/'.$user->id.'/banned', 'class' => 'form', 'method'=>'put', 'onsubmit'=>'return confirm("确定屏蔽这个账号?");')) !!}
-                                                {!! Form::text('id', $user->id, array('hidden'=>'hidden', 'readonly' => true)) !!}
+                                                {!! Form::open(array('url' => 'admin/user/'.$user->user_id.'/authbanned', 'class' => 'form', 'method'=>'put', 'onsubmit'=>'return confirm("确定屏蔽这个账号?");')) !!}
+                                                {!! Form::text('id', $user->user_id, array('hidden'=>'hidden', 'readonly' => true)) !!}
                                                 {!! Form::submit('屏蔽', array('class'=>'btn btn-warning')) !!}
                                             @endif
                                             {!! Form::token() !!}
                                             {!! Form::close() !!}
                                         </td>
                                         <td>
-                                            {!! Form::open(array('url' => 'admin/user/'.$user->id, 'class' => 'form', 'method'=>'delete', 'onsubmit'=>'return confirm("确定删除这个账号?");')) !!}
-                                            {!! Form::text('id', $user->id, array('hidden'=>'hidden', 'readonly' => true)) !!}
+                                            {!! Form::open(array('url' => 'admin/user/'.$user->user_id, 'class' => 'form', 'method'=>'delete', 'onsubmit'=>'return confirm("确定删除这个账号?");')) !!}
+                                            {!! Form::text('id', $user->user_id, array('hidden'=>'hidden', 'readonly' => true)) !!}
                                             {!! Form::submit('删除', array('class'=>'btn btn-danger')) !!}
                                             {!! Form::token() !!}
                                             {!! Form::close() !!}
@@ -100,6 +108,22 @@
     <script src="{{ url('/src/js/jQuery.min.2.2.4.js') }}" ></script>
     <script src="{{ url('/src/js/select2/select2.full.min.js') }}" ></script>
     <script type="text/javascript">
+        function passValidate(user_id) {
+            var getUrl = "{{ url('admin/varifyStatus') }}" + '/' + user_id;
+            jQuery.get(getUrl,function(data){
+                console.log('changed');
+                jQuery('#btn_'+user_id).html('返回重新审批');
+                location.reload();
+            })
+        }
+        function stopValidate(user_id) {
+            var getUrl = "{{ url('admin/devarifyStatus') }}" + '/' + user_id;
+            jQuery.get(getUrl,function(data){
+                console.log('changed');
+                jQuery('#btn_'+user_id).html('通过审批');
+                location.reload();
+            })
+        }
         $('.js-example-basic-single').select2();
         $(document).ready(function(){
             $('#search_role').click(function(){

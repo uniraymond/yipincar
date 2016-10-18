@@ -46,6 +46,9 @@ Route::group(['middleware'=>'auth', 'prefix'=>'admin'], function() {
     Route::get('user/rolemanage', 'UserController@rolemanage');
     Route::put('user/{userId}/banned', 'UserController@banned');
     Route::put('user/{userId}/active', 'UserController@active');
+    Route::put('user/{userId}/authbanned', 'UserController@authbanned');
+    Route::put('user/{userId}/authactive', 'UserController@authactive');
+    Route::delete('user/{userId}', 'UserController@authdestroy');
     Route::get('article/category/{categoryId}', 'ArticleController@category');
     Route::get('article/type/{typeId}', 'ArticleController@type');
     Route::get('article/tag/{tagId}', 'ArticleController@tag');
@@ -102,6 +105,8 @@ Route::group(['middleware'=>'auth', 'prefix'=>'admin'], function() {
     Route::get('user/authEditorList', 'UserController@authEditorList');
     Route::get('user/{user_id}/editpw', 'UserController@editpw');
     Route::get('authprofile/store', 'ProfileController@authstore');
+    Route::get('varifyStatus/{user_id}', 'UserController@varifyStatus');
+    Route::get('devarifyStatus/{user_id}', 'UserController@devarifyStatus');
 
     Route::resource('article', 'ArticleController');
     Route::resource('category', 'CategoryController');
