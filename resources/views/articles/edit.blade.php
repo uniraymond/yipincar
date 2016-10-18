@@ -58,6 +58,14 @@
                             </div>
                         </div>
 
+                        <div>
+                            <label class="col-lg-12 col-md-12 col-sm-12">首页图片</label>
+                            <div class="col-md-12">
+                                {!! Form::file('images', '', array('class'=>'col-md-12 form-control-file form-control', 'id'=>'files', 'required'=>'required')) !!}
+                                <img id="image" width="100" src="/{{ $article->resources->link }}" alt="{{ $article->description }}" />
+                            </div>
+                        </div>
+
                         <div class={{ isset($errors) && $errors->has('content') ? 'has-error clearfix' : 'clearfix' }}>
                             <label class="col-lg-12 col-md-12 col-sm-12 clearfix">内容</label>
                             <div class="clearfix"></div>
@@ -124,6 +132,18 @@
        </div>
        <script src="{{ url('/src/js/jQuery.min.2.2.4.js') }}" ></script>
        <script>
+           document.getElementById("images").onchange = function () {
+               var reader = new FileReader();
+
+               reader.onload = function (e) {
+                   // get loaded data and render thumbnail.
+                   document.getElementById("image").src = e.target.result;
+               };
+
+               // read the image file as a data URL.
+               reader.readAsDataURL(this.files[0]);
+           };
+
            jQuery(document).ready(function(){
                jQuery('#title').blur(function(){
                    var title =  jQuery('#title').val();

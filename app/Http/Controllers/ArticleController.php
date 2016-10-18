@@ -16,6 +16,7 @@ use App\Article;
 use App\ArticleTags as ArticleTags;
 use App\Category;
 use App\ArticleTypes as ArticleTypes;
+use Intervention\Image\Facades\Image;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use App\Resource;
 use App\ArticleResources;
@@ -466,8 +467,7 @@ class ArticleController extends Controller
               $tags = array_unique($tags);
           }
       }
-
-    $article = new Article();
+          $article = new Article();
     $article->title = $title;
     $article->content = $content;
     $article->description = $description;
@@ -511,23 +511,57 @@ class ArticleController extends Controller
               $article_tag->article_id = $article->id;
               $article_tag->tag_id = $tagId;
               $article_tag->created_by = $authuser->id;
-              $article_tag->save();
+      }
+
+      $article_tag->save();
+  }
+      $file = $request->file('images');
+      if (!empty($file)) {
+          $fileName = $file->getClientOriginalName();
+          $fileOriginalDir = "photos/original";
+          $fileThumbsDir = "photos/thumbs";
+          $fileDir = "photos";
+
+//          $fileOriginal->move($fileOriginalDir, $fileName);
+//          $fileThumbs->move($fileThumbsDir, $fileName);
+          $file->move($fileDir, $fileName);
+
+//          $imageOriginalLink = $fileOriginalDir . '/' . $file->getClientOriginalName();
+//          $imageThumbsLink = $fileThumbsDir . '/' . $file->getClientOriginalName();
+          $imageLink = $fileDir . '/' . $file->getClientOriginalName();
+
+//          $cell_img_size_thumbs = GetImageSize($imageThumbsLink); // need to caculate the file width and height to make the image same
+          $cell_img_size = GetImageSize($imageLink); // need to caculate the file width and height to make the image same
+
+//          $imageOriginal = Image::make(sprintf('photos/original/%s', $fileOriginal->getClientOriginalName()))->save();
+//          $imageThumbs = Image::make(sprintf('photos/thumbs/%s', $fileThumbs->getClientOriginalName()))->resize(100, (int)((100 * $cell_img_size_thumbs[1]) / $cell_img_size_thumbs[0]))->save();
+          $image = Image::make(sprintf('photos/%s', $file->getClientOriginalName()))->resize(800, (int)((800 * $cell_img_size[1]) / $cell_img_size[0]))->save();
+
+          $resource = new Resource();
+          $resource->name = $file->getClientOriginalName();
+          $resource->link = '/' . $imageLink;
+          $resource->created_by = $authuser->id;
+          $resource->save();
+          $articlResource = new ArticleResources();
+          $articlResource->article_id = $article->id;
+          $articlResource->resource_id = $resource->id;
+          $articlResource->save();
+      }else {
+          $files = Resource::all();
+          $image_links = array();
+          $image_names = array();
+
+          foreach ($files as $file) {
+              $image_links[] = $file->link;
+              $image_names[] = $file->name;
+              if (false !== strpos($article->content, $file->link)) {
+                  $article->resources()->attach($file->id);
+                  break;
+              }
           }
       }
 
-    $files = Resource::all();
 
-    $image_links = array();
-    $image_names = array();
-
-    foreach ($files as $file) {
-      $image_links[] = $file->link;
-      $image_names[] = $file->name;
-      if (false !== strpos($article->content, $file->link) ) {
-        $article->resources()->attach($file->id);
-        break;
-      }
-    }
 
     $log['name'] = 'Create Article';
     $log['action'] = 'Create article - '. $article->title;
