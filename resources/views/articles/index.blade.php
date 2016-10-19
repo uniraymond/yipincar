@@ -38,7 +38,7 @@
                             <th>评论</th>
                             @if ( Null !== Auth::user() || Auth::user()->hasAnyRole(['super_admin', 'admin','chef_editor', 'main_editor', 'adv_editor']) )
                                 <th>编辑</th>
-                                <th>删除</th>
+                                <th>屏蔽</th>
                             @endif
                             <th>文章状态</th>
                         </tr>
@@ -84,7 +84,7 @@
                                         <a href="{{ url('admin/article/'.$article->id.'/edit') }}" class="btn btn-default" id="editBtn_{{ $article->id }}">编辑</a>
                                     </td>
                                     <td>
-                                        <input type="checkbox" name="delete[{{ $article->id }}]" ng-checked="delete_{{$article->id}}" ng-click="confirmDelete('{{ $article->id }}')"/>
+                                        <input type="checkbox" {{ $article->banned ? 'checked' : '' }} name="banned[{{ $article->id }}]" ng-checked="banned_{{$article->id}}" ng-click="confirmDelete('{{ $article->id }}')"/>
                                     </td>
                                 @else
                                     <td></td>
