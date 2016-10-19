@@ -188,7 +188,7 @@
                                 {{--</div>--}}
 
                                 <div class="col-lg-2 col-md-2 col-sm-2 edit_article pull-right">
-                                    {{ link_to('/authprofile/'.$profile->user_id.'/edit', '编辑入驻编辑资料', ['class'=>'btn btn-primary']) }}
+{{--                                    {{ link_to('/authprofile/'.$profile->user_id.'/edit', '编辑入驻编辑资料', ['class'=>'btn btn-primary']) }}--}}
                                 </div>
                             @endif
                         </div>

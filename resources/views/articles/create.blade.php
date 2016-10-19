@@ -31,12 +31,14 @@
                             </div>
                         </div>
 
+                        @if( !Auth::user()->hasAnyRole([ 'auth_editor']))
                         <div class="{{ isset($errors) && $errors->has('authname') ? 'has-error clearfix' : 'clearfix' }}" style="margin-bottom: 5px" >
                             <label class="col-lg-12 col-md-12 col-sm-12">作者</label>
                             <div class="col-md-12">
                                 <input class="col-lg-12 col-md-12 col-sm-12 form-control" type="text" id="authname" name="authname"  />
                             </div>
                         </div>
+                        @endif
 
                         <div>
                             <label class="col-lg-12 col-md-12 col-sm-12">简介</label>
@@ -55,6 +57,15 @@
                                         </option>
                                     @endforeach
                                 </select>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="col-lg-12 col-md-12 col-sm-12">首页图片</label>
+                            <div class="col-md-12">
+                                <input type="file" class="col-md-12 form-control-file form-control" id="images" name="images" />
+{{--                                {!! Form::file('images', '', array('class'=>'col-md-12 form-control-file form-control', 'id'=>'images', 'required'=>'required')) !!}--}}
+                                <img id="image" width="100" />
                             </div>
                         </div>
 
@@ -108,8 +119,21 @@
             </div>
         </div>
     </div>
-@endsection
 
+    <script>
+        document.getElementById("images").onchange = function () {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                // get loaded data and render thumbnail.
+                document.getElementById("image").src = e.target.result;
+            };
+
+            // read the image file as a data URL.
+            reader.readAsDataURL(this.files[0]);
+        };
+    </script>
+@endsection
 <script src="{{ url('/src/js/vendor/tinymce/js/tinymce/tinymce.min.js') }}"></script>
 <script>
 //    var sampleApp = angular.module('myapp', [], function($interpolateProvider) {
@@ -160,6 +184,18 @@
     var changeFlag=false;
     //标识文本框值是否改变，为true，标识已变
     jQuery(document).ready(function(){
+//        jQuery("#images").change(function() {
+//            console.log('changes');
+//            var reader = new FileReader();
+//            reader.onload = function (e) {
+//                console.log('onload');
+//                // get loaded data and render thumbnail.
+//                jQuery("#image").src = e.target.result;
+//            };
+//
+//            // read the image file as a data URL.
+//            reader.readAsDataURL(this.files[0]);
+//        });
 
         jQuery('#title').blur(function(){
             var title =  jQuery('#title').val();

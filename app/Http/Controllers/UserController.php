@@ -274,6 +274,48 @@ class UserController extends Controller
         return redirect('admin/user');
     }
 
+    public function authbanned(Request $request, $id)
+    {
+        $auth = $request->user();
+
+        $user = User::findorFail($id);
+        if ($user) {
+            $status_id = $user->status_id;
+            $user->banned = 1;
+            $user->status_id = 4;
+            $user->pre_status_id = $status_id;
+            $user->save();
+        }
+        $request->session()->flash('status', '用户: '. $user->name .' 已被屏蔽.');
+        return redirect('admin/user/authEditorList');
+    }
+
+    public function authactive(Request $request, $id)
+    {
+        $auth = $request->user();
+
+        $user = User::findorFail($id);
+        if ($user) {
+            $status_id = $user->status_id;
+            $user->banned = 0;
+            $user->status_id = $user->pre_status_id;
+            $user->save();
+            $user->pre_status_id = $status_id;
+            $user->save();
+        }
+        $request->session()->flash('status', '被屏蔽的用户: '. $user->name .' 已被恢复.');
+        return redirect('admin/user/authEditorList');
+    }
+
+    public function authdestroy(Request $request, $id)
+    {
+        $user = User::find($id);
+        $userName = $user->name;
+        $user->delete();
+
+        $request->session()->flash('status', '用户: '. $userName .' 被成功删除了.');
+        return redirect('admin/user/authEditorList');
+    }
     /**
      * Get a validator for an incoming registration request.
      *
@@ -307,7 +349,7 @@ class UserController extends Controller
                     'phone' => ['required', 'digits:11', 'regex:/^0?(13[0-9]|15[012356789]|18[0-9]|14[57])[0-9]{8}$/'],
                     'password' => 'required|min:6|confirmed',
                     'password_confirmation' => 'required|min:6',
-                    'captcha' => 'required|captcha',
+//                    'captcha' => 'required|captcha',
                     'confirmterm' => 'required'
                 ], $this->messages($valideType));
                 break;
@@ -377,8 +419,8 @@ class UserController extends Controller
                     'password_confirmation.min'  => '确定密码最少是6个字符',
                     'password_confirmation.confirmed'  => '两个密码不一样',
                     'roles.required'  => '角色是必选的',
-                    'captcha.required' => '请输入验证码',
-                    'captcha.captcha' => '输入的验证码错误',
+//                    'captcha.required' => '请输入验证码',
+//                    'captcha.captcha' => '输入的验证码错误',
                     'confirmterm.required'=>'需要同意用户协议'
                 ];
                 break;
@@ -466,12 +508,14 @@ class UserController extends Controller
         $roles = Role::where('name','<>', 'super_admin')->get();
         $authView = $auth->hasAnyRole(['super_admin', 'admin']);
         if ($authView || $auth->id == $user_id) {
+            if ($auth->hasAnyRole(['auth_editor'])) {
+                return view('users/editpw');
+            }
             return view('users/editpw', ['roles'=>$roles, 'usergroups'=>$roles, 'statuses'=>$statuses]);
         }
         return redirect('/');
         return view('users/editpw', ['user'=>$user]);
     }
-
 
     /**
      * Display a listing of the resource.
@@ -509,9 +553,10 @@ class UserController extends Controller
                 $request, $validator
             );
         }
+
         $user = new User();
         $user->name = $request['phone'];
-//        $user->email = $request['phone'];
+//        $user->email = null;
         $user->phone = $request['phone'];
         $user->password = bcrypt($request['password']);
         $user->status_id = 2;
@@ -570,9 +615,9 @@ class UserController extends Controller
 --------------------------------*/
     public function cellphonevalidate($phone){
         //用户账号
-        $uid = 'testsms';
+        $uid = 'yipincar';
 //MD5密码
-        $pwd = '353447s535dd';
+        $pwd = 'yipin123';
 
         /*
         * 变量模板发送示例
@@ -583,10 +628,10 @@ class UserController extends Controller
 //变量模板ID
         $template = '100005';
 //6位随机验证码
-        $code = randNumber();
+        $code = $this->randNumber();
 
         $user = User::where('phone', $phone)->first();
-        if (count($user)>0) {
+        if ($user && count($user)>0) {
             $messageSent = array('phone'=>$phone, 'code'=>$code, 'status'=>400);
             return json_encode($messageSent);
         }
@@ -596,11 +641,12 @@ class UserController extends Controller
             'username'	=> '您好'
         );
 //即时发送
-        $res = sendSMS($uid,$pwd,$phone,array_to_json($contentParam),$template);
+        $res = $this->sendSMS($uid,$pwd,$phone,$this->array_to_json($contentParam),$template);
         $messageSent = array();
+//        $messageSent = array('phone'=>$phone, 'code'=>$code, 'status'=>100);
         $messageSent = array('phone'=>$phone, 'code'=>$code, 'status'=>$res['stat']);
 
-        return json_encode($messageSent);
+        return response()->json($messageSent);
 //        if( $res['stat']=='100' )
 //        {
 //            return json_encode()
@@ -641,8 +687,8 @@ class UserController extends Controller
             'format' => 'json',					//接口返回信息格式 json\xml\txt
         );
 
-        $result = postSMS($apiUrl,$data);			//POST方式提交
-        $re = json_to_array($result);			    //JSON数据转为数组
+        $result = $this->postSMS($apiUrl,$data);			//POST方式提交
+        $re = $this->json_to_array($result);			    //JSON数据转为数组
         //$re = getSMS($apiUrl,$data);				//GET方式提交
 
         return $re;
@@ -710,7 +756,7 @@ class UserController extends Controller
         $row = parse_url($url);
         $host = $row['host'];
         $port='';
-        $port = $row['port'] ? $row['port']:80;
+        $port = isset($row['port']) ? $row['port']:80;
         $file = $row['path'];
         $post='';
         while (list($k,$v) = each($data))
@@ -767,14 +813,14 @@ class UserController extends Controller
 //把数组转json字符串
     function array_to_json($p)
     {
-        return urldecode(json_encode(json_urlencode($p)));
+        return urldecode(json_encode($this->json_urlencode($p)));
     }
 //url转码
     function json_urlencode($p)
     {
         if( is_array($p) )
         {
-            foreach( $p as $key => $value )$p[$key] = json_urlencode($value);
+            foreach( $p as $key => $value )$p[$key] = $this->json_urlencode($value);
         }
         else
         {
@@ -791,5 +837,23 @@ class UserController extends Controller
             $p = iconv('GBK','UTF-8',$p);
         }
         return json_decode($p, true);
+    }
+
+    public function varifyStatus($user_id){
+        $user = User::findorFail($user_id);
+        $user->status_id = 3;
+        $user->save();
+
+        $messageSent = array('status'=>'actived');
+        return response()->json($messageSent);
+    }
+
+    public function devarifyStatus($user_id){
+        $user = User::findorFail($user_id);
+        $user->status_id = 0;
+        $user->save();
+
+        $messageSent = array('status'=>'unactived');
+        return response()->json($messageSent);
     }
 }

@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\City;
 use App\Profile;
+use App\Province;
 use App\Resource;
 use App\User;
 use Intervention\Image\Facades\Image;
@@ -201,20 +203,53 @@ class ProfileController extends Controller
         $auth = $request->user();
         $userId = $auth->id;
         $profile = Profile::where('user_id',$userId)->first();
-        if (count($profile)<1) {
-            return view('authusers/authprofilecreate');
+        $province = Province::all();
+//        $cities = City::all();
+
+        if($auth->id == $userId) {
+            if (count($profile)<1) {
+                return view('authusers/authprofilecreate', ['province'=>$province]);
+            } else {
+                return view('authusers/authprofileshow', ['profile'=>$profile, 'province'=>$province]);
+            }
         } else {
-            return view('authusers/authprofileshow', ['profile'=>$profile]);
+            redirect('/');
         }
     }
 
     public function authedit(Request $request, $userId)
     {
+        $auth = $request->user();
         $profile = Profile::where('user_id', $userId)->first();
-        if ($profile) {
-            return view('authusers/authprofileedit', ['profile'=>$profile]);
+        $province = Province::all();
+//        $cities = City::all();
+
+        if($auth->id == $userId) {
+            if ($profile) {
+                return view('authusers/authprofileedit', ['profile'=>$profile, 'province'=>$province]);
+            } else {
+                return view('authusers/authprofilecreate', ['province'=>$province]);
+            }
         } else {
-            return view('authusers/authprofilecreate');
+            redirect('/');
+        }
+    }
+
+    public function authview(Request $request, $userId)
+    {
+        $auth = $request->user();
+//        $userId = $auth->id;
+        $city = null;
+        $profile = Profile::where('user_id', $userId)->first();
+        $defaultImage = 'photos/default.png';
+        if($profile){
+            $city = Province::where('id', $profile->city_id)->first();
+        }
+        $province = Province::all();
+        if (count($profile)>0) {
+            return view('authusers/authprofileview', ['profile'=>$profile, 'defaultImage'=>$defaultImage, 'province'=>$city]);
+        } else {
+            return redirect('admin/user/authEditorList');
         }
     }
 
@@ -223,11 +258,13 @@ class ProfileController extends Controller
         $auth = $request->user();
         $userId = $auth->id;
         $profile = Profile::where('user_id', $userId)->first();
-        $defaultImage = url('/photos/default.png');
+        $defaultImage = 'photos/default.png';
+        $city = Province::where('id', $profile->city_id)->first();
+        $province = Province::all();
         if (count($profile)>0) {
-            return view('authusers/authprofileshow', ['profile'=>$profile, 'defaultImage'=>$defaultImage]);
+            return view('authusers/authprofileshow', ['profile'=>$profile, 'defaultImage'=>$defaultImage, 'province'=>$city]);
         } else {
-            return view('authusers/authprofilecreate', ['defaultImage'=>$defaultImage]);
+            return view('authusers/authprofilecreate', ['defaultImage'=>$defaultImage, 'province'=>$province]);
         }
     }
 

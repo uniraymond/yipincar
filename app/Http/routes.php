@@ -23,6 +23,7 @@ Route::get('authsendtxt/{phone}', 'UserController@cellphonevalidate');
 
 Route::get('authprofile/{uid}/show', 'ProfileController@authshow');
 Route::get('preview/{id}', 'ArticleController@preview');
+Route::get('authsendtxt/{phone}', 'UserController@cellphonevalidate');
 
 //Route::get('authprofile/show', 'ProfileController@authshow');
 Route::auth();
@@ -37,6 +38,7 @@ Route::group(['middleware'=>'auth', 'prefix'=>'admin'], function() {
     Route::get('profile/{user_id}/editprofile', 'ProfileController@edit');
     Route::get('profile/{user_id}/create', 'ProfileController@create');
     Route::get('profile/{user_id}', 'ProfileController@index');
+    Route::get('authprofile/{user_id}/view', 'ProfileController@authview');
 
     Route::resource('profile', 'ProfileController');
 
@@ -44,6 +46,9 @@ Route::group(['middleware'=>'auth', 'prefix'=>'admin'], function() {
     Route::get('user/rolemanage', 'UserController@rolemanage');
     Route::put('user/{userId}/banned', 'UserController@banned');
     Route::put('user/{userId}/active', 'UserController@active');
+    Route::put('user/{userId}/authbanned', 'UserController@authbanned');
+    Route::put('user/{userId}/authactive', 'UserController@authactive');
+    Route::delete('user/{userId}', 'UserController@authdestroy');
     Route::get('article/category/{categoryId}', 'ArticleController@category');
     Route::get('article/type/{typeId}', 'ArticleController@type');
     Route::get('article/tag/{tagId}', 'ArticleController@tag');
@@ -98,6 +103,8 @@ Route::group(['middleware'=>'auth', 'prefix'=>'admin'], function() {
     Route::get('user/authEditorList', 'UserController@authEditorList');
     Route::get('user/{user_id}/editpw', 'UserController@editpw');
     Route::get('authprofile/store', 'ProfileController@authstore');
+    Route::get('varifyStatus/{user_id}', 'UserController@varifyStatus');
+    Route::get('devarifyStatus/{user_id}', 'UserController@devarifyStatus');
 
     Route::resource('article', 'ArticleController');
     Route::resource('category', 'CategoryController');
