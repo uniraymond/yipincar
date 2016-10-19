@@ -51,7 +51,7 @@
                                     @else
                                     <tr>
                                         <td>
-                                            <a class="" href="{{ url('admin/authprofile/'.$user->user_id.'/show') }}" id="editBtn_{{ $user->id }}">
+                                            <a class="" href="{{ url('admin/authprofile/'.$user->user_id.'/view') }}" id="editBtn_{{ $user->id }}">
                                                 {{ $user->name }}
                                             </a>
                                         </td>
