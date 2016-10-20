@@ -383,27 +383,30 @@ class ArticleController extends Controller
 
     $articleIds = $request['id'];
     $publisheds = $request['published'];
-//    $deletes = $request['delete'];
+    $deletes = $request['delete'];
     $banned = $request['banned'];
     $tops = $request['top'];
-
     foreach($articleIds as $id) {
       $article = Article::find($id);
-      $articleName = $article->title;
-      $article->updated_by = $authuser->id;
+        if(isset($deletes[$id]) && $deletes[$id]) {
+            $article->delete();
+        } else {
+            $articleName = $article->title;
+            $article->updated_by = $authuser->id;
 //      $article->published = isset($publisheds[$id]) && $publisheds[$id] ? 1 : 0;
-      $article->top = isset($tops[$id]) && $tops[$id] ? 1 : 0;
-      if (isset($banned[$id]) && $banned[$id]) {
+            $article->top = isset($tops[$id]) && $tops[$id] ? 1 : 0;
+            if (isset($banned[$id]) && $banned[$id]) {
 //        $article->article_tags()->delete(); //remove article_tags record
-        $article->banned = 1; //remove the artile
-        //$article->article_tags()->delete(); //remove article_tags record
+                $article->banned = 1; //remove the artile
+                //$article->article_tags()->delete(); //remove article_tags record
 //        $article->delete(); //remove the artile
-        $request->session()->flash('status', '文章: '. $articleName .' 已经被删除.');
-      } else {
-          $article->banned = 0;
-        $request->session()->flash('status', '文章: '. $articleName .' 已被修改.');
-      }
-        $article->save(); //published the article
+                $request->session()->flash('status', '文章: '. $articleName .' 已经被删除.');
+            } else {
+                $article->banned = 0;
+                $request->session()->flash('status', '文章: '. $articleName .' 已被修改.');
+            }
+            $article->save(); //published the article
+        }
     }
       if ($request['groupstatus'] = 'actived') {
 //          return redirect('admin/articles/actived');
