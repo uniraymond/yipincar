@@ -522,8 +522,8 @@ class ArticleController extends Controller
           $fileThumbsDir = "photos/thumbs";
           $fileDir = "photos";
 
-//          $file->move($fileDir, $fileName);
-          $file->move($fileThumbsDir, $fileName);
+          $file->move($fileDir, $fileName);
+//          $file->move($fileThumbsDir, $fileName);
 //          $fileOriginal->copy($fileOriginalDir, $fileName);
 
 //          $imageOriginalLink = $fileOriginalDir . '/' . $file->getClientOriginalName();
