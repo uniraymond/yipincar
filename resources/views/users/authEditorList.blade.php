@@ -106,23 +106,31 @@
 
 
     <script src="{{ url('/src/js/jQuery.min.2.2.4.js') }}" ></script>
+    <script src="{{ url('/src/js/jquery-ui.min.js') }}" ></script>
+
     <script src="{{ url('/src/js/select2/select2.full.min.js') }}" ></script>
     <script type="text/javascript">
+        jQuery(function(){
+        });
+
         function passValidate(user_id) {
             var getUrl = "{{ url('admin/varifyStatus') }}" + '/' + user_id;
-            jQuery.get(getUrl,function(data){
-                console.log('changed');
-                jQuery('#btn_'+user_id).html('返回重新审批');
-                location.reload();
-            })
+                jQuery.get(getUrl,function(data){
+                    console.log('changed');
+                    jQuery('#btn_'+user_id).html('返回重新审批');
+                    location.reload();
+                });
         }
         function stopValidate(user_id) {
-            var getUrl = "{{ url('admin/devarifyStatus') }}" + '/' + user_id;
-            jQuery.get(getUrl,function(data){
-                console.log('changed');
-                jQuery('#btn_'+user_id).html('通过审批');
-                location.reload();
-            })
+            var reason = prompt("拒绝申请的原因：", "");
+            if(reason != null) {
+                var getUrl = "{{ url('admin/devarifyStatus') }}" + '/' + user_id+'?reason='+reason;
+                    jQuery.get(getUrl,function(data){
+                    console.log(reason);
+                    jQuery('#btn_'+user_id).html('通过审批');
+                    location.reload();
+                })
+            }
         }
         $('.js-example-basic-single').select2();
         $(document).ready(function(){

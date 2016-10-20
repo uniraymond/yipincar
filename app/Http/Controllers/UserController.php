@@ -863,9 +863,12 @@ class UserController extends Controller
         return response()->json($messageSent);
     }
 
-    public function devarifyStatus($user_id){
+    public function devarifyStatus(Request $request, $user_id){
         $user = User::findorFail($user_id);
         $user->status_id = 0;
+        if($request['reason']) {
+            $user->note = $request['reason'];
+        }
         $user->save();
 
         $messageSent = array('status'=>'unactived');
