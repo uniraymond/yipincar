@@ -356,7 +356,7 @@ class UserController extends Controller
             case 'login':
                 return Validator::make($data, [
                     'phone' => ['required', 'digits:11', 'regex:/^0?(13[0-9]|15[012356789]|18[0-9]|14[57])[0-9]{8}$/'],
-                    'password' => 'required',
+//                    'password' => 'required',
                     'captcha' => 'required|captcha',
                 ], $this->messages($valideType));
                 break;
