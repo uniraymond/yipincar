@@ -9,6 +9,12 @@
         </button>
         <a class="navbar-brand" href="{{ url ('/') }}"><img src="{{ url('/src/images/toplogo.png') }}" /></a>
     </div>
+
+    <div id="app_links">
+        <a class="apple_app" href="https://itunes.apple.com/us/app/yi-pin-qi-che/id1140007396?mt=8" >iPhone</a>
+        <a class="android_app" href="{{ url('/apps/TopAuto.apk') }}" >Android</a>
+    </div>
+
     <div class="hidden-sm-up navbar-toggleable-sm navbar-small-collapse collapse" aria-expanded="false" style="height: 0px;">
         <ul>
             <li>

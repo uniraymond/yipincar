@@ -25,7 +25,7 @@
                 @endif
 
                 @if(count($articles)>0)
-                    <div class="col-md-12">还可以再置顶{{ (6 - $totalTop) > 0 ? (6 - $totalTop) : 0 }}篇文章</div>
+                    <div class="col-lg-9 col-md-8 col-sm-7 pull-left clearfix">还可以再置顶{{ (6 - $totalTop) > 0 ? (6 - $totalTop) : 0 }}篇文章</div>
                     <table class="table table-striped">
                         <thead>
                         <tr>
@@ -38,6 +38,7 @@
                             <th>评论</th>
                             @if ( Null !== Auth::user() || Auth::user()->hasAnyRole(['super_admin', 'admin','chef_editor', 'main_editor', 'adv_editor']) )
                                 <th>编辑</th>
+                                <th>屏蔽</th>
                                 <th>删除</th>
                             @endif
                             <th>文章状态</th>
@@ -84,9 +85,13 @@
                                         <a href="{{ url('admin/article/'.$article->id.'/edit') }}" class="btn btn-default" id="editBtn_{{ $article->id }}">编辑</a>
                                     </td>
                                     <td>
-                                        <input type="checkbox" name="delete[{{ $article->id }}]" ng-checked="delete_{{$article->id}}" ng-click="confirmDelete('{{ $article->id }}')"/>
+                                        <input type="checkbox" {{ $article->banned ? 'checked' : '' }} name="banned[{{ $article->id }}]" />
+                                    </td>
+                                    <td>
+                                        <input type="checkbox" name="delete[{{ $article->id }}]"  />
                                     </td>
                                 @else
+                                    <td></td>
                                     <td></td>
                                     <td></td>
                                 @endif

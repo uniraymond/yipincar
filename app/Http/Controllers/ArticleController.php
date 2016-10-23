@@ -16,6 +16,7 @@ use App\Article;
 use App\ArticleTags as ArticleTags;
 use App\Category;
 use App\ArticleTypes as ArticleTypes;
+use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use App\Resource;
@@ -382,30 +383,33 @@ class ArticleController extends Controller
 
     $articleIds = $request['id'];
     $publisheds = $request['published'];
-//    $deletes = $request['delete'];
+    $deletes = $request['delete'];
     $banned = $request['banned'];
     $tops = $request['top'];
-
     foreach($articleIds as $id) {
       $article = Article::find($id);
-      $articleName = $article->title;
-      $article->updated_by = $authuser->id;
+        if(isset($deletes[$id]) && $deletes[$id]) {
+            $article->delete();
+        } else {
+            $articleName = $article->title;
+            $article->updated_by = $authuser->id;
 //      $article->published = isset($publisheds[$id]) && $publisheds[$id] ? 1 : 0;
-      $article->top = isset($tops[$id]) && $tops[$id] ? 1 : 0;
-      if (isset($banned[$id]) && $banned[$id]) {
+            $article->top = isset($tops[$id]) && $tops[$id] ? 1 : 0;
+            if (isset($banned[$id]) && $banned[$id]) {
 //        $article->article_tags()->delete(); //remove article_tags record
-        $article->banned = 1; //remove the artile
-        //$article->article_tags()->delete(); //remove article_tags record
+                $article->banned = 1; //remove the artile
+                //$article->article_tags()->delete(); //remove article_tags record
 //        $article->delete(); //remove the artile
-        $request->session()->flash('status', '文章: '. $articleName .' 已经被删除.');
-      } else {
-          $article->banned = 0;
-        $request->session()->flash('status', '文章: '. $articleName .' 已被修改.');
-      }
-        $article->save(); //published the article
+                $request->session()->flash('status', '文章: '. $articleName .' 已经被删除.');
+            } else {
+                $article->banned = 0;
+                $request->session()->flash('status', '文章: '. $articleName .' 已被修改.');
+            }
+            $article->save(); //published the article
+        }
     }
       if ($request['groupstatus'] = 'actived') {
-          return redirect('admin/articles/actived');
+//          return redirect('admin/articles/actived');
       }
     return redirect('admin/article');
   }
@@ -511,9 +515,8 @@ class ArticleController extends Controller
               $article_tag->article_id = $article->id;
               $article_tag->tag_id = $tagId;
               $article_tag->created_by = $authuser->id;
+              $article_tag->save();
       }
-
-      $article_tag->save();
   }
       $file = $request->file('images');
       if (!empty($file)) {
@@ -522,20 +525,22 @@ class ArticleController extends Controller
           $fileThumbsDir = "photos/thumbs";
           $fileDir = "photos";
 
-//          $fileOriginal->copy($fileOriginalDir, $fileName);
-//          $fileThumbs->copy($fileThumbsDir, $fileName);
           $file->move($fileDir, $fileName);
+//          $file->move($fileThumbsDir, $fileName);
+//          $fileOriginal->copy($fileOriginalDir, $fileName);
 
           $imageOriginalLink = $fileOriginalDir . '/' . $file->getClientOriginalName();
           $imageThumbsLink = $fileThumbsDir . '/' . $file->getClientOriginalName();
           $imageLink = $fileDir . '/' . $file->getClientOriginalName();
+          copy($imageLink, $imageThumbsLink);
+          copy($imageLink, $imageOriginalLink);
 
 //          $cell_img_size_thumbs = GetImageSize($imageThumbsLink); // need to caculate the file width and height to make the image same
           $cell_img_size = GetImageSize($imageLink); // need to caculate the file width and height to make the image same
 
-          $imageOriginal = Image::make(sprintf('photos/original/%s', $file->getClientOriginalName()))->save();
-          $imageThumbs = Image::make(sprintf('photos/thumbs/%s', $file->getClientOriginalName()))->resize(100, (int)((100 *  $cell_img_size[1]) / $cell_img_size[0]))->save();
           $image = Image::make(sprintf('photos/%s', $file->getClientOriginalName()))->resize(800, (int)((800 * $cell_img_size[1]) / $cell_img_size[0]))->save();
+          $imageThumbs = Image::make(sprintf('photos/thumbs/%s', $file->getClientOriginalName()))->resize(100, (int)((100 *  $cell_img_size[1]) / $cell_img_size[0]))->save();
+          $imageOriginal = Image::make(sprintf('photos/original/%s', $file->getClientOriginalName()))->save();
 
           $resource = new Resource();
           $resource->name = $file->getClientOriginalName();

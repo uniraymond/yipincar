@@ -517,6 +517,21 @@ class UserController extends Controller
         return view('users/editpw', ['user'=>$user]);
     }
 
+    public function autheditpw(Request $request, $user_id)
+    {
+        $auth = $request->user();
+        $statuses = UserStatus::all();
+        $roles = Role::where('name','<>', 'super_admin')->get();
+        $authView = $auth->hasAnyRole(['super_admin', 'admin']);
+        if ($authView || $auth->id == $user_id) {
+            if ($auth->hasAnyRole(['auth_editor'])) {
+                return view('users/autheditpw');
+            }
+            return view('users/editpw', ['roles'=>$roles, 'usergroups'=>$roles, 'statuses'=>$statuses]);
+        }
+        return redirect('/');
+        return view('users/autheditpw', ['user'=>$user]);
+    }
     /**
      * Display a listing of the resource.
      *
@@ -848,9 +863,12 @@ class UserController extends Controller
         return response()->json($messageSent);
     }
 
-    public function devarifyStatus($user_id){
+    public function devarifyStatus(Request $request, $user_id){
         $user = User::findorFail($user_id);
         $user->status_id = 0;
+        if($request['reason']) {
+            $user->note = $request['reason'];
+        }
         $user->save();
 
         $messageSent = array('status'=>'unactived');

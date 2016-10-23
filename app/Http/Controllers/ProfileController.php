@@ -249,6 +249,7 @@ class ProfileController extends Controller
         if (count($profile)>0) {
             return view('authusers/authprofileview', ['profile'=>$profile, 'defaultImage'=>$defaultImage, 'province'=>$city]);
         } else {
+            $request->session()->flash('status', '入驻编辑还未填写资料');
             return redirect('admin/user/authEditorList');
         }
     }

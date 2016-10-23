@@ -64,7 +64,17 @@
                             <label class="col-lg-12 col-md-12 col-sm-12">首页图片</label>
                             <div class="col-md-12">
                                 {!! Form::file('images', '', array('class'=>'col-md-12 form-control-file form-control', 'id'=>'files', 'required'=>'required')) !!}
-{{--                                <img id="image" width="100" src="/{{ $article->resources->link  }}" alt="{{ $article->description }}" />--}}
+                                @php
+                                    $articleLinks = $article->resources;
+                                    $articleLink = '';
+                                    if (count($articleLinks) > 0) {
+                                        foreach($articleLinks as $artLink) {
+                                            $articleLink = $artLink->link;
+                                            break;
+                                        }
+                                    }
+                                @endphp
+                                <img id="image" width="100" src="{{ $articleLink  }}" alt="{{ $article->description }}" />
                             </div>
                         </div>
 

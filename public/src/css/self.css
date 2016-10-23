@@ -82,3 +82,55 @@ img.captcha-img {
 .formgroup {
     margin: 10px;
 }
+
+#app_links {
+    float: left;
+    display: block;
+    position: relative;
+    padding: 9px 10px;
+    margin-top: 8px;
+    margin-left: 15px;
+    margin-bottom: 8px;
+
+}
+
+#app_links .apple_app {
+    background: url(../images/iphone_icon_100_hover.png) 5px center no-repeat transparent;
+    background-size: 20px 20px;
+    display: block;
+    height: 32px;
+    width: 100px;
+    padding: 5px 5px 5px 35px;
+    line-height: 20px;
+    border: 1px solid #e74118;
+    border-radius: 5px;
+    float: left;
+    margin-right: 10px;
+}
+
+#app_links .apple_app:hover {
+    background: url(../images/iphone_icon_100.png) 5px center no-repeat transparent;
+    border: 1px solid #FFF;
+    background-size: 20px 20px;
+    margin-right: 10px;
+    color: #e74118;
+}
+#app_links .android_app {
+    background: url('../images/android_icon_100_hover.png') 5px center no-repeat transparent;
+    background-size: 20px 20px;
+    display: block;
+    height: 32px;
+    width: 100px;
+    padding: 5px 5px 5px 35px;
+    line-height: 20px;
+    border: 1px solid #e74118;
+    border-radius: 5px;
+    float: left;
+}
+
+#app_links .android_app:hover {
+    background: url('../images/android_icon_100.png') 5px center no-repeat transparent;
+    border: 1px solid #FFF;
+    background-size: 20px 20px;
+    color: #e74118;
+}
