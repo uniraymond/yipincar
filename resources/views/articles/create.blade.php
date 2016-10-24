@@ -144,6 +144,7 @@
 <script src="{{ url('/src/js/jQuery.min.2.2.4.js') }}" ></script>
 <script>
     var editor_config = {
+        language:'zh_CN',
         height: "350",
         path_absolute : "{{ URL::to('/') }}/",
         selector: "textarea#content",
