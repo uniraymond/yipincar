@@ -95,7 +95,7 @@ img.captcha-img {
 }
 
 #app_links .apple_app {
-    background: url(../images/iphone_icon_100_hover.png) 5px center no-repeat transparent;
+    background: url(../images/iphone_icon_100_hover.png) 5px center no-repeat #eee;
     background-size: 20px 20px;
     display: block;
     height: 32px;
@@ -109,14 +109,15 @@ img.captcha-img {
 }
 
 #app_links .apple_app:hover {
-    background: url(../images/iphone_icon_100.png) 5px center no-repeat transparent;
+    background: url(../images/iphone_icon_100.png) 5px center no-repeat #ccc;
     border: 1px solid #FFF;
     background-size: 20px 20px;
     margin-right: 10px;
     color: #e74118;
+    text-decoration: none;
 }
 #app_links .android_app {
-    background: url('../images/android_icon_100_hover.png') 5px center no-repeat transparent;
+    background: url('../images/android_icon_100_hover.png') 5px center no-repeat #eee;
     background-size: 20px 20px;
     display: block;
     height: 32px;
@@ -129,8 +130,9 @@ img.captcha-img {
 }
 
 #app_links .android_app:hover {
-    background: url('../images/android_icon_100.png') 5px center no-repeat transparent;
+    background: url('../images/android_icon_100.png') 5px center no-repeat #ccc;
     border: 1px solid #FFF;
     background-size: 20px 20px;
     color: #e74118;
+    text-decoration: none;
 }
