@@ -45,7 +45,7 @@
                         <div>
                             <label class="col-lg-1 col-md-1 col-sm-1">简介</label>
                             <div class="col-md-11">
-                                <textarea class="col-lg-12 col-md-12 col-sm-12 form-control" type="text" id="description" name="description" placeholder="简介" maxlength="140">{{ $article->description }}</textarea>
+                                <textarea class="col-lg-12 col-md-12 col-sm-12 form-control" type="text" id="description" name="description" placeholder="限140字" maxlength="140">{{ $article->description }}</textarea>
                             </div>
                         </div>
 
