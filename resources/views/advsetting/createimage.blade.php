@@ -28,39 +28,62 @@
             @endforeach
           @endif
         </div>
+
         <div class="col-lg-12 col-md-12 col-sm-12" style="margin-top: 55px">
           {!! Form::open(array('url' => 'admin/advsetting/uploadimage', 'class' => 'form', 'enctype'=>'multipart/form-data', 'method'=>'put')) !!}
 
-          {!! Form::label('type_id', '选择类型', array('class'=>'col-md-12')) !!}
-          <select class="col-lg-12 col-md-12 col-sm-12 form-control" name="type_id">
-            @foreach ($types as $type)
-              <option value="{{$type->id}}" >{{$type->name}}</option>
-            @endforeach
+          {!! Form::label('category_id', '栏目', array('class'=>'col-md-1')) !!}
+          <div class="col-md-2" style="margin-bottom: 55px">
+            <select class="col-lg-12 col-md-12 col-sm-12 form-control" name="category_id">
+              <option value="3">动态</option>
+              @foreach ($categories as $category)
+                <option value="{{$category->id}}">{{$category->name}}</option>
+              @endforeach
+            </select>
+          </div>
+          <div class="clearfix"></div>
+
+          {!! Form::label('type_id', '选择类型', array('class'=>'col-md-1')) !!}
+          <div class="col-md-2" style="margin-bottom: 55px">
+            <select class="col-lg-12 col-md-12 col-sm-12 form-control" name="type_id">
+              @foreach ($types as $type)
+                <option value="{{$type->id}}" >{{$type->name}}</option>
+              @endforeach
+            </select>
+          </div>
+
+          <div class="clearfix"></div>
+
+          {!! Form::label('position_id', '选择位置', array('class'=>'col-md-1')) !!}
+          <div class="col-md-2" style="margin-bottom: 55px">
+            <select class="col-lg-12 col-md-12 col-sm-12 form-control" name="position_id">
+              @foreach ($positions as $position)
+                <option value="{{$position->id}}">{{$position->name}}</option>
+              @endforeach
           </select>
+            </div>
           <div class="clearfix"></div>
 
-          {!! Form::label('position_id', '选择位置', array('class'=>'col-md-12')) !!}
-          <select class="col-lg-12 col-md-12 col-sm-12 form-control" name="position_id">
-            @foreach ($positions as $position)
-              <option value="{{$position->id}}">{{$position->name}}</option>
-            @endforeach
-          </select>
+          {!! Form::label('order', '显示顺序', array('class'=>'col-md-1')) !!}
+          <div class="col-md-2" style="margin-bottom: 55px">
+            <select class="col-lg-12 col-md-12 col-sm-12 form-control" name="order">
+              @for($i=1; $i<=10; $i++)
+                <option value="{{ $i }}">{{ $i }}</option>i
+              @endfor
+            </select>
+          </div>
           <div class="clearfix"></div>
 
-          {!! Form::label('title', '标题', array('class'=>'col-md-12')) !!}
-          {!! Form::text('title', '', array('class' => 'input col-md-12 form-control', 'placeholder' => '标题')) !!}
+          {!! Form::label('title', '标题', array('class'=>'col-md-1')) !!}
+          <div class="col-md-11" style="margin-bottom: 55px">
+            {!! Form::text('title', '', array('class' => 'input col-md-12 form-control', 'placeholder' => '限30个字')) !!}
+          </div>
           <div class="clearfix"></div>
 
-          {!! Form::label('description', '广告描述', array('class'=>'col-md-12')) !!}
-          <textarea name="description" class="description input col-md-12 form-control" placeholder="详细信息" rows="3" ></textarea>
-          <div class="clearfix"></div>
-
-          {!! Form::label('order', '显示顺序', array('class'=>'col-md-12')) !!}
-          <select class="col-lg-12 col-md-12 col-sm-12 form-control" name="order">
-            @for($i=1; $i<=10; $i++)
-              <option value="{{ $i }}">{{ $i }}</option>i
-            @endfor
-          </select>
+          {!! Form::label('description', '广告描述', array('class'=>'col-md-1')) !!}
+          <div class="col-md-11" style="margin-bottom: 55px">
+            <textarea name="description" class="description input col-md-12 form-control" placeholder="详细信息" rows="3" ></textarea>
+          </div>
           <div class="clearfix"></div>
 
             @if ($errors->has('links'))
@@ -68,21 +91,16 @@
                 <strong>{{ $errors->first('links') ? '链接不能为空' : '' }}</strong>
             </span>
             @endif
-          {!! Form::label('links', '链接*', array('class'=>'col-md-12')) !!}
-          {!! Form::text('links', '', array('class' => 'input col-md-12 form-control', 'placeholder' => '链接', 'required'=>'required')) !!}
+          {!! Form::label('links', '链接*', array('class'=>'col-md-1')) !!}
+          <div class="col-md-11" style="margin-bottom: 55px">
+            {!! Form::text('links', '', array('class' => 'input col-md-12 form-control', 'placeholder' => '链接', 'required'=>'required')) !!}
+          </div>
           <div class="clearfix"></div>
 
           {{--{!! Form::label('published_at', '开始显示日期', array('class'=>'col-md-12')) !!}--}}
           {!! Form::date('published_at', '', array('class'=>'col-md-12', 'hidden', 'placehold'=>'开始日期')) !!}
           <div class="clearfix"></div>
 
-          {!! Form::label('category_id', '栏目', array('class'=>'col-md-12')) !!}
-          <select class="col-lg-12 col-md-12 col-sm-12 form-control" name="category_id">
-              <option value="3">动态</option>
-            @foreach ($categories as $category)
-              <option value="{{$category->id}}">{{$category->name}}</option>
-            @endforeach
-          </select>
 
           @if( Auth::user()->hasAnyRole(['adv_editor']) )
             <div>
@@ -94,24 +112,26 @@
 
           <div class="clearfix"></div>
 
-          <div>
-            <div id="settop_error" class="alert-danger"></div>
-            <div class="clearfix"></div>
-            <label class="col-md-3 published_label" for="top">
-              <input id="settop" class="top" type="checkbox" name="top"  /> 置顶
-            </label>
-          </div>
+          {{--<div>--}}
+            {{--<div id="settop_error" class="alert-danger"></div>--}}
+            {{--<div class="clearfix"></div>--}}
+            {{--<label class="col-md-3 published_label" for="top">--}}
+              {{--<input id="settop" class="top" type="checkbox" name="top"  /> 置顶--}}
+            {{--</label>--}}
+          {{--</div>--}}
 
           <div class="clearfix"></div>
 
-          {!! Form::label('images', '上传图片*', array('class'=>'col-md-12')) !!}
+          {!! Form::label('images', '上传图片*', array('class'=>'col-md-2')) !!}
           @if ($errors->has('images'))
             <span class="help-block">
                 <strong>{{ $errors->first('images') ? '图片不能为空' : '' }}</strong>
             </span>
           @endif
-          {!! Form::file('images', '', array('class'=>'col-md-12 form-control-file form-control', 'id'=>'files', 'required'=>'required')) !!}
-          <img id="image" width="100" />
+          <div class="col-md-4" style="margin-bottom: 55px">
+            {!! Form::file('images', '', array('class'=>'col-md-12 form-control-file form-control', 'id'=>'files', 'required'=>'required')) !!}
+            <img id="image" width="100" />
+          </div>
           <div class="clearfix"></div>
 
           {!! Form::token() !!}

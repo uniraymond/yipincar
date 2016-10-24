@@ -9,3 +9,4 @@ Homestead.json
 .idea
 /config/database.php
 /laradock
+/public/apps/TopAuto.apk
