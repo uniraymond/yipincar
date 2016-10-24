@@ -136,7 +136,7 @@
                         @endif
                        </div>
                        {!! Form::token() !!}
-                       <div class=" col-lg-12 col-md-12 col-sm-12" style="margin-top: 55px">
+                       <div class=" col-lg-12 col-md-12 col-sm-12" style="margin-top: 55px; margin-bottom: 55px">
                            <input type="submit" id="submit" value="保存" class="btn btn-default" />
                        </div>
                        </form>
