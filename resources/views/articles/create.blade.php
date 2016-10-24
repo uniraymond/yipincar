@@ -16,40 +16,14 @@
                     </div>
                 @endif
 
-                <div class="col-lg-12 col-md-12 col-sm-12">
+                <div class="col-lg-12 col-md-12 col-sm-12" style="margin-top: 55px">
                     {!! Form::open(array('url' => 'admin/article/', 'class' => 'form', 'method'=>'put', 'enctype'=>'multipart/form-data')) !!}
                     <div class="form-group  col-lg-12 col-md-12 col-sm-12" >
-                        <div class="{{ isset($errors) && $errors->has('title') ? 'has-error clearfix' : 'clearfix' }}" style="margin-bottom: 5px" >
-                            <label class="col-lg-12 col-md-12 col-sm-12">标题</label>
-                            <div class="col-md-12">
-                                <input class="col-lg-12 col-md-12 col-sm-12 form-control" type="text" id="title" name="title" required maxlength="23" />
-                                @if ($errors->has('title'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('title') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-                        </div>
 
-                        @if( !Auth::user()->hasAnyRole([ 'auth_editor']))
-                        <div class="{{ isset($errors) && $errors->has('authname') ? 'has-error clearfix' : 'clearfix' }}" style="margin-bottom: 5px" >
-                            <label class="col-lg-12 col-md-12 col-sm-12">作者</label>
-                            <div class="col-md-12">
-                                <input class="col-lg-12 col-md-12 col-sm-12 form-control" type="text" id="authname" name="authname"  />
-                            </div>
-                        </div>
-                        @endif
 
                         <div>
-                            <label class="col-lg-12 col-md-12 col-sm-12">简介</label>
-                            <div class="col-md-12">
-                                <textarea class="col-lg-12 col-md-12 col-sm-12 form-control" type="text" id="description" name="description" placeholder="简介" maxlength="140"></textarea>
-                            </div>
-                        </div>
-
-                        <div>
-                            <label class="col-lg-12 col-md-12 col-sm-12">选择栏目</label>
-                            <div class="col-md-12">
+                            <label class="col-lg-1 col-md-1 col-sm-1" style="margin-bottom: 55px">选择栏目</label>
+                            <div class="col-md-2" style="margin-bottom: 55px">
                                 <select class="col-lg-12 col-md-12 col-sm-12 form-control" name="category_id">
                                     @foreach($categories as $category)
                                         <option value="{{$category->id}}">
@@ -60,17 +34,45 @@
                             </div>
                         </div>
 
+                        @if( !Auth::user()->hasAnyRole([ 'auth_editor']))
+                            <div class="{{ isset($errors) && $errors->has('authname') ? 'has-error clearfix' : 'clearfix' }}" style="margin-bottom: 55px" >
+                                <label class="col-lg1-1 col-md-1 col-sm-1">作者</label>
+                                <div class="col-md-2">
+                                    <input class="col-lg-3 col-md-3 col-sm-3 form-control" type="text" id="authname" name="authname"  />
+                                </div>
+                            </div>
+                        @endif
+
                         <div>
-                            <label class="col-lg-12 col-md-12 col-sm-12">首页图片</label>
-                            <div class="col-md-12">
+                            <label class="col-lg-1 col-md-1 col-sm-1">简介</label>
+                            <div class="col-md-11">
+                                <textarea class="col-lg-12 col-md-12 col-sm-12 form-control" type="text" id="description" name="description" placeholder="限140字" maxlength="140"></textarea>
+                            </div>
+                        </div><br>
+
+                        <div>
+                            <label class="col-lg-1 col-md-1 col-sm-1" style="margin-top: 55px">首页图片</label>
+                            <div class="col-md-4"  style="margin-top: 55px; margin-bottom: 55px">
                                 <input type="file" class="col-md-12 form-control-file form-control" id="images" name="images" />
 {{--                                {!! Form::file('images', '', array('class'=>'col-md-12 form-control-file form-control', 'id'=>'images', 'required'=>'required')) !!}--}}
                                 <img id="image" width="100" />
                             </div>
                         </div>
 
-                        <div class={{ isset($errors) && $errors->has('content') ? 'has-error clearfix' : 'clearfix' }}>
-                            <label class="col-lg-12 col-md-12 col-sm-12 clearfix">内容</label>
+
+                        <div class="{{ isset($errors) && $errors->has('title') ? 'has-error clearfix' : 'clearfix' }}" style="margin-bottom: 0px" >
+                            {{--<label class="col-lg-1 col-md-1 col-sm-1">标题</label>--}}
+                            <div class="col-md-12">
+                                <input class="col-lg-12 col-md-12 col-sm-12 form-control" type="text" id="title" name="title" required maxlength="30"  placeholder="标题, 限30字"/>
+                                @if ($errors->has('title'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('title') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
+                        <div class="{{ isset($errors) && $errors->has('content') ? 'has-error clearfix' : 'clearfix' }}" style="margin-bottom: 55px">
+                            {{--<label class="col-lg-12 col-md-12 col-sm-12 clearfix">内容</label>--}}
                             <div class="clearfix"></div>
                             <div class="col-md-12">
                                 <textarea class="col-lg-12 col-md-12 col-sm-12 form-control clearfix" id="content" name="content" height="50"></textarea>
@@ -94,24 +96,25 @@
                         {{--</div>--}}
 
                         <div>
-                            <label class="col-lg-12 col-md-12 col-sm-12">选择标签(多个关键字之间用逗号隔开)</label>
-                            <div class="col-md-12">
-                                <input id="tags" name="tags" class="col-lg-12 col-md-12 col-sm-12 form-control" placeholder="选择标签"  />
-                                <div class="col-lg-12 col-md-12 col-sm-12 highlight">
+                            <label class="col-lg-1 col-md-1 col-sm-1">选择标签</label>
+                            <div class="col-md-11">
+                                <input id="tags" name="tags" class="col-lg-12 col-md-12 col-sm-12 form-control" placeholder="多个关键字之间用逗号隔开"  />
+                                <div class="col-lg-12 col-md-12 col-sm-12 highlight"  style="margin-top: 5px">
                                     <span><small>提示现有的标签: {!! $tagString !!}</small></span>
                                 </div>
                             </div>
                         </div>
 
-                        <div>
-                            <label class="col-md-3 published_label">
-                                <input class="published" type="checkbox" name="published"  /> 提交
-                            </label>
-                        </div>
+
                     </div>
                     {!! Form::token() !!}
-                    <div class=" col-lg-12 col-md-12 col-sm-12">
+                    <div class=" col-lg-1 col-md-1 col-sm-1" style="margin-top: 55px">
                         <input type="submit" id="submit" value="保存" class="btn btn-default" />
+                    </div>
+                    <div>
+                        <label class="col-md-3 published_label" style="margin-top: 60px">
+                            <input class="published" type="checkbox" name="published"  /> 提交
+                        </label>
                     </div>
                     </form>
                 </div>
@@ -201,9 +204,9 @@
         jQuery('#title').blur(function(){
             var title =  jQuery('#title').val();
             console.log(title.length);
-            if (title.length > 23) {
+            if (title.length > 30) {
                 jQuery('#title').append('<span><strong>文章标题太长</strong></span>');
-                alert('文章标题超过23个字');
+                alert('文章标题超过30个字');
                 return false;
             }
         });
