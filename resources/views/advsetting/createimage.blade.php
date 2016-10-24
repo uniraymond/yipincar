@@ -28,7 +28,7 @@
             @endforeach
           @endif
         </div>
-        <div class="col-lg-12 col-md-12 col-sm-12">
+        <div class="col-lg-12 col-md-12 col-sm-12" style="margin-top: 55px">
           {!! Form::open(array('url' => 'admin/advsetting/uploadimage', 'class' => 'form', 'enctype'=>'multipart/form-data', 'method'=>'put')) !!}
 
           {!! Form::label('type_id', '选择类型', array('class'=>'col-md-12')) !!}
