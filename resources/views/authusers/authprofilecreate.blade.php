@@ -16,56 +16,57 @@
 
                 <div class="panel-body">
                     {!! Form::open(array('url' => 'authprofile/store', 'class' => 'form', 'method' => 'put', 'enctype' => 'multipart/form-data')) !!}
-                    <div class="form-group  col-lg-12 col-md-12 col-sm-12" >
-                        <div class="clearfix formgroup">
-                            {!! Form::label('mediatype', '自媒体类型', array('class'=>'col-md-6')) !!}
-                            <div class="col-md-12">
-                                <label for="mediatype">
+                    <div class="form-group  col-lg-12 col-md-12 col-sm-12">
+                        <div class="clearfix formgroup"  style="margin-bottom: 55px">
+                            {!! Form::label('mediatype', '自媒体类型', array('class'=>'col-md-2')) !!}
+                            <div class="col-md-6">
+                                <label for="mediatype" class="col-md-12">
                                     <input type="radio" value="1" name="mediatype"/>个体自媒体
                                 </label>
-                                <label for="mediatype">
-                                    <input type="radio" value="2" name="mediatype"/>组织机构自媒体
+                                <label for="mediatype" class="col-md-12">
+                                    <input type="radio" value="2" name="mediatype" />组织机构自媒体
                                 </label>
                             </div>
                         </div>
 
-                        <div class="clearfix formgroup">
-                            {!! Form::label('name', '运营者姓名', array('class'=>'col-md-6')) !!}
-                            <div class="col-md-12">
+                        <div class="clearfix formgroup"  style="margin-bottom: 55px">
+                            {!! Form::label('name', '运营者姓名', array('class'=>'col-md-2')) !!}
+                            <div class="col-md-3">
                                 {!! Form::text('name', '', array('class'=>'col-md-6 form-control', 'placeholder' => '姓名')) !!}
                             </div>
                         </div>
 
-                        <div class="clearfix formgroup">
-                            <div class="col-md-12">
-                                <label for="prove_type" >运营者证件
-                                    <select name="prove_type" >
+                        <div class="clearfix formgroup"  style="margin-bottom: 55px">
+                                <label for="prove_type"  class="col-md-2">运营者证件 </label>
+                                <div  class="col-md-2">
+                                    <select class="col-md-2 form-control" name="prove_type">
                                         <option value="sfz" >身份证</option>
                                         <option value="passport" >护照</option>
                                     </select>
-                                    <input name="prove_number" placeholder="证件号码" />
-                                </label>
-                            </div>
+                                </div>
+                                <div   class="col-md-3">
+                                    <input class="col-md-3  form-control" name="prove_number" placeholder="证件号码" />
+                                </div>
                         </div>
 
-                        <div class="clearfix formgroup">
-                            <div class="col-md-12">
-                                {!! Form::label('proveimage', '证件照片', array('class'=>'col-md-12')) !!}
+                        <div class="clearfix formgroup"  style="margin-bottom: 55px">
+                            {{--<div class="col-md-12">--}}
+                                {!! Form::label('proveimage', '证件照片', array('class'=>'col-md-2')) !!}
                                 @if ($errors->has('proveimage'))
                                     <span class="help-block">
                                         <strong>{{ $errors->first('proveimage') ? '图片不能为空' : '' }}</strong>
                                     </span>
                                 @endif
-                                {!! Form::file('proveimage', '', array('class'=>'col-md-12 form-control-file form-control', 'id'=>'proveimage', 'required'=>'required')) !!}
+                                {!! Form::file('proveimage', '', array('class'=>'col-md-10 form-control-file form-control', 'id'=>'proveimage', 'required'=>'required')) !!}
                                 <img id="proveimage_image" width="100" />
                                 <div class="clearfix"></div>
-                            </div>
+                            {{--</div>--}}
                         </div>
 
-                        <div class="clearfix formgroup">
-                            {!! Form::label('city_id', '所在地', array('class'=>'col-md-6')) !!}
-                            <div class="col-md-12">
-                                <select name="city_id">
+                        <div class="clearfix formgroup"  style="margin-bottom: 55px">
+                            {!! Form::label('city_id', '所在地', array('class'=>'col-md-2')) !!}
+                            <div class="col-md-4">
+                                <select class="col-md-3 form-control" name="city_id">
                                     <option value="0" >选择省,直辖市,特别行政区</option>
                                     @foreach($province as $p)
                                         {{--<optgroup label="{{ $p.name }}">--}}
@@ -80,23 +81,27 @@
                             </div>
                         </div>
 
-                        <div class="clearfix formgroup">
-                            <div class="col-md-12">
-                                {!! Form::label('mailbox', '联系邮箱', array('class'=>'col-md-6')) !!}
-                                {!! Form::email('mailbox', '', array('class'=>'col-md-6 form-control', 'height'=>"20", 'placeholder' => '联系邮箱')) !!}
-                            </div>
+                        <div class="clearfix formgroup"  style="margin-bottom: 55px">
+                            {{--<div class="col-md-12">--}}
+                                {!! Form::label('mailbox', '联系邮箱', array('class'=>'col-md-2')) !!}
+                                <div  class="col-md-4">
+                                    {!! Form::email('mailbox', '', array('class'=>'col-md-6 form-control', 'height'=>"20", 'placeholder' => '联系邮箱')) !!}
+                                </div>
+                            {{--</div>--}}
                         </div>
 
-                        <div class="clearfix formgroup">
-                            <div class="col-md-12">
-                            {!! Form::label('cellphone', '联系手机', array('class'=>'col-md-6')) !!}
+                        <div class="clearfix formgroup"  style="margin-bottom: 55px">
+                            {{--<div class="col-md-12">--}}
+                            {!! Form::label('cellphone', '联系手机', array('class'=>'col-md-2')) !!}
+                            <div  class="col-md-4">
                                 {!! Form::text('cellphone', '', array('class'=>'col-md-6 form-control', 'placeholder' => '电话')) !!}
                             </div>
+                            {{--</div>--}}
                         </div>
 
-                        <div class="clearfix formgroup">
-                            <div class="col-md-12">
-                                {!! Form::label('auth_resource', '个人授权书', array('class'=>'col-md-12')) !!}
+                        <div class="clearfix formgroup"  style="margin-bottom: 55px">
+                            {{--<div class="col-md-12">--}}
+                                {!! Form::label('auth_resource', '合同授权书', array('class'=>'col-md-2')) !!}
                                 @if ($errors->has('auth_resource'))
                                     <span class="help-block">
                                         <strong>{{ $errors->first('auth_resource') ? '图片不能为空' : '' }}</strong>
@@ -104,15 +109,15 @@
                                 @endif
                                 {!! Form::file('auth_resource', '', array('class'=>'col-md-12 form-control-file form-control', 'id'=>'auth_resource', 'required'=>'required')) !!}
                                 <img id="auth_resource_image" width="100" />
+                                <div class="auth_document"  style="margin-top: 5px">请先下载<a href="{{ url('/documents/一品汽车媒体平台入驻授权书.docx') }}" target="_blank">《一品汽车媒体平台入驻授权书》</a> ，上传加盖公章的扫描件，支持上传jpeg,png,pdf</div>
 
                                 <div class="clearfix"></div>
-                                <div class="auth_document">请先下载<a href="{{ url('/documents/一品汽车媒体平台入驻授权书.docx') }}" target="_blank">《一品汽车媒体平台入驻授权书》</a> ，上传加盖公章的扫描件，支持上传jpeg,png,pdf</div>
-                            </div>
+                            {{--</div>--}}
                         </div>
 
-                        <div class="clearfix formgroup">
-                            <div class="col-md-12">
-                            {!! Form::label('ass_resource', '组织机构代码证', array('class'=>'col-md-12')) !!}
+                        <div class="clearfix formgroup"  style="margin-bottom: 55px">
+                            {{--<div class="col-md-12">--}}
+                            {!! Form::label('ass_resource', '组织机构代码证', array('class'=>'col-md-2')) !!}
                             @if ($errors->has('ass_resource'))
                                 <span class="help-block">
                                     <strong>{{ $errors->first('ass_resource') ? '图片不能为空' : '' }}</strong>
@@ -121,22 +126,22 @@
                             {!! Form::file('ass_resource', '', array('class'=>'col-md-12 form-control-file form-control', 'id'=>'ass_resource', 'required'=>'required')) !!}
                             <img id="ass_resource_image" width="100" />
                             <div class="clearfix"></div>
-                        </div>
+                        {{--</div>--}}
                         </div>
 
-                        <div class="clearfix formgroup">
-                            <div class="col-md-12">
-                            {!! Form::label('contract_auth', '合同授权书', array('class'=>'col-md-12')) !!}
-                            @if ($errors->has('contract_auth'))
-                                <span class="help-block">
-                                    <strong>{{ $errors->first('contract_auth') ? '图片不能为空' : '' }}</strong>
-                                </span>
-                            @endif
-                            {!! Form::file('contract_auth', '', array('class'=>'col-md-12 form-control-file form-control', 'id'=>'contract_auth', 'required'=>'required')) !!}
-                            <img id="contract_auth_image" width="100" />
-                            <div class="clearfix"></div>
-                        </div>
-                        </div>
+                        {{--<div class="clearfix formgroup">--}}
+                            {{--<div class="col-md-12">--}}
+                            {{--{!! Form::label('contract_auth', '合同授权书', array('class'=>'col-md-12')) !!}--}}
+                            {{--@if ($errors->has('contract_auth'))--}}
+                                {{--<span class="help-block">--}}
+                                    {{--<strong>{{ $errors->first('contract_auth') ? '图片不能为空' : '' }}</strong>--}}
+                                {{--</span>--}}
+                            {{--@endif--}}
+                            {{--{!! Form::file('contract_auth', '', array('class'=>'col-md-12 form-control-file form-control', 'id'=>'contract_auth', 'required'=>'required')) !!}--}}
+                            {{--<img id="contract_auth_image" width="100" />--}}
+                            {{--<div class="clearfix"></div>--}}
+                        {{--</div>--}}
+                        {{--</div>--}}
 
                         {{--<div class="clearfix">--}}
                             {{--{!! Form::label('targetArea', '专注领域', array('class'=>'col-md-6')) !!}--}}
@@ -148,10 +153,10 @@
                             {{--</div>--}}
                         {{--</div>--}}
 
-                        <div class="clearfix formgroup">
-                            {!! Form::label('self_url', '个人网站（可选）', array('class'=>'col-md-6')) !!}
-                            <div class="col-md-12">
-                                {!! Form::text('self_url', '', array('class'=>'col-md-6 form-control', 'placeholder' => '个人网站')) !!}
+                        <div class="clearfix formgroup"  style="margin-bottom: 55px">
+                            {!! Form::label('self_url', '个人网站', array('class'=>'col-md-2')) !!}
+                            <div class="col-md-10">
+                                {!! Form::text('self_url', '', array('class'=>'col-md-6 form-control', 'placeholder' => '选填')) !!}
                             </div>
                         </div>
 
@@ -163,23 +168,23 @@
                             {{--<div class="clearfix">博客，专栏等地址链接</div>--}}
                         {{--</div>--}}
 
-                        <div class="clearfix formgroup">
-                            {!! Form::label('weixin_public_id', '微信公众号', array('class'=>'col-md-6')) !!}
-                            <div class="col-md-12">
+                        <div class="clearfix formgroup"  style="margin-bottom: 55px">
+                            {!! Form::label('weixin_public_id', '微信公众号', array('class'=>'col-md-2')) !!}
+                            <div class="col-md-3">
                                 {!! Form::text('weixin_public_id', '', array('class'=>'col-md-6 form-control', 'placeholder' => '微信公众号')) !!}
                             </div>
                         </div>
 
-                        <div class="clearfix formgroup">
-                            {!! Form::label('media_name', '自媒体名称', array('class'=>'col-md-6')) !!}
-                            <div class="col-md-12">
+                        <div class="clearfix formgroup"  style="margin-bottom: 55px">
+                            {!! Form::label('media_name', '自媒体名称', array('class'=>'col-md-2')) !!}
+                            <div class="col-md-3">
                                 {!! Form::text('', '自媒体名称', array('class'=>'col-md-6 form-control', 'placeholder' => '自媒体名称')) !!}
                             </div>
                         </div>
 
-                        <div class="clearfix formgroup">
-                            <div class="col-md-12">
-                            {!! Form::label('media_icon', '自媒体头像', array('class'=>'col-md-12')) !!}
+                        <div class="clearfix formgroup"  style="margin-bottom: 55px">
+                            {{--<div class="col-md-12">--}}
+                            {!! Form::label('media_icon', '自媒体头像', array('class'=>'col-md-2')) !!}
                             @if ($errors->has('media_icon'))
                                 <span class="help-block">
                                     <strong>{{ $errors->first('media_icon') ? '自媒体头像' : '' }}</strong>
@@ -188,19 +193,19 @@
                             {!! Form::file('media_icon', '', array('class'=>'col-md-12 form-control-file form-control', 'id'=>'media_icon', 'required'=>'required')) !!}
                             <img id="media_icon_image" width="100" />
                             <div class="media_icon"></div>
-                        </div>
+                        {{--</div>--}}
                         </div>
 
-                        <div class="clearfix formgroup">
-                            {!! Form::label('自媒体简介', '', array('class'=>'col-md-12 clearfix')) !!}
-                            <div class="col-md-12">
-                                {!! Form::text('about_self', '', array('class'=>'col-md-12 form-control', 'placeholder' => '自媒体简介')) !!}
+                        <div class="clearfix formgroup"  style="margin-bottom: 55px">
+                            {!! Form::label('media_intro', '自媒体简介', array('class'=>'col-md-2 clearfix')) !!}
+                            <div class="col-md-10">
+                                {!! Form::text('about_self', '', array('class'=>'col-md-12 form-control', 'placeholder' => '2到12字，要求一句话介绍您的自媒体，无特殊符号，请勿添加联系方式')) !!}
 
-                            <div class="clearfix">2到12字，要求一句话介绍您的自媒体，无特殊符号，请勿添加联系方式</div>
+                            {{--<div class="clearfix">2到12字，要求一句话介绍您的自媒体，无特殊符号，请勿添加联系方式</div>--}}
                             </div>
                         </div>
 
-                        <div class="form-group{{ $errors->has('confirmterm') ? ' has-error' : '' }} clearfix formgroup">
+                        <div class="form-group{{ $errors->has('confirmterm') ? ' has-error' : '' }} clearfix formgroup"  style="margin-bottom: 55px">
                             <div class="col-md-12">
 
                                 <label for="confirmterm">
@@ -218,7 +223,7 @@
 
 {{--                        {!! Form::text('user_id', $user->id, array('hidden'=>'hidden')) !!}--}}
                         {!! Form::token() !!}
-                        <div class=" col-lg-12 col-md-12 col-sm-12 clearfix formgroup">
+                        <div class=" col-lg-12 col-md-12 col-sm-12 clearfix formgroup"  style="margin-bottom: 55px">
                             {!! Form::submit('保存', array('class'=>'btn btn-primary')) !!}
                         </div>
                     </div>
