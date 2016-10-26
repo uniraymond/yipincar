@@ -6,13 +6,13 @@
     {!! Form::token() !!}
     <div id="page-wrapper">
         <div class="row">
-            <div class="col-lg-12">
-                <h1 class="page-header">文章</h1>
+            <div class="col-lg-12" style="margin-top: 35px">
+                <h1 class="page-header">待审核文章</h1>
 
-                <div class="col-md-6">
+                <div class="col-md-2">
                     {{--{!! Form::open(array('url' => '/admin/article/articlereview', 'class' => 'form', 'method'=>'get')) !!}--}}
                     {{--{!! Form::token() !!}--}}
-                        <select class="js-example-basic-single" name="statusfilter" id="statusfilter">
+                        <select class="js-example-basic-single form-control" name="statusfilter" id="statusfilter">
                             <option value="0">选择状态</option>
                             <option value="2">初审</option>
                             <option value="3">终审</option>

@@ -7,7 +7,7 @@
 @section('content')
     <div id="page-wrapper">
         <div class="row">
-            <div class="col-lg-12">
+            <div class="col-lg-12" style="margin-top: 35px">
                 <h1 class="page-header">修改用户</h1>
                 @if (count($errors) > 0)
                     <div class="alert alert-danger">

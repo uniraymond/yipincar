@@ -6,8 +6,8 @@
     {!! Form::token() !!}
     <div id="page-wrapper">
         <div class="row">
-            <div class="col-lg-12">
-                <h1 class="page-header">文章</h1>
+            <div class="col-lg-12" style="margin-top: 35px" >
+                <h1 class="page-header">我的文章</h1>
 
                 {{--new blog link--}}
                 <div class="col-lg-4 col-md-3 col-sm-4 pull-right clearfix">
