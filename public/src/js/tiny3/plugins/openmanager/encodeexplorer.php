@@ -63,7 +63,7 @@ $_START_TIME = microtime(TRUE);
 // Choose a language. See below in the language section for options.
 // Default: $_CONFIG['lang'] = "en";
 //
-$_CONFIG['lang'] = "en";
+$_CONFIG['lang'] = "zh";
 
 //
 // Kuva pildifailidele eelvaated. Vaikimisi: true
@@ -178,7 +178,8 @@ $_CONFIG['show_load_time'] = false;
 // The time format for the "last changed" column.
 // Default: $_CONFIG['time_format'] = "d.m.y H:i:s";
 //
-$_CONFIG['time_format'] = "d.m.y H:i:s";
+//$_CONFIG['time_format'] = "d.m.y H:i:s";
+$_CONFIG['time_format'] = "Y-m-d H:i:s";
 
 //
 // Kodeering, mida lehel kasutatakse. 

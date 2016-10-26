@@ -22,7 +22,7 @@
 			// Register the command so that it can be invoked by using tinyMCE.activeEditor.execCommand('mceElvtImage');
 			ed.addCommand('mceElvtImage', function() {
 				ed.windowManager.open({
-					file : url + '/index.php?d='+encodeURI(tinyMCE.activeEditor.getParam('open_manager_upload_path')), //+ '&type=media'),
+					file : url + '/index.php?d='+encodeURI(tinyMCE.activeEditor.getParam('open_manager_upload_path')),
 					//file : url + '/dialog.htm',
 					width : 720 + parseInt(ed.getLang('openmanager.delta_width', 0)),
 					height : 450 + parseInt(ed.getLang('openmanager.delta_height', 0)),
@@ -37,7 +37,7 @@
 
 			// Register openmanager button
 			ed.addButton('openmanager', {
-				title : '插入图片',
+				title : '图片管理',
 				cmd : 'mceElvtImage',
 				image : url + '/assets/img/icon.gif'
 			});
@@ -102,7 +102,7 @@ function openmanager(field_name, url, type, win) {
     
     tinyMCE.activeEditor.windowManager.open({														// open the plugin popup
         file            : strUploaderURL,
-        title           : 'Open Manager',
+        title           : '图片管理',
         width           : 720,  
         height          : 450,
         resizable       : "no", 

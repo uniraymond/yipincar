@@ -155,8 +155,13 @@
         editor_selector: "maincontent",
         plugins : "openmanager",
         file_browser_callback: "openmanager",
+<<<<<<< HEAD
         open_manager_upload_path: 'uploads/',
         theme_advanced_buttons1 : "openmanager, | ,bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull, | ,cleanup",
+=======
+        open_manager_upload_path: 'photos/',
+        theme_advanced_buttons1 : "openmanager,|,undo,redo|bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,|,cleanup",
+>>>>>>> 5984c5f7198161b22f3dbe205f50b8a433d66eb8
         theme : "advanced",
         theme_advanced_toolbar_location : "top",
         // Drop lists for link/image/media/template dialogs

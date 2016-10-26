@@ -21,10 +21,10 @@
 		$uploadfolder = "";
 		if(isset($_POST['uploadfolder']))
 		{
-			$uploadfolder = "../".$_POST['uploadfolder'];
+			$uploadfolder = "../../../../../../".$_POST['uploadfolder'];
 			$reluploadfolder = $_POST['uploadfolder'];
 		}
-				
+
 		if((file_exists($uploadfolder))&&($uploadfolder!=""))
 		{
 			//check the that a file has been uploaded by checking for name
@@ -38,7 +38,7 @@
 				$tname = $_FILES['userfile']['name'];
 				
 				//do some crude cleaning/sanitizing of the name (needs to be improved)
-				$name = strtr($tname, 'ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜİàáâãäåçèéêëìíîïğòóôõöùúûüıÿ', 'AAAAAACEEEEIIIIOOOOOUUUUYaaaaaaceeeeiiiioooooouuuuyy');
+				$name = strtr($tname, 'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½', 'AAAAAACEEEEIIIIOOOOOUUUUYaaaaaaceeeeiiiioooooouuuuyy');
 				$name = preg_replace('/\s+/', '-', $name); //remove spaces
 				
 				
@@ -364,7 +364,7 @@
 	
 	function getPath_img_upload_folder()
 	{
-		return "uploads/";
+		return "photos/";
 	}
 
     function get_file_object($file_name) {
