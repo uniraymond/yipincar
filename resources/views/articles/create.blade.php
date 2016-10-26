@@ -33,6 +33,7 @@
                                 </select>
                             </div>
                         </div>
+                        <div class="clearfix"></div>
 
                         @if( !Auth::user()->hasAnyRole([ 'auth_editor']))
                             <div class="{{ isset($errors) && $errors->has('authname') ? 'has-error clearfix' : 'clearfix' }}" style="margin-bottom: 55px" >
