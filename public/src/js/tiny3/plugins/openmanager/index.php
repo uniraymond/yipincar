@@ -16,9 +16,9 @@
 	}	
 	
 	//get files in folder
-	$thumbimagepath = $_GET['d']."images/thumbs/";
-	$mediapath = $_GET['d']."media/";
-	$imagepath = $_GET['d']."images/";
+	$thumbimagepath =  "../../../../../".$_GET['d']."images/thumbs/";
+	$mediapath = "../../../../../". $_GET['d']."media/";
+	$imagepath = "../../../../../". $_GET['d']."images/";
 	
 	if(is_dir($_GET['d']))
 	{//upload folder has been found
@@ -69,7 +69,8 @@
 <!--	<title>{#elvtimage_dlg.title}</title>-->
 	<title>图片管理</title>
 	<script type="text/javascript" src="../../tiny_mce_popup.js" ></script>
-	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<!--	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>-->
+	<script src="../../../jQuery.min.2.2.4.js"></script>
 	<script type="text/javascript">
 	if(typeof tinyMCEPopup !== 'undefined')
 	{//for debug

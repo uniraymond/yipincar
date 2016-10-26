@@ -21,7 +21,7 @@
 		$uploadfolder = "";
 		if(isset($_POST['uploadfolder']))
 		{
-			$uploadfolder = "../".$_POST['uploadfolder'];
+			$uploadfolder = "../../../../../../".$_POST['uploadfolder'];
 			$reluploadfolder = $_POST['uploadfolder'];
 		}
 
