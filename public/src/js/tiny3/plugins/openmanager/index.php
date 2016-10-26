@@ -1,4 +1,5 @@
 <?php
+	date_default_timezone_set("PRC");
 	include "php/functions.php";
 	
 	$mediatype = "";
@@ -32,6 +33,7 @@
 	}
 	$array_count = 0;
 	$files_array = array();
+	$filetime = array();
 
 	if(($uploadfolderset)&&($files))
 	{
@@ -42,11 +44,30 @@
 			//if (is_file($file_path) && $file_name[0] !== '.')
 			if (is_file($file_path) && $file_name[0] !== '.')
 			{
-				array_push($files_array, $file_name);
+				array_push($files_array, $file_path);
+				$filetime[] = date("Y-m-d H:i:s",filemtime($file_path));
 			}
 		}
+		uasort ( $files_array ,  'cmp' );
+		// array_multisort($filetime,SORT_DESC,SORT_STRING, $files_array);
 	}
 	
+	// function sortFileByMTime($fileArray)
+	// {
+	// 	foreach ($fileArray as $file) {
+	// 		# code...
+	// 	}
+	// }
+	function cmp($fileA, $fileB) 
+	{
+		$fileTimeA = filemtime($fileA);
+		$fileTimeB = filemtime($fileB);
+	    if ($fileTimeA == $fileTimeB) {
+	        return 0;
+	    }
+	    return ($fileTimeA > $fileTimeB) ? -1 : 1;
+	}
+
 	$nofiles = count($files_array);
 	$resultspp = 15;
 	$nopages = ceil($nofiles/$resultspp);
@@ -130,7 +151,7 @@
 									
 									//add div with image in 
 									//refresh image as it has been updated
-									$(this).append("<div class=\"alert alert-success\"><a class=\"close\" data-dismiss=\"alert\">&times;</a>Image uploaded, click on thumbnail to see full image.</div><div class=\"fullimage\" data-toggle=\"modal-gallery\" data-target=\"#modal-gallery-no-del\"><a href=\""+data.result[0].destination+"?t="+time+"\" target=\"_blank\" data-gallery=\"gallery\"><img src=\""+data.result[0].thumb_name+"?t="+time+"\" /></a>&nbsp;&nbsp;<a href=\""+data.result[0].destination+"\" class=\"btn btn-success btn-white start mce-insert\" value=\"{#insert}\"><i class=\"icon-upload icon-white\"></i> Insert</a></div>");
+									$(this).append("<div class=\"alert alert-success\"><a class=\"close\" data-dismiss=\"alert\">&times;</a>图片上传成功，点击图标查看大图。</div><div class=\"fullimage\" data-toggle=\"modal-gallery\" data-target=\"#modal-gallery-no-del\"><a href=\""+data.result[0].destination+"?t="+time+"\" target=\"_blank\" data-gallery=\"gallery\"><img src=\""+data.result[0].thumb_name+"?t="+time+"\" /></a>&nbsp;&nbsp;<a href=\""+data.result[0].destination+"\" class=\"btn btn-success btn-white start mce-insert\" value=\"{#insert}\"><i class=\"icon-upload icon-white\"></i> Insert</a></div>");
 								}
 							}
 						}
@@ -686,10 +707,10 @@ uploadfolder/media</pre>
 			}
 			else
 			{
-				$ubuttontext = "image";
+				$ubuttontext = "图片";
 			?>
-		<li class="active"><a href="#home" data-toggle="tab" id="uploadtab">Upload Image</a></li>
-		<li><a href="#images" data-toggle="tab" id="browsetab">Browse Images</a></li>
+		<li class="active"><a href="#home" data-toggle="tab" id="uploadtab">上传图片</a></li>
+		<li><a href="#images" data-toggle="tab" id="browsetab">浏览图片</a></li>
 			<?php
 			}
 			?>
@@ -704,15 +725,15 @@ uploadfolder/media</pre>
 						<div class="span7" style="width:95%;float:left;">
 							<!-- The fileinput-button span is used to style the file input field as button -->
 						   <span class="btn btn-small btn-success fileinput-button">
-								<span><i class="icon-plus icon-white"></i> Add <?php echo $ubuttontext; ?></span>
+								<span><i class="icon-plus icon-white"></i> 添加<?php echo $ubuttontext; ?></span>
 								<input type="file" name="userfile" class="btnupload">
 							</span>
 							<button type="submit" class="btn btn-small btn-primary start disabled" disabled="disabled">
 							<!--<button type="submit" class="btn btn-primary start">-->
-								<i class="icon-upload icon-white"></i> Start upload
+								<i class="icon-upload icon-white"></i> 开始上传
 							</button>
 							<button type="reset" class="btn btn-small btn-function cancel disabled" disabled="disabled">
-								<i class="icon-ban-circle icon-black"></i> Cancel upload
+								<i class="icon-ban-circle icon-black"></i> 取消上传
 							</button>
 						</div>
 						
@@ -771,7 +792,7 @@ uploadfolder/media</pre>
 	</div>
 	<div class="pagination pagination-centered" style="margin:10px 0 0 0;">
 	<?php
-		//display_gallery_pagination("",count($files_array));
+		// display_gallery_pagination("",count($files_array));
 	?>
 	</div>
 	<div id="modal-gallery" class="modal modal-gallery hide fade" tabindex="-1">
@@ -783,19 +804,19 @@ uploadfolder/media</pre>
 		<div class="modal-footer">
 			<a class="btn btn-danger modal-delete" target="_blank" style="float:left;" data-dismiss="modal">
 				<i class="icon-trash icon-white"></i>
-				<span>Delete</span>
+				<span>删除</span>
 			</a>
 			
 			<a class="btn btn-success modal-insert" target="_blank">
 				<i class="icon-upload icon-white"></i>
-				<span>Insert</span>
+				<span>插入</span>
 			</a>
 			<a class="btn btn-function modal-prev">
 				<i class="icon-arrow-left"></i>
-				<span>Previous</span>
+				<span>前一张</span>
 			</a>
 			<a class="btn btn-function modal-next">
-				<span>Next</span>
+				<span>后一张</span>
 				<i class="icon-arrow-right"></i>
 			</a>
 		</div>
@@ -809,14 +830,14 @@ uploadfolder/media</pre>
 		<div class="modal-footer">
 			<a class="btn btn-success modal-insert" target="_blank">
 				<i class="icon-upload icon-white"></i>
-				<span>Insert</span>
+				<span>插入</span>
 			</a>
 			<a class="btn btn-function modal-prev">
 				<i class="icon-arrow-left"></i>
-				<span>Previous</span>
+				<span>前一张</span>
 			</a>
 			<a class="btn btn-function modal-next">
-				<span>Next</span>
+				<span>后一张</span>
 				<i class="icon-arrow-right"></i>
 			</a>
 		</div>

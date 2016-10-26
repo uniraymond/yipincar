@@ -22,7 +22,7 @@
 			// Register the command so that it can be invoked by using tinyMCE.activeEditor.execCommand('mceElvtImage');
 			ed.addCommand('mceElvtImage', function() {
 				ed.windowManager.open({
-					file : url + '/index.php?d='+encodeURI(tinyMCE.activeEditor.getParam('open_manager_upload_path')),
+					file : url + '/index.php?d='+encodeURI(tinyMCE.activeEditor.getParam('open_manager_upload_path')), //+ '&type=media'),
 					//file : url + '/dialog.htm',
 					width : 720 + parseInt(ed.getLang('openmanager.delta_width', 0)),
 					height : 450 + parseInt(ed.getLang('openmanager.delta_height', 0)),
@@ -37,7 +37,7 @@
 
 			// Register openmanager button
 			ed.addButton('openmanager', {
-				title : 'Open Manager',
+				title : '插入图片',
 				cmd : 'mceElvtImage',
 				image : url + '/assets/img/icon.gif'
 			});

@@ -149,14 +149,21 @@
 <script>
 
     tinyMCE.init({
+//        language:'zh',
         mode : "textareas",
+        height: "450",
         editor_selector: "maincontent",
         plugins : "openmanager",
         file_browser_callback: "openmanager",
         open_manager_upload_path: 'uploads/',
-        theme_advanced_buttons1 : "openmanager",
+        theme_advanced_buttons1 : "openmanager, | ,bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull, | ,cleanup",
         theme : "advanced",
-        theme_advanced_toolbar_location : "top"
+        theme_advanced_toolbar_location : "top",
+        // Drop lists for link/image/media/template dialogs
+        template_external_list_url : "lists/template_list.js",
+        external_link_list_url : "lists/link_list.js",
+        external_image_list_url : "lists/image_list.js",
+        media_external_list_url : "lists/media_list.js",
     });
 
 </script>
