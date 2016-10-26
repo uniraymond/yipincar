@@ -153,8 +153,8 @@
         editor_selector: "maincontent",
         plugins : "openmanager",
         file_browser_callback: "openmanager",
-        open_manager_upload_path: 'uploads/',
-        theme_advanced_buttons1 : "openmanager",
+        open_manager_upload_path: 'photos/',
+        theme_advanced_buttons1 : "openmanager,|,undo,redo|bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,|,cleanup",
         theme : "advanced",
         theme_advanced_toolbar_location : "top"
     });

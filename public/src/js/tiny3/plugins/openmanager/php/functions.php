@@ -120,17 +120,17 @@
 		{
 			if($totPages>1)
 			{
-				$links_html .= "<li id=\"gliFirst\"><a data-target-page=\"1\" href=\"#\">&lt; First</a></li>";
+				$links_html .= "<li id=\"gliFirst\"><a data-target-page=\"1\" href=\"#\">&lt; 第一张</a></li>";
 			}
-			$links_html .= "<li id=\"gliPrev\"><a data-target-page=\"prev\" href=\"#\">Prev</a></li>";
+			$links_html .= "<li id=\"gliPrev\"><a data-target-page=\"prev\" href=\"#\">上一张</a></li>";
 		}
 		else
 		{
 			if($totPages>1)
 			{
-				$links_html .= "<li class=\"disabled\" id=\"gliFirst\"><a data-target-page=\"1\" href=\"#\">&lt; First</a></li>";
+				$links_html .= "<li class=\"disabled\" id=\"gliFirst\"><a data-target-page=\"1\" href=\"#\">&lt; 第一张</a></li>";
 			}
-			$links_html .= "<li class=\"disabled\" id=\"gliPrev\"><a data-target-page=\"prev\" href=\"#\">Prev</a></li>";
+			$links_html .= "<li class=\"disabled\" id=\"gliPrev\"><a data-target-page=\"prev\" href=\"#\">上一张</a></li>";
 		}
 
 		//displaying numbers inbetween page arrows.
@@ -193,20 +193,20 @@
 		if($currentPage < $roundPages)
 		{
 			$nextPage= $currentPage+1;
-			$links_html .= "<li id=\"gliNext\"><a href=\"#\" data-target-page=\"next\">Next</a></li>";
+			$links_html .= "<li id=\"gliNext\"><a href=\"#\" data-target-page=\"next\">下一张</a></li>";
 			
 			if($totPages>1)
 			{
-				$links_html .= "<li id=\"gliLast\"><a href=\"#\" data-target-page=\"$roundPages\">Last &gt;</a></li>";
+				$links_html .= "<li id=\"gliLast\"><a href=\"#\" data-target-page=\"$roundPages\">最后 &gt;</a></li>";
 			}
 		}
 		else
 		{
-			$links_html .= "<li id=\"gliNext\" class=\"disabled\"><a href=\"#\" data-target-page=\"next\">Next</a></li>";
+			$links_html .= "<li id=\"gliNext\" class=\"disabled\"><a href=\"#\" data-target-page=\"next\">下一张</a></li>";
 			
 			if($totPages>1)
 			{
-				$links_html .= "<li id=\"gliLast\" class=\"disabled\"><a href=\"#\" data-target-page=\"$roundPages\">Last &gt;</a><li>";
+				$links_html .= "<li id=\"gliLast\" class=\"disabled\"><a href=\"#\" data-target-page=\"$roundPages\">最后 &gt;</a><li>";
 			}
 		}
 		if($roundPages>9)

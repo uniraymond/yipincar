@@ -37,7 +37,7 @@
 
 			// Register openmanager button
 			ed.addButton('openmanager', {
-				title : 'Open Manager',
+				title : '图片管理',
 				cmd : 'mceElvtImage',
 				image : url + '/assets/img/icon.gif'
 			});
@@ -102,7 +102,7 @@ function openmanager(field_name, url, type, win) {
     
     tinyMCE.activeEditor.windowManager.open({														// open the plugin popup
         file            : strUploaderURL,
-        title           : 'Open Manager',
+        title           : '图片管理',
         width           : 720,  
         height          : 450,
         resizable       : "no", 

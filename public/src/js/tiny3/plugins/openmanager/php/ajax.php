@@ -3,8 +3,10 @@
 	
 	//get files in folder
 	$thumbimagepath = "../".$_GET['d']."images/thumbs/";
+//	$thumbimagepath = "/".$_GET['d']."images/thumbs/";
 	$imagepath = "../".$_GET['d']."images/";
-	
+//	$imagepath = "/".$_GET['d']."images/";
+
 	//handle a delete before
 	if(isset($_GET['del']))
 	{

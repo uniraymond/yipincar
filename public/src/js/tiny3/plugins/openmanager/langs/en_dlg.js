@@ -1,3 +1,4 @@
 tinyMCE.addI18n('en.elvtimage_dlg',{
-	title : 'Open Manager'
+	title : '图片管理'
+	
 });

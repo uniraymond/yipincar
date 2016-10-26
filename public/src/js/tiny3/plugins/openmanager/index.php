@@ -66,7 +66,8 @@
 ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-	<title>{#elvtimage_dlg.title}</title>
+<!--	<title>{#elvtimage_dlg.title}</title>-->
+	<title>图片管理</title>
 	<script type="text/javascript" src="../../tiny_mce_popup.js" ></script>
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 	<script type="text/javascript">
@@ -118,7 +119,7 @@
 								//add div with image in 
 								//refresh image as it has been updated
 								//console.log(data.result);
-								$(this).append("<div class=\"alert alert-success\"><a class=\"close\" data-dismiss=\"alert\">&times;</a>Media uploaded successfully.</div><div class=\"fullimage\"><a href=\""+data.result[0].destination+"?t="+time+"\" target=\"_blank\">"+data.result[0].name+"</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href=\""+data.result[0].destination+"\" class=\"btn btn-success btn-white start mce-insert\" value=\"{#insert}\"><i class=\"icon-upload icon-white\"></i> Insert</a></div>");
+								$(this).append("<div class=\"alert alert-success\"><a class=\"close\" data-dismiss=\"alert\">&times;</a>Media uploaded successfully.</div><div class=\"fullimage\"><a href=\""+data.result[0].destination+"?t="+time+"\" target=\"_blank\">"+data.result[0].name+"</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href=\""+data.result[0].destination+"\" class=\"btn btn-success btn-white start mce-insert\" value=\"{#insert}\"><i class=\"icon-upload icon-white\"></i> 插入</a></div>");
 							}
 							else
 							{
@@ -130,14 +131,15 @@
 									
 									//add div with image in 
 									//refresh image as it has been updated
-									$(this).append("<div class=\"alert alert-success\"><a class=\"close\" data-dismiss=\"alert\">&times;</a>Image uploaded, click on thumbnail to see full image.</div><div class=\"fullimage\" data-toggle=\"modal-gallery\" data-target=\"#modal-gallery-no-del\"><a href=\""+data.result[0].destination+"?t="+time+"\" target=\"_blank\" data-gallery=\"gallery\"><img src=\""+data.result[0].thumb_name+"?t="+time+"\" /></a>&nbsp;&nbsp;<a href=\""+data.result[0].destination+"\" class=\"btn btn-success btn-white start mce-insert\" value=\"{#insert}\"><i class=\"icon-upload icon-white\"></i> Insert</a></div>");
+									$(this).append("<div class=\"alert alert-success\"><a class=\"close\" data-dismiss=\"alert\">&times;</a>图片上传完毕，点击缩略图查看原图.</div><div class=\"fullimage\" data-toggle=\"modal-gallery\" data-target=\"#modal-gallery-no-del\"><a href=\""+data.result[0].destination+"?t="+time+"\" target=\"_blank\" data-gallery=\"gallery\"><img src=\""+data.result[0].thumb_name+"?t="+time+"\" /></a>&nbsp;&nbsp;<a href=\""+data.result[0].destination+"\" class=\"btn btn-success btn-white start mce-insert\" value=\"{#insert}\"><i class=\"icon-upload icon-white\"></i> 插入</a></div>");
 								}
 							}
 						}
 					}
 					else
 					{
-						$(this).append("<div class=\"alert alert-error\"><a class=\"close\" data-dismiss=\"alert\">&times;</a>Error: The upload script has failed silently - this often means that there is not enought memory to generate a thumbnail.  Please check your PHP configuration, impose upload limits (filesize, dimensions etc) or upload a smaller file.</div>");
+						$(this).append("<div class=\"alert alert-error\"><a class=\"close\" data-dismiss=\"alert\">&times;</a>生成图片失败，原图体积过大.</div>");
+                        //Error: The upload script has failed silently - this often means that there is not enought memory to generate a thumbnail.  Please check your PHP configuration, impose upload limits (filesize, dimensions etc) or upload a smaller file
 					}
 					
 					//console.log("THUMB PATH: "+data.result[0].imagepaththumb);
@@ -564,7 +566,7 @@
 	
 		$("a.thumb").hover(function(e){
 			$("#thumb").remove();
-			$("body").append("<div id=\"thumb\"><img src=\"encodeexplorer.php?thumb="+ $(this).attr("href") +"\" alt=\"Preview\" \/><\/div>");
+			$("body").append("<div id=\"thumb\"><img src=\"encodeexplorer.php?lang=zh&thumb="+ $(this).attr("href") +"\" alt=\"Preview\" \/><\/div>");
 			positionThumbnail(e);
 			$("#thumb").fadeIn("medium");
 		},
@@ -680,16 +682,16 @@ uploadfolder/media</pre>
 			{
 				$ubuttontext = "media";
 			?>
-		<li<?php echo ($tabno==1)?" class=\"active\"":""; ?>><a href="#home" data-toggle="tab">Upload Media</a></li>
-		<li<?php echo ($tabno==2)?" class=\"active\"":""; ?>><a href="#media" data-toggle="tab">Browse Media</a></li>
+		<li<?php echo ($tabno==1)?" class=\"active\"":""; ?>><a href="#home" data-toggle="tab">上传图片</a></li>
+		<li<?php echo ($tabno==2)?" class=\"active\"":""; ?>><a href="#media" data-toggle="tab">浏览图片</a></li>
 			<?php
 			}
 			else
 			{
-				$ubuttontext = "image";
+				$ubuttontext = "图片";
 			?>
-		<li class="active"><a href="#home" data-toggle="tab" id="uploadtab">Upload Image</a></li>
-		<li><a href="#images" data-toggle="tab" id="browsetab">Browse Images</a></li>
+		<li class="active"><a href="#home" data-toggle="tab" id="uploadtab">图片上传</a></li>
+		<li><a href="#images" data-toggle="tab" id="browsetab">图片浏览</a></li>
 			<?php
 			}
 			?>
@@ -697,22 +699,22 @@ uploadfolder/media</pre>
 	<div class="tab-content">
 		<div class="tab-pane<?php echo ($tabno==1)?" active":""; ?>" id="home">
 			<div id="upload-img">
-				<form class="fileuploadsingle" action="php/fileactions.php?s=uploadfile" method="POST" enctype="multipart/form-data">
+				<form class="fileuploadsingle" action="php/fileactions.php?lang=zh&s=uploadfile" method="POST" enctype="multipart/form-data">
 					<input type="hidden" name="mediatype" value="<?php echo $mediatype; ?>" />
 					<input type="hidden" name="uploadfolder" value="<?php echo $uploadfolder; ?>" />
 					<div class="row fileupload-buttonbar">
 						<div class="span7" style="width:95%;float:left;">
 							<!-- The fileinput-button span is used to style the file input field as button -->
 						   <span class="btn btn-small btn-success fileinput-button">
-								<span><i class="icon-plus icon-white"></i> Add <?php echo $ubuttontext; ?></span>
+								<span><i class="icon-plus icon-white"></i> 添加 <?php echo $ubuttontext; ?></span>
 								<input type="file" name="userfile" class="btnupload">
 							</span>
 							<button type="submit" class="btn btn-small btn-primary start disabled" disabled="disabled">
 							<!--<button type="submit" class="btn btn-primary start">-->
-								<i class="icon-upload icon-white"></i> Start upload
+								<i class="icon-upload icon-white"></i> 开始上传
 							</button>
 							<button type="reset" class="btn btn-small btn-function cancel disabled" disabled="disabled">
-								<i class="icon-ban-circle icon-black"></i> Cancel upload
+								<i class="icon-ban-circle icon-black"></i> 取消上传
 							</button>
 						</div>
 						
@@ -783,19 +785,19 @@ uploadfolder/media</pre>
 		<div class="modal-footer">
 			<a class="btn btn-danger modal-delete" target="_blank" style="float:left;" data-dismiss="modal">
 				<i class="icon-trash icon-white"></i>
-				<span>Delete</span>
+				<span>删除</span>
 			</a>
 			
 			<a class="btn btn-success modal-insert" target="_blank">
 				<i class="icon-upload icon-white"></i>
-				<span>Insert</span>
+				<span>插入</span>
 			</a>
 			<a class="btn btn-function modal-prev">
 				<i class="icon-arrow-left"></i>
-				<span>Previous</span>
+				<span>上一张</span>
 			</a>
 			<a class="btn btn-function modal-next">
-				<span>Next</span>
+				<span>下一张</span>
 				<i class="icon-arrow-right"></i>
 			</a>
 		</div>
@@ -809,14 +811,14 @@ uploadfolder/media</pre>
 		<div class="modal-footer">
 			<a class="btn btn-success modal-insert" target="_blank">
 				<i class="icon-upload icon-white"></i>
-				<span>Insert</span>
+				<span>插入</span>
 			</a>
 			<a class="btn btn-function modal-prev">
 				<i class="icon-arrow-left"></i>
-				<span>Previous</span>
+				<span>上一张</span>
 			</a>
 			<a class="btn btn-function modal-next">
-				<span>Next</span>
+				<span>下一张</span>
 				<i class="icon-arrow-right"></i>
 			</a>
 		</div>
@@ -829,7 +831,8 @@ uploadfolder/media</pre>
 			<i class="icon-upload icon-white"></i> {#insert}
 		</button>-->
 		<button type="submit" class="btn btn-danger start" onclick="tinyMCEPopup.close();">
-			<i class="icon-ban-circle icon-white"></i> {#cancel}
+			<i class="icon-ban-circle icon-white"></i> 取消
+<!--            {#cancel}-->
 		</button>
 	</div>
 </body>

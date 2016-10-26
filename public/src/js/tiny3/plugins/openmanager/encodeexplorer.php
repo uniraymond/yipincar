@@ -63,7 +63,7 @@ $_START_TIME = microtime(TRUE);
 // Choose a language. See below in the language section for options.
 // Default: $_CONFIG['lang'] = "en";
 //
-$_CONFIG['lang'] = "en";
+$_CONFIG['lang'] = "zh";
 
 //
 // Kuva pildifailidele eelvaated. Vaikimisi: true
@@ -178,7 +178,8 @@ $_CONFIG['show_load_time'] = false;
 // The time format for the "last changed" column.
 // Default: $_CONFIG['time_format'] = "d.m.y H:i:s";
 //
-$_CONFIG['time_format'] = "d.m.y H:i:s";
+//$_CONFIG['time_format'] = "d.m.y H:i:s";
+$_CONFIG['time_format'] = "Y-m-d H:i:s";
 
 //
 // Kodeering, mida lehel kasutatakse. 
@@ -453,6 +454,39 @@ $_TRANSLATIONS["en"] = array(
 	"upload_type_not_allowed" => "This file type is not allowed for uploading.",
 	"del" => "Del", // short for Delete
 	"log_out" => "Log out"
+);
+
+// Chinese
+$_TRANSLATIONS["zh"] = array(
+	"file_name" => "文件名",
+	"size" => "大小",
+	"last_changed" => "更新时间",
+	"total_used_space" => "占用总容量",
+	"free_space" => "剩余空间",
+	"password" => "密码",
+	"upload" => "上传",
+	"failed_upload" => "上传文件失败!",
+	"failed_move" => "移动文件失败!",
+	"wrong_password" => "密码错误",
+	"make_directory" => "创建文件夹",
+	"new_dir_failed" => "创建文件夹失败",
+	"chmod_dir_failed" => "更改文件夹失败",
+	"unable_to_read_dir" => "无法读取文件夹",
+	"location" => "位置",
+	"root" => "根目录",
+	"log_file_permission_error" => "没有权限写日志",
+	"upload_not_allowed" => "没有上传到这个目录的权限",
+	"upload_dir_not_writable" => "文件夹不可写入",
+	"mobile_version" => "移动版本",
+	"standard_version" => "标准版本",
+	"page_load_time" => "页面加载时间 %.2f ms",
+	"wrong_pass" => "用户名或密码错误",
+	"username" => "用户名",
+	"log_in" => "登录",
+	"upload_type_not_allowed" => "当前模式不允许上传",
+	"del" => "删除", // short for Delete
+	"log_out" => "退出",
+	"Upload Image" => "上传图片"
 );
 
 // Estonian
