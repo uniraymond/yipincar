@@ -49,11 +49,11 @@
                         </div>
 
                         <div class="form-group{{ $errors->has('captcha') ? ' has-error' : ''}}">
-                            <label for="captcha" class="col-md-4 control-label ">
+                            <label for="captcha" class="col-md-5 control-label ">
                                 <img src="{{ captcha_src() }}" alt="captcha" class="captcha-img" data-refresh-config="default" >
                             </label>
-                            <div class="col-md-7">
-                                <input type="text" name="captcha" class="form-control"/>
+                            <div class="col-md-6">
+                                <input type="text" name="captcha" class="form-control" style="margin-top: 8px"/>
                                 @if ($errors->has('captcha'))
                                     <span class="help-block">
                                     <strong>{{ $errors->first('captcha') }}</strong>

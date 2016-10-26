@@ -10,9 +10,13 @@
                 <h1 class="page-header">文章</h1>
 
                 {{--new blog link--}}
-                <div class="col-lg-2 col-md-3 col-sm-4 pull-right clearfix">
-                    {{ link_to('admin/article/create', '新建', ['class'=>'btn btn-default']) }}
-                    <input class="btn btn-primary" type="submit" value="提交" />
+                <div class="col-lg-4 col-md-3 col-sm-4 pull-right clearfix">
+                    <div class="col-lg-3">
+                        {{ link_to('admin/article/create', '新建', ['class'=>'btn btn-second']) }}
+                    </div>
+                    <div class="col-md-3">
+                        <input class="btn btn-default" type="submit" value="提交" />
+                    </div>
                 </div>
 
                 {{--flash alert--}}
@@ -108,7 +112,7 @@
                                 <td colspan="6"> </td>
                                 <td colspan="3">
 {{--                                    {{ link_to('admin/article/create', '新建', ['class'=>'btn btn-default']) }}--}}
-                                    <input class="btn btn-primary" type="submit" value="提交" />
+                                    <input class="btn btn-default" type="submit" value="提交" />
                                 </td>
                             </tr>
                         @endif
