@@ -3087,8 +3087,8 @@ fieldset[disabled] .btn-default.active {
 }
 .btn-primary {
   color: #fff;
-  background-color: #337ab7;
-  border-color: #2e6da4;
+  background-color: #e74118;
+  border-color: #e74118;
 }
 .btn-primary:hover,
 .btn-primary:focus,
@@ -3097,8 +3097,8 @@ fieldset[disabled] .btn-default.active {
 .btn-primary.active,
 .open > .dropdown-toggle.btn-primary {
   color: #fff;
-  background-color: #286090;
-  border-color: #204d74;
+  background-color: #e97254;
+  border-color: #e97254;
 }
 .btn-primary:active,
 .btn-primary.active,
@@ -3130,6 +3130,55 @@ fieldset[disabled] .btn-primary.active {
   color: #337ab7;
   background-color: #fff;
 }
+
+
+
+.btn-second {
+  color: #e74118;
+  background-color: #fff;
+  border-color: #e74118;
+}
+.btn-second:hover,
+.btn-second:focus,
+.btn-second.focus,
+.btn-second:active,
+.btn-second.active,
+.open > .dropdown-toggle.btn-second {
+  color: #e74118;
+  background-color: #f6ded8;
+  border-color: #e97254;
+}
+.btn-second:active,
+.btn-second.active,
+.open > .dropdown-toggle.btn-second {
+  background-image: none;
+}
+.btn-second.disabled,
+.btn-second[disabled],
+fieldset[disabled] .btn-second,
+.btn-second.disabled:hover,
+.btn-second[disabled]:hover,
+fieldset[disabled] .btn-second:hover,
+.btn-second.disabled:focus,
+.btn-second[disabled]:focus,
+fieldset[disabled] .btn-second:focus,
+.btn-second.disabled.focus,
+.btn-second[disabled].focus,
+fieldset[disabled] .btn-second.focus,
+.btn-second.disabled:active,
+.btn-second[disabled]:active,
+fieldset[disabled] .btn-second:active,
+.btn-second.disabled.active,
+.btn-second[disabled].active,
+fieldset[disabled] .btn-second.active {
+  background-color: #337ab7;
+  border-color: #2e6da4;
+}
+.btn-second .badge {
+  color: #337ab7;
+  background-color: #fff;
+}
+
 .btn-success {
   color: #fff;
   background-color: #5cb85c;
@@ -3466,7 +3515,7 @@ tbody.collapse.in {
   clear: both;
   font-weight: normal;
   line-height: 1.42857143;
-  color: #333;
+  color: #e74118;
   white-space: nowrap;
 }
 .dropdown-menu > li > a:hover,

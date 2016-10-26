@@ -74,9 +74,9 @@
     <ul class="nav navbar-top-links navbar-right">
         <li class="dropdown">
             @if ((null == Auth::user()) && Auth::guest())
-                <a class="dropdown-toggle" data-toggle="dropdown" href="{{ url('/login') }}">
-                    <i class="fa fa-user fa-fw"></i>登陆<i class="fa fa-caret-down"></i>
-                </a>
+                {{--<a class="dropdown-toggle" data-toggle="dropdown" href="{{ url('/login') }}">--}}
+                    {{--<i class="fa fa-user fa-fw"></i>登陆<i class="fa fa-caret-down"></i>--}}
+                {{--</a>--}}
             @else
                 <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                     <i class="fa fa-user fa-fw"></i> @if (null !== Auth::user()) {{ isset(Auth::user()->profiles->name) ? Auth::user()->profiles->name : Auth::user()->name }} @endif <i class="fa fa-caret-down"></i>
