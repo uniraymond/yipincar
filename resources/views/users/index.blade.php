@@ -5,23 +5,26 @@
     <div id="page-wrapper">
         <div class="row">
             <div class="col-lg-12" style="margin-top: 35px">
-                <h1 class="page-header">用户</h1>
+                <h1 class="page-header">用户管理</h1>
 
-                <select class="js-example-basic-single" name="role" id="select_role">
-                    <option value="0">用户权限查询</option>
-                    @foreach ($usergroups as $role)
-                        @if ($role->name != 'super_admin')
-                            <option value="{{ $role->id }}" > {{ $role->description }}</option>
-                        @endif
-                    @endforeach
-                </select>
-                <button id="search_role" value="查找" class="btn btn-default">查找</button>
+                <div  style="margin-bottom: 45px">
+                    <select class="js-example-basic-single col-lg-2" name="role" id="select_role">
+                        <option value="0">用户权限查询</option>
+                        @foreach ($usergroups as $role)
+                            @if ($role->name != 'super_admin')
+                                <option value="{{ $role->id }}" > {{ $role->description }}</option>
+                            @endif
+                        @endforeach
+                    </select>
+                    <button id="search_role" value="查找" class="btn btn-default">查找</button>
 
-                @if (Auth::user()->hasAnyRole(['super_admin', 'admin']))
-                    <div class="col-lg-2 col-md-2 col-sm-2 pull-right clearfix">
-                        {{ link_to('admin/user/create', '添加', ['class'=>'btn btn-default']) }}
-                    </div>
-                @endif
+                    @if (Auth::user()->hasAnyRole(['super_admin', 'admin']))
+                        <div class="col-lg-1 col-md-2 col-sm-2 pull-right clearfix">
+                            {{ link_to('admin/user/create', '添加', ['class'=>'btn btn-second']) }}
+                        </div>
+                    @endif
+                </div>
+
 
                 {{--flash alert--}}
                 @if ($success = Session::get('status'))
