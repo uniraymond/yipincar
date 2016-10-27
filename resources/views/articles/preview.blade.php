@@ -4,7 +4,7 @@
     <div class="title col-xs-12">{{ $article->title }}</div>
     <div class="clearfix"></div>
     <div class="subtitle">
-        <div class="category col-xs-10">{{ $article->categories->name }}
+        <div class="category col-xs-8">{{ $article->categories->name }}
             <span class="authname" >{{ $article->authname ? $article->authname : $article->user_created_by->name }}</span>
             <span class="article_publish_date">{{ date('Y-m-d H:i', strtotime($article->created_at)) }}</span> </div>
         <div class="comment col-xs-2">评论{{ count($article->comments) }}</div>
@@ -22,8 +22,8 @@
         var width = document.body.scrollWidth;
 //        jQuery('.content p img').width(width > 800 ? 800 *0.9 : width);
 //        jQuery('.article-preview').width(width > 800 ? 800 *0.9 : width);
-        jQuery('.content p img').width(width);
-        jQuery('.article-preview').width(width);
+        jQuery('.content p img').width(width -30);
+//        jQuery('.article-preview').width(width);
 
     });
 </script>
