@@ -1,3 +1,4 @@
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <link rel="stylesheet" href="{{ asset("/src/css/preview.css") }}"/>
 <div class="article-preview">
     <div class="title col-xs-12">{{ $article->title }}</div>
@@ -19,6 +20,10 @@
     jQuery(document).ready(function(){
 //        var width = $(document.body).width();
         var width = document.body.scrollWidth;
-        jQuery('.content p img').width(width > 800 ? 800 *0.9 : width);
+//        jQuery('.content p img').width(width > 800 ? 800 *0.9 : width);
+//        jQuery('.article-preview').width(width > 800 ? 800 *0.9 : width);
+        jQuery('.content p img').width(width);
+        jQuery('.article-preview').width(width);
+
     });
 </script>
