@@ -1,4 +1,4 @@
-{{--<meta name="viewport" content="width=device-width, initial-scale=1" />--}}
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <link rel="stylesheet" href="{{ asset("/src/css/preview.css") }}"/>
 <div class="article-preview">
     <div class="title col-xs-12">{{ $article->title }}</div>
