@@ -47,7 +47,7 @@
                     <div class="panel-body">
                         <div class="form-group col-lg-12 col-md-12 col-sm-12">
                             <div>简述:</div>
-                            <div><p>{{ $article->description }}</p></div>
+                            <div class="description" style="margin-bottom: 15px">{{ $article->description }}</div>
                             <div class="clearfix"></div>
                             <div id="preview" >详细内容:</div>
                             <div class="content"> {!! $article->content !!} </div>

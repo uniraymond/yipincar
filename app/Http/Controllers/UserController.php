@@ -641,7 +641,7 @@ class UserController extends Controller
         */
 
 //变量模板ID
-        $template = '100005';
+        $template = '390807';
 //6位随机验证码
         $code = $this->randNumber();
 
@@ -653,7 +653,7 @@ class UserController extends Controller
 //短信内容参数
         $contentParam = array(
             'code'		=> $code,
-            'username'	=> '您好'
+            'username'	=> $phone
         );
 //即时发送
         $res = $this->sendSMS($uid,$pwd,$phone,$this->array_to_json($contentParam),$template);
