@@ -630,9 +630,9 @@ class UserController extends Controller
 --------------------------------*/
     public function cellphonevalidate($phone){
         //用户账号
-        $uid = 'yipincar';
+        $uid = 'yipinqiche0225';
 //MD5密码
-        $pwd = 'yipin123';
+        $pwd = 'yipinqiche20160225';
 
         /*
         * 变量模板发送示例

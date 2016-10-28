@@ -3,9 +3,9 @@
 @section('content')
 <div class="container">
     <div class="row">
-        <div class="col-md-8 col-md-offset-2">
-            <div class="panel panel-default">
-                <div class="panel-heading">注册一品汽车通行证</div>
+        <div class="col-md-6 col-md-offset-3" style="margin-bottom: 115px; margin-top: 155px">
+            <div class="panel panel-red">
+                <div class="panel-heading">注册一品汽车编辑</div>
                 <div class="panel-body">
                     <form class="form-horizontal" role="form" method="POST" action="{{ url('/autheditorStore') }}">
                         {{ csrf_field() }}
@@ -42,7 +42,7 @@
                         <div class="form-group{{ $errors->has('message') ? ' has-error' : '' }}">
                             <label for="message" class="col-md-4 control-label">短信验证码</label>
 
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <input id="message" type="message" class="form-control" name="message" >
 
                                 @if ($errors->has('message'))
@@ -84,13 +84,13 @@
                             </div>
                         </div>
 
-                        <div class="form-group{{ $errors->has('confirmterm') ? ' has-error' : '' }}">
-                            <label for="confirmterm" class="col-md-4 control-label"></label>
+                        <div class="form-group{{ $errors->has('confirmterm') ? ' has-error' : '' }}" style="margin-top: 25px">
+                            <label for="confirmterm" class="col-md-2 control-label"></label>
 
-                            <div class="col-md-6">
+                            <div class="col-md-8">
                                 <label for="confirmterm">
                                     <input id="confirmterm" type="checkbox" name="confirmterm" />
-                                    我已经阅读并且同意<<<a href="{{ url('termandconditions') }}" >一品汽车用户协议</a>>>
+                                    我已经阅读并且同意<<<a href="{{ url('termandconditions') }}" >一品汽车入驻用户协议</a>>>
                                 </label>
 
                                 @if ($errors->has('confirmterm'))
@@ -101,8 +101,8 @@
                             </div>
                         </div>
 
-                        <div class="form-group">
-                            <div class="col-md-6 col-md-offset-4">
+                        <div class="form-group" style="margin-top: 25px">
+                            <div class="col-md-6 col-md-offset-8">
                                 <button type="submit" class="btn btn-primary" id="submitbtn">
                                     <i class="fa fa-btn fa-user"></i> 注册
                                 </button>
