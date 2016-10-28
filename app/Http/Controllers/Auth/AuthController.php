@@ -124,6 +124,18 @@ class AuthController extends Controller
         return redirect($this->redirectPath());
     }
 
+    public function getLogout(){
+        dd('do sth in here');
+
+       if (Auth::user()->hasAnyRole(['auth_editor'])) {
+           Auth::logout();
+           return redirect('authlogin');
+       } else {
+           Auth::logout();
+           return redirect()->back();
+       }
+    }
+
     public function newuser(Request $request)
     {
 

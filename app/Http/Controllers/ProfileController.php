@@ -351,21 +351,21 @@ class ProfileController extends Controller
         }
 
         $proveimage = $request['proveimage'];
-        $pimage = $this->uploadfile($proveimage);
+        $pimage = $this->uploadfile($proveimage, $userId, 1);
 
         $auth_resource = $request['auth_resource'];
-        $authResource = $this->uploadfile($auth_resource);
+        $authResource = $this->uploadfile($auth_resource, $userId, 2);
 
         $ass_resource = $request['ass_resource'];
-        $assResource = $this->uploadfile($ass_resource);
+        $assResource = $this->uploadfile($ass_resource, $userId, 3);
 
         $contract_auth = $request['contract_auth'];
-        $contractAuth = $this->uploadfile($contract_auth);
+        $contractAuth = $this->uploadfile($contract_auth, $userId, 4);
 
         $media_icon = $request['media_icon'];
-        $mediaIcon = $this->uploadfile($media_icon);
+        $mediaIcon = $this->uploadfile($media_icon, $userId, 5);
 
-        $profile = Profile::where('user_id', $userId)->get();;
+        $profile = Profile::where('user_id', $userId)->first();;
         $profile->name = $request['name'];
         $profile->media_type_id = $request['mediatype'];
         $profile->prove_type = $request['prove_type'];
@@ -373,39 +373,31 @@ class ProfileController extends Controller
         if (count($pimage)>0) {
             $profile->prove_resource = $pimage['path'];
         }
-
         $profile->city_id = $request['city_id'];
         $profile->email = $request['mailbox'];
         $profile->cellphone = $request['cellphone'];
-
         if (count($authResource)>0) {
             $profile->auth_resource = $authResource['path'];
         }
-
         if (count($assResource)>0) {
             $profile->ass_resource = $assResource['path'];
         }
-
         if (count($contractAuth)>0) {
             $profile->contract_auth = $contractAuth['path'];
         }
-
         if (count($mediaIcon)>0) {
             $profile->media_icon = $mediaIcon['path'];
         }
-
         $profile->targetArea = $request['targetArea'];
-        $profile->icon_uri = $request['icon_uri'];
         $profile->weixin_public_id = $request['weixin_public_id'];
         $profile->weixin_public_id = $request['weixin_public_id'];
         $profile->media_name = $request['media_name'];
         $profile->aboutself = $request['about_self'];
-        $profile->agree = $request['agree'] ? 1 : 0;
-
         $profile->save();
 
-        $request->session()->flash('status', '成功创建用户资料');
-        return redirect('admin/user/');
+        $request->session()->flash('status', '成功更改用户资料');
+//        return redirect('admin/user/');
+        return redirect('/');
     }
     
     /**
@@ -471,26 +463,35 @@ class ProfileController extends Controller
         }
     }
 
-    public function uploadfile($file){
+    public function uploadfile($file, $authuserId = 0, $type_id = 6){
         $a = array();
-//        $authuser = $request->user();
-        $authuser = 1;
-//        $file = $request->file('file');
-
         if(!empty($file)) {
             $fileName = $file->getClientOriginalName();
-//      Storage::put($fileName, file_get_contents($file));
-            $fileDir = "photos/autheditor";
-            $file->move($fileDir, $fileName);
-            $imageLink = $fileDir . '/' . $fileName;
+            $fileOriginalDir = "photos/autheditor/profiles/original";
+            $fileThumbsDir = "photos/autheditor/profiles/thumbs";
+            $fileDir = "photos/autheditor/profiles";
 
+            $file->move($fileDir, $fileName);
+//          $file->move($fileThumbsDir, $fileName);
+//          $fileOriginal->copy($fileOriginalDir, $fileName);
+
+            $imageOriginalLink = $fileOriginalDir . '/' . $file->getClientOriginalName();
+            $imageThumbsLink = $fileThumbsDir . '/' . $file->getClientOriginalName();
+            $imageLink = $fileDir . '/' . $file->getClientOriginalName();
+            copy($imageLink, $imageThumbsLink);
+            copy($imageLink, $imageOriginalLink);
+
+//          $cell_img_size_thumbs = GetImageSize($imageThumbsLink); // need to caculate the file width and height to make the image same
             $cell_img_size = GetImageSize($imageLink); // need to caculate the file width and height to make the image same
-            $image = Image::make(sprintf('photos/adv/%s', $file->getClientOriginalName()))->resize(800, (int)((800 * $cell_img_size[1]) / $cell_img_size[0]))->save();
+            $image = Image::make(sprintf('photos/autheditor/profiles/%s', $file->getClientOriginalName()))->resize(800, (int)((800 * $cell_img_size[1]) / $cell_img_size[0]))->save();
+            $imageThumbs = Image::make(sprintf('photos/autheditor/profiles/thumbs/%s', $file->getClientOriginalName()))->resize(100, (int)((100 *  $cell_img_size[1]) / $cell_img_size[0]))->save();
+            $imageOriginal = Image::make(sprintf('photos/autheditor/profiles/original/%s', $file->getClientOriginalName()))->save();
 
             $resource = new Resource();
             $resource->name = $fileName;
             $resource->link = '/' . $imageLink;
-//            $resource->created_by = $authuser->id;
+            $resource->created_by = $authuserId;
+            $resource->type_id = $type_id;
             $resource->save();
 
             $a = array(

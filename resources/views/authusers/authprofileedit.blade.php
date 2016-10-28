@@ -15,7 +15,7 @@
                 @endif
 {{--{{ dd($profile->id) }}--}}
                 <div class="panel-body">
-                    {!! Form::open(array('url' => 'authprofile/update', 'class' => 'form', 'method' => 'post', 'enctype' => 'multipart/form-data')) !!}
+                    {!! Form::open(array('url' => 'authprofile/'.$profile->user_id.'/update', 'class' => 'form', 'method' => 'post', 'enctype' => 'multipart/form-data')) !!}
                     <div class="form-group  col-lg-12 col-md-12 col-sm-12" >
                         <div class="clearfix formgroup"  style="margin-bottom: 55px">
                             {!! Form::label('mediatype', '自媒体类型', array('class'=>'col-md-2')) !!}
@@ -238,17 +238,17 @@
             reader.readAsDataURL(this.files[0]);
         };
 
-        document.getElementById("auth_resource").onchange = function () {
-            var reader = new FileReader();
-
-            reader.onload = function (e) {
-                // get loaded data and render thumbnail.
-                document.getElementById("auth_resource_image").src = e.target.result;
-            };
-
-            // read the image file as a data URL.
-            reader.readAsDataURL(this.files[0]);
-        };
+//        document.getElementById("auth_resource").onchange = function () {
+//            var reader = new FileReader();
+//
+//            reader.onload = function (e) {
+//                // get loaded data and render thumbnail.
+//                document.getElementById("auth_resource_image").src = e.target.result;
+//            };
+//
+//            // read the image file as a data URL.
+//            reader.readAsDataURL(this.files[0]);
+//        };
 
         document.getElementById("ass_resource").onchange = function () {
             var reader = new FileReader();
