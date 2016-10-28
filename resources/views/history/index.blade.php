@@ -20,26 +20,25 @@
                     <table class="table table-striped">
                         <thead>
                         <tr>
-                           <th>动作</th>
-                           <th>原文章</th>
-                           <th>新纪录</th>
+                           <th>更改动作</th>
                            <th>更改者</th>
                            <th>更改时间</th>
                         </tr>
                         </thead>
                         <tbody>
                         @foreach($histories as $history)
-                            @php
-                                $json = '{'.$history->target.'}';
-                                $article = json_decode($json, true);
-                            var_dump($article);
-                                echo $article["article_title"];
-                            @endphp
                             <tr>
-                                <td>{{ $history->action }}</td>
-                                <td>{{ $history->origin }}</td>
-                                <td></td>
-                                <td>{{ $history->created_by->user->name }}</td>
+                                <td>
+                                    @if($history->name == 'Create Article')
+                                        {{ str_replace('Create article -', '新建文章：', $history->action ) }}
+                                    @elseif ($history->name == 'Update Article')
+                                        {{ str_replace('Update article -', '更改文章：', $history->action ) }}
+                                    @elseif($history->name = 'Delete Article')
+                                        {{ str_replace('Delete article -', '删除文章：', $history->action ) }}
+                                    @endif
+                                </td>
+                                <td>{{ $history->users->name }}</td>
+{{--                                <td>{{ isset($history->created_by->user->name) ? $history->created_by->user->name : '' }}</td>--}}
                                 <td>{{ $history->created_at }}</td>
                             </tr>
                         @endforeach

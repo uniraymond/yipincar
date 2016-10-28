@@ -351,19 +351,20 @@ class ProfileController extends Controller
         }
 
         $proveimage = $request['proveimage'];
-        $pimage = $this->uploadfile($proveimage);
+        $pimage = $this->uploadfile($proveimage, $userId, 1);
 
+        dd('goes here?');
         $auth_resource = $request['auth_resource'];
-        $authResource = $this->uploadfile($auth_resource);
+        $authResource = $this->uploadfile($auth_resource, $userId, 2);
 
         $ass_resource = $request['ass_resource'];
-        $assResource = $this->uploadfile($ass_resource);
+        $assResource = $this->uploadfile($ass_resource, $userId, 3);
 
         $contract_auth = $request['contract_auth'];
-        $contractAuth = $this->uploadfile($contract_auth);
+        $contractAuth = $this->uploadfile($contract_auth, $userId, 4);
 
         $media_icon = $request['media_icon'];
-        $mediaIcon = $this->uploadfile($media_icon);
+        $mediaIcon = $this->uploadfile($media_icon, $userId, 5);
 
         $profile = Profile::where('user_id', $userId)->get();;
         $profile->name = $request['name'];
@@ -393,7 +394,7 @@ class ProfileController extends Controller
         if (count($mediaIcon)>0) {
             $profile->media_icon = $mediaIcon['path'];
         }
-
+dd('after upload images');
         $profile->targetArea = $request['targetArea'];
         $profile->icon_uri = $request['icon_uri'];
         $profile->weixin_public_id = $request['weixin_public_id'];
@@ -405,7 +406,8 @@ class ProfileController extends Controller
         $profile->save();
 
         $request->session()->flash('status', '成功创建用户资料');
-        return redirect('admin/user/');
+//        return redirect('admin/user/');
+        return redirect('/');
     }
     
     /**
@@ -471,26 +473,37 @@ class ProfileController extends Controller
         }
     }
 
-    public function uploadfile($file){
+    public function uploadfile($file, $authuserId = 0, $type_id = 6){
         $a = array();
-//        $authuser = $request->user();
-        $authuser = 1;
-//        $file = $request->file('file');
-
         if(!empty($file)) {
             $fileName = $file->getClientOriginalName();
-//      Storage::put($fileName, file_get_contents($file));
-            $fileDir = "photos/autheditor";
+            $fileOriginalDir = "photos/autheditor/profiles/original";
+            $fileThumbsDir = "photos/autheditor/profiles/thumbs";
+            $fileDir = "photos/autheditor/profiles";
+
             $file->move($fileDir, $fileName);
-            $imageLink = $fileDir . '/' . $fileName;
+//          $file->move($fileThumbsDir, $fileName);
+//          $fileOriginal->copy($fileOriginalDir, $fileName);
 
+            $imageOriginalLink = $fileOriginalDir . '/' . $file->getClientOriginalName();
+            $imageThumbsLink = $fileThumbsDir . '/' . $file->getClientOriginalName();
+            $imageLink = $fileDir . '/' . $file->getClientOriginalName();
+            copy($imageLink, $imageThumbsLink);
+            copy($imageLink, $imageOriginalLink);
+
+//          $cell_img_size_thumbs = GetImageSize($imageThumbsLink); // need to caculate the file width and height to make the image same
             $cell_img_size = GetImageSize($imageLink); // need to caculate the file width and height to make the image same
-            $image = Image::make(sprintf('photos/adv/%s', $file->getClientOriginalName()))->resize(800, (int)((800 * $cell_img_size[1]) / $cell_img_size[0]))->save();
-
+var_dump($cell_img_size[1]);
+            $image = Image::make(sprintf('photos/autheditor/profiles/%s', $file->getClientOriginalName()))->resize(800, (int)((800 * $cell_img_size[1]) / $cell_img_size[0]))->save();
+            dd($image);
+            $imageThumbs = Image::make(sprintf('photos/autheditor/profiles/thumbs/%s', $file->getClientOriginalName()))->resize(100, (int)((100 *  $cell_img_size[1]) / $cell_img_size[0]))->save();
+            $imageOriginal = Image::make(sprintf('photos/autheditor/profiles/original/%s', $file->getClientOriginalName()))->save();
+            dd('how about there?');
             $resource = new Resource();
             $resource->name = $fileName;
             $resource->link = '/' . $imageLink;
-//            $resource->created_by = $authuser->id;
+            $resource->created_by = $authuserId;
+            $resource->type_id = $type_id;
             $resource->save();
 
             $a = array(
