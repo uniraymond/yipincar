@@ -3,7 +3,7 @@
 @section('content')
     <div id="page-wrapper">
         <div class="row">
-            <div class="col-lg-12">
+            <div class="col-lg-12" style="margin-top: 35px">
                 <h1 class="page-header">赞</h1>
                 <div>
                     {{ $success = Session::get('status') }}

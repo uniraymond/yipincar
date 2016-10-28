@@ -5,7 +5,7 @@
 @section('content')
     <div id="page-wrapper">
         <div class="row">
-            <div class="col-lg-12">
+            <div class="col-lg-12" style="margin-top: 35px">
                 <h1 class="page-header">编辑文章</h1>
 
                 @if ($fail = Session::get('warning'))
@@ -33,6 +33,7 @@
                                 </select>
                             </div>
                         </div>
+                        <div class="clearfix"></div>
 
                         @if( !Auth::user()->hasAnyRole([ 'auth_editor']))
                             <div class="{{ isset($errors) && $errors->has('authname') ? 'has-error clearfix' : 'clearfix' }}" style="margin-bottom: 55px" >
@@ -53,7 +54,7 @@
                         <div>
                             <label class="col-lg-1 col-md-1 col-sm-1" style="margin-top: 55px">首页图片</label>
                             <div class="col-md-4"  style="margin-top: 55px; margin-bottom: 55px">
-                                <input type="file" class="col-md-12 form-control-file form-control" id="images" name="images" />
+                                <input type="file" class="col-md-12 form-control-file" id="images" name="images" />
 {{--                                {!! Form::file('images', '', array('class'=>'col-md-12 form-control-file form-control', 'id'=>'images', 'required'=>'required')) !!}--}}
                                 <img id="image" width="100" />
                             </div>

@@ -4,7 +4,7 @@
 @section('content')
     <div id="page-wrapper">
         <div class="row">
-            <div class="col-lg-12">
+            <div class="col-lg-12" style="margin-top: 35px">
                 @if(Auth::user()->hasAnyRole(['auth_editor']))
                     还没有填写个人信息，点击<a href="{{ url('authprofile/create') }}" >跳转</a>按钮完成个人信息.
                 @else

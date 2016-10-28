@@ -4,7 +4,7 @@
 @section('content')
     <div id="page-wrapper">
         <div class="row">
-            <div class="col-lg-12">
+            <div class="col-lg-12" style="margin-top: 35px">
                 <h1 class="page-header">敏感词列表</h1>
 
                 <div class="col-md-6">

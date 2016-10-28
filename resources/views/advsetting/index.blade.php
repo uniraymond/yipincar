@@ -4,12 +4,12 @@
 @section('content')
     <div id="page-wrapper">
         <div class="row">
-            <div class="col-lg-12">
-                <h1 class="page-header">广告设置</h1>
+            <div class="col-lg-12" style="margin-top: 35px">
+                <h1 class="page-header">广告管理</h1>
 
                 {{--new blog link--}}
                 <div class="col-lg-2 col-md-2 col-sm-2 pull-right clearfix">
-                    {{ link_to('admin/advsetting/createimage', '新建', ['class'=>'btn btn-default']) }}
+                    {{ link_to('admin/advsetting/createimage', '新建', ['class'=>'btn btn-second']) }}
                 </div>
 
                 {{--flash alert--}}
@@ -73,7 +73,7 @@
                                 @endforeach
                                 <tr>
                                     <td colspan="4"> </td>
-                                    <td><input class="btn btn-primary" type="submit" value="提交" /></td>
+                                    <td><input class="btn btn-default" type="submit" value="提交" /></td>
                                 </tr>
                             </tbody>
                             {!! Form::token() !!}

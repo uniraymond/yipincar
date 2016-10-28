@@ -4,7 +4,7 @@
 @section('content')
     <div id="page-wrapper">
         <div class="row">
-            <div class="col-lg-12">
+            <div class="col-lg-12" style="margin-top: 35px; margin-bottom: 170px">
                 <h1 class="page-header">修改密码</h1>
                 @if (count($errors) > 0)
                     <div class="alert alert-danger">
@@ -16,14 +16,14 @@
                     </div>
                 @endif
 
-                <div class="panel panel-default">
-                    <div class="panel-heading">创建用户</div>
-                    <div class="panel-body">
+                {{--<div class="panel panel-default">--}}
+                    {{--<div class="panel-heading">创建用户</div>--}}
+                    {{--<div class="panel-body">--}}
                         {!! Form::open(array('url' => 'admin/user/', 'class' => 'form form-horizontal', 'method'=>'post')) !!}
 
-                        <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
+                        <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}" style="margin-bottom: 20px; margin-top: 55px">
                             <label for="password" class="col-md-4 control-label">原密码</label>
-                            <div class="col-md-6">
+                            <div class="col-md-3">
                                 <input id="password" type="password" class="form-control" name="oldpassword" placeholder="原密码" required >
                                 @if ($errors->has('oldpassword'))
                                     <span class="help-block">
@@ -34,9 +34,9 @@
                         </div>
 
 
-                        <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
+                        <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}" style="margin-bottom: 25px">
                             <label for="password" class="col-md-4 control-label">新密码</label>
-                            <div class="col-md-6">
+                            <div class="col-md-3">
                                 <input id="password" type="password" class="form-control" name="password" placeholder="新密码" required >
                                 @if ($errors->has('password'))
                                     <span class="help-block">
@@ -46,10 +46,10 @@
                             </div>
                         </div>
 
-                        <div class="form-group{{ $errors->has('password_confirmation') ? ' has-error' : '' }}">
+                        <div class="form-group{{ $errors->has('password_confirmation') ? ' has-error' : '' }}" style="margin-bottom: 25px">
                             <label for="password_confirmation" class="col-md-4 control-label">确认新密码</label>
 
-                            <div class="col-md-6">
+                            <div class="col-md-3">
                                 <input id="password_confirmation" type="password" class="form-control" name="password_confirmation" required >
 
                                 @if ($errors->has('password_confirmation'))
@@ -62,7 +62,7 @@
 
 
 
-                        <div class="form-group{{ $errors->has('captcha') ? ' has-error' : ''}}">
+                        <div class="form-group{{ $errors->has('captcha') ? ' has-error' : ''}}" style="margin-bottom: 25px">
                             <label for="captcha" class="col-md-4 control-label">
                                 <img src="{{ captcha_src() }}" alt="captcha" class="captcha-img" data-refresh-config="default" />
                             </label>
@@ -77,13 +77,13 @@
                         </div>
 
                         <div class="clearfix"></div>
-                        {!! Form::submit('保存', array('class'=>'btn btn-primary col-lg-offset-10 col-md-offset-10 col-sm-offset-10')) !!}
+                        {!! Form::submit('保存', array('class'=>'btn btn-primary col-lg-offset-6 col-md-offset-10 col-sm-offset-10')) !!}
 
                         {!! Form::token() !!}
                         {!! Form::close() !!}
-                    </div>
-                </div>
-            </div>
+                    {{--</div>--}}
+                {{--</div>--}}
+            {{--</div>--}}
         </div>
     </div>
 @endsection
