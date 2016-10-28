@@ -99,21 +99,21 @@
                             {{--</div>--}}
                         </div>
 
-                        <div class="clearfix formgroup"  style="margin-bottom: 55px">
-                            <div class="col-md-12">
-                                {!! Form::label('auth_resource', '个人授权书', array('class'=>'col-md-2')) !!}
-                                @if ($errors->has('auth_resource'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('auth_resource') ? '图片不能为空' : '' }}</strong>
-                                    </span>
-                                @endif
-                                {!! Form::file('auth_resource', '', array('class'=>'col-md-12 form-control-file form-control', 'id'=>'auth_resource', 'required'=>'required')) !!}
-                                <img id="auth_resource_image" width="100" />
-                                <div class="auth_document"  style="margin-top: 5px">请先下载<a href="{{ url('/documents/一品汽车媒体平台入驻授权书.docx') }}" target="_blank">《一品汽车媒体平台入驻授权书》</a> ，上传加盖公章的扫描件，支持上传jpeg,png,pdf</div>
+                        {{--<div class="clearfix formgroup"  style="margin-bottom: 55px">--}}
+                            {{--<div class="col-md-12">--}}
+                                {{--{!! Form::label('auth_resource', '个人授权书', array('class'=>'col-md-2')) !!}--}}
+                                {{--@if ($errors->has('auth_resource'))--}}
+                                    {{--<span class="help-block">--}}
+                                        {{--<strong>{{ $errors->first('auth_resource') ? '图片不能为空' : '' }}</strong>--}}
+                                    {{--</span>--}}
+                                {{--@endif--}}
+                                {{--{!! Form::file('auth_resource', '', array('class'=>'col-md-12 form-control-file form-control', 'id'=>'auth_resource', 'required'=>'required')) !!}--}}
+                                {{--<img id="auth_resource_image" width="100" />--}}
+                                {{--<div class="auth_document"  style="margin-top: 5px">请先下载<a href="{{ url('/documents/一品汽车媒体平台入驻授权书.docx') }}" target="_blank">《一品汽车媒体平台入驻授权书》</a> ，上传加盖公章的扫描件，支持上传jpeg,png,pdf</div>--}}
 
-                                <div class="clearfix"></div>
-                            </div>
-                        </div>
+                                {{--<div class="clearfix"></div>--}}
+                            {{--</div>--}}
+                        {{--</div>--}}
 
                         <div class="clearfix formgroup"  style="margin-bottom: 55px">
                             {{--<div class="col-md-12">--}}
