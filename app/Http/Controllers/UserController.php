@@ -874,4 +874,14 @@ class UserController extends Controller
         $messageSent = array('status'=>'unactived');
         return response()->json($messageSent);
     }
+
+    public function getLogout(){
+        if (Auth::user()->hasAnyRole(['auth_editor'])) {
+            Auth::logout();
+            return redirect('authlogin');
+        } else {
+            Auth::logout();
+            return redirect()->route('login');
+        }
+    }
 }

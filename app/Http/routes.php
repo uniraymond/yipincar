@@ -125,6 +125,11 @@ Route::group(['middleware' => 'auth'], function () {
     Route::put('authprofile/store', 'ProfileController@authstore');
     Route::post('authprofile/{uid}/update', 'ProfileController@authupdate');
     Route::get('authshow', 'ProfileController@authshow');
+    Route::get('logout',[
+        'uses'  => 'UserController@getLogout',
+//        'uses'  => 'Auth\AuthController@getLogout',
+        'as'    =>  'logout'
+    ]);
 });
 
 
