@@ -8,8 +8,9 @@
                 <div class="panel-heading">注册一品汽车通行证</div>
                 <div class="panel-body">
                     <form class="form-horizontal" role="form" method="POST" action="{{ url('/authregister') }}">
-                        {{ csrf_field() }}
+                        {{--{{ csrf_field() }}--}}
 
+                        {!! Form::token() !!}
                         <div class="form-group{{ $errors->has('captcha') ? ' has-error' : ''}}">
                             <label for="captcha" class="col-md-4 control-label">
                                 <img src="{{ captcha_src() }}" alt="captcha" class="captcha-img" data-refresh-config="default" >

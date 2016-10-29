@@ -12,6 +12,7 @@ use App\Http\Requests;
 use App\User;
 use App\Profile;
 //use Illuminate\Validation\Validator;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Redirect;
@@ -96,6 +97,13 @@ class UserController extends Controller
         foreach($roleIds as $roleId) {
             $new_user->roles()->attach($roleId);
         }
+
+        $path = public_path().'/photos/' . $request['name'];
+        File::makeDirectory($path, $mode = 0777, true, true);
+        $pathoriginal = public_path().'/photos/' . $request['name'].'/original';
+        File::makeDirectory($pathoriginal, $mode = 0777, true, true);
+        $paththumbs = public_path().'/photos/' . $request['name'].'/thumbs';
+        File::makeDirectory($paththumbs, $mode = 0777, true, true);
 
         $request->session()->flash('status', '成功创建用户: '. $new_user->name);
         return redirect('admin/user');
@@ -586,13 +594,13 @@ class UserController extends Controller
     public function autheditorStore(Request $request)
     {
         $valideType = 'authuser';
-        $validator = $this->validator($request->all(), $valideType);
-
-        if ($validator->fails()) {
-            $this->throwValidationException(
-                $request, $validator
-            );
-        }
+//        $validator = $this->validator($request->all(), $valideType);
+//
+//        if ($validator->fails()) {
+//            $this->throwValidationException(
+//                $request, $validator
+//            );
+//        }
 
         $user = new User();
         $user->name = $request['phone'];
@@ -603,6 +611,14 @@ class UserController extends Controller
         $user->save();
         $user->roles()->attach(Role::where('name', 'auth_editor')->first());
         Auth::attempt(array('name'=>$user->name, 'password' => $request['password']), false);
+
+        $path = public_path().'/photos/' . $request['phone'];
+        File::makeDirectory($path, $mode = 0777, true, true);
+        $pathoriginal = public_path().'/photos/' . $request['phone'].'/original';
+        File::makeDirectory($pathoriginal, $mode = 0777, true, true);
+        $paththumbs = public_path().'/photos/' . $request['phone'].'/thumbs';
+        File::makeDirectory($paththumbs, $mode = 0777, true, true);
+
         return redirect()->to('authprofile/create');
 //        return view('authprofile.create');
     }
@@ -907,6 +923,27 @@ class UserController extends Controller
         } else {
             Auth::logout();
             return redirect('login');
+        }
+    }
+
+    /**
+     * Create a directory.
+     *
+     * @param  string  $path
+     * @param  int     $mode
+     * @param  bool    $recursive
+     * @param  bool    $force
+     * @return bool
+     */
+    public function makeDirectory($path, $mode = 0777, $recursive = false, $force = false)
+    {
+        if ($force)
+        {
+            return @mkdir($path, $mode, $recursive);
+        }
+        else
+        {
+            return mkdir($path, $mode, $recursive);
         }
     }
 }
