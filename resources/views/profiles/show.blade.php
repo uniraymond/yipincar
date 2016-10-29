@@ -14,6 +14,15 @@
                     </div>
                 @endif
 
+                @if ($success = Session::get('status'))
+                    <div class="col-lg-12 col-md-12 col-sm-12 bs-example-bg-classes">
+                        <p class="bg-success">
+                            {{ $success }}
+                        </p>
+                    </div>
+                    <div class="clearfix"></div>
+                @endif
+
                 <div class="panel-body">
                     <div class="form-group  col-lg-12 col-md-12 col-sm-12" >
                         <div>

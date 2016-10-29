@@ -19,12 +19,12 @@
                 {{--<div class="panel panel-default">--}}
                     {{--<div class="panel-heading">创建用户</div>--}}
                     {{--<div class="panel-body">--}}
-                        {!! Form::open(array('url' => 'admin/user/', 'class' => 'form form-horizontal', 'method'=>'post')) !!}
+                        {!! Form::open(array('url' => 'resetpw', 'class' => 'form form-horizontal', 'method'=>'post')) !!}
 
                         <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}" style="margin-bottom: 20px; margin-top: 55px">
                             <label for="password" class="col-md-4 control-label">原密码</label>
                             <div class="col-md-3">
-                                <input id="password" type="password" class="form-control" name="oldpassword" placeholder="原密码" required >
+                                <input id="oldpassword" type="password" class="form-control" name="oldpassword" placeholder="原密码"  >
                                 @if ($errors->has('oldpassword'))
                                     <span class="help-block">
                                         <strong>{{ $errors->first('oldpassword') }}</strong>
@@ -37,7 +37,7 @@
                         <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}" style="margin-bottom: 25px">
                             <label for="password" class="col-md-4 control-label">新密码</label>
                             <div class="col-md-3">
-                                <input id="password" type="password" class="form-control" name="password" placeholder="新密码" required >
+                                <input id="password" type="password" class="form-control" name="password" placeholder="新密码"  >
                                 @if ($errors->has('password'))
                                     <span class="help-block">
                                         <strong>{{ $errors->first('password') }}</strong>
@@ -50,7 +50,7 @@
                             <label for="password_confirmation" class="col-md-4 control-label">确认新密码</label>
 
                             <div class="col-md-3">
-                                <input id="password_confirmation" type="password" class="form-control" name="password_confirmation" required >
+                                <input id="password_confirmation" type="password" class="form-control" name="password_confirmation"  >
 
                                 @if ($errors->has('password_confirmation'))
                                     <span class="help-block">
@@ -77,6 +77,7 @@
                         </div>
 
                         <div class="clearfix"></div>
+                        <input type="hidden" name="user_id" value="{{ $user_id }}" />
                         {!! Form::submit('保存', array('class'=>'btn btn-primary col-lg-offset-6 col-md-offset-10 col-sm-offset-10')) !!}
 
                         {!! Form::token() !!}
