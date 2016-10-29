@@ -91,7 +91,8 @@
                         {{--<a href="{{ url('admin/profile/'.Auth::user()->id.'/editprofile') }}"><i class="fa fa-user fa-fw"></i>编辑</a>--}}
                     {{--</li>--}}
                     {{--<li class="divider"></li>--}}
-                    <li><a href="{{ url('/logout') }}"><i class="fa fa-sign-out fa-fw"></i>退出</a>
+                    <li><a href="{{ route('logout') }}"><i class="fa fa-sign-out fa-fw"></i>退出</a>
+{{--                    <li><a href="{{ url('/logout') }}"><i class="fa fa-sign-out fa-fw"></i>退出</a>--}}
                     </li>
                 </ul>
             @endif

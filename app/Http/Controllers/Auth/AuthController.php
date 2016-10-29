@@ -9,6 +9,7 @@ use Validator;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
+use Illuminate\Support\Facades\Auth as Auth;
 
 class AuthController extends Controller
 {
@@ -125,40 +126,14 @@ class AuthController extends Controller
     }
 
     public function getLogout(){
-        dd('do sth in here');
-
+        dd('logouthere');
        if (Auth::user()->hasAnyRole(['auth_editor'])) {
            Auth::logout();
-           return redirect('authlogin');
+           return redirect()->route('authlogin');
        } else {
            Auth::logout();
-           return redirect()->back();
+           return redirect()->route('login');
        }
-    }
-
-    public function newuser(Request $request)
-    {
-
-    }
-
-    public function listuser(Request $request)
-    {
-
-    }
-
-    public function edituser(Request $request, $userId)
-    {
-
-    }
-
-    public function deleteuser(Request $request, $userId)
-    {
-
-    }
-
-    public function showuser(Request $request, $userId)
-    {
-        
     }
     
     public function authregister()
