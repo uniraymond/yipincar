@@ -46,6 +46,20 @@
 
                     <div class="panel-body">
                         <div class="form-group col-lg-12 col-md-12 col-sm-12">
+                            <div>首页图片:</div>
+                            <div>
+                                @php
+                                    $articleLinks = $article->resources;
+                                    $articleLink = '';
+                                    if (count($articleLinks) > 0) {
+                                        foreach($articleLinks as $artLink) {
+                                            $articleLink = $artLink->link;
+                                            break;
+                                        }
+                                    }
+                                @endphp
+                                <img id="image" width="100" src="{{ $articleLink  }}" alt="{{ $article->title }}" />
+                            </div>
                             <div>简述:</div>
                             <div class="description" style="margin-bottom: 15px">{{ $article->description }}</div>
                             <div class="clearfix"></div>
@@ -69,13 +83,11 @@
                         </div>
                     </div>
                     @if ( Null !== Auth::user() && $article->created_by == Auth::user()->id || Auth::user()->hasAnyRole(['super_admin', 'admin', 'chef_editor', 'main_editor', 'adv_editor']) )
-                        <div class="col-lg-4 col-md-4 col-sm-4 edit_article pull-right clearfix"  style="margin-top: 55px">
+                        <div class="col-lg-2 col-md-3 col-sm-4 edit_article pull-right clearfix"  style="margin-top: 55px">
                             <a id="pv" class="inline cboxElement btn btn-default" href="{{ url('/admin/article/'.$article->id.'/preview') }}">预览</a>
                             {{--<a id="pv" class="inline cboxElement btn btn-primary" href="#preview">预览</a>--}}
                             @if ( Null !== Auth::user() && $article->created_by == Auth::user()->id && ($article->published == 1 || $article->published == 0) || Auth::user()->hasAnyRole(['super_admin', 'admin', 'chef_editor', 'main_editor', 'adv_editor']))
-                                <div class="col-lg-4">
-                                    {{ link_to('admin/article/'.$article->id.'/edit', '编辑', ['class'=>'btn btn-second']) }}
-                                </div>
+                                {{ link_to('admin/article/'.$article->id.'/edit', '编辑', ['class'=>'btn btn-second']) }}
                             @endif
                         </div>
                     @endif

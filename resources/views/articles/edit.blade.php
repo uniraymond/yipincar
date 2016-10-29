@@ -24,11 +24,21 @@
                             <label class="col-lg-1 col-md-1 col-sm-1" style="margin-bottom: 55px">选择栏目</label>
                             <div class="col-md-2">
                                 <select class="col-lg-12 col-md-12 col-sm-12 form-control" name="category_id">
-                                    @foreach($categories as $category)
-                                        <option {{ $article->category_id == $category->id ? 'selected' : '' }} value="{{$category->id}}">
-                                            {{$category->name}}
-                                        </option>
-                                    @endforeach
+                                    @if(Auth::user()->hasAnyRole([ 'auth_editor']))
+                                        @foreach($categories as $category)
+                                            @if($category->id == 5 || $category->id == 6 || $category->id == 7)
+                                                <option value="{{$category->id}}">
+                                                    {{$category->name}}
+                                                </option>
+                                            @endif
+                                        @endforeach
+                                    @else
+                                        @foreach($categories as $category)
+                                            <option value="{{$category->id}}">
+                                                {{$category->name}}
+                                            </option>
+                                        @endforeach
+                                    @endif
                                 </select>
                             </div>
                         </div>
@@ -55,16 +65,16 @@
                             <div class="col-md-4" style="margin-top: 55px; margin-bottom: 55px">
                                 {!! Form::file('images', '', array('class'=>'col-md-12 form-control-file form-control', 'id'=>'files', 'required'=>'required')) !!}
                                 @php
-                                $articleLinks = $article->resources;
-                                $articleLink = '';
-                                if (count($articleLinks) > 0) {
-                                foreach($articleLinks as $artLink) {
-                                $articleLink = $artLink->link;
-                                break;
-                                }
-                                }
+                                    $articleLinks = $article->resources;
+                                    $articleLink = '';
+                                    if (count($articleLinks) > 0) {
+                                        foreach($articleLinks as $artLink) {
+                                            $articleLink = $artLink->link;
+                                            break;
+                                        }
+                                    }
                                 @endphp
-                                <img id="image" width="100" src="{{ $articleLink  }}" alt="{{ $article->description }}" />
+                                <img id="image" width="100" src="{{ $articleLink  }}" alt="{{ $article->title }}" />
                             </div>
                         </div>
 
