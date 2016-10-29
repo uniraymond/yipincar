@@ -160,6 +160,8 @@ Route::group(['prefix'=>'api'], function() {
     Route::any('signin', 'InfoController@phoneSignIn');
     Route::any('rename', 'InfoController@userRename');
     Route::any('repass', 'InfoController@resetPassword');
+    Route::any('authlogin', 'InfoController@authLogin');
+
 });
 
 Route::get('/get_captcha/{config?}', function (\Mews\Captcha\Captcha $captcha, $config = 'default') {
