@@ -594,13 +594,13 @@ class UserController extends Controller
     public function autheditorStore(Request $request)
     {
         $valideType = 'authuser';
-//        $validator = $this->validator($request->all(), $valideType);
-//
-//        if ($validator->fails()) {
-//            $this->throwValidationException(
-//                $request, $validator
-//            );
-//        }
+        $validator = $this->validator($request->all(), $valideType);
+
+        if ($validator->fails()) {
+            $this->throwValidationException(
+                $request, $validator
+            );
+        }
 
         $user = new User();
         $user->name = $request['phone'];
