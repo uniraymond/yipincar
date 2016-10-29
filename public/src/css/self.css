@@ -10,6 +10,10 @@
     float: left;
 }
 
+#page-wrapper {
+    padding: 60px 30px 10px;
+}
+
 .nav > li > a.active {
     text-decoration: none;
     background-color: #eee;

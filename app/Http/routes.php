@@ -127,9 +127,9 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('authshow', 'ProfileController@authshow');
     Route::get('logout',[
         'uses'  => 'UserController@getLogout',
-//        'uses'  => 'Auth\AuthController@getLogout',
         'as'    =>  'logout'
     ]);
+    Route::post('resetpw', 'UserController@resetpw');
 });
 
 

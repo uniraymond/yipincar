@@ -34,7 +34,7 @@
                                     {!! Form::token() !!}
                                 </td>
                                 <td>
-                                    {!! Html::link('admin/zan/'.$comment->id, 'Zans ('.count($comment->Zan).' )') !!}
+                                    {!! Html::link('admin/zan/'.$comment->id, '点赞数 ('.count($comment->Zan).' )') !!}
                                 </td>
                             </tr>
                             <tr>

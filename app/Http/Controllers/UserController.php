@@ -12,6 +12,7 @@ use App\Http\Requests;
 use App\User;
 use App\Profile;
 //use Illuminate\Validation\Validator;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Redirect;
 use Validator;
@@ -316,6 +317,7 @@ class UserController extends Controller
         $request->session()->flash('status', '用户: '. $userName .' 被成功删除了.');
         return redirect('admin/user/authEditorList');
     }
+
     /**
      * Get a validator for an incoming registration request.
      *
@@ -360,12 +362,15 @@ class UserController extends Controller
                     'captcha' => 'required|captcha',
                 ], $this->messages($valideType));
                 break;
-            default:
+            case 'resetpw':
+                Validator::extend('oldpassword', function ($attribute, $value, $parameters) {
+                    return Hash::check($value, Auth::user()->password);
+                });
                 return Validator::make($data, [
-                    'name' => 'required|max:255',
-                    'email' => 'required|email|max:255',
-                    'password' => 'confirmed',
-                    'roles' => 'required'
+                    'oldpassword' => 'required|oldpassword:' . Auth::user()->password,
+                    'password' => 'required|min:6|confirmed',
+                    'password_confirmation' => 'required|min:6',
+                    'captcha' => 'required|captcha'
                 ], $this->messages($valideType));
                 break;
         }
@@ -435,16 +440,18 @@ class UserController extends Controller
                     'captcha.captcha' => '输入的验证码错误',
                 ];
                 break;
-            default:
+            case 'resetpw':
                 return [
-                    'name.required' => '名字是必填的',
-                    'name.max' => '名字太长了',
-                    'email.required'  => '电子邮件是必填的',
-                    'email.email'  => '电子邮件格式不正确',
-                    'email.max'  => '电子邮件太长了',
-                    'email.unique'  => '电子邮件已经被注册过了',
-                    'password_confirmation.confirmed'  => '两个密码不一样',
-                    'roles.required'  => '角色是必选的',
+                    'oldpassword.required' => '请填写原密码',
+                    'oldpassword.oldpassword' => '原密码不正确',
+                    'password.required'  => '密码是必填的,最少6个字符',
+                    'password.min'  => '密码最少6个字符',
+                    'password.confirmed'  => '两个密码不一样',
+                    'password_confirmation.required'  => '确定密码是必填的,最少6个字符',
+                    'password_confirmation.min'  => '确定密码最少是6个字符',
+                    'password_confirmation.same'  => '两个密码不一样',
+                    'captcha.required' => '请输入验证码',
+                    'captcha.captcha' => '输入的验证码错误',
                 ];
                 break;
         }
@@ -507,14 +514,32 @@ class UserController extends Controller
         $statuses = UserStatus::all();
         $roles = Role::where('name','<>', 'super_admin')->get();
         $authView = $auth->hasAnyRole(['super_admin', 'admin']);
-        if ($authView || $auth->id == $user_id) {
-            if ($auth->hasAnyRole(['auth_editor'])) {
-                return view('users/editpw');
-            }
-            return view('users/editpw', ['roles'=>$roles, 'usergroups'=>$roles, 'statuses'=>$statuses]);
+
+        return view('users/editpw', ['user_id'=>$user_id]);
+    }
+
+    public function resetpw(Request $request){
+        $auth = $request->user();
+        $valideType = 'resetpw';
+        $authView = $auth->hasAnyRole(['super_admin', 'admin']);
+
+        $validator = $this->validator($request->all(), $valideType);
+
+        $user_id = $request['user_id'];
+        if ($validator->fails()) {
+            $this->throwValidationException(
+                $request, $validator
+            );
         }
-        return redirect('/');
-        return view('users/editpw', ['user'=>$user]);
+
+        if ($authView || $auth->id == $user_id) {
+            $user = User::findorFail($user_id);
+            $user->password = bcrypt($request['password']);
+            $user->save();
+
+            $request->session()->flash('status', '密码已经被更改成功');
+            return redirect('/');
+        }
     }
 
     public function autheditpw(Request $request, $user_id)
@@ -881,7 +906,7 @@ class UserController extends Controller
             return redirect('authlogin');
         } else {
             Auth::logout();
-            return redirect()->route('login');
+            return redirect('login');
         }
     }
 }
