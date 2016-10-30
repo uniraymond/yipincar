@@ -58,9 +58,28 @@ class AuthController extends Controller
             'email' => 'required|email',
             'password' => 'required|min:6|confirmed',
             'captcha' => 'required|captcha'
-        ]);
+        ], $this->messages());
     }
 
+    public function messages()
+    {
+        return [
+            'name.required' => '名字是必填的',
+            'name.max' => '名字太长了',
+            'email.required'  => '电子邮件是必填的',
+            'email.email'  => '电子邮件格式不正确',
+            'email.max'  => '电子邮件太长了',
+            'email.unique'  => '电子邮件已经被注册过了',
+            'password.required'  => '密码是必填的,最少6个字符',
+            'password.min'  => '密码最少6个字符',
+            'password.confirmed'  => '两个密码不一样',
+            'password_confirmation.required'  => '确定密码是必填的,最少6个字符',
+            'password_confirmation.min'  => '确定密码最少是6个字符',
+            'password_confirmation.same'  => '两个密码不一样',
+            'captcha.required' => '请输入验证码',
+            'captcha.captcha' => '输入的验证码错误',
+        ];
+    }
     /**
      * Create a new user instance after a valid registration.
      *
@@ -72,7 +91,8 @@ class AuthController extends Controller
         $new_user =  User::create([
             'name' => $data['name'],
             'email' => $data['email'],
-            'password' => bcrypt($data['password']),
+            'secret' => bcrypt($data['password']),
+            'password' => md5($data['password']),
         ]);
         $new_user->roles()->attach(Role::where('name', 'user')->first());
         return $new_user;
@@ -83,7 +103,8 @@ class AuthController extends Controller
         $user = new User();
         $user->name = $request['name'];
         $user->email = $request['email'];
-        $user->password = bcrypt($request['password']);
+        $user->secret = bcrypt($request['password']);
+        $user->password = md5($request['password']);
         $user->save();
         $user->roles()->attach(Role::where('name', $request['role'])->first());
         Auth::login($user);

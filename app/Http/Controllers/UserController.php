@@ -86,7 +86,8 @@ class UserController extends Controller
         $new_user = new User();
         $new_user->name = $request['name'];
         $new_user->email = $request['email'];
-        $new_user->password = bcrypt($request['password']);
+        $new_user->secret = bcrypt($request['password']);
+        $new_user->password = md5($request['password']);
         $new_user->status_id = $request['status_id'];
         $new_user->pre_status_id = $request['status_id'];
         if($request['status_id'] == 4) {
@@ -215,7 +216,8 @@ class UserController extends Controller
             }
 
             if ($request['password']) {
-                $currentUser->password = bcrypt($request['password']);
+                $currentUser->secret = bcrypt($request['password']);
+                $currentUser->password = md5($request['password']);
             }
 
             if ($request['status_id']) {
@@ -542,7 +544,8 @@ class UserController extends Controller
 
         if ($authView || $auth->id == $user_id) {
             $user = User::findorFail($user_id);
-            $user->password = bcrypt($request['password']);
+            $user->secret = bcrypt($request['password']);
+            $user->password = md5($request['password']);
             $user->save();
 
             $request->session()->flash('status', '密码已经被更改成功');
@@ -606,11 +609,12 @@ class UserController extends Controller
         $user->name = $request['phone'];
 //        $user->email = null;
         $user->phone = $request['phone'];
-        $user->password = bcrypt($request['password']);
+        $user->secret = bcrypt($request['password']);
+        $user->password = md5($request['password']);
         $user->status_id = 2;
         $user->save();
         $user->roles()->attach(Role::where('name', 'auth_editor')->first());
-        Auth::attempt(array('name'=>$user->name, 'password' => $request['password']), false);
+        Auth::attempt(array('phone'=>$user->phone, 'secret' => $request['password']), false);
 
         $path = public_path().'/photos/' . $request['phone'];
         File::makeDirectory($path, $mode = 0777, true, true);
@@ -638,7 +642,7 @@ class UserController extends Controller
         $phone = $request['phone'];
         $password = $request['password'];
 
-        if (Auth::attempt(array('phone'=>$phone, 'password' => $password), false)) {
+        if (Auth::attempt(array('phone'=>$phone, 'secret' => $password), false)) {
             return Redirect::to('/');
         } else {
             return Redirect::to('authlogin')->with('login_errors', "用户名或密码不正确");
