@@ -901,44 +901,56 @@ class InfoController extends Controller
         $uid = $request ->get('uid');
 
         if($userid) {
-            $getProfile = DB::table('profiles') ->where('user_id', $userid) ->get();
+            $getProfile = Profile::select('user_id') ->where('user_id', $userid) ->get();
             if($getProfile && count($getProfile)) {
-                DB::table('profiles') ->where('user_id', $userid) ->update ([
+                Profile::where('user_id', $userid) ->update ([
 //                'uid' => $uid,
                     $authName => $authid,
                 ]);
+                return ['result' => "0"];
             } else {
-                DB::table('profiles') ->insert([
+                Profile::insert([
                     'user_id' => $userid,
                     $authName  => $authid
                 ]);
+                return ['result' => "-1"];
             }
-
-            return ['result' => "0"];
         } else {
-            $signUp = User::insert ([
-                $authName => $authid,
-                'uid' => $uid,
-                'password' => 'pass',
-                'role' => 10,
-                'token' => '',
-                'profile_id' => 0,
-                'status_id' => 0,
-                'pre_status_id' => '',
-                'banned' => 0,
-            ]);
-
-            if($signUp) {
-                $getID = User::select('id')
-                    ->where($authName, $authid)
-                    ->get();
-                DB::table('profiles') ->fwhere('user_id', $getID) ->update ([
-//                'uid' => $uid,
-                    $authName => $authid,
+            $getAuthID = Profile::select('*') ->where($authName, $authid) ->get();
+            $userid = null;
+            if($getAuthID && count($getAuthID)) {
+                return ['result' => $getAuthID];
+                $userid = $getAuthID[0]['user_id'];
+                Profile::where($authName, $authid) ->update([
+                    $authName  => $authid
                 ]);
-                return ['result' => $getID];
+            } else {
+                $signUp = User::insert ([
+                    'uid' => $uid,
+                    'password' => 'pass',
+                    'role' => 10,
+                    'token' => '',
+                    'profile_id' => 0,
+                    'status_id' => 0,
+                    'pre_status_id' => '',
+                    'banned' => 0,
+                ]);
+
+                if($signUp) {
+                    $getID = User::select('id')
+                        ->where('uid', $uid)
+                        ->orderBy('id', 'desc')
+                        ->take(1)
+                        ->get();
+                    $userid = $getID[0]['id'];
+                    Profile::insert([
+                        $authName  => $authid,
+                        'user_id' => $userid,
+                    ]);
+                }
+                return ['result' => $userid];
+
             }
-            return ['result' => "0"];
         }
     }
 
