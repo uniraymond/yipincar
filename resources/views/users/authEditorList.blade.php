@@ -38,7 +38,7 @@
                                 <th>用户名</th>
                                 <th>电话</th>
                                 <th>权限</th>
-                                <th>编辑</th>
+                                <th>审核</th>
                                 <th>屏蔽</th>
                                 <th>删除</th>
                             </tr>
@@ -63,9 +63,9 @@
                                         </td>
                                         <td>
                                             @if($user->status_id < 3)
-                                                <button type="button" value="" class="btn btn_default" id="btn_{{ $user->user_id }}" onclick="passValidate({{ $user->user_id }})" >通过审批</button>
+                                                <button type="button" value="" class="btn btn_default" id="btn_{{ $user->user_id }}" onclick="passValidate({{ $user->user_id }})" >审核</button>
                                             @else
-                                                <button type="button" value="" class="btn btn_default" id="btn_{{ $user->user_id }}" onclick="stopValidate({{ $user->user_id }})" >返回重新审批</button>
+                                                <button type="button" value="" class="btn btn_default" id="btn_{{ $user->user_id }}" onclick="stopValidate({{ $user->user_id }})" >通过</button>
                                             @endif
                                         <td>
                                             @if ($user->banned)
@@ -117,7 +117,7 @@
             var getUrl = "{{ url('admin/varifyStatus') }}" + '/' + user_id;
                 jQuery.get(getUrl,function(data){
                     console.log('changed');
-                    jQuery('#btn_'+user_id).html('返回重新审批');
+                    jQuery('#btn_'+user_id).html('通过');
                     location.reload();
                 });
         }
@@ -127,7 +127,7 @@
                 var getUrl = "{{ url('admin/devarifyStatus') }}" + '/' + user_id+'?reason='+reason;
                     jQuery.get(getUrl,function(data){
                     console.log(reason);
-                    jQuery('#btn_'+user_id).html('通过审批');
+                    jQuery('#btn_'+user_id).html('审核');
                     location.reload();
                 })
             }
