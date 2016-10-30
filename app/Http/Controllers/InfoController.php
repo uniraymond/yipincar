@@ -169,7 +169,7 @@ class InfoController extends Controller
                 ->join('users', 'users.id', '=', 'articles.created_by')
                 ->select('articles.id', 'articles.title', 'articles.description', 'articles.authname', 'categories.name as categoryName', 'articles.category_id', 'article_types.name as articletypeName'
                     , 'articles.created_at' , 'resources.link as resourceLink', 'resources.name as resourceName', 'users.name as userName',
-                    'profiles.name as proName')
+                    'profiles.media_name as mediaName')
     //            ->where('articles.published', '=', 0)
                 ->orderBy('articles.created_at', 'desc');
     }
