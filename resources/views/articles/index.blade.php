@@ -4,6 +4,7 @@
 @section('content')
     {!! Form::open(array('url' => 'admin/article/groupupdate', 'class'=>'form', 'method'=>'POST', 'onsubmit'=>'return confirm("确定屏蔽或删除文章?");')) !!}
     {!! Form::token() !!}
+    <input type="hidden" value="articlelist" name="articleType" />
     <div id="page-wrapper">
         <div class="row">
             <div class="col-lg-12" style="margin-top: 35px">
@@ -12,7 +13,7 @@
                 {{--new blog link--}}
                 <div class="col-lg-2 col-md-3 col-sm-4 pull-right clearfix text-right">
                         {{ link_to('admin/article/create', '新建', ['class'=>'btn btn-second']) }}
-                        <input class="btn btn-default" type="submit" value="提交" />
+                        <input class="btn btn-default" type="submit" value="删除" />
                 </div>
 
                 {{--flash alert--}}
@@ -25,7 +26,9 @@
                 @endif
 
                 @if(count($articles)>0)
-                    {{--<div class="col-lg-9 col-md-8 col-sm-7 pull-left clearfix">还可以再置顶{{ (6 - $totalTop) > 0 ? (6 - $totalTop) : 0 }}篇文章</div>--}}
+                    @if (  Auth::user()->hasAnyRole(['super_admin', 'admin','chef_editor', 'main_editor', 'adv_editor']) )
+                        <div class="col-lg-9 col-md-8 col-sm-7 pull-left clearfix">还可以再置顶{{ (6 - $totalTop) > 0 ? (6 - $totalTop) : 0 }}篇文章</div>
+                    @endif
                     <table class="table table-striped">
                         <thead>
                         <tr>
@@ -33,7 +36,7 @@
                             <th>文章</th>
                             <th>栏目</th>
                             {{--<th>类型</th>--}}
-                            <th>关键字</th>
+                            <th>标签</th>
                             <th>作者</th>
                             <th>评论</th>
                             @if ( Null !== Auth::user() || Auth::user()->hasAnyRole(['super_admin', 'admin','chef_editor', 'main_editor', 'adv_editor']) )
@@ -108,7 +111,7 @@
                     @if ( Null !== Auth::user() )
                         <div class="col-lg-2 col-md-3 col-sm-4 pull-right clearfix text-right">
                             {{ link_to('admin/article/create', '新建', ['class'=>'btn btn-second']) }}
-                            <input class="btn btn-default" type="submit" value="提交" />
+                            <input class="btn btn-default" type="submit" value="删除" />
                         </div>
                     @endif
                 @else

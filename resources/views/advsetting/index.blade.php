@@ -2,14 +2,16 @@
 @include('layouts.contentSideBar')
 {{--@include('advsetting.sidebarType',['types'=>$types, 'positions'=>$positions])--}}
 @section('content')
+    {!! Form::open(array('url' => 'admin/advsetting/update', 'class'=>'form', 'onsubmit'=>'return confirm("确定删除文章?");')) !!}
     <div id="page-wrapper">
         <div class="row">
             <div class="col-lg-12" style="margin-top: 35px">
                 <h1 class="page-header">广告管理</h1>
 
                 {{--new blog link--}}
-                <div class="col-lg-2 col-md-2 col-sm-2 pull-right clearfix">
+                <div class="col-lg-2 col-md-3 col-sm-4 pull-right clearfix text-right">
                     {{ link_to('admin/advsetting/createimage', '新建', ['class'=>'btn btn-second']) }}
+                    <input class="btn btn-default" type="submit" value="删除" />
                 </div>
 
                 {{--flash alert--}}
@@ -22,7 +24,9 @@
                 @endif
 
                 @if(count($advsettings)>0)
-                    <div class="col-md-12">还可以再置顶{{ (6 - $totalTop) > 0 ? (6 - $totalTop) : 0 }}篇广告</div>
+                    @if ( Auth::user()->hasAnyRole(['super_admin', 'admin','chef_editor', 'main_editor', 'adv_editor']) )
+                        <div class="col-md-12">还可以再置顶{{ (6 - $totalTop) > 0 ? (6 - $totalTop) : 0 }}篇广告</div>
+                    @endif
                     <table class="table">
                         <thead>
                             <tr>
@@ -37,7 +41,7 @@
                                 <th>编辑</th>
                             </tr>
                         </thead>
-                        {!! Form::open(array('url' => 'admin/advsetting/update', 'class'=>'form')) !!}
+
                             <tbody>
                                 @foreach($advsettings as $advsetting)
                                     <tr>
@@ -71,14 +75,13 @@
                                          </td>
                                     </tr>
                                 @endforeach
-                                <tr>
-                                    <td colspan="4"> </td>
-                                    <td><input class="btn btn-default" type="submit" value="提交" /></td>
-                                </tr>
                             </tbody>
                             {!! Form::token() !!}
                         {!! Form::close() !!}
                     </table>
+                    <div class="col-lg-2 col-md-3 col-sm-4 pull-right clearfix text-right">
+                        <input class="btn btn-default" type="submit" value="删除" />
+                    </div>
                 @endif
                 <div class="col-lg-12 col-md-12 col-sm-12 clearfix">
                     <span class="totalpage pagination">广告总数：{{ ($totalAdvs) }}篇</span>  {!! $advsettings->links() !!}

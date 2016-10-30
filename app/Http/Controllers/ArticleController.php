@@ -380,6 +380,7 @@ class ArticleController extends Controller
   public function groupupdate(Request $request)
   {
     $authuser = $request->user();
+    $articleType = $request['articleType'];
 
     $articleIds = $request['id'];
     $publisheds = $request['published'];
@@ -411,7 +412,24 @@ class ArticleController extends Controller
       if ($request['groupstatus'] = 'actived') {
 //          return redirect('admin/articles/actived');
       }
-    return redirect('admin/article');
+      switch ($articleType) {
+          case 'articlelist':
+              return redirect('admin/article');
+              break;
+          case 'articlereview':
+              return redirect('admin/article/articlereview');
+              break;
+          case 'articlemine':
+              return redirect('admin/article/myarticle');
+              break;
+          case 'articleactived':
+              return redirect('admin/articles/actived');
+              break;
+          default:
+              return redirect('admin/article');
+              break;
+      }
+      return redirect('admin/article');
   }
 
   public function create()

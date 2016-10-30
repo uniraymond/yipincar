@@ -2,8 +2,9 @@
 @include('layouts.contentSideBar')
 {{--@include('articles.sidebarCategory',['categories'=>$categories, 'types'=>$types, 'tag'=>$tags, 'currentAction'=>$currentAction])--}}
 @section('content')
-    {!! Form::open(array('url' => 'admin/article/groupupdate', 'class'=>'form', 'method'=>'POST')) !!}
+    {!! Form::open(array('url' => 'admin/article/groupupdate', 'class'=>'form', 'method'=>'POST', 'onsubmit'=>'return confirm("确定删除文章?");')) !!}
     {!! Form::token() !!}
+    <input type="hidden" value="articlereview" name="articleType" />
     <div id="page-wrapper">
         <div class="row">
             <div class="col-lg-12" style="margin-top: 35px">
@@ -22,13 +23,11 @@
                 </div>
 
                 {{--new blog link--}}
-                <div class="col-lg-3 col-md-5 col-sm-4 pull-right clearfix">
+                <div class="col-lg-2 col-md-3 col-sm-4 pull-right clearfix text-right">
                     {{--<div class="col-lg-3">--}}
                     {{--{{ link_to('admin/article/create', '新建', ['class'=>'btn btn-second']) }}--}}
                     {{--</div>--}}
-                    <div class="col-md-2">
-                        <input class="btn btn-default" type="submit" value="提交" />
-                    </div>
+                        <input class="btn btn-default" type="submit" value="删除" />
                 </div>
 
                 {{--flash alert--}}
@@ -41,7 +40,9 @@
                 @endif
 
                 @if(count($articles)>0)
-{{--                    <div class="col-md-12">还可以再置顶{{ (6 - $totalTop) > 0 ? (6 - $totalTop) : 0 }}篇文章</div>--}}
+                    @if ( Auth::user()->hasAnyRole(['super_admin', 'admin','chef_editor', 'main_editor', 'adv_editor']) )
+                        <div class="col-md-12">还可以再置顶{{ (6 - $totalTop) > 0 ? (6 - $totalTop) : 0 }}篇文章</div>
+                    @endif
                     <table class="table table-striped">
                         <thead>
                         <tr>
@@ -49,7 +50,7 @@
                             <th>文章</th>
                             <th>栏目</th>
                             <th>类型</th>
-                            <th>关键字</th>
+                            <th>标签</th>
                             <th>作者</th>
                             <th>评论</th>
                             @if ( Null !== Auth::user() || Auth::user()->hasAnyRole(['super_admin', 'admin','chef_editor', 'main_editor', 'adv_editor']) )
@@ -114,17 +115,14 @@
                                 </td>
                             </tr>
                         @endforeach
-                        @if ( Null !== Auth::user() )
-                            <tr>
-                                <td colspan="6"> </td>
-                                <td colspan="3">
-{{--                                    {{ link_to('admin/article/create', '新建', ['class'=>'btn btn-default']) }}--}}
-                                    <input class="btn btn-default" type="submit" value="提交" />
-                                </td>
-                            </tr>
-                        @endif
+
                         </tbody>
                     </table>
+                    @if ( Null !== Auth::user() )
+                        <div class="col-lg-2 col-md-3 col-sm-4 pull-right clearfix text-right">
+                            <input class="btn btn-default" type="submit" value="删除" />
+                        </div>
+                    @endif
                 @else
                     <div class="col-lg-12 col-md-12 col-sm-12 clearfix">
                         <h4>暂时还没有文章.</h4>

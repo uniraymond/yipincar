@@ -7,9 +7,15 @@
             <div class="col-lg-12" style="margin-top: 35px">
                 <h1 class="page-header">已发布文章</h1>
 
+                {!! Form::open(array('url' => 'admin/article/groupupdate', 'class'=>'form', 'method'=>'POST', 'onsubmit'=>'return confirm("确定屏蔽文章?");')) !!}
+                {!! Form::token() !!}
+                <input type="hidden" value="articleactived" name="articleType" />
                 {{--new blog link--}}
-                <div class="col-lg-2 col-md-2 col-sm-2 pull-right clearfix">
-                    {{ link_to('admin/article/create', '新建', ['class'=>'btn btn-second']) }}
+                <div class="col-lg-2 col-md-3 col-sm-4 pull-right clearfix text-right">
+                    @if ( Auth::user()->hasAnyRole(['super_admin', 'admin','chef_editor', 'main_editor', 'adv_editor', 'editor']) )
+                        {{ link_to('admin/article/create', '新建', ['class'=>'btn btn-second']) }}
+                    @endif
+                    <input class="btn btn-default" type="submit" value="屏蔽" />
                 </div>
 
                 {{--flash alert--}}
@@ -29,7 +35,7 @@
                             <th>文章</th>
                             <th>栏目</th>
                             {{--<th>类型</th>--}}
-                            <th>关键字</th>
+                            <th>标签</th>
                             <th>作者</th>
                             <th>评论</th>
                             <th>文章状态</th>
@@ -40,8 +46,6 @@
                             @endif
                         </tr>
                         </thead>
-                        {!! Form::open(array('url' => 'admin/article/groupupdate', 'class'=>'form', 'method'=>'POST')) !!}
-                        {!! Form::token() !!}
                         <input type="input" value="actived" name="groupstatus" readonly hidden="hidden" />
                         <tbody>
                         @foreach($articles as $article)
@@ -101,17 +105,17 @@
                                 @endif
                             </tr>
                         @endforeach
-                        @if ( Null !== Auth::user() )
-                            <tr>
-                                <td colspan="7"> </td>
-                                <td>
-                                    <input class="btn btn-default" type="submit" value="提交" />
-                                </td>
-                            </tr>
-                        @endif
                         </tbody>
                         {!! Form::close() !!}
                     </table>
+                    @if ( Null !== Auth::user() )
+                        <div class="col-lg-2 col-md-3 col-sm-4 pull-right clearfix text-right">
+                            @if ( Auth::user()->hasAnyRole(['super_admin', 'admin','chef_editor', 'main_editor', 'adv_editor', 'editor']) )
+                                {{ link_to('admin/article/create', '新建', ['class'=>'btn btn-second']) }}
+                            @endif
+                            <input class="btn btn-default" type="submit" value="屏蔽" />
+                        </div>
+                    @endif
                 @else
                     <div class="col-lg-12 col-md-12 col-sm-12 clearfix">
                         <h4>暂时还没有文章.</h4>
