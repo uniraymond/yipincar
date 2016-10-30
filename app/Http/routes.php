@@ -97,6 +97,7 @@ Route::group(['middleware'=>'auth', 'prefix'=>'admin'], function() {
     Route::get('history', 'HistoryController@index');
     Route::get('articles/actived', 'ArticleController@activedList');
     Route::get('article/{id}/preview', 'ArticleController@preview');
+    Route::get('article/{id}/previewsite', 'ArticleController@previewsite');
 
     Route::get('taboo/filter/{name}', 'TabooController@filter');
     Route::get('taboo/search', 'TabooController@search');
