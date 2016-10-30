@@ -31,7 +31,35 @@ class CommentController extends Controller
     public function articlecomment($id)
     {
         $comments = Comment::where('article_id', $id )->paginate(20);
-        return view('comments/articlecomment', ['comments' => $comments]);
+
+        $totalComments = count(Comment::where('article_id', $id)->get());
+        return view('comments/articlecomment', ['comments' => $comments, 'totalComments' => $totalComments, 'articleId' => $id]);
+    }
+
+    public function destorycomment(Request $request, $id){
+        $commentId = $request['comment_id'];
+        $comment = Comment::find($id);
+        $orgcomment = $comment->comment;
+        $articleId = $comment->article_id;
+        $comment->delete();
+        $request->session()->flash('status', '评论: '. $orgcomment .' 已经被删除.');
+        return response()->json(array('status'=>'success', 'articleId'=>$articleId));
+    }
+
+    public function updatecomments(Request $request, $articleId){
+        $comments = Comment::where('article_id', $articleId)->get();
+        $publishes = $request['published'];
+        foreach($comments as $comment) {
+            if (isset($publishes[$comment->id])) {
+                $comment->published = 1;
+            } else {
+                $comment->published = 0;
+            }
+            $comment->save();
+        }
+
+        $request->session()->flash('status', '评论状态已经被更改.');
+        return redirect('admin/articlecomment/'.$articleId);
     }
 
     /**

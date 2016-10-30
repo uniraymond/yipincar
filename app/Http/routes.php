@@ -57,6 +57,8 @@ Route::group(['middleware'=>'auth', 'prefix'=>'admin'], function() {
     Route::get('article/articlereview', 'ArticleController@articlereview');
 
     Route::get('articlecomment/{articleId}', 'CommentController@articlecomment');
+    Route::post('articlecomment/delete/{commnetId}', 'CommentController@destorycomment');
+    Route::post('articlecomment/update/{articleId}', 'CommentController@updatecomments');
     Route::get('zan/{commentId}', 'CommentController@zan');
     Route::post('zan/{commentId}', 'CommentController@zanupdate');
 
