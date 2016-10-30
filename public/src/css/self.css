@@ -140,3 +140,6 @@ img.captcha-img {
     color: #e74118;
     text-decoration: none;
 }
+.text-right {
+    text-align: right;
+}

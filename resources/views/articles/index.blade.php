@@ -2,7 +2,7 @@
 @include('layouts.contentSideBar')
 {{--@include('articles.sidebarCategory',['categories'=>$categories, 'types'=>$types, 'tag'=>$tags, 'currentAction'=>$currentAction])--}}
 @section('content')
-    {!! Form::open(array('url' => 'admin/article/groupupdate', 'class'=>'form', 'method'=>'POST')) !!}
+    {!! Form::open(array('url' => 'admin/article/groupupdate', 'class'=>'form', 'method'=>'POST', 'onsubmit'=>'return confirm("确定屏蔽或删除文章?");')) !!}
     {!! Form::token() !!}
     <div id="page-wrapper">
         <div class="row">
@@ -10,13 +10,9 @@
                 <h1 class="page-header">文章</h1>
 
                 {{--new blog link--}}
-                <div class="col-lg-4 col-md-3 col-sm-4 pull-right clearfix">
-                    <div class="col-lg-3">
+                <div class="col-lg-2 col-md-3 col-sm-4 pull-right clearfix text-right">
                         {{ link_to('admin/article/create', '新建', ['class'=>'btn btn-second']) }}
-                    </div>
-                    <div class="col-md-3">
                         <input class="btn btn-default" type="submit" value="提交" />
-                    </div>
                 </div>
 
                 {{--flash alert--}}
@@ -29,7 +25,7 @@
                 @endif
 
                 @if(count($articles)>0)
-                    <div class="col-lg-9 col-md-8 col-sm-7 pull-left clearfix">还可以再置顶{{ (6 - $totalTop) > 0 ? (6 - $totalTop) : 0 }}篇文章</div>
+                    {{--<div class="col-lg-9 col-md-8 col-sm-7 pull-left clearfix">还可以再置顶{{ (6 - $totalTop) > 0 ? (6 - $totalTop) : 0 }}篇文章</div>--}}
                     <table class="table table-striped">
                         <thead>
                         <tr>
@@ -107,17 +103,14 @@
                                 </td>
                             </tr>
                         @endforeach
-                        @if ( Null !== Auth::user() )
-                            <tr>
-                                <td colspan="6"> </td>
-                                <td colspan="3">
-{{--                                    {{ link_to('admin/article/create', '新建', ['class'=>'btn btn-default']) }}--}}
-                                    <input class="btn btn-default" type="submit" value="提交" />
-                                </td>
-                            </tr>
-                        @endif
                         </tbody>
                     </table>
+                    @if ( Null !== Auth::user() )
+                        <div class="col-lg-2 col-md-3 col-sm-4 pull-right clearfix text-right">
+                            {{ link_to('admin/article/create', '新建', ['class'=>'btn btn-second']) }}
+                            <input class="btn btn-default" type="submit" value="提交" />
+                        </div>
+                    @endif
                 @else
                     <div class="col-lg-12 col-md-12 col-sm-12 clearfix">
                         <h4>暂时还没有文章.</h4>
