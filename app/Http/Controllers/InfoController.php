@@ -164,10 +164,12 @@ class InfoController extends Controller
         return Article::join('categories', 'articles.category_id', '=', 'categories.id')
                 ->leftJoin('article_resources', 'articles.id', '=', 'article_resources.article_id')
                 ->leftJoin('resources', 'resources.id', '=', 'article_resources.resource_id')
+                ->leftJoin('profiles', 'articles.id', '=', 'profiles.user_id')
                 ->join('article_types', 'articles.type_id', '=', 'article_types.id')
                 ->join('users', 'users.id', '=', 'articles.created_by')
                 ->select('articles.id', 'articles.title', 'articles.description', 'articles.authname', 'categories.name as categoryName', 'articles.category_id', 'article_types.name as articletypeName'
-                    , 'articles.created_at' , 'resources.link as resourceLink', 'resources.name as resourceName', 'users.name as userName')
+                    , 'articles.created_at' , 'resources.link as resourceLink', 'resources.name as resourceName', 'users.name as userName',
+                    'profiles.name as proName')
     //            ->where('articles.published', '=', 0)
                 ->orderBy('articles.created_at', 'desc');
     }
@@ -634,7 +636,7 @@ class InfoController extends Controller
             $signUp = User::insert ([
                 'name' => $phone,
                 'uid' => $request ->get('uid'),
-                'password' => $request ->get('password'),
+                'secret' => $request ->get('password'),
                 'phone' => $phone,
                 'role' => 10,
                 'token' => '',
@@ -658,7 +660,7 @@ class InfoController extends Controller
         $uid = $request ->get('uid');
         $user = User::select('*')
             ->where('phone', $phone)
-            ->where('password', $request ->get('password'))
+            ->where('secret', $request ->get('password'))
             ->get();
 //        if($user && count($user)) {
 ////            if($user ->uid != $uid) {
@@ -689,7 +691,7 @@ class InfoController extends Controller
         $phone = $request ->get('phone');
         if($phone) {
             $user = User::where('phone', $phone) ->update([
-                'password' => $password,
+                'secret' => $password,
                 'phone'    => $phone,
                 'uid'      => $request ->get('uid')
             ]);
@@ -927,7 +929,7 @@ class InfoController extends Controller
             } else {
                 $signUp = User::insert ([
                     'uid' => $uid,
-                    'password' => 'pass',
+                    'secret' => 'pass',
                     'role' => 10,
                     'token' => '',
                     'profile_id' => 0,
