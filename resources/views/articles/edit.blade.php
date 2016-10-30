@@ -63,7 +63,8 @@
                         <div>
                             <label class="col-lg-1 col-md-1 col-sm-1" style="margin-top: 55px">首页图片</label>
                             <div class="col-md-4" style="margin-top: 55px; margin-bottom: 55px">
-                                {!! Form::file('images', '', array('class'=>'col-md-12 form-control-file form-control', 'id'=>'files', 'required'=>'required')) !!}
+{{--                                {!! Form::file('images', '', array('class'=>'col-md-12 form-control-file form-control', 'id'=>'files images', 'required'=>'required')) !!}--}}
+                                <input type="file" id="images" class="col-md-12 form-control-file form-control" />
                                 @php
                                     $articleLinks = $article->resources;
                                     $articleLink = '';
@@ -216,6 +217,7 @@
                    var y = window.innerHeight|| document.documentElement.clientHeight|| document.getElementsByTagName('body')[0].clientHeight;
 
                    var cmsURL = editor_config.path_absolute + 'laravel-filemanager?field_name=' + field_name;
+//                   var cmsURL = editor_config.path_absolute + 'laravel-filemanager?field_name=' + field_name;
                    if (type == 'image') {
                        cmsURL = cmsURL + "&type=Images";
                    } else {
