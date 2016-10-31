@@ -170,7 +170,8 @@ class InfoController extends Controller
                 ->select('articles.id', 'articles.title', 'articles.description', 'articles.authname', 'categories.name as categoryName', 'articles.category_id', 'article_types.name as articletypeName'
                     , 'articles.created_at' , 'resources.link as resourceLink', 'resources.name as resourceName', 'users.name as userName',
                     'profiles.media_name as mediaName')
-    //            ->where('articles.published', '=', 0)
+                ->where('articles.published', '=', 4)
+                ->where('articles.banned', '=', 0)
                 ->orderBy('articles.created_at', 'desc');
     }
 
