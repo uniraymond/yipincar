@@ -148,6 +148,7 @@ class InfoController extends Controller
     public function getAdvert($position, $limit, $top, $category) {
         $advert = AdvSetting::join('resources', 'resources.id', '=', 'adv_settings.resource_id')
             ->select('adv_settings.*', 'resources.name as resourceName', 'resources.link as resourceLink')
+            ->where('status', 4)
             ->where('position_id', $position);
 
         if($category > 0 && $top == 0)
