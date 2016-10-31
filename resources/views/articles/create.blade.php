@@ -177,6 +177,8 @@
             var y = window.innerHeight|| document.documentElement.clientHeight|| document.getElementsByTagName('body')[0].clientHeight;
 
             var cmsURL = editor_config.path_absolute + 'laravel-filemanager?field_name=' + field_name;
+{{--            var cmsURL = editor_config.path_absolute + '{{ Auth::user()->phone }}?field_name=' + field_name;--}}
+            console.log(cmsURL);
             if (type == 'image') {
                 cmsURL = cmsURL + "&type=Images";
             } else {
