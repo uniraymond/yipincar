@@ -34,6 +34,11 @@
                             <div class="col-md-3">
                                 {!! Form::text('name', '', array('class'=>'col-md-6 form-control', 'placeholder' => '姓名')) !!}
                             </div>
+                            @if ($errors->has('name'))
+                                <span class="help-block">
+                                        <strong>{{ $errors->first('name') }}</strong>
+                                    </span>
+                            @endif
                         </div>
 
                         <div class="clearfix formgroup"  style="margin-bottom: 55px">
@@ -47,6 +52,11 @@
                                 <div   class="col-md-3">
                                     <input class="col-md-3  form-control" name="prove_number" placeholder="证件号码" />
                                 </div>
+                            @if ($errors->has('prove_number'))
+                                <span class="help-block">
+                                        <strong>{{ $errors->first('prove_number') }}</strong>
+                                    </span>
+                            @endif
                         </div>
 
                         <div class="clearfix formgroup"  style="margin-bottom: 55px">
@@ -87,6 +97,12 @@
                                 <div  class="col-md-4">
                                     {!! Form::email('mailbox', '', array('class'=>'col-md-6 form-control', 'height'=>"20", 'placeholder' => '联系邮箱')) !!}
                                 </div>
+
+                            @if ($errors->has('mailbox'))
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('mailbox') ? '图片不能为空' : '' }}</strong>
+                                </span>
+                            @endif
                             {{--</div>--}}
                         </div>
 
@@ -96,6 +112,12 @@
                             <div  class="col-md-4">
                                 {!! Form::text('cellphone', '', array('class'=>'col-md-6 form-control', 'placeholder' => '电话')) !!}
                             </div>
+
+                            @if ($errors->has('cellphone'))
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('cellphone') ? '图片不能为空' : '' }}</strong>
+                                </span>
+                            @endif
                             {{--</div>--}}
                         </div>
 
@@ -178,12 +200,22 @@
                                 {!! Form::text('weixin_public_id', '', array('class'=>'col-md-6 form-control', 'placeholder' => '微信公众号')) !!}
                             </div>
                         </div>
+                        @if ($errors->has('weixin_public_id'))
+                            <span class="help-block">
+                                <strong>{{ $errors->first('weixin_public_id') }}</strong>
+                            </span>
+                        @endif
 
                         <div class="clearfix formgroup"  style="margin-bottom: 55px">
                             {!! Form::label('media_name', '自媒体名称', array('class'=>'col-md-2')) !!}
                             <div class="col-md-3">
                                 {!! Form::text('', '自媒体名称', array('class'=>'col-md-6 form-control', 'placeholder' => '自媒体名称')) !!}
                             </div>
+                            @if ($errors->has('weixin_public_id'))
+                                <span class="help-block">
+                                        <strong>{{ $errors->first('weixin_public_id') }}</strong>
+                                    </span>
+                            @endif
                         </div>
 
                         <div class="clearfix formgroup"  style="margin-bottom: 55px">
@@ -204,7 +236,11 @@
                             {!! Form::label('media_intro', '自媒体简介', array('class'=>'col-md-2 clearfix')) !!}
                             <div class="col-md-10">
                                 {!! Form::text('about_self', '', array('class'=>'col-md-12 form-control', 'placeholder' => '2到12字，要求一句话介绍您的自媒体，无特殊符号，请勿添加联系方式')) !!}
-
+                                @if ($errors->has('about_self'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('about_self') }}</strong>
+                                    </span>
+                                @endif
                             {{--<div class="clearfix">2到12字，要求一句话介绍您的自媒体，无特殊符号，请勿添加联系方式</div>--}}
                             </div>
                         </div>

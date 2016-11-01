@@ -34,6 +34,11 @@
                             <div class="col-md-3">
                                 {!! Form::text('name', $profile->name,  array('class'=>'col-md-6 form-control', 'placeholder' => '姓名')) !!}
                             </div>
+                            @if ($errors->has('name'))
+                                <span class="help-block">
+                                        <strong>{{ $errors->first('name') }}</strong>
+                                    </span>
+                            @endif
                         </div>
 
                         <div class="clearfix formgroup"  style="margin-bottom: 55px">
@@ -47,6 +52,11 @@
                             <div   class="col-md-3">
                                 <input class="col-md-3  form-control" name="prove_number" value="{{ $profile->prove_namber }}" placeholder="证件号码" />
                             </div>
+                            @if ($errors->has('prove_number'))
+                                <span class="help-block">
+                                        <strong>{{ $errors->first('prove_number') }}</strong>
+                                    </span>
+                            @endif
                         </div>
 
                         <div class="clearfix formgroup"  style="margin-bottom: 55px">
@@ -84,6 +94,11 @@
                             <div class="col-md-4">
                                 {!! Form::email('mailbox', $profile->email, array('class'=>'col-md-6 form-control', 'height'=>"20", 'placeholder' => '联系邮箱')) !!}
                             </div>
+                            @if ($errors->has('mailbox'))
+                                <span class="help-block">
+                                        <strong>{{ $errors->first('mailbox') }}</strong>
+                                    </span>
+                            @endif
                         </div>
 
                         <div class="clearfix formgroup"  style="margin-bottom: 55px">
@@ -91,6 +106,11 @@
                             <div class="col-md-4">
                                 {!! Form::text('cellphone', $profile->cellphone, array('class'=>'col-md-6 form-control', 'placeholder' => '电话')) !!}
                             </div>
+                            @if ($errors->has('cellphone'))
+                                <span class="help-block">
+                                        <strong>{{ $errors->first('cellphone') }}</strong>
+                                    </span>
+                            @endif
                         </div>
 
                         {{--<div class="clearfix formgroup">--}}
@@ -168,6 +188,11 @@
                             <div class="col-md-3">
                                 {!! Form::text('weixin_public_id', $profile->weixin_public_id, array('class'=>'col-md-6 form-control', 'placeholder' => '微信公众号')) !!}
                             </div>
+                            @if ($errors->has('weixin_public_id'))
+                                <span class="help-block">
+                                        <strong>{{ $errors->first('weixin_public_id') }}</strong>
+                                    </span>
+                            @endif
                         </div>
 
                         <div class="clearfix formgroup"  style="margin-bottom: 55px">
@@ -175,6 +200,11 @@
                             <div class="col-md-3">
                                 {!! Form::text('media_name', $profile->media_name, array('class'=>'col-md-6 form-control', 'placeholder' => '自媒体名称')) !!}
                             </div>
+                            @if ($errors->has('media_name'))
+                                <span class="help-block">
+                                        <strong>{{ $errors->first('media_name') }}</strong>
+                                    </span>
+                            @endif
                         </div>
 
                         <div class="clearfix formgroup"  style="margin-bottom: 55px">
@@ -196,6 +226,11 @@
                             <div class="col-md-10">
                                 {!! Form::text('about_self', $profile->aboutself, array('class'=>'col-md-12 form-control', 'placeholder' => '2到12字，要求一句话介绍您的自媒体，无特殊符号，请勿添加联系方式')) !!}
                             </div>
+                            @if ($errors->has('about_self'))
+                                <span class="help-block">
+                                        <strong>{{ $errors->first('about_self') }}</strong>
+                                    </span>
+                            @endif
                         </div>
 
                         <div class="form-group {{ $errors->has('confirmterm') ? ' has-error' : '' }} clearfix">

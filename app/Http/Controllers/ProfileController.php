@@ -421,10 +421,15 @@ class ProfileController extends Controller
                 break;
             case 'authuser':
                 return Validator::make($data, [
+                    'name' => 'required',
+                    'prove_number' => 'required',
+                    'mailbox' => 'required|email',
+                    'weixin_public_id' => 'required',
+                    'media_name' => 'required',
                     'phone' => 'required|max:14|min:11',
                     'password' => 'required|min:6|confirmed',
                     'password_confirmation' => 'required|min:6',
-                    'captcha' => 'required|captcha',
+                    'about_self' => 'required|min:4|max:24',
                     'confirmterm' => 'required'
                 ], $this->messages($type));
                 break;
@@ -453,17 +458,25 @@ class ProfileController extends Controller
                 break;
             case 'authuser':
                 return [
+                    'name.required' => '请填写名字',
                     'phone.required' => '电话是必填的',
                     'phone.max' => '电话号码太长',
                     'phone.min' => '电话号码太短',
+
+                    'prove_number.required' => '请填写证件号码',
+                    'mailbox.required' => '请填写电子邮件地址',
+                    'mailbox.email' => '请填写正确电子邮件格式',
+                    'weixin_public_id.required' => '请填写微信公众号',
+                    'media_name.required' => '请填写媒体名',
+
                     'password.required'  => '密码是必填的,最少6个字符',
                     'password.min'  => '密码最少6个字符',
                     'password_confirmation.required'  => '确定密码是必填的,最少6个字符',
                     'password_confirmation.min'  => '确定密码最少是6个字符',
                     'password_confirmation.confirmed'  => '两个密码不一样',
-                    'roles.required'  => '角色是必选的',
-                    'captcha.required' => '请输入验证码',
-                    'captcha.captcha' => '输入的验证码错误',
+                    'about_self.required' => '请填写自媒体简介',
+                    'about_self.min' => '自媒体简介最少2个字',
+                    'about_self.max' => '自媒体简介最多12个字',
                     'confirmterm.required'=>'需要同意用户协议'
                 ];
                 break;
