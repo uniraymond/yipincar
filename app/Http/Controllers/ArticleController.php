@@ -398,7 +398,7 @@ class ArticleController extends Controller
           $articlResource->resource_id = $resource->id;
           $articlResource->save();
       }
-      
+
     $log['name'] = 'Update Article';
     $log['action'] = 'Update article - '. $article->title;
     $log['action_id'] = $article->id;
