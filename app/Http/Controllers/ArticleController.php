@@ -591,9 +591,9 @@ class ArticleController extends Controller
 //          $cell_img_size_thumbs = GetImageSize($imageThumbsLink); // need to caculate the file width and height to make the image same
           $cell_img_size = GetImageSize($imageLink); // need to caculate the file width and height to make the image same
 
-          $image = Image::make(sprintf('photos/%s', $file->getClientOriginalName()))->resize(800, (int)((800 * $cell_img_size[1]) / $cell_img_size[0]))->save();
-          $imageThumbs = Image::make(sprintf('photos/thumbs/%s', $file->getClientOriginalName()))->resize(100, (int)((100 *  $cell_img_size[1]) / $cell_img_size[0]))->save();
-          $imageOriginal = Image::make(sprintf('photos/original/%s', $file->getClientOriginalName()))->save();
+          $image = Image::make(sprintf('photos/'.$authuser->id.'/%s', $file->getClientOriginalName()))->resize(1000, (int)((1000 * $cell_img_size[1]) / $cell_img_size[0]))->save();
+          $imageThumbs = Image::make(sprintf('photos/'.$authuser->id.'/thumbs/%s', $file->getClientOriginalName()))->resize(100, (int)((100 *  $cell_img_size[1]) / $cell_img_size[0]))->save();
+          $imageOriginal = Image::make(sprintf('photos/'.$authuser->id.'/original/%s', $file->getClientOriginalName()))->save();
 
           $resource = new Resource();
           $resource->name = $file->getClientOriginalName();
