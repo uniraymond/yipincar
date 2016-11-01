@@ -288,7 +288,7 @@ class InfoController extends Controller
                 ->join('article_types', 'articles.type_id', '=', 'article_types.id')
                 ->select('articles.id', 'articles.title', 'categories.name as categoryName', 'articles.category_id', 'article_types.name as articletypeName'
                     , 'articles.created_at' , 'resources.link as resourceLink', 'resources.name as resourceName', 'users.name as userName')
-                ->where('articles.published', '=', 1)
+                ->where('articles.published', '=', 4)
                 ->where('articles.banned', '=', 0)
                 ->where('articles.category_id', '!=', 13)
                 ->where('article_tags.tag_id', '=', $tagid)
