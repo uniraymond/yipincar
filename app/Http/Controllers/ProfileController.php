@@ -50,7 +50,7 @@ class ProfileController extends Controller
      */
     public function store(Request $request)
     {
-        $validator = $this->validator($request->all(), $new=true);
+        $validator = $this->validator($request->all(), $type = 'new');
 
         if ($validator->fails()) {
             $this->throwValidationException(
@@ -274,7 +274,7 @@ class ProfileController extends Controller
         $auth = $request->user();
         $userId = $auth->id;
 
-        $validator = $this->validator($request->all(), $authuser=true);
+        $validator = $this->validator($request->all(), $type = 'authuser');
 
         if ($validator->fails()) {
             $this->throwValidationException(
@@ -342,7 +342,7 @@ class ProfileController extends Controller
 
     public function authupdate(Request $request, $userId)
     {
-        $validator = $this->validator($request->all(), $authuser=true);
+        $validator = $this->validator($request->all(), $type = 'authuser');
 
         if ($validator->fails()) {
             $this->throwValidationException(
@@ -406,60 +406,73 @@ class ProfileController extends Controller
      * @param  array  $data
      * @return \Illuminate\Contracts\Validation\Validator
      */
-    protected function validator(array $data, $new=false, $checkemail=true, $authuser = false)
+    protected function validator(array $data, $type)
     {
-        if ($new) {
-            return Validator::make($data, [
-                'name' => 'required|max:255',
-            ], $this->messages($new));
-        } elseif($checkemail){
-            return Validator::make($data, [
-                'name' => 'required|max:255',
-            ], $this->messages());
-        } elseif($authuser) {
-            return Validator::make($data, [
-                'phone' => 'required|max:14|min:11',
-                'password' => 'required|min:6|confirmed',
-                'password_confirmation' => 'required|min:6',
-                'captcha' => 'required|captcha',
-                'confirmterm' => 'required'
-            ], $this->messages($new, $authuser));
-        } else{
-            return Validator::make($data, [
-                'name' => 'required|max:255',
-            ], $this->messages());
+        switch ($type) {
+            case 'new':
+                return Validator::make($data, [
+                    'name' => 'required|max:255',
+                ], $this->messages($type));
+                break;
+            case 'checkemail':
+                return Validator::make($data, [
+                    'name' => 'required|max:255',
+                ], $this->messages($type));
+                break;
+            case 'authuser':
+                return Validator::make($data, [
+                    'phone' => 'required|max:14|min:11',
+                    'password' => 'required|min:6|confirmed',
+                    'password_confirmation' => 'required|min:6',
+                    'captcha' => 'required|captcha',
+                    'confirmterm' => 'required'
+                ], $this->messages($type));
+                break;
+            default:
+                return Validator::make($data, [
+                    'name' => 'required|max:255',
+                ], $this->messages());
+                break;
         }
-
     }
 
-    public function messages($new=false, $authuser= false)
+    public function messages($type)
     {
-        if($new) {
-            return [
-                'name.required' => '名字是必填的',
-                'name.max' => '名字太长了',
-            ];
-        } elseif ($authuser) {
-            return [
-                'phone.required' => '电话是必填的',
-                'phone.max' => '电话号码太长',
-                'phone.min' => '电话号码太短',
-                'password.required'  => '密码是必填的,最少6个字符',
-                'password.min'  => '密码最少6个字符',
-                'password_confirmation.required'  => '确定密码是必填的,最少6个字符',
-                'password_confirmation.min'  => '确定密码最少是6个字符',
-                'password_confirmation.confirmed'  => '两个密码不一样',
-                'roles.required'  => '角色是必选的',
-                'captcha.required' => '请输入验证码',
-                'captcha.captcha' => '输入的验证码错误',
-                'confirmterm.required'=>'需要同意用户协议'
-            ];
-        } else{
-            return [
-                'name.required' => '名字是必填的',
-                'name.max' => '名字太长了',
-
-            ];
+        switch ($type) {
+            case 'new':
+                return [
+                    'name.required' => '名字是必填的',
+                    'name.max' => '名字太长了',
+                ];
+                break;
+            case 'checkemail':
+                return [
+                    'name.required' => '名字是必填的',
+                    'name.max' => '名字太长了',
+                ];
+                break;
+            case 'authuser':
+                return [
+                    'phone.required' => '电话是必填的',
+                    'phone.max' => '电话号码太长',
+                    'phone.min' => '电话号码太短',
+                    'password.required'  => '密码是必填的,最少6个字符',
+                    'password.min'  => '密码最少6个字符',
+                    'password_confirmation.required'  => '确定密码是必填的,最少6个字符',
+                    'password_confirmation.min'  => '确定密码最少是6个字符',
+                    'password_confirmation.confirmed'  => '两个密码不一样',
+                    'roles.required'  => '角色是必选的',
+                    'captcha.required' => '请输入验证码',
+                    'captcha.captcha' => '输入的验证码错误',
+                    'confirmterm.required'=>'需要同意用户协议'
+                ];
+                break;
+            default:
+                return [
+                    'name.required' => '名字是必填的',
+                    'name.max' => '名字太长了',
+                ];
+                break;
         }
     }
 
