@@ -354,11 +354,11 @@ function useFile(file) {
       path = path.substring(1);
     }
 
+      // use user_id as default folder yipin
+      path = '/{{ Auth::user()->id }}';
     if (path != ds) {
       item_url = item_url + path + ds;
     }
-      // use user_id as default folder yipin
-      path = '/{{ Auth::user()->id }}';
     var url = item_url + file;
 
     url = url.replace(/\\/g, "/");
