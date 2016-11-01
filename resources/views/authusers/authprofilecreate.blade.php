@@ -211,9 +211,9 @@
                             <div class="col-md-3">
                                 {!! Form::text('', '自媒体名称', array('class'=>'col-md-6 form-control', 'placeholder' => '自媒体名称')) !!}
                             </div>
-                            @if ($errors->has('weixin_public_id'))
+                            @if ($errors->has('media_name'))
                                 <span class="help-block">
-                                        <strong>{{ $errors->first('weixin_public_id') }}</strong>
+                                        <strong>{{ $errors->first('media_name') }}</strong>
                                     </span>
                             @endif
                         </div>
