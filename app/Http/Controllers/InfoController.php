@@ -285,9 +285,11 @@ class InfoController extends Controller
                 ->join('users', 'users.id', '=', 'articles.created_by')
                 ->leftJoin('article_resources', 'articles.id', '=', 'article_resources.article_id')
                 ->leftJoin('resources', 'resources.id', '=', 'article_resources.resource_id')
+                ->leftJoin('profiles', 'articles.created_by', '=', 'profiles.user_id')
                 ->join('article_types', 'articles.type_id', '=', 'article_types.id')
-                ->select('articles.id', 'articles.title', 'categories.name as categoryName', 'articles.category_id', 'article_types.name as articletypeName'
-                    , 'articles.created_at' , 'resources.link as resourceLink', 'resources.name as resourceName', 'users.name as userName')
+                ->select('articles.id', 'articles.title', 'articles.description', 'articles.authname', 'categories.name as categoryName', 'articles.category_id', 'article_types.name as articletypeName'
+                    , 'articles.created_at' , 'resources.link as resourceLink', 'resources.name as resourceName', 'users.name as userName',
+                    'profiles.media_name as mediaName')
                 ->where('articles.published', '=', 4)
                 ->where('articles.banned', '=', 0)
                 ->where('articles.category_id', '!=', 13)
@@ -392,12 +394,15 @@ class InfoController extends Controller
         $from = ($page -1) * $limit;
         $articles = Article::join('categories', 'articles.category_id', '=', 'categories.id')
             ->leftJoin('article_resources', 'articles.id', '=', 'article_resources.article_id')
+            ->leftJoin('profiles', 'articles.created_by', '=', 'profiles.user_id')
             ->leftJoin('resources', 'resources.id', '=', 'article_resources.resource_id')
             ->join('article_types', 'articles.type_id', '=', 'article_types.id')
             ->join('users', 'users.id', '=', 'articles.created_by')
-            ->select('articles.id', 'articles.title', 'categories.name as categoryName', 'articles.category_id', 'article_types.name as articletypeName'
-                , 'articles.created_at' , 'resources.link as resourceLink', 'resources.name as resourceName', 'users.name as userName')
-//            ->where('articles.published', '=', 0)
+            ->select('articles.id', 'articles.title', 'articles.description', 'articles.authname', 'categories.name as categoryName', 'articles.category_id', 'article_types.name as articletypeName'
+                , 'articles.created_at' , 'resources.link as resourceLink', 'resources.name as resourceName', 'users.name as userName',
+                'profiles.media_name as mediaName')
+            ->where('articles.published', '=', 4)
+            ->where('articles.banned', '=', 0)
             ->where('articles.created_by', '=', $authorid)
             ->orderBy('articles.created_at', 'desc')
             ->skip($from)
@@ -416,11 +421,14 @@ class InfoController extends Controller
             ->join('categories', 'articles.category_id', '=', 'categories.id')
             ->leftJoin('article_resources', 'articles.id', '=', 'article_resources.article_id')
             ->leftJoin('resources', 'resources.id', '=', 'article_resources.resource_id')
+            ->leftJoin('profiles', 'articles.created_by', '=', 'profiles.user_id')
             ->join('article_types', 'articles.type_id', '=', 'article_types.id')
             ->join('users', 'users.id', '=', 'articles.created_by')
-            ->select('articles.id', 'articles.title', 'articles.category_id', 'article_types.name as articletypeName'
-                , 'articles.created_at' , 'resources.link as resourceLink', 'resources.name as resourceName', 'users.name as userName')
-//            ->where('articles.published', '=', 0)
+            ->select('articles.id', 'articles.title', 'articles.description', 'articles.authname', 'categories.name as categoryName', 'articles.category_id', 'article_types.name as articletypeName'
+                , 'articles.created_at' , 'resources.link as resourceLink', 'resources.name as resourceName', 'users.name as userName',
+                'profiles.media_name as mediaName')
+            ->where('articles.published', '=', 4)
+            ->where('articles.banned', '=', 0)
             ->where('collections.user_id', '=', $userid)
             ->orderBy('articles.created_at', 'desc')
             ->skip($from)
@@ -442,10 +450,12 @@ class InfoController extends Controller
         $articles = Article::join('categories', 'articles.category_id', '=', 'categories.id')
             ->leftJoin('article_resources', 'articles.id', '=', 'article_resources.article_id')
             ->leftJoin('resources', 'resources.id', '=', 'article_resources.resource_id')
+            ->leftJoin('profiles', 'articles.created_by', '=', 'profiles.user_id')
             ->join('article_types', 'articles.type_id', '=', 'article_types.id')
             ->join('users', 'users.id', '=', 'articles.created_by')
-            ->select('articles.id', 'articles.title', 'categories.name as categoryName', 'articles.category_id', 'article_types.name as articletypeName'
-                , 'articles.created_at' , 'resources.link as resourceLink', 'resources.name as resourceName', 'users.name as userName')
+            ->select('articles.id', 'articles.title', 'articles.description', 'articles.authname', 'categories.name as categoryName', 'articles.category_id', 'article_types.name as articletypeName'
+                , 'articles.created_at' , 'resources.link as resourceLink', 'resources.name as resourceName', 'users.name as userName',
+                'profiles.media_name as mediaName')
             ->where(function($query){
                 $query->where('articles.title', 'like', $this -> likeKey)
                     ->orWhere(function($query){
@@ -453,7 +463,8 @@ class InfoController extends Controller
                     });
             })
 //            ->where('articles.category_id', '=', $category)
-//            ->where('articles.published', '=', 0)
+            ->where('articles.published', '=', 4)
+            ->where('articles.banned', '=', 0)
 //            ->where('articles.title'.'articles.content', 'like', $likeKey)
 //            ->orWhere('articles.content', 'like', $likeKey)
 //            ->where('articles.type_id', 1)
