@@ -50,7 +50,7 @@
                                     </select>
                             </div>
                             <div   class="col-md-3">
-                                <input class="col-md-3  form-control" name="prove_number" value="{{ $profile->prove_namber }}" placeholder="证件号码" />
+                                <input class="col-md-3  form-control" name="prove_number" value="{{ $profile->prove_number }}" placeholder="证件号码" />
                             </div>
                             @if ($errors->has('prove_number'))
                                 <span class="help-block">
@@ -128,7 +128,7 @@
                                 {{--</div>--}}
                         {{--</div>--}}
 
-                        <div class="clearfix formgroup"  style="margin-bottom: 55px">
+                        <div class="clearfix formgroup" id="ass_resource_upload" style="margin-bottom: 55px; {{ $profile->media_type_id == 1 ? 'display: none;' : 'display: block' }}" >
                             {!! Form::label('ass_resource', '组织机构代码证', array('class'=>'col-md-2')) !!}
                             {{--<div class="col-md-12">--}}
                             @if ($errors->has('ass_resource'))
@@ -136,7 +136,7 @@
                                     <strong>{{ $errors->first('ass_resource') ? '图片不能为空' : '' }}</strong>
                                 </span>
                             @endif
-                            {!! Form::file('ass_resource', '', array('class'=>'col-md-12 form-control-file form-control', 'id'=>'ass_resource', 'required'=>'required')) !!}
+                            {!! Form::file('ass_resource', '', array('class'=>'col-md-12 form-control-file form-control', 'id'=>'ass_resource')) !!}
                             <img id="ass_resource_image" width="100" src="{{ $profile->ass_resource }}" />
                             <div class="clearfix"></div>
                                 {{--</div>--}}
@@ -260,6 +260,22 @@
             </div>
         </div>
     </div>
+
+    <script src="{{ url('/src/js/jQuery.min.2.2.4.js') }}" ></script>
+    <script>
+        jQuery(document).ready(function(){
+            jQuery("input[name='mediatype']").change(function(){
+                if ($(this).val() == 1) {
+                    $('#ass_resource_upload').hide();
+                    $('#ass_resource_upload input').prop('disabled', true);
+                }
+                if ($(this).val() == 2) {
+                    $('#ass_resource_upload').show();
+                    $('#ass_resource_upload input').prop('enabled', true);
+                }
+            });
+        });
+    </script>
     <script>
         document.getElementById("proveimage").onchange = function () {
             var reader = new FileReader();

@@ -272,6 +272,22 @@
             </div>
         </div>
     </div>
+
+    <script src="{{ url('/src/js/jQuery.min.2.2.4.js') }}" ></script>
+    <script>
+        jQuery(document).ready(function(){
+            jQuery("input[name='mediatype']").change(function(){
+                if ($(this).val() == 1) {
+                    $('#ass_resource_upload').hide();
+                    $('#ass_resource_upload input').prop('disabled', true);
+                }
+                if ($(this).val() == 2) {
+                    $('#ass_resource_upload').show();
+                    $('#ass_resource_upload input').prop('enabled', true);
+                }
+            });
+        });
+    </script>
     <script>
         document.getElementById("proveimage").onchange = function () {
             var reader = new FileReader();
@@ -285,17 +301,17 @@
             reader.readAsDataURL(this.files[0]);
         };
 
-        document.getElementById("auth_resource").onchange = function () {
-            var reader = new FileReader();
-
-            reader.onload = function (e) {
-                // get loaded data and render thumbnail.
-                document.getElementById("auth_resource_image").src = e.target.result;
-            };
-
-            // read the image file as a data URL.
-            reader.readAsDataURL(this.files[0]);
-        };
+//        document.getElementById("auth_resource").onchange = function () {
+//            var reader = new FileReader();
+//
+//            reader.onload = function (e) {
+//                // get loaded data and render thumbnail.
+//                document.getElementById("auth_resource_image").src = e.target.result;
+//            };
+//
+//            // read the image file as a data URL.
+//            reader.readAsDataURL(this.files[0]);
+//        };
 
         document.getElementById("ass_resource").onchange = function () {
             var reader = new FileReader();

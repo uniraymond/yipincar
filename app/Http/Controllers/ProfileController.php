@@ -342,6 +342,7 @@ class ProfileController extends Controller
 
     public function authupdate(Request $request, $userId)
     {
+
         $validator = $this->validator($request->all(), $type = 'authuser');
 
         if ($validator->fails()) {
@@ -376,6 +377,7 @@ class ProfileController extends Controller
         $profile->city_id = $request['city_id'];
         $profile->email = $request['mailbox'];
         $profile->cellphone = $request['cellphone'];
+
         if (count($authResource)>0) {
             $profile->auth_resource = $authResource['path'];
         }
@@ -426,17 +428,10 @@ class ProfileController extends Controller
                     'mailbox' => 'required|email',
                     'weixin_public_id' => 'required',
                     'media_name' => 'required',
-                    'phone' => 'required|max:14|min:11',
-                    'password' => 'required|min:6|confirmed',
-                    'password_confirmation' => 'required|min:6',
+                    'cellphone' => 'required|min:11|max:14',
                     'about_self' => 'required|min:4|max:24',
                     'confirmterm' => 'required'
                 ], $this->messages($type));
-                break;
-            default:
-                return Validator::make($data, [
-                    'name' => 'required|max:255',
-                ], $this->messages());
                 break;
         }
     }
@@ -469,21 +464,10 @@ class ProfileController extends Controller
                     'weixin_public_id.required' => '请填写微信公众号',
                     'media_name.required' => '请填写媒体名',
 
-                    'password.required'  => '密码是必填的,最少6个字符',
-                    'password.min'  => '密码最少6个字符',
-                    'password_confirmation.required'  => '确定密码是必填的,最少6个字符',
-                    'password_confirmation.min'  => '确定密码最少是6个字符',
-                    'password_confirmation.confirmed'  => '两个密码不一样',
                     'about_self.required' => '请填写自媒体简介',
                     'about_self.min' => '自媒体简介最少2个字',
                     'about_self.max' => '自媒体简介最多12个字',
                     'confirmterm.required'=>'需要同意用户协议'
-                ];
-                break;
-            default:
-                return [
-                    'name.required' => '名字是必填的',
-                    'name.max' => '名字太长了',
                 ];
                 break;
         }

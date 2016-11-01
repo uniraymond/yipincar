@@ -100,7 +100,7 @@
                             </div>
                         </div>
 
-                        <div class="clearfix">
+                        <div class="clearfix" style="{{ $profile->media_type_id == 1 ? 'display:none':'' }}">
                             <div class="col-md-3" style="margin-bottom: 55px">
                                 组织机构代码证：
                             </div>
