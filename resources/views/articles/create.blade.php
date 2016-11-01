@@ -110,9 +110,9 @@
                             <label class="col-lg-1 col-md-1 col-sm-1">选择标签</label>
                             <div class="col-md-11">
                                 <input id="tags" name="tags" class="col-lg-12 col-md-12 col-sm-12 form-control" placeholder="(必填) 多个关键字之间用逗号隔开"  />
-                                <div class="col-lg-12 col-md-12 col-sm-12 highlight"  style="margin-top: 5px">
-                                    <span><small>提示现有的标签: {!! $tagString !!}</small></span>
-                                </div>
+                                {{--<div class="col-lg-12 col-md-12 col-sm-12 highlight"  style="margin-top: 5px">--}}
+                                    {{--<span><small>提示现有的标签: {!! $tagString !!}</small></span>--}}
+                                {{--</div>--}}
                             </div>
                         </div>
 
