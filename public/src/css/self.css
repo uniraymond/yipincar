@@ -143,3 +143,7 @@ img.captcha-img {
 .text-right {
     text-align: right;
 }
+
+.help-block strong {
+    color: red;
+}
