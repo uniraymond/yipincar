@@ -364,6 +364,41 @@ class ArticleController extends Controller
 
     $authuser = $request->user();
 
+      $file = $request->file('images');
+      if (!empty($file)) {
+          $fileName = $file->getClientOriginalName();
+          $fileOriginalDir = "photos/".$authuser->id."/original";
+          $fileThumbsDir = "photos/".$authuser->id."/thumbs";
+          $fileDir = "photos/".$authuser->id;
+
+          $file->move($fileDir, $fileName);
+//          $file->move($fileThumbsDir, $fileName);
+//          $fileOriginal->copy($fileOriginalDir, $fileName);
+
+          $imageOriginalLink = $fileOriginalDir . '/' . $file->getClientOriginalName();
+          $imageThumbsLink = $fileThumbsDir . '/' . $file->getClientOriginalName();
+          $imageLink = $fileDir . '/' . $file->getClientOriginalName();
+          copy($imageLink, $imageThumbsLink);
+          copy($imageLink, $imageOriginalLink);
+
+//          $cell_img_size_thumbs = GetImageSize($imageThumbsLink); // need to caculate the file width and height to make the image same
+          $cell_img_size = GetImageSize($imageLink); // need to caculate the file width and height to make the image same
+
+          $image = Image::make(sprintf('photos/%s', $file->getClientOriginalName()))->resize(800, (int)((800 * $cell_img_size[1]) / $cell_img_size[0]))->save();
+          $imageThumbs = Image::make(sprintf('photos/thumbs/%s', $file->getClientOriginalName()))->resize(100, (int)((100 *  $cell_img_size[1]) / $cell_img_size[0]))->save();
+          $imageOriginal = Image::make(sprintf('photos/original/%s', $file->getClientOriginalName()))->save();
+
+          $resource = new Resource();
+          $resource->name = $file->getClientOriginalName();
+          $resource->link = '/' . $imageLink;
+          $resource->created_by = $authuser->id;
+          $resource->save();
+          $articlResource = new ArticleResources();
+          $articlResource->article_id = $article->id;
+          $articlResource->resource_id = $resource->id;
+          $articlResource->save();
+      }
+
     $log['name'] = 'Update Article';
     $log['action'] = 'Update article - '. $article->title;
     $log['action_id'] = $article->id;
@@ -539,9 +574,9 @@ class ArticleController extends Controller
       $file = $request->file('images');
       if (!empty($file)) {
           $fileName = $file->getClientOriginalName();
-          $fileOriginalDir = "photos/original";
-          $fileThumbsDir = "photos/thumbs";
-          $fileDir = "photos";
+          $fileOriginalDir = "photos/".$authuser->id."/original";
+          $fileThumbsDir = "photos/".$authuser->id."/thumbs";
+          $fileDir = "photos/".$authuser->id;
 
           $file->move($fileDir, $fileName);
 //          $file->move($fileThumbsDir, $fileName);
@@ -556,9 +591,9 @@ class ArticleController extends Controller
 //          $cell_img_size_thumbs = GetImageSize($imageThumbsLink); // need to caculate the file width and height to make the image same
           $cell_img_size = GetImageSize($imageLink); // need to caculate the file width and height to make the image same
 
-          $image = Image::make(sprintf('photos/%s', $file->getClientOriginalName()))->resize(800, (int)((800 * $cell_img_size[1]) / $cell_img_size[0]))->save();
-          $imageThumbs = Image::make(sprintf('photos/thumbs/%s', $file->getClientOriginalName()))->resize(100, (int)((100 *  $cell_img_size[1]) / $cell_img_size[0]))->save();
-          $imageOriginal = Image::make(sprintf('photos/original/%s', $file->getClientOriginalName()))->save();
+          $image = Image::make(sprintf('photos/'.$authuser->id.'/%s', $file->getClientOriginalName()))->resize(1000, (int)((1000 * $cell_img_size[1]) / $cell_img_size[0]))->save();
+          $imageThumbs = Image::make(sprintf('photos/'.$authuser->id.'/thumbs/%s', $file->getClientOriginalName()))->resize(100, (int)((100 *  $cell_img_size[1]) / $cell_img_size[0]))->save();
+          $imageOriginal = Image::make(sprintf('photos/'.$authuser->id.'/original/%s', $file->getClientOriginalName()))->save();
 
           $resource = new Resource();
           $resource->name = $file->getClientOriginalName();

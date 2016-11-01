@@ -106,6 +106,19 @@ class UserController extends Controller
         $paththumbs = public_path().'/photos/' . $request['name'].'/thumbs';
         File::makeDirectory($paththumbs, $mode = 0777, true, true);
 
+        if($roleId == 6) {
+            $path = public_path().'/photos/profiles/autheditor/' . $request['name'];
+            $pathoriginal = public_path().'/photos/profiles/autheditor/' . $request['name'].'/original';
+            $paththumbs = public_path().'/photos/profiles/autheditor/' . $request['name'].'/thumbs';
+        } else {
+            $path = public_path().'/photos/profiles/users/' . $request['name'];
+            $pathoriginal = public_path().'/photos/profiles/users/' . $request['name'].'/original';
+            $paththumbs = public_path().'/photos/profiles/users/' . $request['name'].'/thumbs';
+        }
+        File::makeDirectory($path, $mode = 0777, true, true);
+        File::makeDirectory($pathoriginal, $mode = 0777, true, true);
+        File::makeDirectory($paththumbs, $mode = 0777, true, true);
+
         $request->session()->flash('status', '成功创建用户: '. $new_user->name);
         return redirect('admin/user');
     }
