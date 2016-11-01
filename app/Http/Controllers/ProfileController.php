@@ -283,19 +283,19 @@ class ProfileController extends Controller
         }
 
         $proveimage = $request['proveimage'];
-        $pimage = $this->uploadfile($proveimage);
+        $pimage = $this->uploadfile($proveimage, $userId, 1);
 
         $auth_resource = $request['auth_resource'];
-        $authResource = $this->uploadfile($auth_resource);
+        $authResource = $this->uploadfile($auth_resource, $userId, 2);
 
         $ass_resource = $request['ass_resource'];
-        $assResource = $this->uploadfile($ass_resource);
+        $assResource = $this->uploadfile($ass_resource, $userId, 3);
 
         $contract_auth = $request['contract_auth'];
-        $contractAuth = $this->uploadfile($contract_auth);
+        $contractAuth = $this->uploadfile($contract_auth, $userId, 4);
 
         $media_icon = $request['media_icon'];
-        $mediaIcon = $this->uploadfile($media_icon);
+        $mediaIcon = $this->uploadfile($media_icon, $userId, 5);
 
         $profile = new Profile();
         $profile->user_id = $userId;
@@ -476,13 +476,13 @@ class ProfileController extends Controller
         }
     }
 
-    public function uploadfile($file, $authuserId = 0, $type_id = 6){
+    public function uploadfile($file, $authuserId, $type_id = 6){
         $a = array();
         if(!empty($file)) {
             $fileName = $file->getClientOriginalName();
-            $fileOriginalDir = "photos/autheditor/profiles/original";
-            $fileThumbsDir = "photos/autheditor/profiles/thumbs";
-            $fileDir = "photos/autheditor/profiles";
+            $fileOriginalDir = "photos/profiles/autheditors/".$authuserId."/original";
+            $fileThumbsDir = "photos/profiles/autheditors/".$authuserId."/thumbs";
+            $fileDir = "photos/profiles/autheditors/".$authuserId;
 
             $file->move($fileDir, $fileName);
 //          $file->move($fileThumbsDir, $fileName);
@@ -496,9 +496,9 @@ class ProfileController extends Controller
 
 //          $cell_img_size_thumbs = GetImageSize($imageThumbsLink); // need to caculate the file width and height to make the image same
             $cell_img_size = GetImageSize($imageLink); // need to caculate the file width and height to make the image same
-            $image = Image::make(sprintf('photos/autheditor/profiles/%s', $file->getClientOriginalName()))->resize(800, (int)((800 * $cell_img_size[1]) / $cell_img_size[0]))->save();
-            $imageThumbs = Image::make(sprintf('photos/autheditor/profiles/thumbs/%s', $file->getClientOriginalName()))->resize(100, (int)((100 *  $cell_img_size[1]) / $cell_img_size[0]))->save();
-            $imageOriginal = Image::make(sprintf('photos/autheditor/profiles/original/%s', $file->getClientOriginalName()))->save();
+            $image = Image::make(sprintf('photos/profiles/autheditors/'.$authuserId.'/%s', $file->getClientOriginalName()))->resize(800, (int)((800 * $cell_img_size[1]) / $cell_img_size[0]))->save();
+            $imageThumbs = Image::make(sprintf('photos/profiles/autheditors/'.$authuserId.'/thumbs/%s', $file->getClientOriginalName()))->resize(100, (int)((100 *  $cell_img_size[1]) / $cell_img_size[0]))->save();
+            $imageOriginal = Image::make(sprintf('photos/profiles/autheditors/'.$authuserId.'/original/%s', $file->getClientOriginalName()))->save();
 
             $resource = new Resource();
             $resource->name = $fileName;
