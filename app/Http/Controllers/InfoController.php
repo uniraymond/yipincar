@@ -194,8 +194,11 @@ class InfoController extends Controller
 
         if($category != 3) {
             $articles = $articles ->where('articles.category_id', '=', $category);
-        } else
-            $articles = $articles ->where('articles.top', '=', 0);
+        } else {
+            $articles = $articles ->where('articles.top', '=', 0)
+                ->where('articles.category_id', '!=', 13);
+
+        }
 
         if($page != 1 && $lastid && $lastid > 0)
             $articles = $articles->where('articles.id', '<=', $lastid);
@@ -287,6 +290,7 @@ class InfoController extends Controller
                     , 'articles.created_at' , 'resources.link as resourceLink', 'resources.name as resourceName', 'users.name as userName')
                 ->where('articles.published', '=', 1)
                 ->where('articles.banned', '=', 0)
+                ->where('articles.category_id', '!=', 13)
                 ->where('article_tags.tag_id', '=', $tagid)
                 ->whereNotIn('articles.id', $exArray)
                 ->orderBy('articles.created_at', 'desc')
