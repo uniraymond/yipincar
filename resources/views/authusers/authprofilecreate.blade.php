@@ -64,7 +64,7 @@
                                 {!! Form::label('proveimage', '证件照片', array('class'=>'col-md-2')) !!}
                                 @if ($errors->has('proveimage'))
                                     <span class="help-block">
-                                        <strong>{{ $errors->first('proveimage') ? '图片不能为空' : '' }}</strong>
+                                        <strong>{{ $errors->first('proveimage') }}</strong>
                                     </span>
                                 @endif
                                 {!! Form::file('proveimage', '', array('class'=>'col-md-10 form-control-file form-control', 'id'=>'proveimage', 'required'=>'required')) !!}
@@ -100,7 +100,7 @@
 
                             @if ($errors->has('mailbox'))
                                 <span class="help-block">
-                                    <strong>{{ $errors->first('mailbox') ? '图片不能为空' : '' }}</strong>
+                                    <strong>{{ $errors->first('mailbox') }}</strong>
                                 </span>
                             @endif
                             {{--</div>--}}
@@ -115,7 +115,7 @@
 
                             @if ($errors->has('cellphone'))
                                 <span class="help-block">
-                                    <strong>{{ $errors->first('cellphone') ? '图片不能为空' : '' }}</strong>
+                                    <strong>{{ $errors->first('cellphone')  }}</strong>
                                 </span>
                             @endif
                             {{--</div>--}}
@@ -142,7 +142,7 @@
                             {!! Form::label('contract_auth', '合同授权书', array('class'=>'col-md-2')) !!}
                             @if ($errors->has('contract_auth'))
                                 <span class="help-block">
-                                    <strong>{{ $errors->first('contract_auth') ? '图片不能为空' : '' }}</strong>
+                                    <strong>{{ $errors->first('contract_auth') ?  $errors->first('contract_auth')  : '' }}</strong>
                                 </span>
                             @endif
 
@@ -199,12 +199,12 @@
                             <div class="col-md-3">
                                 {!! Form::text('weixin_public_id', '', array('class'=>'col-md-6 form-control', 'placeholder' => '微信公众号')) !!}
                             </div>
-                        </div>
-                        @if ($errors->has('weixin_public_id'))
-                            <span class="help-block">
+                            @if ($errors->has('weixin_public_id'))
+                                <span class="help-block">
                                 <strong>{{ $errors->first('weixin_public_id') }}</strong>
                             </span>
-                        @endif
+                            @endif
+                        </div>
 
                         <div class="clearfix formgroup"  style="margin-bottom: 55px">
                             {!! Form::label('media_name', '自媒体名称', array('class'=>'col-md-2')) !!}
