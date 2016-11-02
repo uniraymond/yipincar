@@ -27,7 +27,7 @@
         var width = document.body.scrollWidth;
 //        jQuery('.content p img').width(width > 800 ? 800 *0.9 : width);
 //        jQuery('.article-preview').width(width > 800 ? 800 *0.9 : width);
-        jQuery('.content p img').width(width);
+        jQuery('.content p img').width(width -30);
         jQuery('.article-preview').width(width -30);
 
     });
