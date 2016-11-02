@@ -76,12 +76,13 @@
                             {!! Form::label('proveimage', '证件照片', array('class'=>'col-md-2')) !!}
                             @if ($errors->has('proveimage'))
                                 <span class="help-block">
-                                    <strong>{{ $errors->first('proveimage') ? '图片不能为空' : '' }}</strong>
+                                    <strong>{{ $errors->first('proveimage') }}</strong>
                                 </span>
                             @endif
                             {!! Form::file('proveimage', '', array('class'=>'col-md-10 form-control-file form-control', 'id'=>'proveimage', 'required'=>'required')) !!}
                             <img id="proveimage_image" width="100" src="{{ $profile->prove_resource }}"/>
                             <div class="clearfix"></div>
+
                         </div>
 
                         <div class="clearfix formgroup"  style="margin-bottom: 55px">
@@ -100,6 +101,12 @@
                                     @endforeach
                                 </select>
                             </div>
+
+                            @if ($errors->has('city_id'))
+                                <span class="help-block">
+                                        <strong>{{ $errors->first('city_id') }}</strong>
+                                    </span>
+                            @endif
                         </div>
 
                         <div class="clearfix formgroup"  style="margin-bottom: 55px">
@@ -146,7 +153,7 @@
                             {{--<div class="col-md-12">--}}
                             @if ($errors->has('ass_resource'))
                                 <span class="help-block">
-                                    <strong>{{ $errors->first('ass_resource') ? '图片不能为空' : '' }}</strong>
+                                    <strong>{{ $errors->first('ass_resource') }}</strong>
                                 </span>
                             @endif
                             {!! Form::file('ass_resource', '', array('class'=>'col-md-12 form-control-file form-control', 'id'=>'ass_resource')) !!}
@@ -160,7 +167,7 @@
                             {{--<div class="col-md-12">--}}
                             @if ($errors->has('contract_auth'))
                                 <span class="help-block">
-                                    <strong>{{ $errors->first('contract_auth') ? '图片不能为空' : '' }}</strong>
+                                    <strong>{{ $errors->first('contract_auth') }}</strong>
                                 </span>
                             @endif
                             {!! Form::file('contract_auth', '', array('class'=>'col-md-12 form-control-file form-control', 'id'=>'contract_auth', 'required'=>'required')) !!}
@@ -225,7 +232,7 @@
                             {{--<div class="col-md-12">--}}
                             @if ($errors->has('media_icon'))
                                 <span class="help-block">
-                                    <strong>{{ $errors->first('media_icon') ? '自媒体头像' : '' }}</strong>
+                                    <strong>{{ $errors->first('media_icon') }}</strong>
                                 </span>
                             @endif
                             {!! Form::file('media_icon', '', array('class'=>'col-md-12 form-control-file form-control', 'id'=>'media_icon', 'required'=>'required')) !!}

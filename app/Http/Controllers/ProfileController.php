@@ -343,7 +343,7 @@ class ProfileController extends Controller
     public function authupdate(Request $request, $userId)
     {
 
-        $validator = $this->validator($request->all(), $type = 'authuser');
+        $validator = $this->validator($request->all(), $type = 'authuseredit');
 
         if ($validator->fails()) {
             $this->throwValidationException(
@@ -424,6 +424,25 @@ class ProfileController extends Controller
             case 'authuser':
                 return Validator::make($data, [
                     'name' => 'required',
+                    'proveimage' => 'required',
+                    'city_id' => 'required|not_in:0',
+                    'ass_resource' => 'required',
+                    'contract_auth' => 'required',
+                    'media_icon' => 'required',
+                    'mediatype' => 'required',
+                    'prove_number' => 'required',
+                    'mailbox' => 'required|email',
+                    'weixin_public_id' => 'required',
+                    'media_name' => 'required',
+                    'cellphone' => 'required|min:11|max:14',
+                    'about_self' => 'required|min:4|max:24',
+                    'confirmterm' => 'required'
+                ], $this->messages($type));
+                break;
+            case 'authuseredit':
+                return Validator::make($data, [
+                    'name' => 'required',
+                    'city_id' => 'required|not_in:0',
                     'mediatype' => 'required',
                     'prove_number' => 'required',
                     'mailbox' => 'required|email',
@@ -452,6 +471,7 @@ class ProfileController extends Controller
                     'name.max' => '名字太长了',
                 ];
                 break;
+            case 'authuseredit':
             case 'authuser':
                 return [
                     'name.required' => '请填写名字',
@@ -467,7 +487,12 @@ class ProfileController extends Controller
                     'about_self.required' => '请填写自媒体简介',
                     'about_self.min' => '自媒体简介最少2个字',
                     'about_self.max' => '自媒体简介最多12个字',
-                    'confirmterm.required'=>'需要同意用户协议'
+                    'confirmterm.required'=>'需要同意用户协议',
+                    'proveimage.required' => '请上传证件照片',
+                    'city_id.not_in'=>'请选择所在地城市',
+                    'ass_resource.required' => '请上传组织机构代码证',
+                    'contract_auth.required' => '请上传合同授权书',
+                    'media_icon.required' => '请上传自媒体头像'
                 ];
                 break;
         }

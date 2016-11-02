@@ -101,6 +101,11 @@
                                     @endforeach
                                 </select>
                             </div>
+                            @if ($errors->has('city_id'))
+                                <span class="help-block">
+                                        <strong>{{ $errors->first('city_id') }}</strong>
+                                    </span>
+                            @endif
                         </div>
 
                         <div class="clearfix formgroup"  style="margin-bottom: 55px">
@@ -154,7 +159,7 @@
                             {!! Form::label('contract_auth', '合同授权书', array('class'=>'col-md-2')) !!}
                             @if ($errors->has('contract_auth'))
                                 <span class="help-block">
-                                    <strong>{{ $errors->first('contract_auth') ?  $errors->first('contract_auth')  : '' }}</strong>
+                                    <strong>{{ $errors->first('contract_auth') }}</strong>
                                 </span>
                             @endif
 
@@ -170,7 +175,7 @@
                             {!! Form::label('ass_resource', '组织机构代码证', array('class'=>'col-md-2')) !!}
                             @if ($errors->has('ass_resource'))
                                 <span class="help-block">
-                                    <strong>{{ $errors->first('ass_resource') ? '图片不能为空' : '' }}</strong>
+                                    <strong>{{ $errors->first('ass_resource') }}</strong>
                                 </span>
                             @endif
                             {!! Form::file('ass_resource', '', array('class'=>'col-md-12 form-control-file form-control', 'id'=>'ass_resource', 'required'=>'required')) !!}
@@ -235,7 +240,7 @@
                             {!! Form::label('media_icon', '自媒体头像', array('class'=>'col-md-2')) !!}
                             @if ($errors->has('media_icon'))
                                 <span class="help-block">
-                                    <strong>{{ $errors->first('media_icon') ? '自媒体头像' : '' }}</strong>
+                                    <strong>{{ $errors->first('media_icon') }}</strong>
                                 </span>
                             @endif
                             {!! Form::file('media_icon', '', array('class'=>'col-md-12 form-control-file form-control', 'id'=>'media_icon', 'required'=>'required')) !!}

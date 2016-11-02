@@ -59,6 +59,12 @@
                             <div class="col-md-11">
                                 <textarea class="col-lg-12 col-md-12 col-sm-12 form-control" type="text" id="description" name="description" placeholder="限140字" maxlength="140"></textarea>
                             </div>
+
+                            @if ($errors->has('description'))
+                                <span class="help-block">
+                                        <strong>{{ $errors->first('description') }}</strong>
+                                    </span>
+                            @endif
                         </div><br>
 
                         <div>
@@ -74,6 +80,11 @@
                         <div class="{{ isset($errors) && $errors->has('title') ? 'has-error clearfix' : 'clearfix' }}" style="margin-bottom: 0px" >
                             {{--<label class="col-lg-1 col-md-1 col-sm-1">标题</label>--}}
                             <div class="col-md-12">
+                                @if ($errors->has('title'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('title') }}</strong>
+                                    </span>
+                                @endif
                                 <input class="col-lg-12 col-md-12 col-sm-12 form-control" type="text" id="title" name="title" required maxlength="30"  placeholder="标题, 限30字"/>
                                 @if ($errors->has('title'))
                                     <span class="help-block">
