@@ -107,17 +107,17 @@ class UserController extends Controller
         File::makeDirectory($paththumbs, $mode = 0777, true, true);
 
         if($roleId == 6) {
-            $path = public_path().'/photos/profiles/autheditor/' . $new_user->id;
-            $pathoriginal = public_path().'/photos/profiles/autheditor/' . $new_user->id.'/original';
-            $paththumbs = public_path().'/photos/profiles/autheditor/' . $new_user->id.'/thumbs';
+            $pathprofile = public_path().'/photos/profiles/autheditor/' . $new_user->id;
+            $pathoriginalprofile = public_path().'/photos/profiles/autheditor/' . $new_user->id.'/original';
+            $paththumbsprofile = public_path().'/photos/profiles/autheditor/' . $new_user->id.'/thumbs';
         } else {
-            $path = public_path().'/photos/profiles/users/' . $new_user->id;
-            $pathoriginal = public_path().'/photos/profiles/users/' . $new_user->id.'/original';
-            $paththumbs = public_path().'/photos/profiles/users/' . $new_user->id.'/thumbs';
+            $pathprofile = public_path().'/photos/profiles/users/' . $new_user->id;
+            $pathoriginalprofile = public_path().'/photos/profiles/users/' . $new_user->id.'/original';
+            $paththumbsprofile = public_path().'/photos/profiles/users/' . $new_user->id.'/thumbs';
         }
-        File::makeDirectory($path, $mode = 0777, true, true);
-        File::makeDirectory($pathoriginal, $mode = 0777, true, true);
-        File::makeDirectory($paththumbs, $mode = 0777, true, true);
+        File::makeDirectory($pathprofile, $mode = 0777, true, true);
+        File::makeDirectory($pathoriginalprofile, $mode = 0777, true, true);
+        File::makeDirectory($paththumbsprofile, $mode = 0777, true, true);
 
         $request->session()->flash('status', '成功创建用户: '. $new_user->name);
         return redirect('admin/user');
