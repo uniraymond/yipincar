@@ -147,13 +147,12 @@ class AuthController extends Controller
     }
 
     public function getLogout(){
-        dd('logouthere');
        if (Auth::user()->hasAnyRole(['auth_editor'])) {
            Auth::logout();
            return redirect()->route('authlogin');
        } else {
            Auth::logout();
-           return redirect()->route('login');
+           return redirect()->route('adminlogin');
        }
     }
     
