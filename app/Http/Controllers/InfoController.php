@@ -167,7 +167,7 @@ class InfoController extends Controller
 //                ->leftJoin('resources', 'resources.id', '=', 'article_resources.resource_id')
             ->leftJoin('resources', function ($resources) {
                 $resources ->on('resources.id', '=', 'article_resources.resource_id')
-                    ->where('article_resources.resource_id', '=', DB::raw("(select max(`id`) from article_resources)"));
+                    ->where('article_resources.id', '=', DB::raw("(select max(`id`) from article_resources)"));
             })
                 ->leftJoin('profiles', 'articles.created_by', '=', 'profiles.user_id')
                 ->join('article_types', 'articles.type_id', '=', 'article_types.id')
