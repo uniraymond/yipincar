@@ -118,32 +118,32 @@
                             </div>
                         </div>
 
-                        <div class="clearfix">
-                            <div class="col-md-3" style="margin-bottom: 55px">
-                                专注领域：
-                            </div>
-                            <div class="col-md-6">
-                                {{ $profile->targetArea }}
-                            </div>
-                        </div>
+                        {{--<div class="clearfix">--}}
+                            {{--<div class="col-md-3" style="margin-bottom: 55px">--}}
+                                {{--专注领域：--}}
+                            {{--</div>--}}
+                            {{--<div class="col-md-6">--}}
+                                {{--{{ $profile->targetArea }}--}}
+                            {{--</div>--}}
+                        {{--</div>--}}
 
-                        <div class="clearfix">
-                            <div class="col-md-3" style="margin-bottom: 55px">
-                                个人网站：
-                            </div>
-                            <div class="col-md-6">
-                                {{ $profile->self_url }}
-                            </div>
-                        </div>
+                        {{--<div class="clearfix">--}}
+                            {{--<div class="col-md-3" style="margin-bottom: 55px">--}}
+                                {{--个人网站：--}}
+                            {{--</div>--}}
+                            {{--<div class="col-md-6">--}}
+                                {{--{{ $profile->self_url }}--}}
+                            {{--</div>--}}
+                        {{--</div>--}}
 
-                        <div class="clearfix">
-                            <div class="col-md-3" style="margin-bottom: 55px">
-                                辅助材料：
-                            </div>
-                            <div class="col-md-6">
-                                {{ $profile->icon_uri }}
-                            </div>
-                        </div>
+                        {{--<div class="clearfix">--}}
+                            {{--<div class="col-md-3" style="margin-bottom: 55px">--}}
+                                {{--辅助材料：--}}
+                            {{--</div>--}}
+                            {{--<div class="col-md-6">--}}
+                                {{--{{ $profile->icon_uri }}--}}
+                            {{--</div>--}}
+                        {{--</div>--}}
 
                         <div class="clearfix">
                             <div class="col-md-3" style="margin-bottom: 55px">
