@@ -423,7 +423,10 @@ class InfoController extends Controller
         $articles = Article::join('collections', 'collections.article_id', '=', 'articles.id')
             ->join('categories', 'articles.category_id', '=', 'categories.id')
             ->leftJoin('article_resources', 'articles.id', '=', 'article_resources.article_id')
-            ->leftJoin('resources', 'resources.id', '=', 'article_resources.resource_id')
+//            ->leftJoin('resources', 'resources.id', '=', 'article_resources.resource_id')
+            ->leftJoin('resources', function ($resources) {
+                $resources ->where('resources.id', '=', 'article_resources.resource_id') ->take(1);
+            })
             ->leftJoin('profiles', 'articles.created_by', '=', 'profiles.user_id')
             ->join('article_types', 'articles.type_id', '=', 'article_types.id')
             ->join('users', 'users.id', '=', 'articles.created_by')
