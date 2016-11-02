@@ -137,15 +137,15 @@
 
 
                         <div class="clearfix"></div>
-                        @if( Auth::user()->hasAnyRole(['super_admin', 'admin', 'chef_editor', 'main_editor', 'adv_editor']) && $article->published == 4)
-                           <div>
-                               <div id="settop_error" class="alert-danger"></div>
-                               <div class="clearfix"></div>
-                               <label class="col-md-3 published_label" for="top">
-                                   <input id="settop" class="top" type="checkbox" name="top" {{ $article->top ? 'checked' : '' }} /> 置顶
-                               </label>
-                           </div>
-                        @endif
+                        {{--@if( Auth::user()->hasAnyRole(['super_admin', 'admin', 'chef_editor', 'main_editor', 'adv_editor']) && $article->published == 4)--}}
+                           {{--<div>--}}
+                               {{--<div id="settop_error" class="alert-danger"></div>--}}
+                               {{--<div class="clearfix"></div>--}}
+                               {{--<label class="col-md-3 published_label" for="top">--}}
+                                   {{--<input id="settop" class="top" type="checkbox" name="top" {{ $article->top ? 'checked' : '' }} /> 置顶--}}
+                               {{--</label>--}}
+                           {{--</div>--}}
+                        {{--@endif--}}
                        </div>
                        {!! Form::token() !!}
                        <div class=" col-lg-12 col-md-12 col-sm-12" style="margin-top: 55px; margin-bottom: 55px">
