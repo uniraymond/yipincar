@@ -169,7 +169,7 @@ class ArticleController extends Controller
     $article = Article::find($id);
     $authuser = $request->user();
 
-    $categories = Category::where('last_category', 1)->get();
+    $categories = Category::where('category_id','<>', 0)->get();
     $types = ArticleTypes::all();
     $tags = Tags::all();
     $currentAction = false;
