@@ -34,6 +34,11 @@
                                     <input type="radio" value="2" name="mediatype" />组织机构自媒体
                                 </label>
                             </div>
+                            @if ($errors->has('mediatype'))
+                                <span class="help-block">
+                                        <strong>{{ $errors->first('mediatype') }}</strong>
+                                    </span>
+                            @endif
                         </div>
 
                         <div class="clearfix formgroup"  style="margin-bottom: 55px">

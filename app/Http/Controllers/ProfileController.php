@@ -424,6 +424,7 @@ class ProfileController extends Controller
             case 'authuser':
                 return Validator::make($data, [
                     'name' => 'required',
+                    'mediatype' => 'required',
                     'prove_number' => 'required',
                     'mailbox' => 'required|email',
                     'weixin_public_id' => 'required',
@@ -454,16 +455,15 @@ class ProfileController extends Controller
             case 'authuser':
                 return [
                     'name.required' => '请填写名字',
+                    'mediatype.required' => '请选择自媒体类型',
                     'cellphone.required' => '电话是必填的',
                     'cellphone.max' => '电话号码太长',
                     'cellphone.min' => '电话号码太短',
-
                     'prove_number.required' => '请填写证件号码',
                     'mailbox.required' => '请填写电子邮件地址',
                     'mailbox.email' => '请填写正确电子邮件格式',
                     'weixin_public_id.required' => '请填写微信公众号',
                     'media_name.required' => '请填写媒体名',
-
                     'about_self.required' => '请填写自媒体简介',
                     'about_self.min' => '自媒体简介最少2个字',
                     'about_self.max' => '自媒体简介最多12个字',
@@ -494,7 +494,7 @@ class ProfileController extends Controller
 //          $cell_img_size_thumbs = GetImageSize($imageThumbsLink); // need to caculate the file width and height to make the image same
                 $cell_img_size = GetImageSize($imageLink); // need to caculate the file width and height to make the image same
                 $image = Image::make(sprintf('photos/profiles/autheditors/'.$authuserId.'/%s', $file->getClientOriginalName()))->save();
-                $imageThumbs = Image::make(sprintf('photos/profiles/autheditors/'.$authuserId.'/thumbs/%s', $file->getClientOriginalName()))->resize(100, (int)((100 *  $cell_img_size[1]) / $cell_img_size[0]))->save();
+                $imageThumbs = Image::make(sprintf('photos/profiles/autheditors/'.$authuserId.'/thumbs/%s', $file->getClientOriginalName()))->resize(300, (int)((300 *  $cell_img_size[1]) / $cell_img_size[0]))->save();
                 $imageOriginal = Image::make(sprintf('photos/profiles/autheditors/'.$authuserId.'/original/%s', $file->getClientOriginalName()))->save();
             } else {
                 $fileDir = "photos/profiles/autheditors/".$authuserId;
