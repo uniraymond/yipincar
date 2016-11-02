@@ -15,7 +15,7 @@
                     @if ( Auth::user()->hasAnyRole(['super_admin', 'admin','chef_editor', 'main_editor', 'adv_editor', 'editor']) )
                         {{ link_to('admin/article/create', '新建', ['class'=>'btn btn-second']) }}
                     @endif
-                    <input class="btn btn-default" type="submit" value="屏蔽" />
+                    <input class="btn btn-default" type="submit" value="提交" />
                 </div>
 
                 {{--flash alert--}}
@@ -113,7 +113,7 @@
                             @if ( Auth::user()->hasAnyRole(['super_admin', 'admin','chef_editor', 'main_editor', 'adv_editor', 'editor']) )
                                 {{ link_to('admin/article/create', '新建', ['class'=>'btn btn-second']) }}
                             @endif
-                            <input class="btn btn-default" type="submit" value="屏蔽" />
+                            <input class="btn btn-default" type="submit" value="提交" />
                         </div>
                     @endif
                 @else
