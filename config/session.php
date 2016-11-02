@@ -33,7 +33,7 @@ return [
 
     'expire_on_close' => false,
 
-    'expired-session-redirect' => url('authlogin'),
+    'expired_session_redirect' => '/authlogin',
     /*
     |--------------------------------------------------------------------------
     | Session Encryption

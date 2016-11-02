@@ -39,7 +39,8 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://yipincar/'),
+    'url' => env('APP_URL', 'http://topautochina.com/'),
+//    'url' => env('APP_URL', 'http://yipin/'),
 
     /*
     |--------------------------------------------------------------------------
