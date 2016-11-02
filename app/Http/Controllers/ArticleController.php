@@ -169,13 +169,13 @@ class ArticleController extends Controller
     $article = Article::find($id);
     $authuser = $request->user();
 
-    $categories = Category::where('category_id','<>', 0)->get();
+    $categories =  Category::where('last_category', 1)->get();
     $types = ArticleTypes::all();
     $tags = Tags::all();
     $currentAction = false;
 
     if ($article->created_by == $authuser->id || $authuser->hasAnyRole(['super_admin', 'admin', 'chef_editor', 'main_editor', 'adv_editor'])) {
-      $categories = Category::where('category_id', '<>', 0)->orderBy('category_id')->get();
+      $categories = Category::where('last_category', 1)->orderBy('category_id')->get();
 
       $tags = Tags::all();
       $articletypes = ArticleTypes::all();
