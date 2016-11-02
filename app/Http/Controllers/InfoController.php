@@ -165,7 +165,7 @@ class InfoController extends Controller
         return Article::join('categories', 'articles.category_id', '=', 'categories.id')
                 ->leftJoin('article_resources', 'articles.id', '=', 'article_resources.article_id')
                 ->leftJoin('resources', 'resources.id', '=', 'article_resources.resource_id')
-                ->join('profiles', 'articles.created_by', '=', 'profiles.user_id')
+                ->leftJoin('profiles', 'articles.created_by', '=', 'profiles.user_id')
                 ->join('article_types', 'articles.type_id', '=', 'article_types.id')
                 ->join('users', 'users.id', '=', 'articles.created_by')
                 ->select('articles.id', 'articles.title', 'articles.description', 'articles.authname', 'categories.name as categoryName', 'articles.category_id', 'article_types.name as articletypeName'
