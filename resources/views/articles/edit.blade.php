@@ -27,15 +27,15 @@
                                     @if(Auth::user()->hasAnyRole([ 'auth_editor']))
                                         @foreach($categories as $category)
                                             @if($category->id == 5 || $category->id == 6 || $category->id == 7)
-                                                <option value="{{$category->id}}">
+                                                <option value="{{$category->id}}" {{ $article->category_id == $category->id ? 'selected' : '' }}>
                                                     {{$category->name}}
                                                 </option>
                                             @endif
                                         @endforeach
                                     @else
                                         @foreach($categories as $category)
-                                            <option value="{{$category->id}}">
-                                                {{$category->name}}
+                                            <option value="{{$category->id}}" {{ $article->category_id == $category->id ? 'selected' : '' }}>
+                                                {{$category->name}} {{$article->category_id}}
                                             </option>
                                         @endforeach
                                     @endif
