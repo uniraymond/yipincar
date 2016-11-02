@@ -35,7 +35,7 @@
                                     @else
                                         @foreach($categories as $category)
                                             <option value="{{$category->id}}" {{ $article->category_id == $category->id ? 'selected' : '' }}>
-                                                {{$category->name}} {{$article->category_id}}
+                                                {{$category->name}}
                                             </option>
                                         @endforeach
                                     @endif
