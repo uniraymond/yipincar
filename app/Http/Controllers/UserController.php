@@ -82,8 +82,8 @@ class UserController extends Controller
         $new_user = new User();
         $new_user->name = $request['name'];
         $new_user->email = $request['email'];
-        $new_user->secret = bcrypt($request['password']);
-        $new_user->password = md5($request['password']);
+        $new_user->password = bcrypt($request['password']);
+        $new_user->secret = md5($request['password']);
         $new_user->status_id = $request['status_id'];
         $new_user->pre_status_id = $request['status_id'];
         if($request['status_id'] == 4) {
