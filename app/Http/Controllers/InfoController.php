@@ -917,7 +917,8 @@ class InfoController extends Controller
     public function authLogin(Request $request) {
         $authName = $request ->get('authname');
         $userid = $request ->get('userid');
-        $authid = $request ->get('authid');
+        $authid = $request ->get('id');
+        $name = $request ->get('id');
         $uid = $request ->get('uid');
 
         if($userid) {
