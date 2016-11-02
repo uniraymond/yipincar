@@ -171,6 +171,7 @@
     var editor_config = {
         language:'zh_CN',
         height: "350",
+
         path_absolute : "{{ URL::to('/') }}/",
         selector: "textarea#content",
         plugins : 'link image imagetools preview',
