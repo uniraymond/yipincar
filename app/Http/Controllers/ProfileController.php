@@ -327,7 +327,7 @@ class ProfileController extends Controller
             $profile->media_icon = $mediaIcon['path'];
         }
 
-        $profile->targetArea = $request['targetArea'];
+//        $profile->targetArea = $request['targetArea'];
         $profile->weixin_public_id = $request['weixin_public_id'];
         $profile->weixin_public_id = $request['weixin_public_id'];
         $profile->media_name = $request['media_name'];
@@ -390,7 +390,7 @@ class ProfileController extends Controller
         if (count($mediaIcon)>0) {
             $profile->media_icon = $mediaIcon['path'];
         }
-        $profile->targetArea = $request['targetArea'];
+        // $profile->targetArea = $request['targetArea'];
         $profile->weixin_public_id = $request['weixin_public_id'];
         $profile->weixin_public_id = $request['weixin_public_id'];
         $profile->media_name = $request['media_name'];
@@ -401,7 +401,7 @@ class ProfileController extends Controller
 //        return redirect('admin/user/');
         return redirect('/');
     }
-    
+
     /**
      * Get a validator for an incoming registration request.
      *
@@ -454,9 +454,9 @@ class ProfileController extends Controller
             case 'authuser':
                 return [
                     'name.required' => '请填写名字',
-                    'phone.required' => '电话是必填的',
-                    'phone.max' => '电话号码太长',
-                    'phone.min' => '电话号码太短',
+                    'cellphone.required' => '电话是必填的',
+                    'cellphone.max' => '电话号码太长',
+                    'cellphone.min' => '电话号码太短',
 
                     'prove_number.required' => '请填写证件号码',
                     'mailbox.required' => '请填写电子邮件地址',

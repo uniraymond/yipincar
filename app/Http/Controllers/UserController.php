@@ -99,21 +99,21 @@ class UserController extends Controller
             $new_user->roles()->attach($roleId);
         }
 
-        $path = public_path().'/photos/' . $request['name'];
+        $path = public_path().'/photos/' . $new_user->id;
         File::makeDirectory($path, $mode = 0777, true, true);
-        $pathoriginal = public_path().'/photos/' . $request['name'].'/original';
+        $pathoriginal = public_path().'/photos/' . $new_user->id.'/original';
         File::makeDirectory($pathoriginal, $mode = 0777, true, true);
-        $paththumbs = public_path().'/photos/' . $request['name'].'/thumbs';
+        $paththumbs = public_path().'/photos/' . $new_user->id.'/thumbs';
         File::makeDirectory($paththumbs, $mode = 0777, true, true);
 
         if($roleId == 6) {
-            $path = public_path().'/photos/profiles/autheditor/' . $request['name'];
-            $pathoriginal = public_path().'/photos/profiles/autheditor/' . $request['name'].'/original';
-            $paththumbs = public_path().'/photos/profiles/autheditor/' . $request['name'].'/thumbs';
+            $path = public_path().'/photos/profiles/autheditor/' . $new_user->id;
+            $pathoriginal = public_path().'/photos/profiles/autheditor/' . $new_user->id.'/original';
+            $paththumbs = public_path().'/photos/profiles/autheditor/' . $new_user->id.'/thumbs';
         } else {
-            $path = public_path().'/photos/profiles/users/' . $request['name'];
-            $pathoriginal = public_path().'/photos/profiles/users/' . $request['name'].'/original';
-            $paththumbs = public_path().'/photos/profiles/users/' . $request['name'].'/thumbs';
+            $path = public_path().'/photos/profiles/users/' . $new_user->id;
+            $pathoriginal = public_path().'/photos/profiles/users/' . $new_user->id.'/original';
+            $paththumbs = public_path().'/photos/profiles/users/' . $new_user->id.'/thumbs';
         }
         File::makeDirectory($path, $mode = 0777, true, true);
         File::makeDirectory($pathoriginal, $mode = 0777, true, true);
