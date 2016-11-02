@@ -163,11 +163,11 @@ class InfoController extends Controller
 
     private function getArticleListContent() {
         return Article::join('categories', 'articles.category_id', '=', 'categories.id')
-//                ->leftJoin('article_resources', 'articles.id', '=', 'article_resources.article_id')
-            ->leftJoin('article_resources', function ($resources) {
-                $resources ->on('articles.id', '=', 'article_resources.article_id');
-                    ->where('article_resources.id', '=', DB::raw("(select max(`id`) from article_resources)"));
-            })
+                ->leftJoin('article_resources', 'articles.id', '=', 'article_resources.article_id')
+//            ->leftJoin('article_resources', function ($resources) {
+//                $resources ->on('articles.id', '=', 'article_resources.article_id')
+//                    ->where('article_resources.id', '=', DB::raw("(select max(`id`) from article_resources)"));
+//            })
                 ->leftJoin('resources', 'resources.id', '=', 'article_resources.resource_id')
 
                 ->leftJoin('profiles', 'articles.created_by', '=', 'profiles.user_id')
