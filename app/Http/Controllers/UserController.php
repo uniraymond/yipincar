@@ -64,10 +64,6 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-//        $data['name'] = $request['name'];
-//        $data['email'] = $request['email'];
-//        $data['password'] = $request['password'];
-//        $data['roles'] = $request['roles'];
         $valideType = 'new';
         $validator = $this->validator($request->all(), $valideType);
 
@@ -106,21 +102,18 @@ class UserController extends Controller
         $paththumbs = public_path().'/photos/' . $new_user->id.'/thumbs';
         File::makeDirectory($paththumbs, $mode = 0777, true, true);
 
-        if($roleId == 6) {
-            $pathprofile = public_path().'/photos/profiles/autheditor/' . $new_user->id;
-            $pathoriginalprofile = public_path().'/photos/profiles/autheditor/' . $new_user->id.'/original';
-            $paththumbsprofile = public_path().'/photos/profiles/autheditor/' . $new_user->id.'/thumbs';
-        } else {
-            $pathprofile = public_path().'/photos/profiles/users/' . $new_user->id;
-            $pathoriginalprofile = public_path().'/photos/profiles/users/' . $new_user->id.'/original';
-            $paththumbsprofile = public_path().'/photos/profiles/users/' . $new_user->id.'/thumbs';
-        }
+        $pathprofile = public_path().'/photos/profiles/users/' . $new_user->id;
+        $pathoriginalprofile = public_path().'/photos/profiles/users/' . $new_user->id.'/original';
+        $paththumbsprofile = public_path().'/photos/profiles/users/' . $new_user->id.'/thumbs';
+
         File::makeDirectory($pathprofile, $mode = 0777, true, true);
         File::makeDirectory($pathoriginalprofile, $mode = 0777, true, true);
         File::makeDirectory($paththumbsprofile, $mode = 0777, true, true);
 
         $request->session()->flash('status', '成功创建用户: '. $new_user->name);
+
         return redirect('admin/user');
+
     }
 
     /**
@@ -629,12 +622,20 @@ class UserController extends Controller
         $user->roles()->attach(Role::where('name', 'auth_editor')->first());
         Auth::attempt(array('phone'=>$user->phone, 'password' => $request['password']), false);
 
-        $path = public_path().'/photos/' . $request['phone'];
+        $path = public_path().'/photos/' . $user->id;
         File::makeDirectory($path, $mode = 0777, true, true);
-        $pathoriginal = public_path().'/photos/' . $request['phone'].'/original';
+        $pathoriginal = public_path().'/photos/' . $user->id.'/original';
         File::makeDirectory($pathoriginal, $mode = 0777, true, true);
-        $paththumbs = public_path().'/photos/' . $request['phone'].'/thumbs';
+        $paththumbs = public_path().'/photos/' . $user->id.'/thumbs';
         File::makeDirectory($paththumbs, $mode = 0777, true, true);
+
+        $pathprofile = public_path().'/photos/profiles/autheditors/' . $user->id;
+        $pathoriginalprofile = public_path().'/photos/profiles/autheditors/' . $user->id.'/original';
+        $paththumbsprofile = public_path().'/photos/profiles/autheditors/' . $user->id.'/thumbs';
+
+        File::makeDirectory($pathprofile, $mode = 0777, true, true);
+        File::makeDirectory($pathoriginalprofile, $mode = 0777, true, true);
+        File::makeDirectory($paththumbsprofile, $mode = 0777, true, true);
 
         return redirect()->to('authprofile/create');
 //        return view('authprofile.create');
