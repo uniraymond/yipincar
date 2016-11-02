@@ -476,26 +476,31 @@ class ProfileController extends Controller
     public function uploadfile($file, $authuserId, $type_id = 6){
         $a = array();
         if(!empty($file)) {
+            $fileType = strtolower($file->getMimeType());
             $fileName = $file->getClientOriginalName();
-            $fileOriginalDir = "photos/profiles/autheditors/".$authuserId."/original";
-            $fileThumbsDir = "photos/profiles/autheditors/".$authuserId."/thumbs";
-            $fileDir = "photos/profiles/autheditors/".$authuserId;
+            if ($fileType == 'image/jpeg' || $fileType == 'image/jpg' || $fileType == 'image/png' || $fileType == 'image/gif') {
+                $fileOriginalDir = "photos/profiles/autheditors/".$authuserId."/original";
+                $fileThumbsDir = "photos/profiles/autheditors/".$authuserId."/thumbs";
+                $fileDir = "photos/profiles/autheditors/".$authuserId;
 
-            $file->move($fileDir, $fileName);
-//          $file->move($fileThumbsDir, $fileName);
-//          $fileOriginal->copy($fileOriginalDir, $fileName);
+                $file->move($fileDir, $fileName);
 
-            $imageOriginalLink = $fileOriginalDir . '/' . $file->getClientOriginalName();
-            $imageThumbsLink = $fileThumbsDir . '/' . $file->getClientOriginalName();
-            $imageLink = $fileDir . '/' . $file->getClientOriginalName();
-            copy($imageLink, $imageThumbsLink);
-            copy($imageLink, $imageOriginalLink);
+                $imageOriginalLink = $fileOriginalDir . '/' . $file->getClientOriginalName();
+                $imageThumbsLink = $fileThumbsDir . '/' . $file->getClientOriginalName();
+                $imageLink = $fileDir . '/' . $file->getClientOriginalName();
+                copy($imageLink, $imageThumbsLink);
+                copy($imageLink, $imageOriginalLink);
 
 //          $cell_img_size_thumbs = GetImageSize($imageThumbsLink); // need to caculate the file width and height to make the image same
-            $cell_img_size = GetImageSize($imageLink); // need to caculate the file width and height to make the image same
-            $image = Image::make(sprintf('photos/profiles/autheditors/'.$authuserId.'/%s', $file->getClientOriginalName()))->resize(800, (int)((800 * $cell_img_size[1]) / $cell_img_size[0]))->save();
-            $imageThumbs = Image::make(sprintf('photos/profiles/autheditors/'.$authuserId.'/thumbs/%s', $file->getClientOriginalName()))->resize(100, (int)((100 *  $cell_img_size[1]) / $cell_img_size[0]))->save();
-            $imageOriginal = Image::make(sprintf('photos/profiles/autheditors/'.$authuserId.'/original/%s', $file->getClientOriginalName()))->save();
+                $cell_img_size = GetImageSize($imageLink); // need to caculate the file width and height to make the image same
+                $image = Image::make(sprintf('photos/profiles/autheditors/'.$authuserId.'/%s', $file->getClientOriginalName()))->save();
+                $imageThumbs = Image::make(sprintf('photos/profiles/autheditors/'.$authuserId.'/thumbs/%s', $file->getClientOriginalName()))->resize(100, (int)((100 *  $cell_img_size[1]) / $cell_img_size[0]))->save();
+                $imageOriginal = Image::make(sprintf('photos/profiles/autheditors/'.$authuserId.'/original/%s', $file->getClientOriginalName()))->save();
+            } else {
+                $fileDir = "photos/profiles/autheditors/".$authuserId;
+                $file->move($fileDir, $fileName);
+                $imageLink = $fileDir . '/' . $file->getClientOriginalName();
+            }
 
             $resource = new Resource();
             $resource->name = $fileName;
