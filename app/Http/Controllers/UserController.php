@@ -518,7 +518,8 @@ class UserController extends Controller
         $authUsers = DB::table('users')
             ->join('user_roles', 'users.id', '=', 'user_roles.user_id')
             ->where('user_roles.role_id', '=', $role_id)
-//            ->paginate(15);
+            ->orderBy('users.id', 'desc')
+//            ->paginate(15)
         ->get();
 
         return view('users/listAutheditor', ['authUsers'=> $authUsers]);
