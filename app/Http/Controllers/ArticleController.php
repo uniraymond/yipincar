@@ -334,34 +334,6 @@ class ArticleController extends Controller
       }
     }
 
-    $files = Resource::all();
-
-    $image_links = array();
-    $image_names = array();
-
-    foreach ($files as $file) {
-      // check there is a record on article resource page.
-      $article_image = ArticleResources::where('article_id', $article->id)->where('resource_id', $file->id)->first();
-
-      $image_links[] = $file->link;
-      $image_names[] = $file->name;
-
-      //check a image in the content and image in resource table
-      if (false !== strpos($article->content, $file->link)) {
-        $hasImage = true;
-        if (count($article_image)) {
-          break;
-        } else {
-          $article->resources()->attach($file->id);
-        }
-        break;
-      }
-
-      if (!$hasImage && $article_image) {
-        $article_image->delete();
-      }
-    }
-
     $authuser = $request->user();
 
       $file = $request->file('images');
@@ -372,8 +344,6 @@ class ArticleController extends Controller
           $fileDir = "photos/".$authuser->id;
 
           $file->move($fileDir, $fileName);
-//          $file->move($fileThumbsDir, $fileName);
-//          $fileOriginal->copy($fileOriginalDir, $fileName);
 
           $imageOriginalLink = $fileOriginalDir . '/' . $file->getClientOriginalName();
           $imageThumbsLink = $fileThumbsDir . '/' . $file->getClientOriginalName();
@@ -381,7 +351,6 @@ class ArticleController extends Controller
           copy($imageLink, $imageThumbsLink);
           copy($imageLink, $imageOriginalLink);
 
-//          $cell_img_size_thumbs = GetImageSize($imageThumbsLink); // need to caculate the file width and height to make the image same
           $cell_img_size = GetImageSize($imageLink); // need to caculate the file width and height to make the image same
 
           $image = Image::make(sprintf('photos/'.$authuser->id.'/%s', $file->getClientOriginalName()))->save();
@@ -393,10 +362,41 @@ class ArticleController extends Controller
           $resource->link = '/' . $imageLink;
           $resource->created_by = $authuser->id;
           $resource->save();
+
+          $oldArticlResource = ArticleResources::where('article_id', $article->id)->delete();
+          
           $articlResource = new ArticleResources();
           $articlResource->article_id = $article->id;
           $articlResource->resource_id = $resource->id;
           $articlResource->save();
+      } else {
+          $files = Resource::all();
+
+          $image_links = array();
+          $image_names = array();
+
+          foreach ($files as $file) {
+              // check there is a record on article resource page.
+              $article_image = ArticleResources::where('article_id', $article->id)->where('resource_id', $file->id)->first();
+
+              $image_links[] = $file->link;
+              $image_names[] = $file->name;
+
+              //check a image in the content and image in resource table
+              if (false !== strpos($article->content, $file->link)) {
+                  $hasImage = true;
+                  if (count($article_image)) {
+                      break;
+                  } else {
+                      $article->resources()->attach($file->id);
+                  }
+                  break;
+              }
+
+              if (!$hasImage && $article_image) {
+                  $article_image->delete();
+              }
+          }
       }
 
     $log['name'] = 'Update Article';
