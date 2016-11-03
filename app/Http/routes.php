@@ -16,7 +16,7 @@ Route::get('/', ['middleware' => 'auth', function () {
 }]);
 
 Route::get('authregister', 'Auth\AuthController@authregister');
-Route::get('login', 'Auth\AuthController@authlogin');
+Route::get('login', 'Auth\AuthController@login');
 Route::get('authlogin', 'Auth\AuthController@authlogin');
 Route::post('postauthlogin', 'UserController@authlogin');
 Route::post('autheditorStore', 'UserController@autheditorStore');

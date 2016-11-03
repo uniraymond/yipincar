@@ -152,7 +152,7 @@ class AuthController extends Controller
            return redirect()->route('authlogin');
        } else {
            Auth::logout();
-           return redirect()->route('adminlogin');
+           return redirect()->route('login');
        }
     }
     
