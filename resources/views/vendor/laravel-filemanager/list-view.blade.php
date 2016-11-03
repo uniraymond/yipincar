@@ -53,17 +53,17 @@
         <a href="javascript:trash('{{ $file_name }}')">
           <i class="fa fa-trash fa-fw"></i>
         </a>
-        @if($type == 'Images')
-        <a href="javascript:cropImage('{{ $file_name }}')">
-          <i class="fa fa-crop fa-fw"></i>
-        </a>
-        <a href="javascript:resizeImage('{{ $file_name }}')">
-          <i class="fa fa-arrows fa-fw"></i>
-        </a>
-        <a href="javascript:notImp()">
-        <i class="fa fa-rotate-left fa-fw"></i>
-        </a>
-        @endif
+        {{--@if($type == 'Images')--}}
+        {{--<a href="javascript:cropImage('{{ $file_name }}')">--}}
+          {{--<i class="fa fa-crop fa-fw"></i>--}}
+        {{--</a>--}}
+        {{--<a href="javascript:resizeImage('{{ $file_name }}')">--}}
+          {{--<i class="fa fa-arrows fa-fw"></i>--}}
+        {{--</a>--}}
+        {{--<a href="javascript:notImp()">--}}
+        {{--<i class="fa fa-rotate-left fa-fw"></i>--}}
+        {{--</a>--}}
+        {{--@endif--}}
       </td>
     </tr>
     @endforeach
