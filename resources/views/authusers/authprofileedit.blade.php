@@ -287,11 +287,11 @@
             jQuery("input[name='mediatype']").change(function(){
                 if ($(this).val() == 1) {
                     $('#ass_resource_upload').hide();
-                    $('#ass_resource_upload input').prop('disabled', true);
+                    $('#ass_resource_upload input').prop({'disabled': true, 'required': false});
                 }
                 if ($(this).val() == 2) {
                     $('#ass_resource_upload').show();
-                    $('#ass_resource_upload input').prop('enabled', true);
+                    $('#ass_resource_upload input').prop({'enabled': true, 'required': true});
                 }
             });
         });

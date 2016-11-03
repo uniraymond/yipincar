@@ -94,7 +94,7 @@ class UserController extends Controller
         foreach($roleIds as $roleId) {
             $new_user->roles()->attach($roleId);
         }
-
+        $old = umask(0);
         $path = public_path().'/photos/' . $new_user->id;
         File::makeDirectory($path, $mode = 0777, true, true);
         $pathoriginal = public_path().'/photos/' . $new_user->id.'/original';
@@ -109,6 +109,7 @@ class UserController extends Controller
         File::makeDirectory($pathprofile, $mode = 0777, true, true);
         File::makeDirectory($pathoriginalprofile, $mode = 0777, true, true);
         File::makeDirectory($paththumbsprofile, $mode = 0777, true, true);
+        umask($old);
 
         $request->session()->flash('status', '成功创建用户: '. $new_user->name);
 
@@ -624,6 +625,7 @@ class UserController extends Controller
         $user->roles()->attach(Role::where('name', 'auth_editor')->first());
         Auth::attempt(array('phone'=>$user->phone, 'password' => $request['password']), false);
 
+        $old = umask(0);
         $path = public_path().'/photos/' . $user->id;
         File::makeDirectory($path, $mode = 0777, true, true);
         $pathoriginal = public_path().'/photos/' . $user->id.'/original';
@@ -639,6 +641,8 @@ class UserController extends Controller
         File::makeDirectory($pathoriginalprofile, $mode = 0777, true, true);
         File::makeDirectory($paththumbsprofile, $mode = 0777, true, true);
 
+        umask($old);
+        
         return redirect()->to('authprofile/create');
 //        return view('authprofile.create');
     }
