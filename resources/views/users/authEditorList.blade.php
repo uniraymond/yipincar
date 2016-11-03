@@ -94,7 +94,7 @@
                         </table>
                     @endif
 
-                    @if ( Null !== Auth::user()->hasRole('super_admin', 'admin') )
+                    @if ( Auth::user()->hasRole('super_admin', 'admin') )
                         <div class="col-lg-12 col-md-12 col-sm-12 clearfix">
                             {!! $users->links() !!}
                         </div>
