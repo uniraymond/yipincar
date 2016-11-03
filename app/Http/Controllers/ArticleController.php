@@ -385,7 +385,7 @@ class ArticleController extends Controller
           $cell_img_size = GetImageSize($imageLink); // need to caculate the file width and height to make the image same
 
           $image = Image::make(sprintf('photos/'.$authuser->id.'/%s', $file->getClientOriginalName()))->save();
-          $imageThumbs = Image::make(sprintf('photos/'.$authuser->id.'/thumbs/%s', $file->getClientOriginalName()))->resize(300, (int)((300 *  $cell_img_size[1]) / $cell_img_size[0]))->save();
+          $imageThumbs = Image::make(sprintf('photos/'.$authuser->id.'/thumbs/%s', $file->getClientOriginalName()))->resize(600, (int)((600 *  $cell_img_size[1]) / $cell_img_size[0]))->save();
           $imageOriginal = Image::make(sprintf('photos/'.$authuser->id.'/original/%s', $file->getClientOriginalName()))->save();
 
           $resource = new Resource();

@@ -91,14 +91,14 @@
                             </div>
                         </div>
 
-                        <div class="clearfix">
-                            <div class="col-md-3" style="margin-bottom: 55px">
-                                个人授权书：
-                            </div>
-                            <div class="col-md-6">
-                                <img id="auth_resource_image" width="100" src="{{ $profile->auth_resource ? url($profile->auth_resource) : url('photos/default.png') }}" />
-                            </div>
-                        </div>
+                        {{--<div class="clearfix">--}}
+                            {{--<div class="col-md-3" style="margin-bottom: 55px">--}}
+                                {{--个人授权书：--}}
+                            {{--</div>--}}
+                            {{--<div class="col-md-6">--}}
+                                {{--<img id="auth_resource_image" width="100" src="{{ $profile->auth_resource ? url($profile->auth_resource) : url('photos/default.png') }}" />--}}
+                            {{--</div>--}}
+                        {{--</div>--}}
 
                         <div class="clearfix" style="{{ $profile->media_type_id == 1 ? 'display:none':'' }}">
                             <div class="col-md-3" style="margin-bottom: 55px">

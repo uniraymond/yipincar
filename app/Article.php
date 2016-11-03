@@ -76,7 +76,8 @@ class Article extends Model
     $article = DB::table('articles')
         ->join('categories', 'articles.category_id', '=', 'categories.id')
         ->join('article_types', 'articles.type_id', '=', 'article_types.id')
-        ->select('articles.*', 'categories.name as categoryName', 'article_types.name as articletypeName')
+        ->leftJoin('profiles', 'articles.created_by', '=', 'profiles.user_id')
+        ->select('articles.*', 'categories.name as categoryName', 'article_types.name as articletypeName', 'profiles.media_name as mediaName')
         ->where('articles.id', '=', $id)
         ->get();
 
