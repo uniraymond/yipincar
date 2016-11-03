@@ -297,11 +297,11 @@
                 console.log($(this).val());
                 if ($(this).val() == 1) {
                     $('#ass_resource_upload').hide();
-                    $('#ass_resource_upload input').prop('disabled', true);
+                    $('#ass_resource_upload input').prop('disabled', true).prop('required', false);
                 }
                 if ($(this).val() == 2) {
                     $('#ass_resource_upload').show();
-                    $('#ass_resource_upload input').prop('enabled', true);
+                    $('#ass_resource_upload input').prop('enabled', true).prop('required', true);
                 }
             });
         });

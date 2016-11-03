@@ -426,7 +426,7 @@ class ProfileController extends Controller
                     'name' => 'required',
                     'proveimage' => 'required',
                     'city_id' => 'required|not_in:0',
-                    'ass_resource' => 'required',
+//                    'ass_resource' => 'required',
                     'contract_auth' => 'required',
                     'media_icon' => 'required',
                     'mediatype' => 'required',
@@ -490,7 +490,7 @@ class ProfileController extends Controller
                     'confirmterm.required'=>'需要同意用户协议',
                     'proveimage.required' => '请上传证件照片',
                     'city_id.not_in'=>'请选择所在地城市',
-                    'ass_resource.required' => '请上传组织机构代码证',
+//                    'ass_resource.required' => '请上传组织机构代码证',
                     'contract_auth.required' => '请上传合同授权书',
                     'media_icon.required' => '请上传自媒体头像'
                 ];
