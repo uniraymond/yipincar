@@ -36,35 +36,35 @@
           {{ $file_name }}
         </a>
         &nbsp;&nbsp;
-        {{--<a href="javascript:rename('{{ $file_name }}')">--}}
-          {{--<i class="fa fa-edit"></i>--}}
-        {{--</a>--}}
+        <a href="javascript:rename('{{ $file_name }}')">
+          <i class="fa fa-edit"></i>
+        </a>
       </td>
-      {{--<td>--}}
-        {{--{{ $file['size'] }}--}}
-      {{--</td>--}}
-      {{--<td>--}}
-        {{--{{ $file['type'] }}--}}
-      {{--</td>--}}
-      {{--<td>--}}
-        {{--{{ date("Y-m-d h:m", $file['created']) }}--}}
-      {{--</td>--}}
-      {{--<td>--}}
-        {{--<a href="javascript:trash('{{ $file_name }}')">--}}
-          {{--<i class="fa fa-trash fa-fw"></i>--}}
-        {{--</a>--}}
-        {{--@if($type == 'Images')--}}
-        {{--<a href="javascript:cropImage('{{ $file_name }}')">--}}
-          {{--<i class="fa fa-crop fa-fw"></i>--}}
-        {{--</a>--}}
-        {{--<a href="javascript:resizeImage('{{ $file_name }}')">--}}
-          {{--<i class="fa fa-arrows fa-fw"></i>--}}
-        {{--</a>--}}
-        {{--<a href="javascript:notImp()">--}}
-        {{--<i class="fa fa-rotate-left fa-fw"></i>--}}
-        {{--</a>--}}
-        {{--@endif--}}
-      {{--</td>--}}
+      <td>
+        {{ $file['size'] }}
+      </td>
+      <td>
+        {{ $file['type'] }}
+      </td>
+      <td>
+        {{ date("Y-m-d h:m", $file['created']) }}
+      </td>
+      <td>
+        <a href="javascript:trash('{{ $file_name }}')">
+          <i class="fa fa-trash fa-fw"></i>
+        </a>
+        @if($type == 'Images')
+        <a href="javascript:cropImage('{{ $file_name }}')">
+          <i class="fa fa-crop fa-fw"></i>
+        </a>
+        <a href="javascript:resizeImage('{{ $file_name }}')">
+          <i class="fa fa-arrows fa-fw"></i>
+        </a>
+        <a href="javascript:notImp()">
+        <i class="fa fa-rotate-left fa-fw"></i>
+        </a>
+        @endif
+      </td>
     </tr>
     @endforeach
   </tbody>
