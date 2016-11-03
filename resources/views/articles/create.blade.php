@@ -178,6 +178,7 @@
         menubar: false,
         toolbar: 'undo redo | image | removeformat | bold italic underline strikethrough | alignleft aligncenter alignright',
         relative_urls: false,
+        automatic_uploads: false,
         removeformat: [
             {selector: 'b,strong,em,i,font,u,strike', remove : 'all', split : true, expand : false, block_expand: true, deep : true},
             {selector: 'span', attributes : ['style', 'class'], remove : 'empty', split : true, expand : false, deep : true},
