@@ -69,7 +69,7 @@
                                 所在地：
                             </div>
                             <div class="col-md-6">
-                                {{ $profile->city_id }}
+                                {{ $profile->cityName }}
                             </div>
                         </div>
 
@@ -91,14 +91,14 @@
                             </div>
                         </div>
 
-                        <div class="clearfix">
-                            <div class="col-md-6">
-                                个人授权书：
-                            </div>
-                            <div class="col-md-6">
-                                <img id="auth_resource_image" width="100" src="{{ $profile->auth_resource ? url($profile->auth_resource) : '' }}" />
-                            </div>
-                        </div>
+                        {{--<div class="clearfix">--}}
+                            {{--<div class="col-md-6">--}}
+                                {{--个人授权书：--}}
+                            {{--</div>--}}
+                            {{--<div class="col-md-6">--}}
+                                {{--<img id="auth_resource_image" width="100" src="{{ $profile->auth_resource ? url($profile->auth_resource) : '' }}" />--}}
+                            {{--</div>--}}
+                        {{--</div>--}}
 
                         <div class="clearfix">
                             <div class="col-md-6">
@@ -118,14 +118,14 @@
                             </div>
                         </div>
 
-                        <div class="clearfix">
-                            <div class="col-md-6">
-                                专注领域：
-                            </div>
-                            <div class="col-md-6">
-                                {{ $profile->targetArea }}
-                            </div>
-                        </div>
+                        {{--<div class="clearfix">--}}
+                            {{--<div class="col-md-6">--}}
+                                {{--专注领域：--}}
+                            {{--</div>--}}
+                            {{--<div class="col-md-6">--}}
+                                {{--{{ $profile->targetArea }}--}}
+                            {{--</div>--}}
+                        {{--</div>--}}
 
                         <div class="clearfix">
                             <div class="col-md-6">
@@ -136,14 +136,14 @@
                             </div>
                         </div>
 
-                        <div class="clearfix">
-                            <div class="col-md-6">
-                                辅助材料：
-                            </div>
-                            <div class="col-md-6">
-                                {{ $profile->icon_uri }}
-                            </div>
-                        </div>
+                        {{--<div class="clearfix">--}}
+                            {{--<div class="col-md-6">--}}
+                                {{--辅助材料：--}}
+                            {{--</div>--}}
+                            {{--<div class="col-md-6">--}}
+                                {{--{{ $profile->icon_uri }}--}}
+                            {{--</div>--}}
+                        {{--</div>--}}
 
                         <div class="clearfix">
                             <div class="col-md-6">
