@@ -7,7 +7,7 @@
     <div class="subtitle">
         <div class="category col-xs-8">{{ $article->categories->name }}
             @if($article->mediaName) {
-                <span class="mediaName" >{{ $article->mediaName ? $article->mediaName : $article->user_created_by->name }}</span>
+                <span class="mediaName" >{{ $article->mediaName}}</span>
             } @else
                 <span class="authname" >{{ $article->authname ? $article->authname : $article->user_created_by->name }}</span>
             @endif
