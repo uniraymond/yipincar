@@ -263,9 +263,9 @@ class InfoController extends Controller
         if (!$lastid) $lastid = 0;
         $from = ($page -1) * $limit;
 
-        $comments = Comment::join('users', 'comments.created_by', '=', 'users.id')
+        $comments = Comment::leftJoin('users', 'comments.created_by', '=', 'users.id')
 //            ->leftJoin('zans', 'comments.id', '=', 'zans.comment_id')
-            ->join('profiles', 'users.profile_id', '=', 'profiles.id')
+            ->leftJoin('profiles', 'users.profile_id', '=', 'profiles.id')
             ->select('comments.*', 'users.name as userName', 'profiles.icon_uri as userIcon')
             ->where('comments.article_id', '=', $articleid)
             ->where('comments.banned', '=', 0)
