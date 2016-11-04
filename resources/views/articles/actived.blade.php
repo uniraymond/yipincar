@@ -53,9 +53,9 @@
                                 <td>
                                     @if ($article->published == 4)
                                         <input class="articl_top" id="article_{{ $article->id }}" type="checkbox"
-                                        @if ($article->top)
+                                               @if ($article->top)
                                                checked
-                                                @elseif ($totalTop >= 6)
+                                               @elseif ($totalTop >= 6)
                                                disabled
                                                @endif
                                                name="top[{{ $article->id }}]" />
@@ -64,7 +64,7 @@
 
                                 <td>{{ link_to('admin/article/'.$article->id, $value = str_limit($article->title, 20)) }}</td>
                                 <td>{{ $article->categories->name }}</td>
-{{--                                <td>{{ $article->article_types->name }}</td>--}}
+                                {{--                                <td>{{ $article->article_types->name }}</td>--}}
                                 <td>
                                     @foreach ($article->tags as $t)
                                         {{ $t->name }},
@@ -91,7 +91,7 @@
                                 <td>
                                     {{ date('Y-m-d', strtotime($article->created_at)) }}
                                 </td>
-                                
+
                                 @if ( (Null !== Auth::user() && $article->created_by == Auth::user()->id) || Auth::user()->hasAnyRole(['super_admin', 'admin','chef_editor', 'main_editor', 'adv_editor']))
                                     <td>
                                         <input type="checkbox" name="banned[{{ $article->id }}]" {{ $article->banned ? 'checked' : '' }} />
@@ -124,7 +124,7 @@
             </div>
         </div>
         <div class="col-lg-12 col-md-12 col-sm-12 clearfix">
-            {!! $articles->links() !!}
+            <span class="totalpage pagination">发表文章总数：{{ ($totalActivedArticle) }}篇</span>   {!! $articles->links() !!}
         </div>
     </div>
 @endsection
