@@ -593,7 +593,7 @@ class UserController extends Controller
             ->join('user_roles', 'users.id', '=', 'user_roles.user_id')
             ->where('user_roles.role_id', '=', 6)
             ->orderBy('users.id', 'desc')
-            ->paginate(15);
+            ->paginate(12);
 //            ->get();
 //        dd($users);
             return view('users/authEditorList', ['users'=>$users, 'usergroups'=>$roles]);
