@@ -45,8 +45,7 @@
                             </thead>
                             <tbody>
                             @foreach($users as $user)
-                                @if(!Auth::user()->hasAnyRole('super_admin', 'admin')||$user->id == 1 || $user->id == 2)
-                                {{--@if(Auth::user()->hasAnyRole('super_admin')||$user->id == 1 || $user->id == 2)--}}
+                                @if(Auth::user()->hasAnyRole('super_admin')||$user->id == 1 || $user->id == 2)
                                 @else
                                     @if($user->id == 1 || $user->id == 2)
                                     @else
@@ -95,8 +94,7 @@
                         </table>
                     @endif
 
-                        @if ( Auth::user()->hasAnyRole('super_admin', 'admin') )
-                    {{--@if ( Auth::user()->hasRole('super_admin', 'admin') )--}}
+                    @if ( Auth::user()->hasRole('super_admin', 'admin') )
                         <div class="col-lg-12 col-md-12 col-sm-12 clearfix">
                             {!! $users->links() !!}
                         </div>
