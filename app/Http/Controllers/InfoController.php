@@ -84,7 +84,7 @@ class InfoController extends Controller
         $article = Article::findorFail($id);
 //        $comments = $article->comments()->take(10)->get();
 //        $approved = $info->approved()->count();
-        $article['comment'] = $this ->getCommentList($article['id'], 0, 1, 10);
+        $article['comment'] = $this ->getCommentList($id, 0, 1, 10);
 //        $info['approved'] = $approved;
 //        $zan = $info->zan()->count();
         $article['zan'] = $this ->articleApprovedCount($id);
