@@ -132,6 +132,8 @@ class InfoController extends Controller
         $user = array();
         if($userid) {
             $user = User::select('*')
+                ->join('profiles', 'users.id', '=', 'profiles.user_id')
+                ->select('users.*', 'profiles.*')
                 ->where('id', $userid)
                 ->get();
         } else {
