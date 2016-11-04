@@ -388,7 +388,7 @@ class InfoController extends Controller
         $subscribe = DB::table('user_subscribes')
             ->leftJoin('users', 'users.id', '=', 'user_subscribes.subscribe_user_id')
             ->leftJoin('profiles','profiles.user_id' , '=', 'user_subscribes.subscribe_user_id')
-            ->select('users.id', 'users.name', 'profiles.aboutself as description', 'profiles.icon_uri', 'profiles.media_name as mediaName')
+            ->select('users.id', 'users.name', 'profiles.aboutself as description', 'profiles.media_icon', 'profiles.media_name as mediaName')
             ->where('user_subscribes.user_id', $userid)
             ->skip($from)
             ->take($limit);
