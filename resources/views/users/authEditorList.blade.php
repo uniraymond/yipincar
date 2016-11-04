@@ -45,7 +45,7 @@
                             </thead>
                             <tbody>
                             @foreach($users as $user)
-                                @if(Auth::user()->hasAnyRole('super_admin', 'admin')||$user->id == 1 || $user->id == 2)
+                                @if(!Auth::user()->hasAnyRole('super_admin', 'admin')||$user->id == 1 || $user->id == 2)
 {{--                                @if(!Auth::user()->hasAnyRole('super_admin', 'admin')||$user->id == 1 || $user->id == 2)--}}
                                 {{--@if(Auth::user()->hasAnyRole('super_admin')||$user->id == 1 || $user->id == 2)--}}
                                 @else
