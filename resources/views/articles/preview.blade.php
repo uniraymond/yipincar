@@ -6,8 +6,12 @@
     <div class="clearfix"></div>
     <div class="subtitle">
         <div class="category col-xs-8">{{ $article->categories->name }}
-            @if($article->user_created_by->profiles->media_name != '')
-                <span class="mediaName" >{{ $article->user_created_by->profiles->media_name }}</span>
+            @if (isset($article->user_created_by->profiles))
+                @if(isset($article->user_created_by->profiles->media_name) && $article->user_created_by->profiles->media_name != '')
+                    <span class="mediaName" >{{ $article->user_created_by->profiles->media_name }}</span>
+                @else
+                    <span class="authname" >{{ $article->authname != '' ? $article->authname : $article->user_created_by->name }}</span>
+                @endif
             @else
                 <span class="authname" >{{ $article->authname != '' ? $article->authname : $article->user_created_by->name }}</span>
             @endif
