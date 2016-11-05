@@ -286,10 +286,10 @@ class InfoController extends Controller
         if (!$lastid) $lastid = 0;
         $from = ($page -1) * $limit;
 
-        $comments = Comment::leftJoin('users', 'comments.created_by', '=', 'users.id')
+        $comments = Comment::join('users', 'comments.created_by', '=', 'users.id')
 //            ->leftJoin('zans', 'comments.id', '=', 'zans.comment_id')
-            ->leftJoin('profiles', 'users.profile_id', '=', 'profiles.id')
-            ->select('comments.*', 'users.id as userID', 'users.name as userName',
+            ->join('profiles', 'comments.created_by', '=', 'profiles.user_id')
+            ->select('comments.*', 'users.name as userName',
                 'profiles.weixin_id', 'profiles.weixin_name', 'profiles.weixin_icon',
                 'profiles.weibo_id', 'profiles.weibo_name','profiles.weibo_icon',
                 'profiles.qq_id', 'profiles.qq_name', 'profiles.qq_icon')
