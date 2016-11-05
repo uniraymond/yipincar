@@ -161,6 +161,11 @@ class AuthController extends Controller
         return view('authusers.authregister');
     }
 
+    public function authforgetpw()
+    {
+        return view('auth.authforgetpw');
+    }
+
     public function authlogin()
     {
         return view('auth.authlogin');

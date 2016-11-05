@@ -63,19 +63,20 @@
                         </div>
 
                         <div class="form-group">
-                            <div class="col-md-12">
-                                <div class="col-md-2">
-                                    <button type="submit" class="btn btn-primary">
-                                        <i class="fa fa-btn fa-sign-in"></i> 登录
-                                    </button>
-                                </div>
-                                <div class="col-md-offset-8">
-                                    <a href="{{ url('authregister') }}" class="btn btn-second">
-                                        <i class="fa fa-btn fa-sign-in"></i> 注册
-                                    </a>
-                                </div>
-
-{{--                                <a class="btn btn-link" href="{{ url('/password/reset') }}">忘记密码?</a>--}}
+                            <div class="col-md-3 col-sm-3">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fa fa-btn fa-sign-in"></i> 登录
+                                </button>
+                            </div>
+                            <div class="col-md-6 col-sm-5">
+                                <a href="{{ url('authforgetpw') }}" class="btn btn-second">
+                                    <i class="fa fa-btn fa-sign-in"></i> 忘记密码
+                                </a>
+                            </div>
+                            <div class="col-md-3 col-sm-3">
+                                <a href="{{ url('authregister') }}" class="btn btn-second">
+                                    <i class="fa fa-btn fa-sign-in"></i> 注册
+                                </a>
                             </div>
                         </div>
                     </form>

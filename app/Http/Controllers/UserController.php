@@ -595,13 +595,8 @@ class UserController extends Controller
             ->orderBy('users.id', 'desc')
             ->paginate(10);
 //            ->get();
-
-        $totalUsers = DB::table('users')
-            ->join('user_roles', 'users.id', '=', 'user_roles.user_id')
-            ->where('user_roles.role_id', '=', 6)
-            ->count();
-
-            return view('users/authEditorList', ['users'=>$users, 'usergroups'=>$roles, 'totalUsers' => $totalUsers]);
+//        dd($users);
+            return view('users/authEditorList', ['users'=>$users, 'usergroups'=>$roles]);
 //        }
 //
 //        return redirect('/');
@@ -650,6 +645,26 @@ class UserController extends Controller
         
         return redirect()->to('authprofile/create');
 //        return view('authprofile.create');
+    }
+
+
+    public function autheditorPassReset(Request $request)
+    {
+        $valideType = 'authuser';
+        $validator = $this->validator($request->all(), $valideType);
+
+        if ($validator->fails()) {
+            $this->throwValidationException(
+                $request, $validator
+            );
+        }
+
+        $user = User::where('phone', $request['phone'])->first();
+        $user->password = bcrypt($request['password']);
+        $user->secret = md5($request['password']);
+        $user->save();
+
+        return redirect()->to('authlogin');
     }
 
     public function authlogin(Request $request){
@@ -741,6 +756,40 @@ class UserController extends Controller
 //        {
 //            echo "发送失败! 状态：".$res['stat'].'|'.$res['message'];
 //        }
+    }
+    public function cellphonevalidatepw($phone){
+        //用户账号
+        $uid = 'yipinqiche0225';
+//MD5密码
+        $pwd = 'yipinqiche20160225';
+
+        /*
+        * 变量模板发送示例
+        * 模板内容：您的验证码是：{$code}，对用户{$username}操作绑定手机号，有效期为5分钟。如非本人操作，可不用理会。【云信】
+        * 变量模板ID：100003
+        */
+
+//变量模板ID
+        $template = '390807';
+//6位随机验证码
+        $code = $this->randNumber();
+
+        $user = User::where('phone', $phone)->first();
+        
+        if (count($user) <= 0) {
+            $messageSent = array('phone'=>$phone, 'code'=>$code, 'status'=>400);
+            return json_encode($messageSent);
+        }
+//短信内容参数
+        $contentParam = array(
+            'code'		=> $code,
+            'username'	=> $phone
+        );
+//即时发送
+        $res = $this->sendSMS($uid,$pwd,$phone,$this->array_to_json($contentParam),$template);
+        $messageSent = array('phone'=>$phone, 'code'=>$code, 'status'=>$res['stat']);
+
+        return response()->json($messageSent);
     }
 
     /**

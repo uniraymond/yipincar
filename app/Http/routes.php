@@ -16,11 +16,13 @@ Route::get('/', ['middleware' => 'auth', function () {
 }]);
 
 Route::get('authregister', 'Auth\AuthController@authregister');
+Route::get('authforgetpw', 'Auth\AuthController@authforgetpw');
 //Route::get('login', 'Auth\AuthController@login');
 Route::get('authlogin', 'Auth\AuthController@authlogin');
 Route::post('postauthlogin', 'UserController@authlogin');
 Route::post('autheditorStore', 'UserController@autheditorStore');
-Route::get('authsendtxt/{phone}', 'UserController@cellphonevalidate');
+Route::post('autheditorPassReset', 'UserController@autheditorPassReset');
+Route::get('authsendtxtpw/{phone}', 'UserController@cellphonevalidatepw');
 
 Route::get('authprofile/{uid}/show', 'ProfileController@authshow');
 Route::get('authprofile/{uid}/update', 'ProfileController@authupdate');
