@@ -69,7 +69,7 @@
                                 所在地：
                             </div>
                             <div class="col-md-6">
-                                {{ $profile->city_id }}
+                                {{ $profile->cityName }}
                             </div>
                         </div>
 

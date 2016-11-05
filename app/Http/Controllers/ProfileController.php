@@ -113,7 +113,8 @@ class ProfileController extends Controller
         $auth = $request->user();
         $id = $auth->id;
         $user = User::findorFail($id);
-        $userProfile = Profile::where('user_id', $id)->first();
+        $userProfile = Profile::join('provinces', 'profiles.city_id', '=', 'provinces.id')
+            ->select('profiles.*', 'provinces.name as cityName') ->where('user_id', $id)->first();
         if (isset($userProfile) && $userProfile) {
             if ($user->hasAnyRole('auth_editor')){
                 return view('authusers/authprofileshow', ['user'=>$user, 'profile'=>$userProfile]);

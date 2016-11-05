@@ -84,7 +84,7 @@ class InfoController extends Controller
         $article = Article::findorFail($id);
 //        $comments = $article->comments()->take(10)->get();
 //        $approved = $info->approved()->count();
-        $article['comment'] = $this ->getCommentList($article['id'], 0, 1, 10);
+        $article['comment'] = $this ->getCommentList($id, 0, 1, 10);
 //        $info['approved'] = $approved;
 //        $zan = $info->zan()->count();
         $article['zan'] = $this ->articleApprovedCount($id);
@@ -132,6 +132,8 @@ class InfoController extends Controller
         $user = array();
         if($userid) {
             $user = User::select('*')
+                ->join('profiles', 'users.id', '=', 'profiles.user_id')
+                ->select('users.*', 'profiles.*')
                 ->where('id', $userid)
                 ->get();
         } else {
@@ -261,9 +263,9 @@ class InfoController extends Controller
         if (!$lastid) $lastid = 0;
         $from = ($page -1) * $limit;
 
-        $comments = Comment::join('users', 'comments.created_by', '=', 'users.id')
+        $comments = Comment::leftJoin('users', 'comments.created_by', '=', 'users.id')
 //            ->leftJoin('zans', 'comments.id', '=', 'zans.comment_id')
-            ->join('profiles', 'users.profile_id', '=', 'profiles.id')
+            ->leftJoin('profiles', 'users.profile_id', '=', 'profiles.id')
             ->select('comments.*', 'users.name as userName', 'profiles.icon_uri as userIcon')
             ->where('comments.article_id', '=', $articleid)
             ->where('comments.banned', '=', 0)
@@ -386,7 +388,7 @@ class InfoController extends Controller
         $subscribe = DB::table('user_subscribes')
             ->leftJoin('users', 'users.id', '=', 'user_subscribes.subscribe_user_id')
             ->leftJoin('profiles','profiles.user_id' , '=', 'user_subscribes.subscribe_user_id')
-            ->select('users.id', 'users.name', 'profiles.aboutself as description', 'profiles.icon_uri', 'profiles.media_name as mediaName')
+            ->select('users.id', 'users.name', 'profiles.aboutself as description', 'profiles.media_icon', 'profiles.media_name as mediaName')
             ->where('user_subscribes.user_id', $userid)
             ->skip($from)
             ->take($limit);
