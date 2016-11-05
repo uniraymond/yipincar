@@ -45,13 +45,12 @@
                             </thead>
                             <tbody>
                             @foreach($users as $user)
-{{--                                @if(Auth::user()->hasAnyRole('super_admin', 'admin', 'chef_editor', 'main_editor', 'adv_editor')||$user->id == 1 || $user->id == 2)--}}
+                                @if(Auth::user()->hasAnyRole('super_admin', 'admin', 'chef_editor', 'main_editor', 'adv_editor')||$user->id == 1 || $user->id == 2)
 {{--                                @if(!Auth::user()->hasAnyRole('super_admin', 'admin')||$user->id == 1 || $user->id == 2)--}}
                                 {{--@if(Auth::user()->hasAnyRole('super_admin')||$user->id == 1 || $user->id == 2)--}}
-                                {{--@else--}}
-                                @if($user->id == 1 || $user->id == 2)
-
-                                @elseif(Auth::user()->hasAnyRole('super_admin', 'admin', 'chef_editor', 'main_editor', 'adv_editor'))
+                                @else
+                                    @if($user->id == 1 || $user->id == 2)
+                                    @else
                                     <tr>
                                         <td>
                                             <a class="" href="{{ url('admin/authprofile/'.$user->user_id.'/view') }}" id="editBtn_{{ $user->id }}">
@@ -90,7 +89,7 @@
                                             {!! Form::token() !!}
                                             {!! Form::close() !!}
                                         </td>
-                                    </tr> 
+                                    </tr> @endif
                                 @endif
                             @endforeach
                             </tbody>
