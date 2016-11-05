@@ -103,7 +103,7 @@ class InfoController extends Controller
         $article = Article::findorFail($id);
 //        $comments = $article->comments()->take(10)->get();
 //        $approved = $info->approved()->count();
-        if ($upreaded) {
+        if ($upreaded == 1) {
             Article::where('id', $id)->update(['readed' => $article['readed'] + 1]);
             $article['readed'] = $article['readed'] + 1;
         }
@@ -951,8 +951,9 @@ class InfoController extends Controller
     public function authLogin(Request $request) {
         $authName = $request ->get('authname');
         $userid = $request ->get('userid');
-        $authid = $request ->get('id');
-        $name = $request ->get('id');
+        $id = $request ->get('id');
+        $name = $request ->get('name');
+        $icon = $request ->get('icon');
         $uid = $request ->get('uid');
 
         if($userid) {
@@ -960,24 +961,30 @@ class InfoController extends Controller
             if($getProfile && count($getProfile)) {
                 Profile::where('user_id', $userid) ->update ([
 //                'uid' => $uid,
-                    $authName => $authid,
+                    $authName."_id" => $id,
+                    $authName."_name" => $name,
+                    $authName."_icon" => $icon,
                 ]);
                 return ['result' => "0"];
             } else {
                 Profile::insert([
                     'user_id' => $userid,
-                    $authName  => $authid
+                    $authName."_id" => $id,
+                    $authName."_name" => $name,
+                    $authName."_icon" => $icon,
                 ]);
                 return ['result' => "-1"];
             }
         } else {
-            $getAuthID = Profile::select('*') ->where($authName, $authid) ->get();
+            $getAuthID = Profile::select('*') ->where($authName."_id", $id) ->get();
             $userid = null;
             if($getAuthID && count($getAuthID)) {
                 return ['result' => $getAuthID];
                 $userid = $getAuthID[0]['user_id'];
-                Profile::where($authName, $authid) ->update([
-                    $authName  => $authid
+                Profile::where($authName."_id", $id) ->update([
+                    $authName."_id" => $id,
+                    $authName."_name" => $name,
+                    $authName."_icon" => $icon,
                 ]);
             } else {
                 $signUp = User::insert ([
@@ -999,7 +1006,9 @@ class InfoController extends Controller
                         ->get();
                     $userid = $getID[0]['id'];
                     Profile::insert([
-                        $authName  => $authid,
+                        $authName."_id" => $id,
+                        $authName."_name" => $name,
+                        $authName."_icon" => $icon,
                         'user_id' => $userid,
                     ]);
                 }
