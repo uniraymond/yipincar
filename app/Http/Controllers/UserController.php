@@ -595,8 +595,13 @@ class UserController extends Controller
             ->orderBy('users.id', 'desc')
             ->paginate(10);
 //            ->get();
-//        dd($users);
-            return view('users/authEditorList', ['users'=>$users, 'usergroups'=>$roles]);
+
+        $totalUsers = DB::table('users')
+            ->join('user_roles', 'users.id', '=', 'user_roles.user_id')
+            ->where('user_roles.role_id', '=', 6)
+            ->count();
+
+            return view('users/authEditorList', ['users'=>$users, 'usergroups'=>$roles, 'totalUsers' => $totalUsers]);
 //        }
 //
 //        return redirect('/');
