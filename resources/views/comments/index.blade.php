@@ -19,36 +19,35 @@
                 @if(count($comments)>0)
                     <table class="table table-striped">
                         <thead>
-                        <tr>
-                            <th>文章评论</th>
-                            <th>文章</th>
-                            <th>发表</th>
-                            <th>删除</th>
-                        </tr>
+                            <tr>
+                                <th>文章评论</th>
+                                <th>文章</th>
+                                <th>发表</th>
+                                <th></th>
+                                <th>删除</th>
+                            </tr>
                         </thead>
                         <tbody>
                         @foreach($comments as $comment)
-                            {!! Form::open(array('url' => 'admin/comment/'.$comment->id, 'class' => 'form', 'method'=>'delete', 'onsubmit'=>'return confirm("确定删除?");')) !!}
-                            <tr>
-                                <td>{{ $comment->comment }}</td>
-                                <td><span id="article_{{ $comment->id }}">{{ $comment->article->title }}</span></td>
-                                <td>
-                                    <input type="checkbox" name="published[{{ $comment->id }}]" {{ $comment->published ? 'checked' : '' }}/>
-                                </td>
-                                <td>
-                                    <input type="checkbox" name="delete[{{ $comment->id }}]" />
-                                </td>
-                                <td>
-                                    {!! Form::token() !!}
-                                </td>
-                                <td>
-                                    {!! Html::link('admin/zan/'.$comment->id, 'Zans') !!}
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>{!! Form::submit('删除', array('class'=>'btn btn-primary')) !!}</td>
-                            </tr>
-                            {!! Form::close() !!}
+                            @if ( isset($comment->article->title) )
+                                {!! Form::open(array('url' => 'admin/comment/'.$comment->id, 'class' => 'form', 'method'=>'delete', 'onsubmit'=>'return confirm("确定删除?");')) !!}
+                                <tr>
+                                    <td>{{ $comment->comment }}</td>
+                                    <td><span id="article_{{ $comment->id }}">{{ $comment->article->title }}</span></td>
+                                    <td>
+                                        <input type="checkbox" name="published[{{ $comment->id }}]" {{ $comment->published ? 'checked' : '' }}/>
+                                    </td>
+                                    {{--<td>--}}
+                                        {{--<input type="checkbox" name="delete[{{ $comment->id }}]" />--}}
+                                    {{--</td>--}}
+                                    <td>
+                                        {!! Form::token() !!}
+                                        {!! Html::link('admin/zan/'.$comment->id, 'Zans') !!}
+                                    </td>
+                                    <td>{!! Form::submit('删除', array('class'=>'btn btn-primary')) !!}</td>
+                                </tr>
+                                {!! Form::close() !!}
+                            @endif
                         @endforeach
                         </tbody>
                     </table>
