@@ -95,7 +95,10 @@
                             </tbody>
                         </table>
                     @endif
-                        @if ( Auth::user()->hasAnyRole('super_admin', 'admin', 'chef_editor', 'main_editor', 'adv_editor') )
+                        <div class="col-lg-12 col-md-12 col-sm-12 clearfix">
+                        <span class="totalpage pagination">共有入驻编辑：{{ ($totalUsers) }}</span>   {!! $users->links() !!}
+                    </div>
+                    @if ( Auth::user()->hasAnyRole('super_admin', 'admin', 'chef_editor', 'main_editor', 'adv_editor') )
 {{--                    @if ( Auth::user()->hasRole('super_admin', 'admin') )--}}
                         <div class="col-lg-12 col-md-12 col-sm-12 clearfix">
                             <span class="totalpage pagination">共有入驻编辑：{{ ($totalUsers) }}</span>   {!! $users->links() !!}
