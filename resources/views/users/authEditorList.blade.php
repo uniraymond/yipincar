@@ -50,6 +50,7 @@
                                 {{--@if(Auth::user()->hasAnyRole('super_admin')||$user->id == 1 || $user->id == 2)--}}
                                 {{--@else--}}
                                 @if($user->id == 1 || $user->id == 2)
+
                                 @elseif(Auth::user()->hasAnyRole('super_admin', 'admin', 'chef_editor', 'main_editor', 'adv_editor'))
                                     <tr>
                                         <td>
@@ -89,7 +90,7 @@
                                             {!! Form::token() !!}
                                             {!! Form::close() !!}
                                         </td>
-                                    </tr> @endif
+                                    </tr> 
                                 @endif
                             @endforeach
                             </tbody>
