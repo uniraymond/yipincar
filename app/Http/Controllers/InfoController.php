@@ -289,7 +289,10 @@ class InfoController extends Controller
         $comments = Comment::leftJoin('users', 'comments.created_by', '=', 'users.id')
 //            ->leftJoin('zans', 'comments.id', '=', 'zans.comment_id')
             ->leftJoin('profiles', 'users.profile_id', '=', 'profiles.id')
-            ->select('comments.*', 'users.name as userName', 'profiles.icon_uri as userIcon')
+            ->select('comments.*', 'users.id as userID', 'users.name as userName',
+                'profiles.weixin_id', 'profiles.weixin_name', 'profiles.weixin_icon',
+                'profiles.weibo_id', 'profiles.weibo_name','profiles.weibo_icon',
+                'profiles.qq_id', 'profiles.qq_name', 'profiles.qq_icon')
             ->where('comments.article_id', '=', $articleid)
             ->where('comments.banned', '=', 0)
             ->orderBy('created_at', 'desc')
@@ -503,7 +506,7 @@ class InfoController extends Controller
 //            ->orWhere('articles.content', 'like', $likeKey)
 //            ->where('articles.type_id', 1)
             ->orderBy('articles.created_at', 'desc')
-            ->take(10);
+            ->take(15);
         if($category != 3)
             $articles = $articles ->where('articles.category_id', '=', $category);
 
@@ -526,6 +529,7 @@ class InfoController extends Controller
         Comment::Insert(array(
             'comment' => $comment,
             'article_id' => $request ->get('articleid'),
+            'role_id'    => $request ->get('roleid'),
             'created_by' => $userid,
             'updated_by' => $userid,
             'published'  => $published
