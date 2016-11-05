@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddReadedToArticlesTable extends Migration
+class AddRoleIdToCommentsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,8 +12,8 @@ class AddReadedToArticlesTable extends Migration
      */
     public function up()
     {
-        Schema::table('articles', function (Blueprint $table) {
-            $table->integer('readed');
+        Schema::table('comments', function (Blueprint $table) {
+            $table->integer('role_id');
         });
     }
 
@@ -24,8 +24,8 @@ class AddReadedToArticlesTable extends Migration
      */
     public function down()
     {
-        Schema::table('articles', function (Blueprint $table) {
-            $table->drop('readed');
+        Schema::table('comments', function (Blueprint $table) {
+            $table->drop('role_id');
         });
     }
 }
