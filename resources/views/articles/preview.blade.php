@@ -6,10 +6,10 @@
     <div class="clearfix"></div>
     <div class="subtitle">
         <div class="category col-xs-8">{{ $article->categories->name }}
-            @if($article->mediaName) {
-                <span class="mediaName" >{{ $article->mediaName}}</span>
-            } @else
-                <span class="authname" >{{ $article->authname ? $article->authname : $article->user_created_by->name }}</span>
+            @if($article->user_created_by->profiles->media_name != '')
+                <span class="mediaName" >{{ $article->user_created_by->profiles->media_name }}</span>
+            @else
+                <span class="authname" >{{ $article->authname != '' ? $article->authname : $article->user_created_by->name }}</span>
             @endif
             <span class="article_publish_date">{{ date('Y-m-d H:i', strtotime($article->created_at)) }}</span> </div>
         <div class="comment col-xs-2">评论{{ count($article->comments) }}</div>
