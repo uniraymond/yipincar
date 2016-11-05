@@ -175,7 +175,7 @@ class InfoController extends Controller
                 ->leftJoin('profiles', 'articles.created_by', '=', 'profiles.user_id')
                 ->join('article_types', 'articles.type_id', '=', 'article_types.id')
                 ->join('users', 'users.id', '=', 'articles.created_by')
-                ->select('articles.id', 'articles.title', 'articles.description', 'articles.authname',
+                ->select('articles.id', 'articles.title', 'articles.description', 'articles.authname', 'articles.readed',
                     'categories.name as categoryName', 'articles.category_id', 'article_types.name as articletypeName'
                     , 'articles.created_at', 'article_resources.resource_id'
                     , 'resources.link as resourceLink', 'resources.name as resourceName',
