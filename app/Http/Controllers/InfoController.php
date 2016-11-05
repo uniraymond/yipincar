@@ -84,6 +84,8 @@ class InfoController extends Controller
         $article = Article::findorFail($id);
 //        $comments = $article->comments()->take(10)->get();
 //        $approved = $info->approved()->count();
+//        Article::where('id', $id)->update(['readed' => $article['readed'] + 1]);
+//        $article['readed'] = $article['readed'] + 1;
         $article['comment'] = $this ->getCommentList($id, 0, 1, 10);
 //        $info['approved'] = $approved;
 //        $zan = $info->zan()->count();
@@ -92,6 +94,27 @@ class InfoController extends Controller
         return ['article' => $article,
                 'advert'  => $advert
                 ];
+    }
+
+    public function showDetail(Request $request)
+    {
+        $id = $request ->get('id');
+        $upreaded = $request ->get('upreaded');
+        $article = Article::findorFail($id);
+//        $comments = $article->comments()->take(10)->get();
+//        $approved = $info->approved()->count();
+        if ($upreaded) {
+            Article::where('id', $id)->update(['readed' => $article['readed'] + 1]);
+            $article['readed'] = $article['readed'] + 1;
+        }
+        $article['comment'] = $this ->getCommentList($id, 0, 1, 10);
+//        $info['approved'] = $approved;
+//        $zan = $info->zan()->count();
+        $article['zan'] = $this ->articleApprovedCount($id);
+        $advert = $this ->getAdvert(3, 1, -1, $article['category_id']);
+        return ['article' => $article,
+            'advert'  => $advert
+        ];
     }
 
     /**
@@ -175,7 +198,7 @@ class InfoController extends Controller
                 ->leftJoin('profiles', 'articles.created_by', '=', 'profiles.user_id')
                 ->join('article_types', 'articles.type_id', '=', 'article_types.id')
                 ->join('users', 'users.id', '=', 'articles.created_by')
-                ->select('articles.id', 'articles.title', 'articles.description', 'articles.authname',
+                ->select('articles.id', 'articles.title', 'articles.description', 'articles.authname', 'articles.readed',
                     'categories.name as categoryName', 'articles.category_id', 'article_types.name as articletypeName'
                     , 'articles.created_at', 'article_resources.resource_id'
                     , 'resources.link as resourceLink', 'resources.name as resourceName',

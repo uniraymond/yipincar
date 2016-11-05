@@ -141,6 +141,7 @@ Route::group(['middleware' => 'auth'], function () {
 
 Route::group(['prefix'=>'api'], function() {
     Route::resource('info', 'InfoController');
+    Route::any('showdetail', 'InfoController@showDetail');
     Route::get('initinfo/{userid?}/{uid?}', 'InfoController@loadInitInfo');
     Route::get('articlelist/{category?}/{lastid?}/{page?}/{limit?}', 'InfoController@getArticleList');
     Route::get('advert/{uid?}', 'InfoController@getAdvert');
