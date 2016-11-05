@@ -180,7 +180,7 @@ class InfoController extends Controller
                     , 'articles.created_at', 'article_resources.resource_id'
                     , 'resources.link as resourceLink', 'resources.name as resourceName',
                     'users.name as userName',
-                    'profiles.media_name as mediaName')
+                    'profiles.media_name as mediaName', 'profiles.readed')
                 ->where('articles.published', '=', 4)
                 ->where('articles.banned', '=', 0)
                 ->orderBy('articles.created_at', 'desc');
