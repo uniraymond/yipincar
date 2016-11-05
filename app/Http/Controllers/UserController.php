@@ -775,7 +775,7 @@ class UserController extends Controller
         $code = $this->randNumber();
 
         $user = User::where('phone', $phone)->first();
-        
+
         if (count($user) <= 0) {
             $messageSent = array('phone'=>$phone, 'code'=>$code, 'status'=>400);
             return json_encode($messageSent);

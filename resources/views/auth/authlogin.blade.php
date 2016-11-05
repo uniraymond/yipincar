@@ -68,11 +68,11 @@
                                     <i class="fa fa-btn fa-sign-in"></i> 登录
                                 </button>
                             </div>
-                            <div class="col-md-6 col-sm-5">
-                                <a href="{{ url('authforgetpw') }}" class="btn btn-second">
-                                    <i class="fa fa-btn fa-sign-in"></i> 忘记密码
-                                </a>
-                            </div>
+                            {{--<div class="col-md-6 col-sm-5">--}}
+                                {{--<a href="{{ url('authforgetpw') }}" class="btn btn-second">--}}
+                                    {{--<i class="fa fa-btn fa-sign-in"></i> 忘记密码--}}
+                                {{--</a>--}}
+                            {{--</div>--}}
                             <div class="col-md-3 col-sm-3">
                                 <a href="{{ url('authregister') }}" class="btn btn-second">
                                     <i class="fa fa-btn fa-sign-in"></i> 注册
