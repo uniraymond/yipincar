@@ -45,12 +45,12 @@
                             </thead>
                             <tbody>
                             @foreach($users as $user)
-                                @if(Auth::user()->hasAnyRole('super_admin', 'admin', 'chef_editor', 'main_editor', 'adv_editor')||$user->id == 1 || $user->id == 2)
+                                {{--@if(Auth::user()->hasAnyRole(['super_admin', 'admin', 'chef_editor', 'main_editor', 'adv_editor'])||$user->id == 1 || $user->id == 2)--}}
 {{--                                @if(!Auth::user()->hasAnyRole('super_admin', 'admin')||$user->id == 1 || $user->id == 2)--}}
                                 {{--@if(Auth::user()->hasAnyRole('super_admin')||$user->id == 1 || $user->id == 2)--}}
-                                @else
+                                {{--@else--}}
                                     @if($user->id == 1 || $user->id == 2)
-                                    @else
+                                    @elseif(Auth::user()->hasAnyRole(['super_admin', 'admin', 'chef_editor', 'main_editor', 'adv_editor']))
                                     <tr>
                                         <td>
                                             <a class="" href="{{ url('admin/authprofile/'.$user->user_id.'/view') }}" id="editBtn_{{ $user->id }}">
@@ -89,16 +89,13 @@
                                             {!! Form::token() !!}
                                             {!! Form::close() !!}
                                         </td>
-                                    </tr> @endif
+                                    </tr>
                                 @endif
                             @endforeach
                             </tbody>
                         </table>
                     @endif
-                        <div class="col-lg-12 col-md-12 col-sm-12 clearfix">
-                        <span class="totalpage pagination">共有入驻编辑：{{ ($totalUsers) }}</span>   {!! $users->links() !!}
-                    </div>
-                    @if ( Auth::user()->hasAnyRole('super_admin', 'admin', 'chef_editor', 'main_editor', 'adv_editor') )
+                    @if ( Auth::user()->hasAnyRoles(['super_admin', 'admin', 'chef_editor', 'main_editor', 'adv_editor']) )
 {{--                    @if ( Auth::user()->hasRole('super_admin', 'admin') )--}}
                         <div class="col-lg-12 col-md-12 col-sm-12 clearfix">
                             <span class="totalpage pagination">共有入驻编辑：{{ ($totalUsers) }}</span>   {!! $users->links() !!}
