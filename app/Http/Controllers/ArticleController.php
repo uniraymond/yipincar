@@ -339,6 +339,7 @@ class ArticleController extends Controller
         $authuser = $request->user();
 
         $file = $request->file('images');
+        $checkArticlResource = ArticleResources::where('article_id', $article->id)->get();
         if (!empty($file)) {
             $fileName = $file->getClientOriginalName();
             $fileOriginalDir = "photos/".$authuser->id."/original";
@@ -371,7 +372,7 @@ class ArticleController extends Controller
             $articlResource->article_id = $article->id;
             $articlResource->resource_id = $resource->id;
             $articlResource->save();
-        } else {
+        } elseif (!isset($checkArticlResource) && count($checkArticlResource) <= 0) {
             $files = Resource::all();
 
             $image_links = array();
