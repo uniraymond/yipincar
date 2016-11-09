@@ -30,7 +30,7 @@
                 <div class="col-lg-12 col-md-12 col-sm-12">
                     {!! Form::open(array('url' => 'admin/advsetting/updateimage', 'class' => 'form', 'enctype'=>'multipart/form-data')) !!}
                     <div style="margin-bottom: 55px; margin-top: 55px">
-                        <img src="/{{ $advSettings->resources->link }}" alt="{{ $advSettings->description }}" width="300px"/>
+                        <img src="{{ url($advSettings->resources->link) }}" alt="{{ $advSettings->description }}" width="300px"/>
                     </div>
                     <br>
 
