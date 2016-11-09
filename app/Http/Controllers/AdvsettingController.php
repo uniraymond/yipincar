@@ -289,7 +289,7 @@ class AdvsettingController extends Controller
       $cell_img_size = GetImageSize($imageLink); // need to caculate the file width and height to make the image same
 
 //      $image = Image::make(sprintf('photos/adv/%s', $file->getClientOriginalName()))->resize(800, (int)((800 * $cell_img_size[1]) / $cell_img_size[0]))->save();
-      $image = Image::make(sprintf('photos/adv/%s', $fileName))->resize(1000, (int)((1000 * $cell_img_size[1]) / $cell_img_size[0]))->save();
+      $image = Image::make(sprintf('photos/adv/%s', $fileName))->save();
       $resource = new Resource();
       $resource->name = $fileName;
       $resource->link = '/' . $imageLink;
