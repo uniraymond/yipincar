@@ -21,7 +21,14 @@ use Symfony\Component\HttpFoundation\File\File;
 
 class AdvsettingController extends Controller
 {
-  /**
+    public function generateImageName(){
+        $fartime = strtotime('2300-12-30');
+        $nowtime  = strtotime('now');
+        $new_name = ($fartime - $nowtime).'ypc';
+        return $new_name;
+    }
+
+    /**
    * @return mixed
    */
   public function index()
@@ -271,17 +278,20 @@ class AdvsettingController extends Controller
     $authuser = $request->user();
     $file = $request->file('images');
     if (!empty($file)) {
-      $fileName = $file->getClientOriginalName();
+      $fileOriginalName = $file->getClientOriginalName();
+      $fileName = $this->generateImageName();
 //      $fileName = $request['name'] ? $request['name'] : $file->getClientOriginalName(); //if wanna use filled file name use this line
 
       $fileDir = "photos/adv";
       $file->move($fileDir, $fileName);
-      $imageLink = $fileDir . '/' . $file->getClientOriginalName();
+//      $imageLink = $fileDir . '/' . $file->getClientOriginalName();
+      $imageLink = $fileDir . '/' . $fileName;
       $cell_img_size = GetImageSize($imageLink); // need to caculate the file width and height to make the image same
 
-      $image = Image::make(sprintf('photos/adv/%s', $file->getClientOriginalName()))->resize(800, (int)((800 * $cell_img_size[1]) / $cell_img_size[0]))->save();
+//      $image = Image::make(sprintf('photos/adv/%s', $file->getClientOriginalName()))->resize(800, (int)((800 * $cell_img_size[1]) / $cell_img_size[0]))->save();
+      $image = Image::make(sprintf('photos/adv/%s', $fileName))->save();
       $resource = new Resource();
-      $resource->name = $file->getClientOriginalName();
+      $resource->name = $fileName;
       $resource->link = '/' . $imageLink;
       $resource->created_by = $authuser->id;
       $resource->save();
