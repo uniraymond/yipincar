@@ -241,7 +241,7 @@ class InfoController extends Controller
         $listAdverts = array();
         $topArticles = array();
         $topAdverts = array();
-        if($page == 1 && $category == 3) {
+        if($page == 1) {
             $listAdverts = $this ->getAdvert(2, 3, 0, $category);
             if($category == 3) {
                 $topArticles = $this->getArticleListContent() ->where('articles.top', 1)->get();
