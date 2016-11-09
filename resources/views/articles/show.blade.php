@@ -84,7 +84,7 @@
                     </div>
                     @if ( Null !== Auth::user() && $article->created_by == Auth::user()->id || Auth::user()->hasAnyRole(['super_admin', 'admin', 'chef_editor', 'main_editor', 'adv_editor']) )
                         <div class="col-lg-2 col-md-3 col-sm-4 edit_article pull-right clearfix"  style="margin-top: 55px">
-                            <a id="pv" class="inline cboxElement btn btn-default" href="{{ url('/admin/article/'.$article->id.'/previewsite') }}" target="_blank">预览</a>
+                            <a id="pv" class="inline cboxElement btn btn-default" href="{{ url('/preview/'.$article->id) }}" target="_blank">预览</a>
                             {{--<a id="pv" class="inline cboxElement btn btn-primary" href="#preview">预览</a>--}}
                             @if ( Null !== Auth::user() && $article->created_by == Auth::user()->id && ($article->published == 1 || $article->published == 0) || Auth::user()->hasAnyRole(['super_admin', 'admin', 'chef_editor', 'main_editor', 'adv_editor']))
                                 {{ link_to('admin/article/'.$article->id.'/edit', '编辑', ['class'=>'btn btn-second']) }}
