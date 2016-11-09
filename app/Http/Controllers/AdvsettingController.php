@@ -21,11 +21,12 @@ use Symfony\Component\HttpFoundation\File\File;
 
 class AdvsettingController extends Controller
 {
-    public function generateImageName(){
+    public function generateImageName($file){
         $fartime = strtotime('2300-12-30');
         $nowtime  = strtotime('now');
         $new_name = ($fartime - $nowtime).'ypc';
-        return $new_name;
+        $new_filename = $new_name . '.' . $file->getClientOriginalExtension();
+        return $new_filename;
     }
 
     /**
@@ -279,7 +280,7 @@ class AdvsettingController extends Controller
     $file = $request->file('images');
     if (!empty($file)) {
       $fileOriginalName = $file->getClientOriginalName();
-      $fileName = $this->generateImageName();
+      $fileName = $this->generateImageName($file);
 //      $fileName = $request['name'] ? $request['name'] : $file->getClientOriginalName(); //if wanna use filled file name use this line
 
       $fileDir = "photos/adv";
@@ -295,7 +296,7 @@ class AdvsettingController extends Controller
       $resource->link = '/' . $imageLink;
       $resource->created_by = $authuser->id;
       $resource->save();
-      
+
       
       $advSetting = new AdvSetting();
       $advSetting->title = $request['title'];

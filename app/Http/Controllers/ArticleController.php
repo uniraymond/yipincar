@@ -25,11 +25,12 @@ use App\Http\Controllers\Auth;
 
 class ArticleController extends Controller
 {
-    public function generateImageName(){
+    public function generateImageName($file){
         $fartime = strtotime('2300-12-30');
         $nowtime  = strtotime('now');
         $new_name = ($fartime - $nowtime).'ypc';
-        return $new_name;
+        $new_filename = $new_name . '.' . $file->getClientOriginalExtension();
+        return $new_filename;
     }
 
     public function index(Request $request)
@@ -349,7 +350,7 @@ class ArticleController extends Controller
         $checkArticlResource = ArticleResources::where('article_id', $article->id)->get();
         if (!empty($file)) {
             $fileOriginalName = $file->getClientOriginalName();
-            $fileName = $this->generateImageName();
+            $fileName = $this->generateImageName($file);
             $fileOriginalDir = "photos/".$authuser->id."/original";
             $fileThumbsDir = "photos/".$authuser->id."/thumbs";
             $fileDir = "photos/".$authuser->id;
@@ -586,7 +587,7 @@ class ArticleController extends Controller
         $file = $request->file('images');
         if (!empty($file)) {
             $fileOriginalName = $file->getClientOriginalName();
-            $fileName = $this->generateImageName();
+            $fileName = $this->generateImageName($file);
             $fileOriginalDir = "photos/".$authuser->id."/original";
             $fileThumbsDir = "photos/".$authuser->id."/thumbs";
             $fileDir = "photos/".$authuser->id;
