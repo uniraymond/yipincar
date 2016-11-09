@@ -247,7 +247,6 @@ class InfoController extends Controller
                 $topArticles = $this->getArticleListContent() ->where('articles.top', 1)->get();
                 $topAdverts = $this ->getAdvert(2, 6, 1, $category);
             }
-
         }
         return [
             'articles'      =>$articles,
