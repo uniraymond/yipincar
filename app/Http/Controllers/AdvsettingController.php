@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\AdvPosition;
+use App\AdvTemplate;
 use App\AdvType;
 use App\Article;
 use App\ArticleResources;
@@ -92,11 +93,12 @@ class AdvsettingController extends Controller
   {
     $types = AdvType::all();
     $positions = AdvPosition::all();
+      $templates = AdvTemplate::all();
     $categories = Category::where('last_category', 1)->get();
     $advSettings = AdvSetting::findorFail($id);
     $displayorder = ArticleResources::where('resource_id', $id)->where('article_id', 0)->first();
 
-    return view('advsetting/editimage', ['advSettings' => $advSettings, 'types'=>$types, 'displayorder'=>$displayorder, 'positions'=>$positions, 'categories'=>$categories]);
+    return view('advsetting/editimage', ['advSettings' => $advSettings, 'types'=>$types, 'displayorder'=>$displayorder, 'positions'=>$positions, 'categories'=>$categories, 'templates'=>$templates]);
   }
 
     public function show(Request $request, $id)
@@ -224,10 +226,12 @@ class AdvsettingController extends Controller
 
   public function create(Request $request)
   {
-    $types = AdvType::all();
-    $positions = AdvPosition::all();
-    $categories = Category::where('last_category', 1)->get();
-    return view('advsetting/createimage', ['types'=>$types, 'positions'=>$positions, 'categories'=>$categories]);
+        $types = AdvType::all();
+        $positions = AdvPosition::all();
+        $templates = AdvTemplate::all();
+        $categories = Category::where('last_category', 1)->get();
+
+      return view('advsetting/createimage', ['types'=>$types, 'positions'=>$positions, 'categories'=>$categories, 'templates'=>$templates]);
   }
 
   /**
@@ -250,6 +254,7 @@ class AdvsettingController extends Controller
     $advSetting->title = $request['title'];
     $advSetting->type_id = $request['type_id'];
     $advSetting->position_id = $request['position_id'];
+    $advSetting->template_id = $request['template_id'];
     $advSetting->category_id = $request['category_id'];
     $advSetting->description = $request['description'];
     $advSetting->order = $request['order'];
@@ -303,6 +308,7 @@ class AdvsettingController extends Controller
       $advSetting->resource_id = $resource->id;
       $advSetting->type_id = $request['type_id'];
       $advSetting->position_id = $request['position_id'];
+      $advSetting->template_id = $request['template_id'];
       $advSetting->category_id = $request['category_id'];
       $advSetting->description = $request['description'];
       $advSetting->order = $request['order'];
@@ -311,6 +317,7 @@ class AdvsettingController extends Controller
       $advSetting->top = $request['top'] ? 1 : 0;
       $advSetting->published_at = date('Y-m-d');
       $advSetting->created_by = $authuser->id;
+      $advSetting->readed = random_int(50, 650);
       $advSetting->save();
 
         if ($request['status']) {

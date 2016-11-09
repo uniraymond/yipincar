@@ -52,6 +52,8 @@
                             <div class="clearfix"></div>
                             <div class="list-group">
                                 <div class="list-group-item list-group-item-action">
+                                    模版: {{ count($advsetting->adv_templates->name) >= 0 ? $advsetting->adv_templates->name : ''}} </div>
+                                <div class="list-group-item list-group-item-action">
                                     类型: {{ $advsetting->adv_types->name }} </div>
                                 <div class="list-group-item list-group-item-action">
                                     位置: {{ $advsetting->adv_positions->name }} </div>

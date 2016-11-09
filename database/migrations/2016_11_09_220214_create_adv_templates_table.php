@@ -12,7 +12,7 @@ class CreateAdvTemplatesTable extends Migration
      */
     public function up()
     {
-        Schema::create('adv_temmplates', function (Blueprint $table) {
+        Schema::create('adv_templates', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
             $table->string('description');
@@ -26,6 +26,6 @@ class CreateAdvTemplatesTable extends Migration
      */
     public function down()
     {
-        Schema::drop('adv_temmplates');
+        Schema::drop('adv_templates');
     }
 }

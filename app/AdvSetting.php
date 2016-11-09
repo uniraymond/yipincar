@@ -57,6 +57,11 @@ class AdvSetting extends Model
     return $this->belongsTo('App\AdvPosition', 'position_id');
   }
 
+  public function adv_templates()
+  {
+    return $this->belongsTo('App\AdvTemplate', 'template_id');
+  }
+
   public function categories()
   {
     return $this->belongsTo('App\Category', 'category_id');

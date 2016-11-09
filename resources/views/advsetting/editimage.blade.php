@@ -34,6 +34,18 @@
                     </div>
                     <br>
 
+                    <div class="clearfix"></div>
+                    {!! Form::label('template_id', '首页模版', array('class'=>'col-md-1')) !!}
+                    <div class="col-md-2" style="margin-bottom: 55px">
+                        <select class="col-lg-12 col-md-12 col-sm-12 form-control" name="template_id">
+                            @foreach ($templates as $template)
+                                <option value="{{$template->id}}" {{ isset($advSettings->template_id) && ($template->id == $advSettings->template_id) ? 'selected' : '' }} >{{$template->name}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="clearfix"></div>
+
                     {!! Form::date('published_at', date('Y-m-d', strtotime($advSettings->published_at)), array('class'=>'col-md-12','hidden', 'placehold'=>'开始日期')) !!}
                     <div class="clearfix"></div>
                     {!! Form::label('category_id', '栏目', array('class'=>'col-md-1')) !!}
