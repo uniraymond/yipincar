@@ -367,7 +367,7 @@ class ProfileController extends Controller
         $media_icon = $request['media_icon'];
         $mediaIcon = $this->uploadfile($media_icon, $userId, 5);
 
-        $profile = Profile::where('user_id', $userId)->first();;
+        $profile = Profile::where('user_id', $userId)->first();
         $profile->name = $request['name'];
         $profile->media_type_id = $request['mediatype'];
         $profile->prove_type = $request['prove_type'];
