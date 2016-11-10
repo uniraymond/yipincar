@@ -115,7 +115,7 @@ class ArticleController extends Controller
         $totalTop = $this->getTotalTop();
 
         if ($authuser->hasAnyRole(['super_admin', 'admin', 'chef_editor', 'main_editor', 'adv_editor'])) {
-            $articles = Article::where('published', 4)->orderBy('created_at', 'desc')->paginate(15);
+            $articles = Article::where('published', 4)->orderBy('top', 'desc')->orderBy('created_at', 'desc')->paginate(15);
             $totalActivedArticle = Article::where('published', 4)->count();
 //      } else ($authuser->hasAnyRole(['auth_editor', 'editor'])) {
         } else  {
