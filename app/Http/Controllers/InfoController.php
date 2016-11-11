@@ -988,7 +988,7 @@ class InfoController extends Controller
             $getAuthID = Profile::select('*') ->where($authName."_id", $id) ->get();
             $userid = null;
             if($getAuthID && count($getAuthID)) {
-                return ['result' => $getAuthID];
+//                return ['result' => $getAuthID];
                 $userid = $getAuthID[0]['user_id'];
                 Profile::where($authName."_id", $id) ->update([
                     $authName."_id" => $id,
@@ -1021,9 +1021,8 @@ class InfoController extends Controller
                         'user_id' => $userid,
                     ]);
                 }
-                return ['result' => $userid];
-
             }
+            return ['result' => $userid];
         }
     }
 
