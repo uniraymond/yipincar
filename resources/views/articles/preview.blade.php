@@ -32,7 +32,7 @@
 <script src="{{ url('/src/js/jQuery.min.2.2.4.js') }}" ></script>
 <script>
     jQuery(document).ready(function(){
-//        var width = $(document.body).width();
+        var width = $(document.body).width();
 
 
         var tables = document.getElementsByTagName('table');
@@ -45,7 +45,7 @@
 //        jQuery('.content p img').width(width > 800 ? 800 *0.9 : width);
 //        jQuery('.article-preview').width(width > 800 ? 800 *0.9 : width);
 
-//        jQuery('.content p img').width(width -30);
-//        jQuery('.article-preview').width(width -30);
+        jQuery('.content p img').width(width -30);
+        jQuery('.article-preview').width(width -30);
     });
 </script>
