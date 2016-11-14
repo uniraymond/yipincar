@@ -103,9 +103,12 @@ class InfoController extends Controller
         $article = Article::findorFail($id);
 //        $comments = $article->comments()->take(10)->get();
 //        $approved = $info->approved()->count();
+        $readed = $article['readed'];
         if ($upreaded == 1) {
             Article::where('id', $id)->update(['readed' => $article['readed'] + 1]);
-            $article['readed'] = $article['readed'] + 1;
+//            $article['readed'] = $article['readed'] + random_int(5, 10);//1;
+            $article['readed'] = $readed + random_int(5, 10);//1;
+
         }
         $article['comment'] = $this ->getCommentList($id, 0, 1, 10);
 //        $info['approved'] = $approved;
