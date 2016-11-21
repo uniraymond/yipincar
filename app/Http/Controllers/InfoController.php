@@ -984,7 +984,7 @@ class InfoController extends Controller
                     $authName."_name" => $name,
                     $authName."_icon" => $icon,
                 ]);
-                return ['result2' => "-1"];
+                return ['result2' => $userid];
             }
         } else {
             $getAuthID = Profile::select('*') ->where($authName."_id", $id) ->get();
