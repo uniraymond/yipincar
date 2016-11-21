@@ -967,7 +967,7 @@ class InfoController extends Controller
         $icon = $request ->get('icon');
         $uid = $request ->get('uid');
 
-        if($userid != null && $userid > 0) {
+        if($userid) {
             $getProfile = Profile::select('user_id') ->where('user_id', $userid) ->get();
             if($getProfile && count($getProfile)) {
                 Profile::where('user_id', $userid) ->update ([
@@ -976,7 +976,7 @@ class InfoController extends Controller
                     $authName."_name" => $name,
                     $authName."_icon" => $icon,
                 ]);
-                return ['result1' => "0"];
+                return ['result' => "0"];
             } else {
                 Profile::insert([
                     'user_id' => $userid,
@@ -984,12 +984,12 @@ class InfoController extends Controller
                     $authName."_name" => $name,
                     $authName."_icon" => $icon,
                 ]);
-                return ['result2' => $userid];
+                return ['result' => "-1"];
             }
         } else {
             $getAuthID = Profile::select('*') ->where($authName."_id", $id) ->get();
             $userid = null;
-            if($getAuthID > 0 && count($getAuthID)) {
+            if($getAuthID && count($getAuthID)) {
 //                return ['result' => $getAuthID];
                 $userid = $getAuthID[0]['user_id'];
                 Profile::where($authName."_id", $id) ->update([
@@ -1006,7 +1006,7 @@ class InfoController extends Controller
                     'profile_id' => 0,
                     'status_id' => 0,
                     'pre_status_id' => '',
-                    'banned' => 0
+                    'banned' => 0,
                 ]);
 
                 if($signUp) {
@@ -1023,9 +1023,8 @@ class InfoController extends Controller
                         'user_id' => $userid,
                     ]);
                 }
-                return ['result3' => $signUp];
             }
-            return ['result4' => $userid];
+            return ['result' => $userid];
         }
     }
 
