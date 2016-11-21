@@ -988,7 +988,7 @@ class InfoController extends Controller
             }
         } else {
             $getAuthID = Profile::select('*') ->where($authName."_id", $id) ->get();
-            $userid = '-21';
+            $userid = null;
             if($getAuthID && count($getAuthID)) {
 //                return ['result' => $getAuthID];
                 $userid = $getAuthID[0]['user_id'];
@@ -1009,20 +1009,20 @@ class InfoController extends Controller
                     'banned' => 0,
                 ]);
 
-                if($signUp) {
-                    $getID = User::select('id')
-                        ->where('uid', $uid)
-                        ->orderBy('id', 'desc')
-                        ->take(1)
-                        ->get();
-                    $userid = $getID[0]['id'];
-                    Profile::insert([
-                        $authName."_id" => $id,
-                        $authName."_name" => $name,
-                        $authName."_icon" => $icon,
-                        'user_id' => $userid,
-                    ]);
-                }
+//                if($signUp) {
+//                    $getID = User::select('id')
+//                        ->where('uid', $uid)
+//                        ->orderBy('id', 'desc')
+//                        ->take(1)
+//                        ->get();
+//                    $userid = $getID[0]['id'];
+//                    Profile::insert([
+//                        $authName."_id" => $id,
+//                        $authName."_name" => $name,
+//                        $authName."_icon" => $icon,
+//                        'user_id' => $userid,
+//                    ]);
+//                }
             }
             return ['result' => $userid];
         }
