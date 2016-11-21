@@ -976,7 +976,7 @@ class InfoController extends Controller
                     $authName."_name" => $name,
                     $authName."_icon" => $icon,
                 ]);
-                return ['result' => "-11"];
+                return ['result' => "0"];
             } else {
                 Profile::insert([
                     'user_id' => $userid,
@@ -1024,7 +1024,7 @@ class InfoController extends Controller
                     ]);
                 }
             }
-            return ['result' => $userid];
+            return ['result' => $authName];
         }
     }
 
