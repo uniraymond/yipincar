@@ -1006,7 +1006,7 @@ class InfoController extends Controller
                     'profile_id' => 0,
                     'status_id' => 0,
                     'pre_status_id' => '',
-                    'banned' => 0,
+                    'banned' => 0
                 ]);
 
                 if($signUp) {
@@ -1024,7 +1024,7 @@ class InfoController extends Controller
                     ]);
                 }
             }
-            return ['result' => $getAuthID];
+            return ['result' => $userid];
         }
     }
 
