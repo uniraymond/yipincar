@@ -976,7 +976,7 @@ class InfoController extends Controller
                     $authName."_name" => $name,
                     $authName."_icon" => $icon,
                 ]);
-                return ['result' => "0"];
+                return ['result1' => "0"];
             } else {
                 Profile::insert([
                     'user_id' => $userid,
@@ -984,7 +984,7 @@ class InfoController extends Controller
                     $authName."_name" => $name,
                     $authName."_icon" => $icon,
                 ]);
-                return ['result' => "-1"];
+                return ['result2' => "-1"];
             }
         } else {
             $getAuthID = Profile::select('*') ->where($authName."_id", $id) ->get();
@@ -1023,9 +1023,9 @@ class InfoController extends Controller
                         'user_id' => $userid,
                     ]);
                 }
-                return ['result' => $signUp];
+                return ['result3' => $signUp];
             }
-            return ['result' => $userid];
+            return ['result4' => $userid];
         }
     }
 
