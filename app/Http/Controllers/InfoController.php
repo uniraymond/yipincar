@@ -976,7 +976,7 @@ class InfoController extends Controller
                     $authName."_name" => $name,
                     $authName."_icon" => $icon,
                 ]);
-                return ['result' => "0"];
+                return ['result' => "-11"];
             } else {
                 Profile::insert([
                     'user_id' => $userid,
