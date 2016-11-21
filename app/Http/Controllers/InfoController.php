@@ -988,7 +988,7 @@ class InfoController extends Controller
             }
         } else {
             $getAuthID = Profile::select('*') ->where($authName."_id", $id) ->get();
-            $userid = null;
+            $userid = '-21';
             if($getAuthID && count($getAuthID)) {
 //                return ['result' => $getAuthID];
                 $userid = $getAuthID[0]['user_id'];
@@ -1024,7 +1024,7 @@ class InfoController extends Controller
                     ]);
                 }
             }
-            return ['result' => $authName];
+            return ['result' => $userid];
         }
     }
 
