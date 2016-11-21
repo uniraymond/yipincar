@@ -1024,7 +1024,7 @@ class InfoController extends Controller
                     ]);
                 }
             }
-            return ['result' => $userid];
+            return ['result' => $getAuthID];
         }
     }
 
