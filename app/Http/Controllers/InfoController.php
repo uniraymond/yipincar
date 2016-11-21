@@ -1023,6 +1023,7 @@ class InfoController extends Controller
                         'user_id' => $userid,
                     ]);
                 }
+                return ['result' => $signUp];
             }
             return ['result' => $userid];
         }
