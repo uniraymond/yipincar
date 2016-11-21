@@ -59,6 +59,7 @@ p {
 
 .content p img {
     text-align: center;
+    width: 90%;
     height: auto;
 }
 .clearfix {

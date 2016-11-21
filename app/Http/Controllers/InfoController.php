@@ -103,9 +103,11 @@ class InfoController extends Controller
         $article = Article::findorFail($id);
 //        $comments = $article->comments()->take(10)->get();
 //        $approved = $info->approved()->count();
-        if ($upreaded == 1) {
-            Article::where('id', $id)->update(['readed' => $article['readed'] + 1]);
-            $article['readed'] = $article['readed'] + 1;
+        if ($upreaded == 1 && $article['readed'] < 6600) {
+//            Article::where('id', $id)->update(['readed' => $article['readed'] + 1]);
+//            $article['readed'] = $article['readed'] + 1;
+            $article['readed'] = $article['readed'] + random_int(5, 10);
+            Article::where('id', $id)->update(['readed' => $article['readed']]);
         }
         $article['comment'] = $this ->getCommentList($id, 0, 1, 10);
 //        $info['approved'] = $approved;
@@ -988,7 +990,7 @@ class InfoController extends Controller
             $getAuthID = Profile::select('*') ->where($authName."_id", $id) ->get();
             $userid = null;
             if($getAuthID && count($getAuthID)) {
-                return ['result' => $getAuthID];
+//                return ['result' => $getAuthID];
                 $userid = $getAuthID[0]['user_id'];
                 Profile::where($authName."_id", $id) ->update([
                     $authName."_id" => $id,
@@ -1021,9 +1023,8 @@ class InfoController extends Controller
                         'user_id' => $userid,
                     ]);
                 }
-                return ['result' => $userid];
-
             }
+            return ['result' => $userid];
         }
     }
 
