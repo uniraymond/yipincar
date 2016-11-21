@@ -967,7 +967,7 @@ class InfoController extends Controller
         $icon = $request ->get('icon');
         $uid = $request ->get('uid');
 
-        if($userid && $userid > 0) {
+        if($userid != null && $userid > 0) {
             $getProfile = Profile::select('user_id') ->where('user_id', $userid) ->get();
             if($getProfile && count($getProfile)) {
                 Profile::where('user_id', $userid) ->update ([
