@@ -991,12 +991,12 @@ class InfoController extends Controller
             $userid = null;
             if($getAuthID && count($getAuthID)) {
 //                return ['result' => $getAuthID];
-                $userid = $getAuthID[0]['user_id'];
-                Profile::where($authName."_id", $id) ->update([
-                    $authName."_id" => $id,
-                    $authName."_name" => $name,
-                    $authName."_icon" => $icon,
-                ]);
+//                $userid = $getAuthID[0]['user_id'];
+//                Profile::where($authName."_id", $id) ->update([
+//                    $authName."_id" => $id,
+//                    $authName."_name" => $name,
+//                    $authName."_icon" => $icon,
+//                ]);
             } else {
                 $signUp = User::insert ([
                     'uid' => $uid,
@@ -1009,20 +1009,20 @@ class InfoController extends Controller
                     'banned' => 0,
                 ]);
 
-//                if($signUp) {
-//                    $getID = User::select('id')
-//                        ->where('uid', $uid)
-//                        ->orderBy('id', 'desc')
-//                        ->take(1)
-//                        ->get();
-//                    $userid = $getID[0]['id'];
-//                    Profile::insert([
-//                        $authName."_id" => $id,
-//                        $authName."_name" => $name,
-//                        $authName."_icon" => $icon,
-//                        'user_id' => $userid,
-//                    ]);
-//                }
+                if($signUp) {
+                    $getID = User::select('id')
+                        ->where('uid', $uid)
+                        ->orderBy('id', 'desc')
+                        ->take(1)
+                        ->get();
+                    $userid = $getID[0]['id'];
+                    Profile::insert([
+                        $authName."_id" => $id,
+                        $authName."_name" => $name,
+                        $authName."_icon" => $icon,
+                        'user_id' => $userid,
+                    ]);
+                }
             }
             return ['result' => $userid];
         }
