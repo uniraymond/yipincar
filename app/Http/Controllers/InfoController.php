@@ -991,12 +991,12 @@ class InfoController extends Controller
             $userid = null;
             if($getAuthID && count($getAuthID)) {
 //                return ['result' => $getAuthID];
-//                $userid = $getAuthID[0]['user_id'];
-//                Profile::where($authName."_id", $id) ->update([
-//                    $authName."_id" => $id,
-//                    $authName."_name" => $name,
-//                    $authName."_icon" => $icon,
-//                ]);
+                $userid = $getAuthID[0]['user_id'];
+                Profile::where($authName."_id", $id) ->update([
+                    $authName."_id" => $id,
+                    $authName."_name" => $name,
+                    $authName."_icon" => $icon,
+                ]);
             } else {
                 $signUp = User::insert ([
                     'uid' => $uid,
