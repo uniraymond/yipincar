@@ -88,9 +88,9 @@
                     </table>
                 @endif
 
-                    @if ( Null !== Auth::user()->hasRole('super_admin', 'admin') )
+                    @if (Auth::user()->hasAnyRole(['super_admin', 'admin']))
                         <div class="col-lg-12 col-md-12 col-sm-12 clearfix">
-                            {!! $users->links() !!}
+                            <span class="totalpage pagination">共有用户：{{ ($totalUsers) }}</span>{!! $users->links() !!}
                         </div>
                     @endif
             </div>
