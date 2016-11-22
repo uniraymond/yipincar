@@ -33,7 +33,10 @@ class UserController extends Controller
         if ($authView) {
             $roles = Role::all();
             $users = User::paginate(10);
-            return view('users/index', ['users'=>$users, 'usergroups'=>$roles]);
+
+            $allUsers = User::count();
+            $totalUsers = $allUsers - 3;
+            return view('users/index', ['users'=>$users, 'usergroups'=>$roles, 'totalUsers'=>$totalUsers]);
         }
 
         return redirect('/');
