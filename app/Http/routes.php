@@ -168,6 +168,7 @@ Route::group(['prefix'=>'api'], function() {
     Route::any('rename', 'InfoController@userRename');
     Route::any('repass', 'InfoController@resetPassword');
     Route::any('authlogin', 'InfoController@authLogin');
+    Route::get('checkupdate/{device}', 'InfoController@checkAppUpdate');
 
 });
 
