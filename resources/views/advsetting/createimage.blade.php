@@ -140,7 +140,7 @@
             </span>
           @endif
           <div class="col-md-4" style="margin-bottom: 55px">
-              <input type="file" class="col-md-12 form-control-file form-control" id="files" required="required" name="images">
+              <input type="file" class="col-md-12 form-control-file form-control" id="images" required="required" name="images">
 {{--            {!! Form::file('images', '', array('class'=>'col-md-12 form-control-file form-control', 'id'=>'files', 'required'=>'required')) !!}--}}
             <img id="image" width="100" />
           </div>
