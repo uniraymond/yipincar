@@ -278,11 +278,12 @@ class AdvsettingController extends Controller
   {
     $this->validate($request, [
 //        'links' => 'required',
-//        'images' => 'required',
+        'images' => 'required',
         'title' => 'max:23'
     ]);
     $authuser = $request->user();
     $file = $request->file('images');
+      var_dump($file);exit;
     if (!empty($file)) {
       $fileOriginalName = $file->getClientOriginalName();
       $fileName = $this->generateImageName($file);
