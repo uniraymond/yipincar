@@ -278,7 +278,7 @@ class AdvsettingController extends Controller
   {
     $this->validate($request, [
 //        'links' => 'required',
-        'images' => 'required',
+//        'images' => 'required',
         'title' => 'max:23'
     ]);
     $authuser = $request->user();
