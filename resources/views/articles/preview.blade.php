@@ -32,6 +32,7 @@
         <div class="content col-xs-12">{!! $article->content !!}</div>
     {{--</table>--}}
 </div>
+<div class="clearfix"></div>
 
 <script src="{{ url('/src/js/jQuery.min.2.2.4.js') }}" ></script>
 <script>
@@ -49,7 +50,7 @@
 //        jQuery('.content p img').width(width > 800 ? 800 *0.9 : width);
 //        jQuery('.article-preview').width(width > 800 ? 800 *0.9 : width);
 
-//        jQuery('.content p img').width(width -30);
-//        jQuery('.article-preview').width(width -30);
+        jQuery('.content p img').width(width -30);
+        jQuery('.article-preview').width(width -30);
     });
 </script>
