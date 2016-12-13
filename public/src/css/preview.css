@@ -71,7 +71,7 @@ p {
     /*height: 736px;*/
     /*overflow-y: scroll;*/
     /*max-width:1000px;*/
-    /*margin: 17px;*/
-    width: 90%;
+    margin: 17px;
+    /*width: 90%;*/
     alignment: center;
 }
