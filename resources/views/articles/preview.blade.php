@@ -3,7 +3,7 @@
 <title>{{ $article->title }}</title>
 <link rel="stylesheet" href="{{ asset("/src/css/preview.css") }}"/>
 {{--<div class="article-preview" id="content" contenteditable="false">--}}
-<div style="margin: 35px" >
+<div style="margin: 10px" >
 
     <div class="title col-xs-12">{{ $article->title }}</div>
     <div class="clearfix"></div>
