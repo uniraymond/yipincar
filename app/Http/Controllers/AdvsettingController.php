@@ -276,13 +276,12 @@ class AdvsettingController extends Controller
 
   public function uploadimage(Request $request)
   {
-    $this->validate($request, [
-//        'links' => 'required',
-        'images' => 'required',
-        'title' => 'max:23'
-    ]);
+      $this->validate($request, [
+          'title' => 'required|max:31'
+      ]);
     $authuser = $request->user();
     $file = $request->file('images');
+
     if (!empty($file)) {
       $fileOriginalName = $file->getClientOriginalName();
       $fileName = $this->generateImageName($file);

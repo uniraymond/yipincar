@@ -32,7 +32,7 @@ class UserController extends Controller
         $authView = $auth->hasAnyRole(['super_admin', 'admin']);
         if ($authView) {
             $roles = Role::all();
-            $users = User::paginate(10);
+            $users = User::orderBy('created_at', 'desc')->paginate(10);
 
             $allUsers = User::count();
             $totalUsers = $allUsers - 3;
@@ -522,7 +522,7 @@ class UserController extends Controller
         $authUsers = DB::table('users')
             ->join('user_roles', 'users.id', '=', 'user_roles.user_id')
             ->where('user_roles.role_id', '=', $role_id)
-            ->orderBy('users.id', 'desc')
+            ->orderBy('users.created_at', 'desc')
 //            ->paginate(15)
         ->get();
 
