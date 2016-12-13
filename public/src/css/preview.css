@@ -69,10 +69,9 @@ p {
 
 .article-preview {
     /*height: 736px;*/
-    /*overflow-y: scroll;*/
+    overflow-y: hidden;
     /*max-width:1000px;*/
     /*margin: 17px;*/
     /*width: 90%;*/
     /*alignment: center;*/
-    background-color: #FFF1E0;
 }
