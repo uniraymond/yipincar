@@ -69,7 +69,7 @@ p {
 
 .article-preview {
     /*height: 736px;*/
-    overflow-y: scroll;
+    /*overflow-y: scroll;*/
     /*max-width:1000px;*/
     margin: 17px;
     width: 90%;
