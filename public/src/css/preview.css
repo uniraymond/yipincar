@@ -3,8 +3,8 @@ body {
     /*letter-spacing: 0.5px;*/
     font-family: "Heiti SC", "Helvetica Neue", Helvetica, Arial, sans-serif;
 
-    margin: 17px auto;
-    padding: 20px;
+    margin: 0 auto;
+    padding: 0;
     text-align: left;
 }
 
@@ -74,4 +74,5 @@ p {
     /*margin: 17px;*/
     /*width: 90%;*/
     /*alignment: center;*/
+    background-color: #FFF1E0;
 }

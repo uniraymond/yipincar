@@ -3,7 +3,7 @@
 <title>{{ $article->title }}</title>
 <link rel="stylesheet" href="{{ asset("/src/css/preview.css") }}"/>
 {{--<div class="article-preview" id="content" contenteditable="false">--}}
-{{--<div class="article-preview" >--}}
+<div class="article-preview" >
 
     <div class="title col-xs-12">{{ $article->title }}</div>
     <div class="clearfix"></div>
@@ -31,7 +31,7 @@
     {{--<table>--}}
         <div class="content col-xs-12">{!! $article->content !!}</div>
     {{--</table>--}}
-{{--</div>--}}
+</div>
 
 <script src="{{ url('/src/js/jQuery.min.2.2.4.js') }}" ></script>
 <script>
