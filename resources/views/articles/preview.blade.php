@@ -35,11 +35,11 @@
         var width = $(document.body).width();
 
 
-        var tables = document.getElementsByTagName('img');
-        for(var i = 0; i<tables.length; i++){  // 逐个改变
-            tables[i].style.width = '100%';  // 宽度改为100%
-            tables[i].style.height = 'auto';
-        }
+//        var tables = document.getElementsByTagName('img');
+//        for(var i = 0; i<tables.length; i++){  // 逐个改变
+//            tables[i].style.width = '100%';  // 宽度改为100%
+//            tables[i].style.height = 'auto';
+//        }
 
 //        var width = document.body.scrollWidth;
 //        jQuery('.content p img').width(width > 800 ? 800 *0.9 : width);
