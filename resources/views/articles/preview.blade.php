@@ -2,7 +2,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
 <title>{{ $article->title }}</title>
 <link rel="stylesheet" href="{{ asset("/src/css/preview.css") }}"/>
-{{--<div class="article-preview" id="content" contenteditable="false">--}}
+<div class="article-preview" id="content" contenteditable="false">
     <div class="title col-xs-12">{{ $article->title }}</div>
     <div class="clearfix"></div>
     <div class="subtitle">
@@ -29,7 +29,7 @@
     {{--<table>--}}
         <div class="content col-xs-12">{!! $article->content !!}</div>
     {{--</table>--}}
-{{--</div>--}}
+</div>
 
 <script src="{{ url('/src/js/jQuery.min.2.2.4.js') }}" ></script>
 <script>
