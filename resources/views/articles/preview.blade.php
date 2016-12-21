@@ -1,6 +1,6 @@
 {{--<meta name="viewport" content="width=device-width, initial-scale=1" />--}}
 <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
-{{--<title>{{ $article->title }}</title>--}}
+<title>{{ $article->title }}</title>
 <link rel="stylesheet" href="{{ asset("/src/css/preview.css") }}"/>
 {{--<link>http://www.topautochina.com/preview/{{ $article->id }}</link>--}}
 <!--此行是XML声明。定义了XML的版本和所使用的编码-->
