@@ -9,11 +9,11 @@
         xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
     <channel>
         <title>{{ $article->title }}</title>
-        <link>http://www.topautochina.com</link>
+{{--        <link>http://www.topautochina.com/preview/{{ $article->id }}</link>--}}
         <description><![CDATA[{{ $article->description }}]]>}</description>
         <item>
             <title>{{ $article->title }}</title>
-            <link>http://www.topautochina.com</link>
+            {{--<link>http://www.topautochina.com/preview/{{ $article->id }}</link>--}}
             <description><![CDATA[{{ $article->description }}]]></description>
             <pubDate>{{ date('Y-m-d H:i', strtotime($article->created_at)) }}</pubDate>
         </item>
