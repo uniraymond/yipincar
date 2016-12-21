@@ -4,21 +4,21 @@
 <link rel="stylesheet" href="{{ asset("/src/css/preview.css") }}"/>
 {{--<link>http://www.topautochina.com/preview/{{ $article->id }}</link>--}}
 <!--此行是XML声明。定义了XML的版本和所使用的编码-->
-<rss
-        xmlns:content="http://purl.org/rss/1.0/modules/content/"
-        xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
-    <channel>
-        <title>{{ $article->title }}</title>
-{{--        <link>http://www.topautochina.com/preview/{{ $article->id }}</link>--}}
-        <description><![CDATA[{{ $article->description }}]]>}</description>
-        <item>
-            <title>{{ $article->title }}</title>
+{{--<rss--}}
+        {{--xmlns:content="http://purl.org/rss/1.0/modules/content/"--}}
+        {{--xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">--}}
+    {{--<channel>--}}
+        {{--<title>{{ $article->title }}</title>--}}
+        {{--<link>http://www.topautochina.com/preview/{{ $article->id }}</link>--}}
+        {{--<description><![CDATA[{{ $article->description }}]]>}</description>--}}
+        {{--<item>--}}
+            {{--<title>{{ $article->title }}</title>--}}
             {{--<link>http://www.topautochina.com/preview/{{ $article->id }}</link>--}}
-            <description><![CDATA[{{ $article->description }}]]></description>
-            <pubDate>{{ date('Y-m-d H:i', strtotime($article->created_at)) }}</pubDate>
-        </item>
-    </channel>
-</rss>
+            {{--<description><![CDATA[{{ $article->description }}]]></description>--}}
+            {{--<pubDate>{{ date('Y-m-d H:i', strtotime($article->created_at)) }}</pubDate>--}}
+        {{--</item>--}}
+    {{--</channel>--}}
+{{--</rss>--}}
 {{--<div class="article-preview" id="content" contenteditable="false">--}}
 <div style="margin: 17px" >
 
