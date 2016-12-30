@@ -172,6 +172,8 @@ Route::group(['prefix'=>'api'], function() {
 
 });
 
+Route::get('article/videoTest', 'ArticleController@videoTest');
+
 Route::get('/get_captcha/{config?}', function (\Mews\Captcha\Captcha $captcha, $config = 'default') {
     return $captcha->src($config);
 });

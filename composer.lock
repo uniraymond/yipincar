@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "115b53e034e8f6a292e9d828b057eab1",
-    "content-hash": "288f4b04f43b31f9ed74b639799b5711",
+    "hash": "ae17fb3ef8fca55ee8f5667e81a72073",
+    "content-hash": "8a66fe0c575ce4832bcc011c269591cd",
     "packages": [
         {
             "name": "classpreloader/classpreloader",
@@ -1432,6 +1432,85 @@
                 "silly"
             ],
             "time": "2016-09-16 11:44:03"
+        },
+        {
+            "name": "moell/laravel-rss",
+            "version": "1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/moell-peng/laravel-rss.git",
+                "reference": "cac73c3da8999d7a665bb1bed91aeb7ae4c54eb2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/moell-peng/laravel-rss/zipball/cac73c3da8999d7a665bb1bed91aeb7ae4c54eb2",
+                "reference": "cac73c3da8999d7a665bb1bed91aeb7ae4c54eb2",
+                "shasum": ""
+            },
+            "require": {
+                "moell/rss": "1.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Moell\\LaravelRss\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Moell",
+                    "email": "moell91@foxmail.com"
+                }
+            ],
+            "description": "Based on moell/rss development laravel version",
+            "keywords": [
+                "laravel",
+                "rss"
+            ],
+            "time": "2016-11-28 05:23:13"
+        },
+        {
+            "name": "moell/rss",
+            "version": "1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/moell-peng/rss.git",
+                "reference": "52b15b3a76e4f79f653c4c256663ed2c347fe039"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/moell-peng/rss/zipball/52b15b3a76e4f79f653c4c256663ed2c347fe039",
+                "reference": "52b15b3a76e4f79f653c4c256663ed2c347fe039",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Moell\\Rss\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Moell",
+                    "email": "moell91@foxmail.com"
+                }
+            ],
+            "description": "moell/rss is a package that follows the RSS 2.0 standard",
+            "keywords": [
+                "rss"
+            ],
+            "time": "2016-11-28 05:12:40"
         },
         {
             "name": "monolog/monolog",

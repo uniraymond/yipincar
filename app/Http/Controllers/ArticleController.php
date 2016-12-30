@@ -846,4 +846,20 @@ class ArticleController extends Controller
             'content' => '内容是必须的'
         ];
     }
+
+    public function videoTest(Request $request) {
+        //website
+        $authuser = $request->user();
+
+        $categories = Category::where('last_category', 1)->get();
+        $types = ArticleTypes::all();
+        $tags = Tags::all();
+        $currentAction = false;
+        $totalTop = $this->getTotalTop();
+
+        $articles = Article::where('created_by', $authuser->id)->orderBy('top', 'desc')->orderBy('created_at', 'desc')->paginate(15);
+        $totalArticle = Article::where('created_by', $authuser->id)->count();
+
+        return view('articles/videotest', ['articles'=>$articles, 'categories'=>$categories, 'types'=>$types, 'tags'=>$tags, 'currentAction'=>$currentAction, 'totalArticle'=>$totalArticle, 'totalTop'=>$totalTop]);
+    }
 }

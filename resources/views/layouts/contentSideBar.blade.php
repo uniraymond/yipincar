@@ -12,6 +12,10 @@
             @if((null !== Auth::user()) && Auth::user()->hasAnyRole(['super_admin', 'admin', 'chef_editor', 'adv_editor']))
             <li class="list-group-item {{ (Request::is('*history') ? 'active' : '') }}"><a href="{{ url('admin/history') }}"> <i class="fa fa-files-o fa-fw"></i> 历史记录</a></li>
             @endif
+
+            @if((null !== Auth::user()) && Auth::user()->hasAnyRole(['super_admin']))
+                <li class="list-group-item {{ (Request::is('*article/videoTest') ? 'active' : '') }}"> <a href="{{ url('admin/article/videoTest') }}"><i class="fa fa-files-o fa-fw"></i> 视频测试 </a></li>
+            @endif
         </ul>
     </div>
 </div>
