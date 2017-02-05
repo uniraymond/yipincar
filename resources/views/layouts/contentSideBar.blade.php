@@ -14,7 +14,7 @@
             @endif
 
             @if((null !== Auth::user()) && Auth::user()->hasAnyRole(['super_admin']))
-                <li class="list-group-item {{ (Request::is('*article/videoTest') ? 'active' : '') }}"> <a href="{{ url('admin/article/videoTest') }}"><i class="fa fa-files-o fa-fw"></i> 视频测试 </a></li>
+                <li class="list-group-item {{ (Request::is('*videotest') ? 'active' : '') }}"> <a href="{{ url('admin/videotest') }}"><i class="fa fa-files-o fa-fw"></i> 视频测试 </a></li>
             @endif
         </ul>
     </div>

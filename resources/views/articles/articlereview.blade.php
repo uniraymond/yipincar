@@ -14,9 +14,9 @@
                     {{--{!! Form::open(array('url' => '/admin/article/articlereview', 'class' => 'form', 'method'=>'get')) !!}--}}
                     {{--{!! Form::token() !!}--}}
                         <select class="js-example-basic-single form-control" name="statusfilter" id="statusfilter">
-                            <option value="0">选择状态</option>
-                            <option value="2">初审</option>
-                            <option value="3">终审</option>
+                            <option value="0" {{ $statusfilter == 0 ? 'selected' : '' }}>选择状态</option>
+                            <option value="2" {{ $statusfilter == 2 ? 'selected' : '' }}>初审</option>
+                            <option value="3" {{ $statusfilter == 3 ? 'selected' : '' }}>终审</option>
                         </select>
                     {{--{!! Form::submit('过滤', array('class'=>'btn btn-default')) !!}--}}
                     {{--{!! Form::close() !!}--}}

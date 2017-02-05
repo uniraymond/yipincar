@@ -121,6 +121,10 @@ Route::group(['middleware'=>'auth', 'prefix'=>'admin'], function() {
     Route::resource('comment', 'CommentController');
     Route::resource('user', 'UserController');
     Route::resource('taboo', 'TabooController');
+
+    Route::get('videotest', 'ArticleController@videoTest');
+    Route::any('createtest', 'ArticleController@createTest');
+
 });
 
 Route::group(['middleware' => 'auth'], function () {
@@ -172,7 +176,6 @@ Route::group(['prefix'=>'api'], function() {
 
 });
 
-Route::get('article/videoTest', 'ArticleController@videoTest');
 
 Route::get('/get_captcha/{config?}', function (\Mews\Captcha\Captcha $captcha, $config = 'default') {
     return $captcha->src($config);

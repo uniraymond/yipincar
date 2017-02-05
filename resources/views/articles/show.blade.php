@@ -50,21 +50,46 @@
                             <div>
                                 @php
                                     $articleLinks = $article->resources;
-                                    $articleLink = '';
+                                    $articleLink1 = '';
                                     if (count($articleLinks) > 0) {
                                         foreach($articleLinks as $artLink) {
-                                            $articleLink = $artLink->link;
-                                            break;
+                                            if($artLink->description == 'image') {
+                                                $articleLink1 = "http://localhost:8000".$artLink->link;
+                                                break;
+                                            }
                                         }
                                     }
                                 @endphp
-                                <img id="image" width="100" src="{{ $articleLink  }}" alt="{{ $article->title }}" />
+                                <img id="image" width="100" src="{{ $articleLink1  }}" alt="{{ $article->title }}" />
                             </div>
                             <div>简述:</div>
                             <div class="description" style="margin-bottom: 15px">{{ $article->description }}</div>
                             <div class="clearfix"></div>
                             <div id="preview" >详细内容:</div>
-                            <div class="content"> {!! $article->content !!} </div>
+                            @if($article->categories->id == 16)
+                                @php
+                                $articleLinks = $article->resources;
+                                $articleLink = '';
+                                if (count($articleLinks) > 0) {
+                                foreach($articleLinks as $artLink) {
+                                    if($artLink->description == 'video') {
+                                        $articleLink = "http://localhost:8000".$artLink->link;
+                                        break;
+                                    }
+                                }
+                                }
+                                @endphp
+                                <video id="example_video_1" class="video-js vjs-default-skin vjs-big-play-centered"
+                                       controls preload="auto" width="auto" height="640"
+                                       poster="{{$articleLink1}}"
+                                       data-setup='{"example_option":true}'>
+                                    <source src="{{$articleLink}}"/>
+                                    <p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p>
+                                </video>
+                            @else
+                                <div class="content"> {!! $article->content !!} </div>
+                            @endif
+
                             <div class="list-group">
                                 <div class="list-group-item list-group-item-action">
                                     栏目: {{ $article->categories->name }} </div>
@@ -119,6 +144,19 @@
 
         jQuery(function(){
             jQuery('.article-content img').width(500);
+        });
+    </script>
+
+    <script>
+        videojs("example_video_1", {}, function(){
+            // Player (this) is initialized and ready.
+        });
+        videojs(document.getElementById('example_video_1'), {}, function() {
+            // This is functionally the same as the previous example.
+        });
+        videojs(document.getElementsByClassName('awesome_video_class')[0], {}, function() {
+            // You can grab an element by class if you'd like, just make sure
+            // if it's an array that you pick one (here we chose the first).
         });
     </script>
 @endsection

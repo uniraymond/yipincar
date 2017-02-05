@@ -8,6 +8,10 @@ use App\ArticleStatusCheck;
 use App\Tags;
 use App\User;
 use App\Yipinlog;
+use FFMpeg\Coordinate\Dimension;
+use FFMpeg\Coordinate\TimeCode;
+use FFMpeg\FFMpeg;
+use FFMpeg\FFProbe;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB as DB;
 use Illuminate\Http\Response;
@@ -23,14 +27,24 @@ use App\Resource;
 use App\ArticleResources;
 use App\Http\Controllers\Auth;
 
+use App\AdvTemplate;
+
 class ArticleController extends Controller
 {
-    public function generateImageName($file){
+    public function generateFileName($extension) {
         $fartime = strtotime('2300-12-30');
         $nowtime  = strtotime('now');
         $new_name = ($fartime - $nowtime).'ypc';
-        $new_filename = $new_name . '.' . $file->getClientOriginalExtension();
+        $new_filename = $new_name . '.' . $extension;
         return $new_filename;
+    }
+    public function generateImageName($file){
+//        $fartime = strtotime('2300-12-30');
+//        $nowtime  = strtotime('now');
+//        $new_name = ($fartime - $nowtime).'ypc';
+//        $new_filename = $new_name . '.' . $file->getClientOriginalExtension();
+//        return $new_filename;
+        return $this->generateFileName($file->getClientOriginalExtension());
     }
 
     public function index(Request $request)
@@ -81,16 +95,17 @@ class ArticleController extends Controller
         $tags = Tags::all();
         $currentAction = false;
         $totalTop = $this->getTotalTop();
+        $statusfilter = $request['statusfilter'];
 
         if ($request['statusfilter']) {
-            $articles = Article::where('published', $request['statusfilter'])->orderBy('top', 'desc')->orderBy('created_at', 'desc')->paginate(15);
-            $totalArticle = Article::where('published',$request['statusfilter'])->count();
+            $articles = Article::where('published', $statusfilter)->orderBy('top', 'desc')->orderBy('created_at', 'desc')->paginate(15);
+            $totalArticle = Article::where('published',$statusfilter)->count();
         } else {
             $articles = Article::where('published', 2)->orWhere('published', 3)->orderBy('top', 'desc')->orderBy('created_at', 'desc')->paginate(15);
             $totalArticle = Article::where('published', 2)->orWhere('published', 3)->count();
         }
 
-        return view('articles/articlereview', ['articles'=>$articles, 'categories'=>$categories, 'types'=>$types, 'tags'=>$tags, 'currentAction'=>$currentAction, 'totalArticle'=>$totalArticle, 'totalTop'=>$totalTop]);
+        return view('articles/articlereview', ['articles'=>$articles, 'categories'=>$categories, 'types'=>$types, 'tags'=>$tags, 'currentAction'=>$currentAction, 'totalArticle'=>$totalArticle, 'totalTop'=>$totalTop, 'statusfilter'=>$statusfilter]);
     }
 
     public function getTotalTop()
@@ -472,6 +487,10 @@ class ArticleController extends Controller
             case 'articleactived':
                 return redirect('admin/articles/actived');
                 break;
+//            video test
+            case 'createtest':
+                return redirect('admin/createtest');
+
             default:
                 return redirect('admin/article');
                 break;
@@ -506,19 +525,47 @@ class ArticleController extends Controller
     public function store(Request $request)
     {
         $authuser = $request->user();
-        $this->validate($request, [
-            'title' => 'required|max:31',
-            'description' => 'max:141',
-            'content'=> 'required'
-        ], $this->messages());
+        $categoryId = $request['category_id'];
+        $videoLink = $request['link'];
+
+        if($categoryId == 16) {
+            $this->validate($request, [
+                'title' => 'required|max:31',
+                'description' => 'max:141',
+            ], $this->messages());
+
+        } else {
+            $this->validate($request, [
+                'title' => 'required|max:31',
+                'description' => 'max:141',
+                'content'=> 'required'
+            ], $this->messages());
+        }
 
         $title = $request->input('title');
         $content = trim($request['content']);
         $description = $request['description'];
         $typeId = $request['type_id'];
-        $categoryId = $request['category_id'];
+//        $categoryId = $request['category_id'];
         $published = $request['published'] ? 2 : 1;
         $authname = $request['authname'];
+
+        $article = new Article();
+        $article->title = $title;
+        $article->content = $content;
+        $article->description = $description;
+        $article->created_by = $authuser->id;
+//    $article->type_id = $typeId;
+        //$typeId default is article and setup 1 as article
+        $article->type_id = 1;
+        $article->category_id = $categoryId;
+        $article->published = $published;
+        if($authname) {
+            $article->authname = $authname;
+        }
+        $article->readed = random_int(2600, 4500);
+//        if($categoryId == 16)
+        $article->save();
 
         if (isset($request['tags'])){
             $tags = trim($request['tags']);
@@ -536,21 +583,6 @@ class ArticleController extends Controller
                 $tags = array_unique($tags);
             }
         }
-        $article = new Article();
-        $article->title = $title;
-        $article->content = $content;
-        $article->description = $description;
-        $article->created_by = $authuser->id;
-//    $article->type_id = $typeId;
-        //$typeId default is article and setup 1 as article
-        $article->type_id = 1;
-        $article->category_id = $categoryId;
-        $article->published = $published;
-        if($authname) {
-            $article->authname = $authname;
-        }
-        $article->readed = random_int(2600, 4500);
-        $article->save();
 
         if ($request['published']) {
             $articleStatusCheck = new ArticleStatusCheck();
@@ -566,6 +598,8 @@ class ArticleController extends Controller
         foreach ($allTags as $allTag) {
             $allTagArray[$allTag->id] = $allTag->name;
         }
+
+
 
         if (isset($tags)) {
             foreach ($tags as $tag) {
@@ -585,6 +619,7 @@ class ArticleController extends Controller
             }
         }
         $file = $request->file('images');
+        $imageFile = $file;
         if (!empty($file)) {
             $fileOriginalName = $file->getClientOriginalName();
             $fileName = $this->generateImageName($file);
@@ -617,6 +652,7 @@ class ArticleController extends Controller
             $resource->name = $fileName;
             $resource->link = '/' . $imageLink;
             $resource->created_by = $authuser->id;
+            $resource->description = 'image';
             $resource->save();
             $articlResource = new ArticleResources();
             $articlResource->article_id = $article->id;
@@ -634,6 +670,67 @@ class ArticleController extends Controller
                     $article->resources()->attach($file->id);
                     break;
                 }
+            }
+        }
+
+        if($categoryId == 16) {
+            $video = $request->file('video');
+            if (!empty($video)) {
+                $fileOriginalName = $video->getClientOriginalName();
+                $fileName = $this->generateImageName($video);
+                $fileDir = "videos/".$authuser->id;
+
+                $video->move($fileDir, $fileName);
+
+                $videoLink = $fileDir . '/' . $fileName;
+                $videoPath = 'videos/'.$authuser->id.'/'.$fileName;
+
+//                $store = Image::make(sprintf('videos/'.$authuser->id.'/%s', $fileName))->save();
+
+//                if(!
+                Storage::exists('videos/'.$authuser->id.'/%s', $fileName);
+//                ){
+//                    exit('保存文件失败！');
+//                }
+                if(filesize($videoPath) > 1024 * 1024 *20) {
+                    echo "视频文件不能大于20M, 大于20M请填写视频链接";
+                    exit;
+                }
+                $resource = new Resource();
+                $resource->name = $fileName;
+                $resource->link = '/' . $videoLink;
+                $resource->created_by = $authuser->id;
+                $resource->description = 'video';
+                $resource->save();
+                $articlResource = new ArticleResources();
+                $articlResource->article_id = $article->id;
+                $articlResource->resource_id = $resource->id;
+                $articlResource->save();
+
+                $article->totalTime = $this->getTime($videoPath);
+                if(empty($imageFile)) {
+                    $coverName = $this->generateFileName('jpg');
+                    $coverPath = "photos/".$authuser->id."/".$coverName;
+//                    echo $coverPath; exit;
+                    $this->getVideoCover($videoPath, 1, $coverPath);
+                    $resource = new Resource();
+                    $resource->name = $coverName;
+                    $resource->link = '/' . $coverPath;
+                    $resource->created_by = $authuser->id;
+                    $resource->description = 'image1';
+                    $resource->save();
+                    $articlResource = new ArticleResources();
+                    $articlResource->article_id = $article->id;
+                    $articlResource->resource_id = $resource->id;
+                    $articlResource->save();
+                }
+                $article->save();
+
+            }else {
+                $this->validate($request, [
+                    'videolink' => 'required',
+                ], $this->messages());
+                $article->link=$request['videolink'];
             }
         }
 
@@ -843,7 +940,8 @@ class ArticleController extends Controller
             'title.required' => '标题是必填的',
             'title.max' => '标题不能超过30个字',
             'description' => '简介不能超过140个字',
-            'content' => '内容是必须的'
+            'content' => '内容是必须的',
+            'videolink' => '请添加视频文件或者视频链接'
         ];
     }
 
@@ -862,4 +960,118 @@ class ArticleController extends Controller
 
         return view('articles/videotest', ['articles'=>$articles, 'categories'=>$categories, 'types'=>$types, 'tags'=>$tags, 'currentAction'=>$currentAction, 'totalArticle'=>$totalArticle, 'totalTop'=>$totalTop]);
     }
+
+    public function createTest(Request $request)
+    {
+        $categoryid = $request ->get('categoryid');
+        $categories = Category::where('last_category', 1)->get();
+        $types = ArticleTypes::all();
+        $tags = Tags::all();
+        $currentAction = false;
+
+        $tagString = null;
+        $tagArray = array();
+        foreach ($tags as $tag) {
+            $tagArray[]= $tag->name;
+        }
+        $tagString = implode(', ', $tagArray);
+        $templates = AdvTemplate::all();
+
+        return view('articles/createtest', [
+            'articletypes' => $types,
+            'categoryid' => $categoryid,
+            'categories' => $categories,
+            'tags' => $tags,
+            'tagString' => $tagString,
+            'tagArray' => $tagArray,
+            'types'=>$types,
+            'currentAction'=>$currentAction,
+            'templates'=>$templates
+        ]);
+    }
+
+    function BigEndian2Int($byte_word, $signed = false) {
+        $int_value = 0;
+        $byte_wordlen = strlen($byte_word);
+        for ($i = 0; $i < $byte_wordlen; $i++) {
+            $int_value += ord($byte_word{$i}) * pow(256, ($byte_wordlen - 1 - $i));
+        }
+        if ($signed) {
+            $sign_mask_bit = 0x80 << (8 * ($byte_wordlen - 1));
+            if ($int_value & $sign_mask_bit) {
+                $int_value = 0 - ($int_value & ($sign_mask_bit - 1));
+            }
+        }
+        return $int_value;
+    }
+
+    function getVideoTime($name){
+        if(!file_exists($name)){
+            echo "文件不存在";exit;
+        }
+        $flv_data_length=filesize($name);
+        $fp = @fopen($name, 'rb');
+        $flv_header = fread($fp, 5);
+        fseek($fp, 5, SEEK_SET);
+        $frame_size_data_length = $this-> BigEndian2Int(fread($fp, 4));
+        $flv_header_frame_length = 9;
+        if ($frame_size_data_length > $flv_header_frame_length) {
+            fseek($fp, $frame_size_data_length - $flv_header_frame_length, SEEK_CUR);
+        }
+        $duration = 0;
+        while ((ftell($fp) + 1) < $flv_data_length) {
+            $this_tag_header = fread($fp, 16);
+            $data_length = $this->BigEndian2Int(substr($this_tag_header, 5, 3));
+            $timestamp = $this->BigEndian2Int(substr($this_tag_header, 8, 3));
+            $next_offset = ftell($fp) - 1 + $data_length;
+            if ($timestamp > $duration) {
+                $duration = $timestamp;
+            }
+            fseek($fp, $next_offset, SEEK_SET);
+        }
+        fclose($fp);
+        return $duration;
+    }
+
+    //获得视频文件的总长度时间和创建时间
+    function getTime($file){
+//        $vtime = exec("ffmpeg -i ".$file." 2>&1 | grep 'Duration' | cut -d ' ' -f 4 | sed s/,//");//总长度
+//        $ctime = date("Y-m-d H:i:s",filectime($file));//创建时间
+////$duration = explode(":",$time);
+//// $duration_in_seconds = $duration[0]*3600 + $duration[1]*60+ round($duration[2]);//转化为秒
+////        return array('vtime'=>$vtime,
+////            'ctime'=>$ctime
+////        );
+//        echo 'duaration'.$vtime;
+//        return  $vtime;
+        $ffprobe = FFProbe::create([
+            'ffmpeg.binaries'  => '/usr/local/bin/FFMpeg/ffmpeg',
+            'ffprobe.binaries' => '/usr/local/bin/FFMpeg/ffprobe',
+//            'timeout'          => 3600, // The timeout for the underlying process
+//            'ffmpeg.threads'   => 12,   // The number of threads that FFMpeg should use
+        ]);
+        return $ffprobe ->format($file) // extracts file informations
+            ->get('duration');
+    }
+//获得视频文件的缩略图
+    function getVideoCover($file,$time, $name) {
+//        if(empty($time))$time = '1';//默认截取第一秒第一帧
+//        $strlen = strlen($file);
+//        $videoCover = substr($file,0,$strlen-4);
+//        $videoCoverName = $videoCover.'.jpg';//缩略图命名
+//        exec("ffmpeg -i ".$file." -y -f mjpeg -ss ".$time." -t 0.001 -s 320x240 ".$videoCoverName."",$out,$status);
+//        if($status == 0)return $videoCoverName;
+//        elseif ($status == 1)return FALSE;
+        $ffmpeg = FFMpeg::create([
+            'ffmpeg.binaries'  => '/usr/local/bin/FFMpeg/ffmpeg',
+            'ffprobe.binaries' => '/usr/local/bin/FFMpeg/ffprobe',
+        ]);
+        $video = $ffmpeg->open($file);
+        $video ->filters()
+//            ->resize(new Dimension(320, 240))
+            ->synchronize();
+        $video ->frame(TimeCode::fromSeconds($time))
+            ->save($name);
+    }
+
 }

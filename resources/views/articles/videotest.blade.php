@@ -8,7 +8,7 @@
     <div id="page-wrapper">
         <div class="row">
             <div class="col-lg-12" style="margin-top: 35px" >
-                <h1 class="page-header">我的文章</h1>
+                <h1 class="page-header">视频测试</h1>
 
                 {{--flash alert--}}
                 @if ($success = Session::get('status'))
@@ -21,7 +21,7 @@
 
                 {{--new blog link--}}
                 <div class="col-lg-2 col-md-3 col-sm-4 pull-right clearfix text-right">
-                    {{ link_to('admin/article/create', '新建', ['class'=>'btn btn-second']) }}
+                    {{ link_to('admin/createtest', '新建', ['class'=>'btn btn-second']) }}
                     <input class="btn btn-default" type="submit" value="删除" />
                 </div>
                 @if(count($articles)>0)

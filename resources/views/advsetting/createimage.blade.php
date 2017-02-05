@@ -131,7 +131,7 @@
             {{--</label>--}}
           {{--</div>--}}
 
-          <div class="clearfix"></div>
+          {{--<div class="clearfix"></div>--}}
 
           {!! Form::label('images', '上传图片*', array('class'=>'col-md-2')) !!}
           @if ($errors->has('images'))
