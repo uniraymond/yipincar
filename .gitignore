@@ -11,3 +11,5 @@ Homestead.json
 /config/database.php
 /laradock
 /public/apps/TopAuto.apk
+/bower_components
+/public/vendor/FFMpeg
