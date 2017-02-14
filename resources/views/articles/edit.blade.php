@@ -82,7 +82,7 @@
                         <div class="{{ isset($errors) && $errors->has('title') ? 'has-error clearfix' : 'clearfix' }}" style="margin-bottom: 0px" >
                             {{--<label class="col-lg-12 col-md-12 col-sm-12">标题</label>--}}
                             <div class="col-md-12">
-                                <input class="col-lg-12 col-md-12 col-sm-12 form-control" type="text" id="title" name="title" required  value="{{ $article->title }}" maxlength="30"   placeholder="标题, 限30字"/>
+                                <input class="col-lg-12 col-md-12 col-sm-12 form-control" type="text" id="title" name="title" required  value="{{ $article->title }}" maxlength="35"   placeholder="标题, 限35字"/>
                                 @if ($errors->has('title'))
                                     <span class="help-block">
                                         <strong>{{ $errors->first('title') }}</strong>
@@ -175,9 +175,9 @@
                jQuery('#title').blur(function(){
                    var title =  jQuery('#title').val();
                    console.log(title.length);
-                   if (title.length > 30) {
+                   if (title.length > 35) {
                        jQuery('#title').append('<span><strong>文章标题太长</strong></span>');
-                       alert('文章标题超过30个字');
+                       alert('文章标题超过35个字');
                        return false;
                    }
                });

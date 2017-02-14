@@ -87,7 +87,7 @@
 
           {!! Form::label('title', '标题', array('class'=>'col-md-1')) !!}
           <div class="col-md-11" style="margin-bottom: 55px">
-            {!! Form::text('title', '', array('class' => 'input col-md-12 form-control', 'placeholder' => '限30个字')) !!}
+            {!! Form::text('title', '', array('class' => 'input col-md-12 form-control', 'placeholder' => '限35个字')) !!}
           </div>
           <div class="clearfix"></div>
 
