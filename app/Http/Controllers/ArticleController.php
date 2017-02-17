@@ -529,6 +529,8 @@ class ArticleController extends Controller
                 $tags = preg_replace("/。/",",",$tags);
                 $tags = preg_replace("/，/",",",$tags);
                 $tags = preg_replace("/；/",",",$tags);
+                $tags = preg_replace("/、/",",",$tags);
+                $tags = preg_replace("/ /",",",$tags);
 //              $tags = rtrim(trim($tags), ',');
                 $tags = explode(',', $tags);
                 $tags = array_map('trim', $tags);
