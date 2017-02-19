@@ -23,7 +23,7 @@
                         <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
                             {!! Form::label('name', '名字', array('class'=>'col-md-4 control-label')) !!}
                             <div class="col-md-6">
-                                {!! Form::text('name', '' , array('class'=>'form-control', 'placeholder' => '名字', 'required'=>'required' )) !!}
+                                {!! Form::text('name', $user && $user->name ? $user->name : '' , array('class'=>'form-control', 'placeholder' => '名字', 'required'=>'required' )) !!}
 
                                 @if ($errors->has('name'))
                                     <span class="help-block">
@@ -37,7 +37,7 @@
                             {!! Form::label('email', '电子邮件(用于登录)', array('class'=>'col-md-4 control-label')) !!}
 
                             <div class="col-md-6">
-                                {!! Form::text('email', '' , array('class'=>'form-control', 'placeholder' => '电子邮件', 'required'=>'required' )) !!}
+                                {!! Form::text('email', $user && $user->email ? $user->email : '' , array('class'=>'form-control', 'placeholder' => '电子邮件', 'required'=>'required' )) !!}
 
                                 @if ($errors->has('email'))
                                     <span class="help-block">
@@ -96,7 +96,7 @@
                             <div class="col-md-6">
                                 <select name="status_id" id="status_id" class="form-control">
                                     @foreach($statuses as $status)
-                                        <option value="{{ $status->id }}">{{ $status->name }}</option>
+                                        <option value="{{ $status->id }}" @if($user && $status->id == $user->status_id)selected="selected"@endif>{{ $status->name }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -131,6 +131,27 @@
 
 <script src="{{ url('/src/js/jQuery.min.2.2.4.js') }}" ></script>
 <script>
+//    jQuery( document ).ready(function() { 
+//        jQuery('#email').on('click', function(){ 
+//            var email = jQuery('#email').val(); 
+//            jQuery.ajax({ 
+//                method: 'GET', 
+//                dataType: 'json', 
+//                url: '/emailvalidate/'+ email, 
+//                success: function(data){ 
+//                    console.log(data); 
+//                    console.log(data.code); 
+//                    console.log(data['status']); 
+//                    if(data.status == 400) { 
+//                        jQuery('#phone').append('<span class="help-block"><strong>邮箱已经存在</strong></span>'); 
+//                        alert('邮箱已被注册'); 
+//                        return false; 
+//                    } 
+//                } 
+//            }) 
+//        }); 
+//    });
+
     jQuery( document ).ready(function() {
         jQuery('img.captcha-img').on('click', function () {
             var captcha = jQuery(this);

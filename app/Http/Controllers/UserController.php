@@ -54,7 +54,7 @@ class UserController extends Controller
         $roles = Role::where('name','<>', 'super_admin')->get();
         $authView = $auth->hasAnyRole(['super_admin', 'admin']);
         if ($authView) {
-            return view('users/create', ['roles'=>$roles, 'usergroups'=>$roles, 'statuses'=>$statuses]);
+            return view('users/create', ['user'=> null, 'roles'=>$roles, 'usergroups'=>$roles, 'statuses'=>$statuses]);
         }
         return redirect('/');
     }
@@ -89,6 +89,21 @@ class UserController extends Controller
         $new_user->secret = md5($request['password']);
         $new_user->status_id = $request['status_id'];
         $new_user->pre_status_id = $request['status_id'];
+        $user = User::where('email', $new_user->email) ->first();
+        if ($user && count($user)>0) {
+            $roles = Role::where('name','<>', 'super_admin')->get();
+            $statuses = UserStatus::all();
+            $valideType = 'checkemail';
+            $validator = $this->validator($request->all(), $valideType);
+
+            if ($validator->fails()) {
+                $this->throwValidationException(
+                    $request, $validator
+                );
+            }
+            return view('users/create', ['user'=> $new_user, 'roles'=>$roles, 'usergroups'=>$roles, 'statuses'=>$statuses,
+                    'name'=>$new_user->name]);
+        }
         if($request['status_id'] == 4) {
             $new_user->banned = 1;
         }
@@ -359,7 +374,7 @@ class UserController extends Controller
             case 'checkemail':
                 return Validator::make($data, [
                     'name' => 'required|max:255',
-                    'email' => 'required|email|max:255',
+                    'email' => 'required|email|max:255|unique:users',
                     'password' => 'confirmed',
                     'roles' => 'required',
                 ], $this->messages($valideType));
