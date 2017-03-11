@@ -165,6 +165,8 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
+//        Image Water Mark
+        Intervention\Image\ImageServiceProvider::class,
     ],
 
     /*
@@ -217,6 +219,8 @@ return [
         'Html' => Collective\Html\HtmlFacade::class,
         'Captcha' => Mews\Captcha\Facades\Captcha::class,
 
+//        Image Water Mark
+        'Image' => Intervention\Image\Facades\Image::class,
     ],
 
 ];

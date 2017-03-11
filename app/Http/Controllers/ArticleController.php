@@ -22,6 +22,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use App\Resource;
 use App\ArticleResources;
 use App\Http\Controllers\Auth;
+use App\Libraries;
 
 class ArticleController extends Controller
 {
@@ -613,7 +614,9 @@ class ArticleController extends Controller
 //          $cell_img_size_thumbs = GetImageSize($imageThumbsLink); // need to caculate the file width and height to make the image same
             $cell_img_size = GetImageSize($imageLink); // need to caculate the file width and height to make the image same
 
-            $image = Image::make(sprintf('photos/'.$authuser->id.'/%s', $fileName))->save();
+            $image = Image::make(sprintf('photos/'.$authuser->id.'/%s', $fileName));
+            $image->insert('photos/watermark.png', 'bottom-right', 15, 10);
+            $image->save();
             $imageThumbs = Image::make(sprintf('photos/'.$authuser->id.'/thumbs/%s', $fileName))->resize(300, (int)((300 *  $cell_img_size[1]) / $cell_img_size[0]))->save();
             $imageOriginal = Image::make(sprintf('photos/'.$authuser->id.'/original/%s', $fileName))->save();
 
@@ -850,4 +853,6 @@ class ArticleController extends Controller
             'content' => '内容是必须的'
         ];
     }
+
+
 }
