@@ -44,8 +44,8 @@ class InfoController extends Controller
 
 
     private $likeKey = "";
-    private $androidVersion = "1.1.1";
-    private $iosVersion = "1.1.1";
+    private $androidVersion = "1.1.7";
+    private $iosVersion = "1.1.7";
 
     public function index()
     {
