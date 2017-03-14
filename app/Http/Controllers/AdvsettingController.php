@@ -246,7 +246,7 @@ class AdvsettingController extends Controller
     $this->validate($request, [
 //        'links' => 'required',
         'id' => 'required',
-        'title' => 'max:23'
+        'title' => 'required|max:36'
     ]);
 
     $advSetting = AdvSetting::findorFail($request['id']);
