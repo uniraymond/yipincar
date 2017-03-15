@@ -11,7 +11,7 @@
                 {{--new blog link--}}
                 <div class="col-lg-2 col-md-3 col-sm-4 pull-right clearfix text-right">
                     {{ link_to('admin/advsetting/createimage', '新建', ['class'=>'btn btn-second']) }}
-                    <input class="btn btn-default" type="submit" value="删除" />
+                    <input class="btn btn-default" type="submit" value="提交" />
                 </div>
 
                 {{--flash alert--}}
@@ -80,7 +80,7 @@
                         {!! Form::close() !!}
                     </table>
                     <div class="col-lg-2 col-md-3 col-sm-4 pull-right clearfix text-right">
-                        <input class="btn btn-default" type="submit" value="删除" />
+                        <input class="btn btn-default" type="submit" value="提交" />
                     </div>
                 @endif
                 <div class="col-lg-12 col-md-12 col-sm-12 clearfix">
