@@ -2,7 +2,7 @@
 @include('layouts.contentSideBar')
 {{--@include('advsetting.sidebarType',['types'=>$types, 'positions'=>$positions])--}}
 @section('content')
-    {!! Form::open(array('url' => 'admin/advsetting/update', 'class'=>'form', 'onsubmit'=>'return confirm("确定删除文章?");')) !!}
+    {!! Form::open(array('url' => 'admin/advsetting/update', 'class'=>'form', 'onsubmit'=>'return confirm("确定提交修改?");')) !!}
     <div id="page-wrapper">
         <div class="row">
             <div class="col-lg-12" style="margin-top: 35px">
