@@ -184,9 +184,9 @@ class InfoController extends Controller
             $advert = $advert ->where('category_id', $category);
         if($top >= 0)
             $advert = $advert ->where('top', $top);
-
-        $advert = $advert ->orderBy('order', 'asc')
-            ->take($limit) ->get();
+        if($limit > 0)
+            $advert = $advert ->take($limit);
+        $advert = $advert ->orderBy('order', 'asc') ->get();
         return $advert;
     }
 
@@ -246,7 +246,7 @@ class InfoController extends Controller
         $topArticles = array();
         $topAdverts = array();
         if($page == 1) {
-            $listAdverts = $this ->getAdvert(2, 10, 0, $category);
+            $listAdverts = $this ->getAdvert(2, 0, 0, $category);
             if($category == 3) {
                 $topArticles = $this->getArticleListContent() ->where('articles.top', 1)->get();
                 $topAdverts = $this ->getAdvert(2, 6, 1, $category);
