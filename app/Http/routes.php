@@ -169,7 +169,8 @@ Route::group(['prefix'=>'api'], function() {
     Route::any('repass', 'InfoController@resetPassword');
     Route::any('authlogin', 'InfoController@authLogin');
     Route::get('checkupdate/{device}', 'InfoController@checkAppUpdate');
-
+    Route::get('replaceimages', 'InfoController@replaceArticleImages');
+    Route::get('makeuserdirs', 'InfoController@makeUserDir');
 });
 
 Route::get('/get_captcha/{config?}', function (\Mews\Captcha\Captcha $captcha, $config = 'default') {

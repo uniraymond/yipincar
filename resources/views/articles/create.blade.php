@@ -176,7 +176,7 @@
         selector: "textarea#content",
         plugins : 'link image imagetools preview',
         menubar: false,
-        toolbar: 'undo redo | image | removeformat | bold italic underline strikethrough | alignleft aligncenter alignright',
+        toolbar: 'undo redo | image | removeformat | bold italic underline strikethrough | alignleft aligncenter alignright',// | link',
         relative_urls: false,
         automatic_uploads: false,
         removeformat: [
