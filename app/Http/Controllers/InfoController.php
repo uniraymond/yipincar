@@ -1195,16 +1195,16 @@ class InfoController extends Controller
 
             $dir = public_path().'/photos/'.$user->id;
             if(!is_dir($dir)) {
-                mkdir($dir, 0777, true);
+                @mkdir($dir, 0777, true);
             }
 
             $thumbsDir = $dir.'/thumbs';
             if(!is_dir($thumbsDir))
-                mkdir($thumbsDir, 0777, true);
+                @mkdir($thumbsDir, 0777, true);
 
             $oriDir = $dir.'/original';
             if(!is_dir($oriDir))
-                mkdir($oriDir, 0777, true);
+                @mkdir($oriDir, 0777, true);
         }
     }
 }
