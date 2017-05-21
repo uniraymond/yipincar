@@ -1051,26 +1051,28 @@ class InfoController extends Controller
                 $fileDir = $fileNames[count($fileNames) -1];  //article title as dir
                 $article = Article::where('title', '=', $fileDir)->first();  //find article according title
 
-
-                foreach($dirs[$fullPath]['file'] as $imagePath) { // dir paths under public path
-                    $imageExts = explode('.', $imagePath);
-                    $imageType = end($imageExts);
-                    if($imageType=='jpg' || $imageType=='jpeg' || $imageType=='jpg' || $imageType=='png'
-                        || $imageType=='gif' || $imageType=='bmp' || $imageType=='JPG' )
-                        array_push($imagePaths, str_replace(public_path(), '', $imagePath));
-                }
-                $filePath = str_replace(public_path(), '', $dirNames[$i]);//'/photos/oldarticles/'.$fileDir;
+                if($article) {
+                    foreach($dirs[$fullPath]['file'] as $imagePath) { // dir paths under public path
+                        $imageExts = explode('.', $imagePath);
+                        $imageType = end($imageExts);
+                        if($imageType=='jpg' || $imageType=='jpeg' || $imageType=='jpg' || $imageType=='png'
+                            || $imageType=='gif' || $imageType=='bmp' || $imageType=='JPG' )
+                            array_push($imagePaths, str_replace(public_path(), '', $imagePath));
+                    }
+                    $filePath = str_replace(public_path(), '', $dirNames[$i]);//'/photos/oldarticles/'.$fileDir;
 //                echo $filePath;
 //                echo $article['content'];
 //                echo $fullPath;
-                sort($imagePaths);  //sort images by name
+                    sort($imagePaths);  //sort images by name
 //                var_dump($imagePaths);
 //                echo ' before: '.$article['content'];
-                $content = $this->get_img_thumb_url($article, $imagePaths);
-                $article['content'] = $content;
+                    $content = $this->get_img_thumb_url($article, $imagePaths);
+                    $article['content'] = $content;
 //                $article->save();
 
-                echo ' after: '.$content;
+                    echo ' after: '.$content;
+                }
+
             }
         }
     }
