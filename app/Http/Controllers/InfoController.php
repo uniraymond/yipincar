@@ -1068,7 +1068,7 @@ class InfoController extends Controller
 //                echo ' before: '.$article['content'];
                     $content = $this->get_img_thumb_url($article, $imagePaths);
                     $article['content'] = $content;
-//                $article->save();
+                $article->save();
 
                     echo ' after: '.$content;
                 }
