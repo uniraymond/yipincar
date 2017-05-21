@@ -11,10 +11,11 @@ use App\Zan;
 use App;
 use App\Taboo;
 use App\AdvSetting;
+use App\Resource;
+use App\ArticleResources;
 
 use Illuminate\Http\Request;
 use Intervention\Image\Facades\Image;
-//use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Collection;
 
 use App\Http\Requests;
@@ -1039,61 +1040,88 @@ class InfoController extends Controller
 
     public function replaceArticleImages() {
 
-        $dirs = $this->read_all_dir(public_path().'/photos/oldarticles')['dir'];
+        $dirs = $this->read_all_dir(public_path().'/photos/oldarticles')['dir'];//all old article dir & files
 //        var_dump($dirs);
         if(count($dirs)) {
-            $dirNames = array_keys($dirs);
+            $dirNames = array_keys($dirs);  //all dir name
             for($i=0; $i<count($dirs); $i++) {
-                $fullPath = $dirNames[$i];
+                $fullPath = $dirNames[$i];  //one article dir path
                 $fileNames = explode('/', $fullPath);
                 $imagePaths = array();
-                $fileDir = $fileNames[count($fileNames) -1];
-                $article = Article::where('title', '=', $fileDir)->first();
+                $fileDir = $fileNames[count($fileNames) -1];  //article title as dir
+                $article = Article::where('title', '=', $fileDir)->first();  //find article according title
 
-                foreach($dirs[$fullPath]['file'] as $imagePath) {
-                    array_push($imagePaths, str_replace(public_path(), '', $imagePath));
+
+                foreach($dirs[$fullPath]['file'] as $imagePath) { // dir paths under public path
+                    $imageExts = explode('.', $imagePath);
+                    $imageType = end($imageExts);
+                    if($imageType=='jpg' || $imageType=='jpeg' || $imageType=='jpg' || $imageType=='png'
+                        || $imageType=='gif' || $imageType=='bmp' || $imageType=='JPG' )
+                        array_push($imagePaths, str_replace(public_path(), '', $imagePath));
                 }
                 $filePath = str_replace(public_path(), '', $dirNames[$i]);//'/photos/oldarticles/'.$fileDir;
 //                echo $filePath;
 //                echo $article['content'];
 //                echo $fullPath;
-                sort($imagePaths);
+                sort($imagePaths);  //sort images by name
 //                var_dump($imagePaths);
 //                echo ' before: '.$article['content'];
-                $content = $this->get_img_thumb_url($article['content'], $imagePaths);
+                $content = $this->get_img_thumb_url($article, $imagePaths);
                 $article['content'] = $content;
-                $article->save();
+//                $article->save();
 
-//                echo ' after: '.$content;
+                echo ' after: '.$content;
             }
         }
     }
 
 
 
-    function get_img_thumb_url($article, $content,$paths)
+    function get_img_thumb_url($article ,$paths)
     {
         $char = 'shouldreplacedimage';
         $pregRule = "/<[img|IMG].*?src=[\'|\"](.*?(?:[\.jpg|\.jpeg|\.png|\.gif|\.bmp|\.JPG]))[\'|\"].*?[\/]?>/";
 //        echo $pregRule;
-        $content = preg_replace($pregRule, '<img src="'.$char.'" style="max-width:100%">', $content);
+        $content = preg_replace($pregRule, '<img src="'.$char.'" style="max-width:100%">', $article['content']);
+
+        $newDir = '/photos/articles/'.$article->id;
+        $newPath = public_path().$newDir;
+        if(!is_dir($newPath))
+            @mkdir($newPath, 0777, true);
+
 
         foreach($paths as $path) {
-            $start = stripos($content, $char);
-            if($start)
-                $content = substr_replace($content, $path, $start, strlen($char));
 
-            $resource = new Resource();
-            $splitPaths = explode('/', $path);
-            $resource->name = $splitPaths[count($splitPaths)-1];
-            $resource->link = $path;
-            $resource->created_by = $article->created_by;
-            $resource->save();
 
-            $articlResource = new ArticleResources();
-            $articlResource->article_id = $article->id;
-            $articlResource->resource_id = $resource->id;
-            $articlResource->save();
+            $start = stripos($content, $char);  //locate replaced position
+            if($start) {
+                $fileTypes = explode('.', $path);
+                $imageNames = explode('/', $path);
+                $imageName = end($imageNames);
+//                $newName = $this->generateImageName(end($fileTypes));
+
+                $newImagePath = $newPath.'/'.$imageName; //$this->generateImageName(end($fileTypes));
+                $newLink = $newDir.'/'.$imageName;//$newName;
+                echo $newLink;
+                copy(public_path().$path, $newImagePath);
+                unlink(public_path().$path);
+//            Storage::move(public_path().$path, $newImagePath);
+                $content = substr_replace($content, $newLink, $start, strlen($char));
+
+                $resource = new Resource();
+//            $splitPaths = explode('/', $path);
+                $resource->name = $imageName;//$splitPaths[count($splitPaths)-1];
+                $resource->link = $newLink;
+                $resource->created_by = $article->created_by;
+                $resource->save();
+
+                $articlResource = new ArticleResources();
+                $articlResource->article_id = $article->id;
+                $articlResource->resource_id = $resource->id;
+                $articlResource->save();
+            }
+
+
         }
         return $content;
     }
@@ -1187,6 +1215,14 @@ class InfoController extends Controller
                 }
             }
         }
+    }
+
+    public function generateImageName($fileType){
+        $fartime = strtotime('2300-12-30');
+        $nowtime  = strtotime('now');
+        $new_name = ($fartime - $nowtime).'ypc';
+        $new_filename = $new_name . '.' . $fileType;
+        return $new_filename;
     }
 
     public function makeUserDir() {
