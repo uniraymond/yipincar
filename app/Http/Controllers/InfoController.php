@@ -1039,7 +1039,7 @@ class InfoController extends Controller
     }
 
     public function replaceArticleImages() {
-
+        //check image name/ extention
         $dirs = $this->read_all_dir(public_path().'/photos/oldarticles')['dir'];//all old article dir & files
 //        var_dump($dirs);
         if(count($dirs)) {
