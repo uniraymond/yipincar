@@ -49,7 +49,7 @@
                             <div class="{{ isset($errors) && $errors->has('authname') ? 'has-error clearfix' : 'clearfix' }}" style="margin-bottom: 55px" >
                                 <label class="col-lg1-1 col-md-1 col-sm-1">作者</label>
                                 <div class="col-md-2">
-                                    <input class="col-lg-3 col-md-3 col-sm-3 form-control" type="text" id="authname" name="authname"  />
+                                    <input class="col-lg-3 col-md-3 col-sm-3 form-control" value="{{ $authname }}" type="text" id="authname" name="authname"  />
                                 </div>
                             </div>
                         @endif
@@ -67,13 +67,56 @@
                             @endif
                         </div><br>
 
+                        {!! Form::label('template_label', '首页模版', array('class'=>'col-md-1', 'style'=>'margin-top: 55px')) !!}
+                        <div class="col-md-2" style="margin-top: 55px">
+                            <select class="col-lg-12 col-md-12 col-sm-12 form-control" name="statusfilter" id="statusfilter">
+                                @foreach ($templates as $temp)
+                                    <option value="{{$temp->id}}" @if($template == $temp->id) selected = 'selected' @endif>{{$temp->name}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div class="clearfix"></div>
+
                         <div>
                             <label class="col-lg-1 col-md-1 col-sm-1" style="margin-top: 55px">首页图片</label>
-                            <div class="col-md-4"  style="margin-top: 55px; margin-bottom: 55px">
-                                <input type="file" class="col-md-12 form-control-file" id="images" name="images" />
-{{--                                {!! Form::file('images', '', array('class'=>'col-md-12 form-control-file form-control', 'id'=>'images', 'required'=>'required')) !!}--}}
-                                <img id="image" width="300" />
-                            </div>
+
+                            {{--<form style="position:relative">--}}
+                                <div class="col-md-3"  style=" margin-top: 55px; margin-bottom: 55px">
+                                    <input type="file" class="col-md-12 form-control-file" id="images1" name="images1" style="display:none"/>
+                                    {{--                                {!! Form::file('images', '', array('class'=>'col-md-12 form-control-file form-control', 'id'=>'images', 'required'=>'required')) !!}--}}
+                                    <label for="images1">　　
+                                        　　　　　　
+                                        <img src="/photos/add_image.jpg" id="image1" width="200" />
+                                        　　
+                                        　　</label>
+                                </div>
+
+                            @if($template==3)
+                                <div class="col-md-3"  style=" margin-top: 55px; margin-bottom: 55px">
+                                    <input type="file" class="col-md-12 form-control-file" id="images2" name="images2" style="display:none"/>
+                                    {{--                                {!! Form::file('images', '', array('class'=>'col-md-12 form-control-file form-control', 'id'=>'images', 'required'=>'required')) !!}--}}
+                                    <label for="images2">　　
+                                        　　　　　　
+                                        <img src="/photos/add_image.jpg" id="image2" width="200" />
+                                        　　
+                                        　　</label>
+                                </div>
+
+                                <div class="col-md-3"  style=" margin-top: 55px; margin-bottom: 55px">
+                                    <input type="file" class="col-md-12 form-control-file" id="images3" name="images3" style="display:none"/>
+                                    {{--                                {!! Form::file('images', '', array('class'=>'col-md-12 form-control-file form-control', 'id'=>'images', 'required'=>'required')) !!}--}}
+                                    <label for="images3">　　
+                                        　　　　　　
+                                        <img src="/photos/add_image.jpg" id="image3" width="200" />
+                                        　　
+                                        　　</label>
+                                </div>
+                            @endif
+
+
+                            {{--</form>--}}
+
                         </div>
 
 
@@ -146,19 +189,43 @@
     </div>
 
     <script>
-        document.getElementById("images").onchange = function () {
+        document.getElementById("images1").onchange = function () {
             var reader = new FileReader();
 
             reader.onload = function (e) {
                 // get loaded data and render thumbnail.
-                document.getElementById("image").src = e.target.result;
+                document.getElementById("image1").src = e.target.result;
+            };
+
+            // read the image file as a data URL.
+            reader.readAsDataURL(this.files[0]);
+        };
+
+        document.getElementById("images2").onchange = function () {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                // get loaded data and render thumbnail.
+                document.getElementById("image2").src = e.target.result;
+            };
+
+            // read the image file as a data URL.
+            reader.readAsDataURL(this.files[0]);
+        };
+
+        document.getElementById("images3").onchange = function () {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                // get loaded data and render thumbnail.
+                document.getElementById("image3").src = e.target.result;
             };
 
             // read the image file as a data URL.
             reader.readAsDataURL(this.files[0]);
         };
     </script>
-@endsection
+{{--@endsection--}}
 <script src="{{ url('/src/js/vendor/tinymce/js/tinymce/tinymce.min.js') }}"></script>
 <script>
 //    var sampleApp = angular.module('myapp', [], function($interpolateProvider) {
@@ -174,7 +241,7 @@
 
         path_absolute : "{{ URL::to('/') }}/",
         selector: "textarea#content",
-        plugins : 'link image imagetools preview',
+        plugins : ['link image imagetools preview', 'paste'],
         menubar: false,
         toolbar: 'undo redo | image | removeformat | bold italic underline strikethrough | alignleft aligncenter alignright | link',
         relative_urls: false,
@@ -184,6 +251,12 @@
             {selector: 'span', attributes : ['style', 'class'], remove : 'empty', split : true, expand : false, deep : true},
             {selector: '*', attributes : ['style', 'class'], split : false, expand : false, deep : true}
         ],
+
+        paste_auto_cleanup_on_paste : true,
+        paste_remove_styles: true,
+        paste_remove_styles_if_webkit: true,
+        paste_strip_class_attributes: true,
+
         file_browser_callback_types: 'image media',
         file_browser_callback : function(field_name, url, type, win) {
             var x = window.innerWidth || document.documentElement.clientWidth || document.getElementsByTagName('body')[0].clientWidth;
@@ -297,3 +370,30 @@
         });
     } );
 </script>
+
+<script src="{{ url('/src/js/jQuery.min.2.2.4.js') }}" ></script>
+<script type="text/javascript">
+    jQuery('#statusfilter').change(function(){
+        $(".statusfilter").empty();
+
+// 实际的应用中，这里的option一般都是用循环生成多个了
+
+//            var option = $("<option>").val(1).text("pxx");
+//
+//            $(".statusfilter").append(option);
+        console.log($("#statusfilter").val());
+        var statusfilterurl = "/admin/article/create?template="+$("#statusfilter").val()+"&authname="+$("#authname").val();
+        jQuery(window.location).attr('href', statusfilterurl);
+    });
+</script>
+{{--<script src="{{ url('/src/js/jQuery.min.2.2.4.js') }}" ></script>--}}
+{{--<script type="text/javascript">--}}
+    {{--jQuery('#template_id').change(function(){--}}
+        {{--$(".template_id").empty();--}}
+        {{--console.log($("#template_id").val());--}}
+        {{--var statusfilterurl = "/admin/article/create?template="+$("#template_id").val();--}}
+        {{--jQuery(window.location).attr('href', statusfilterurl);--}}
+    {{--});--}}
+{{--</script>--}}
+
+@stop
