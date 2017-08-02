@@ -246,7 +246,7 @@ class AdvsettingController extends Controller
     $this->validate($request, [
 //        'links' => 'required',
         'id' => 'required',
-        'title' => 'max:23'
+        'title' => 'required|max:36'
     ]);
 
     $advSetting = AdvSetting::findorFail($request['id']);
@@ -316,8 +316,9 @@ class AdvsettingController extends Controller
       $advSetting->top = $request['top'] ? 1 : 0;
       $advSetting->published_at = date('Y-m-d');
       $advSetting->created_by = $authuser->id;
-      $advSetting->readed = random_int(2600, 4500);
-      $advSetting->save();
+      $advSetting->readed = random_int(4000, 7000);
+//        $advSetting->readed = random_int(15000, 20000);
+        $advSetting->save();
 
         if ($request['status']) {
             $articleStatusCheck = new ArticleStatusCheck();

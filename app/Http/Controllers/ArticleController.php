@@ -17,6 +17,8 @@ use App\Article;
 use App\ArticleTags as ArticleTags;
 use App\Category;
 use App\ArticleTypes as ArticleTypes;
+use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -25,6 +27,7 @@ use App\ArticleResources;
 use App\Http\Controllers\Auth;
 use App\Libraries;
 use Illuminate\Support\Collection;
+use App\AdvTemplate;
 
 class ArticleController extends Controller
 {
@@ -484,12 +487,18 @@ class ArticleController extends Controller
         return redirect('admin/article');
     }
 
-    public function create()
+    public function create(Request $request)
     {
+//        Input::flash();
+        $authname = $request->get('authname');
+//        Session::flash('authname', 'title');
         $categories = Category::where('last_category', 1)->get();
         $types = ArticleTypes::all();
+        $templates = AdvTemplate::all();
         $tags = Tags::all();
         $currentAction = false;
+        $requestTemplate = $request->get('template');
+        $template = $requestTemplate ? $requestTemplate : 1;
 
         $tagString = null;
         $tagArray = array();
@@ -498,13 +507,21 @@ class ArticleController extends Controller
         }
         $tagString = implode(', ', $tagArray);
 
+        if($requestTemplate) {
+//            return redirect()->back()->withInput();
+//            return redirect('/admin/article/create?template='.$requestTemplate)->withInput();
+//            return redirect()->route('/admin/article/create?template='.$requestTemplate)->withInput();
+        }
         return view('articles/create', [
             'articletypes' => $types,
             'categories' => $categories,
             'tags' => $tags,
             'tagString' => $tagString,
             'tagArray' => $tagArray,
-            'types'=>$types, 'currentAction'=>$currentAction
+            'types'=>$types, 'currentAction'=>$currentAction,
+            'templates'=>$templates,
+            'template'=>$template,
+            'authname'=>$authname,
         ]);
     }
 
@@ -556,7 +573,7 @@ class ArticleController extends Controller
         if($authname) {
             $article->authname = $authname;
         }
-        $article->readed = random_int(2600, 4500);
+        $article->readed = random_int(4000, 7000);
         $article->save();
 
         if ($request['published']) {

@@ -11,10 +11,11 @@ use App\Zan;
 use App;
 use App\Taboo;
 use App\AdvSetting;
+use App\Resource;
+use App\ArticleResources;
 
 use Illuminate\Http\Request;
 use Intervention\Image\Facades\Image;
-//use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Collection;
 
 use App\Http\Requests;
@@ -44,8 +45,8 @@ class InfoController extends Controller
 
 
     private $likeKey = "";
-    private $androidVersion = "1.1.1";
-    private $iosVersion = "1.1.1";
+    private $androidVersion = "1.1.7";
+    private $iosVersion = "1.1.7";
 
     public function index()
     {
@@ -184,9 +185,9 @@ class InfoController extends Controller
             $advert = $advert ->where('category_id', $category);
         if($top >= 0)
             $advert = $advert ->where('top', $top);
-
-        $advert = $advert ->orderBy('order', 'asc')
-            ->take($limit) ->get();
+        if($limit > 0)
+            $advert = $advert ->take($limit);
+        $advert = $advert ->orderBy('order', 'asc') ->get();
         return $advert;
     }
 
@@ -246,7 +247,7 @@ class InfoController extends Controller
         $topArticles = array();
         $topAdverts = array();
         if($page == 1) {
-            $listAdverts = $this ->getAdvert(2, 3, 0, $category);
+            $listAdverts = $this ->getAdvert(2, 0, 0, $category);
             if($category == 3) {
                 $topArticles = $this->getArticleListContent() ->where('articles.top', 1)->get();
                 $topAdverts = $this ->getAdvert(2, 6, 1, $category);
@@ -1037,4 +1038,211 @@ class InfoController extends Controller
             return ['version' => $this->iosVersion];
     }
 
+    public function replaceArticleImages() {
+        //check image name/ extention
+        $dirs = $this->read_all_dir(public_path().'/photos/oldarticles')['dir'];//all old article dir & files
+//        var_dump($dirs);
+        if(count($dirs)) {
+            $dirNames = array_keys($dirs);  //all dir name
+            for($i=0; $i<count($dirs); $i++) {
+                $fullPath = $dirNames[$i];  //one article dir path
+                $fileNames = explode('/', $fullPath);
+                $imagePaths = array();
+                $fileDir = $fileNames[count($fileNames) -1];  //article title as dir
+                $article = Article::where('title', '=', $fileDir)->first();  //find article according title
+
+                if($article) {
+                    foreach($dirs[$fullPath]['file'] as $imagePath) { // dir paths under public path
+                        $imageExts = explode('.', $imagePath);
+                        $imageType = end($imageExts);
+                        if($imageType=='jpg' || $imageType=='jpeg' || $imageType=='jpg' || $imageType=='png'
+                            || $imageType=='gif' || $imageType=='bmp' || $imageType=='JPG' )
+                            array_push($imagePaths, str_replace(public_path(), '', $imagePath));
+                    }
+                    $filePath = str_replace(public_path(), '', $dirNames[$i]);//'/photos/oldarticles/'.$fileDir;
+//                echo $filePath;
+//                echo $article['content'];
+//                echo $fullPath;
+                    sort($imagePaths);  //sort images by name
+//                var_dump($imagePaths);
+//                echo ' before: '.$article['content'];
+                    $content = $this->get_img_thumb_url($article, $imagePaths);
+                    $article['content'] = $content;
+                $article->save();
+
+                    echo ' after: '.$content;
+                }
+
+            }
+        }
+    }
+
+
+
+    function get_img_thumb_url($article ,$paths)
+    {
+        $char = 'shouldreplacedimage';
+        $pregRule = "/<[img|IMG].*?src=[\'|\"](.*?(?:[\.jpg|\.jpeg|\.png|\.gif|\.bmp|\.JPG]))[\'|\"].*?[\/]?>/";
+//        echo $pregRule;
+        $content = preg_replace($pregRule, '<img src="'.$char.'" style="max-width:100%">', $article['content']);
+
+        $newDir = '/photos/articles/'.$article->id;
+        $newPath = public_path().$newDir;
+        if(!is_dir($newPath))
+            @mkdir($newPath, 0777, true);
+
+
+        foreach($paths as $path) {
+
+
+            $start = stripos($content, $char);  //locate replaced position
+            if($start) {
+                $fileTypes = explode('.', $path);
+                $imageNames = explode('/', $path);
+                $imageName = end($imageNames);
+//                $newName = $this->generateImageName(end($fileTypes));
+
+                $newImagePath = $newPath.'/'.$imageName; //$this->generateImageName(end($fileTypes));
+                $newLink = $newDir.'/'.$imageName;//$newName;
+                echo $newLink;
+                copy(public_path().$path, $newImagePath);
+                unlink(public_path().$path);
+//            Storage::move(public_path().$path, $newImagePath);
+                $content = substr_replace($content, $newLink, $start, strlen($char));
+
+                $resource = new Resource();
+//            $splitPaths = explode('/', $path);
+                $resource->name = $imageName;//$splitPaths[count($splitPaths)-1];
+                $resource->link = $newLink;
+                $resource->created_by = $article->created_by;
+                $resource->save();
+
+                $articlResource = new ArticleResources();
+                $articlResource->article_id = $article->id;
+                $articlResource->resource_id = $resource->id;
+                $articlResource->save();
+            }
+
+
+        }
+        return $content;
+    }
+
+    public function read_all_dir($dir) {
+        $result = array();
+        $handle = opendir($dir);
+        if ($handle)
+        {
+            while ( ( $file = readdir ( $handle ) ) !== false )
+            {
+                if ( $file != '.' && $file != '..')
+                {
+                    $cur_path = $dir . DIRECTORY_SEPARATOR . $file;
+                    if ( is_dir ( $cur_path ) )
+                    {
+                        $result['dir'][$cur_path] = $this->read_all_dir ($cur_path);
+                    }
+                    else
+                    {
+                        $result['file'][] = $cur_path;
+                    }
+                }
+            }
+            closedir($handle);
+        }
+        return $result;
+    }
+
+    public function setResources($article, $fileName, $link) {
+        $checkArticlResource = ArticleResources::where('article_id', $article->id)->get();
+        if (!empty($file)) {
+//            $fileOriginalName = $file->getClientOriginalName();
+//            $fileName = $this->generateImageName($file);
+//            $fileOriginalDir = "photos/".$authuser->id."/original";
+//            $fileThumbsDir = "photos/".$authuser->id."/thumbs";
+//            $fileDir = "photos/".$authuser->id;
+//
+//            $file->move($fileDir, $fileName);
+
+//            $imageOriginalLink = $fileOriginalDir . '/' . $fileName;
+//            $imageThumbsLink = $fileThumbsDir . '/' . $fileName;
+//            $imageLink = $fileDir . '/' . $fileName;
+//            copy($imageLink, $imageThumbsLink);
+//            copy($imageLink, $imageOriginalLink);
+
+//            $cell_img_size = GetImageSize($imageLink); // need to caculate the file width and height to make the image same
+//
+//            $image = Image::make(sprintf('photos/'.$authuser->id.'/%s', $fileName))->save();
+//            $imageThumbs = Image::make(sprintf('photos/'.$authuser->id.'/thumbs/%s', $fileName))->resize(600, (int)((600 *  $cell_img_size[1]) / $cell_img_size[0]))->save();
+//            $imageOriginal = Image::make(sprintf('photos/'.$authuser->id.'/original/%s', $fileName))->save();
+
+            $resource = new Resource();
+            $resource->name = $fileName;
+            $resource->link = $link;
+            $resource->created_by = $article->created_by;
+            $resource->save();
+
+            $oldArticlResource = ArticleResources::where('article_id', $article->id)->delete();
+
+            $articlResource = new ArticleResources();
+            $articlResource->article_id = $article->id;
+            $articlResource->resource_id = $resource->id;
+            $articlResource->save();
+        } elseif (!isset($checkArticlResource) && count($checkArticlResource) <= 0) {
+            $files = Resource::all();
+
+            $image_links = array();
+            $image_names = array();
+
+            foreach ($files as $file) {
+                // check there is a record on article resource page.
+                $article_image = ArticleResources::where('article_id', $article->id)->where('resource_id', $file->id)->first();
+
+                $image_links[] = $file->link;
+                $image_names[] = $file->name;
+
+                //check a image in the content and image in resource table
+                if (false !== strpos($article->content, $file->link)) {
+                    $hasImage = true;
+                    if (count($article_image)) {
+                        break;
+                    } else {
+                        $article->resources()->attach($file->id);
+                    }
+                    break;
+                }
+
+                if (!$hasImage && $article_image) {
+                    $article_image->delete();
+                }
+            }
+        }
+    }
+
+    public function generateImageName($fileType){
+        $fartime = strtotime('2300-12-30');
+        $nowtime  = strtotime('now');
+        $new_name = ($fartime - $nowtime).'ypc';
+        $new_filename = $new_name . '.' . $fileType;
+        return $new_filename;
+    }
+
+    public function makeUserDir() {
+        $users = User::where('role', '!=', '10')->get();
+        foreach($users as $user) {
+
+            $dir = public_path().'/photos/'.$user->id;
+            if(!is_dir($dir)) {
+                @mkdir($dir, 0777, true);
+            }
+
+            $thumbsDir = $dir.'/thumbs';
+            if(!is_dir($thumbsDir))
+                @mkdir($thumbsDir, 0777, true);
+
+            $oriDir = $dir.'/original';
+            if(!is_dir($oriDir))
+                @mkdir($oriDir, 0777, true);
+        }
+    }
 }
