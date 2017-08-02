@@ -27,6 +27,8 @@ Route::get('authsendtxtpw/{phone}', 'UserController@cellphonevalidatepw');
 Route::get('authprofile/{uid}/show', 'ProfileController@authshow');
 Route::get('authprofile/{uid}/update', 'ProfileController@authupdate');
 Route::get('preview/{id}', 'ArticleController@preview');
+Route::get('v1/preview/{id}/{exid}', 'ArticleController@previewv1');
+
 Route::get('authsendtxt/{phone}', 'UserController@cellphonevalidate');
 
 //Route::get('authprofile/show', 'ProfileController@authshow');
@@ -121,6 +123,10 @@ Route::group(['middleware'=>'auth', 'prefix'=>'admin'], function() {
     Route::resource('comment', 'CommentController');
     Route::resource('user', 'UserController');
     Route::resource('taboo', 'TabooController');
+});
+
+Route::group(['middleware'=>'auth', 'prefix'=>'adminv1'], function() {
+
 });
 
 Route::group(['middleware' => 'auth'], function () {

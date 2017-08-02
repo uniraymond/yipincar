@@ -75,7 +75,13 @@
                                 <img id="image" width="300" />
                             </div>
                         </div>
+                        <div class="clearfix"/>
 
+                        <div>
+                            <label class="col-md-3 published_label" style="margin-top: 60px">
+                                <input class="published" type="checkbox" name="watermark"  /> 添加水印
+                            </label>
+                        </div>
 
                         <div class="{{ isset($errors) && $errors->has('title') ? 'has-error clearfix' : 'clearfix' }}" style="margin-bottom: 0px" >
                             {{--<label class="col-lg-1 col-md-1 col-sm-1">标题</label>--}}
@@ -176,7 +182,7 @@
         selector: "textarea#content",
         plugins : 'link image imagetools preview',
         menubar: false,
-        toolbar: 'undo redo | image | removeformat | bold italic underline strikethrough | alignleft aligncenter alignright',
+        toolbar: 'undo redo | image | removeformat | bold italic underline strikethrough | alignleft aligncenter alignright | link',
         relative_urls: false,
         automatic_uploads: false,
         removeformat: [

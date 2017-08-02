@@ -8,6 +8,7 @@ use App\ArticleStatusCheck;
 use App\Tags;
 use App\User;
 use App\Yipinlog;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB as DB;
 use Illuminate\Http\Response;
@@ -23,6 +24,7 @@ use App\Resource;
 use App\ArticleResources;
 use App\Http\Controllers\Auth;
 use App\Libraries;
+use Illuminate\Support\Collection;
 
 class ArticleController extends Controller
 {
@@ -369,7 +371,7 @@ class ArticleController extends Controller
             $cell_img_size = GetImageSize($imageLink); // need to caculate the file width and height to make the image same
 
             $image = Image::make(sprintf('photos/'.$authuser->id.'/%s', $fileName))->save();
-            $imageThumbs = Image::make(sprintf('photos/'.$authuser->id.'/thumbs/%s', $fileName))->resize(600, (int)((600 *  $cell_img_size[1]) / $cell_img_size[0]))->save();
+            $imageThumbs = Image::make(sprintf('photos/'.$authuser->id.'/thumbs/%s', $fileName))->resize(300, (int)((300 *  $cell_img_size[1]) / $cell_img_size[0]))->save();
             $imageOriginal = Image::make(sprintf('photos/'.$authuser->id.'/original/%s', $fileName))->save();
 
             $resource = new Resource();
@@ -615,7 +617,9 @@ class ArticleController extends Controller
             $cell_img_size = GetImageSize($imageLink); // need to caculate the file width and height to make the image same
 
             $image = Image::make(sprintf('photos/'.$authuser->id.'/%s', $fileName));
-            $image->insert('photos/watermark.png', 'bottom-right', 15, 10);
+//            $markWidth = ($cell_img_size[0] > $cell_img_size[1] ? $cell_img_size[1] : $cell_img_size[0]) - 20;
+//            $waterMark = Image::make(sprintf('photos/watermark2.png'))->resize($markWidth -40, $markWidth -40);
+//            $image->insert($waterMark, 'center');
             $image->save();
             $imageThumbs = Image::make(sprintf('photos/'.$authuser->id.'/thumbs/%s', $fileName))->resize(300, (int)((300 *  $cell_img_size[1]) / $cell_img_size[0]))->save();
             $imageOriginal = Image::make(sprintf('photos/'.$authuser->id.'/original/%s', $fileName))->save();
@@ -624,26 +628,51 @@ class ArticleController extends Controller
             $resource->name = $fileName;
             $resource->link = '/' . $imageLink;
             $resource->created_by = $authuser->id;
+
             $resource->save();
             $articlResource = new ArticleResources();
             $articlResource->article_id = $article->id;
             $articlResource->resource_id = $resource->id;
             $articlResource->save();
+
+
         }else {
             $files = Resource::all();
             $image_links = array();
             $image_names = array();
 
+
             foreach ($files as $file) {
                 $image_links[] = $file->link;
                 $image_names[] = $file->name;
+
+
+
                 if (false !== strpos($article->content, $file->link)) {
                     $article->resources()->attach($file->id);
                     break;
                 }
             }
         }
-
+        $paths = array();
+        preg_match_all('/<img.+src=\"?(.+\.(jpg|gif|bmp|bnp|png|mif|mif|jpeg|ico|tif|tiff|cut|pic|tga|dib|svg|eps|))\"?.+>/i', $article->content, $paths);
+        $paths = $paths[1];
+//        var_dump($paths);
+        if($paths && count($paths) ) {
+            foreach($paths as $path) {
+//                $photo = Image::make(sprintf(public_path().'/%s', $image->link));
+//                echo $path;
+                if($path && strlen($path)) {
+                    $newPath = substr($path, 1, strlen($path));
+                    $photo = Image::make($newPath);
+                    $imageSize = GetImageSize($newPath);
+                    $markWidth = ($imageSize[0] > $imageSize[1] ? $imageSize[1] : $imageSize[0]) - 20;
+                    $waterMark = Image::make('photos/watermark2.png')->resize($markWidth -40, $markWidth -40);
+                    $photo->insert($waterMark, 'center');
+                    $photo->save();
+                }
+            }
+        }
 
 
         $log['name'] = 'Create Article';
@@ -832,10 +861,69 @@ class ArticleController extends Controller
         return view('articles/preview', ['article'=>$article]);
     }
 
+    public function previewv1($article_id, $excludeids)
+    {
+        $article = Article::find($article_id);
+        $recommends = $this->getRecommendList($article_id, $excludeids);
+        $comments=$article->comments;
+        return view('articles/previewv1', ['article'=>$article, 'recommends'=>$recommends, 'comments'=>$comments]);
+    }
+
+    public function getRecommendList($articleid, $excludeids) {
+        $keys = ArticleTags::select('tag_id') ->where('article_id', $articleid) ->get();
+        $exArray = explode(',', $excludeids);
+
+        $limit = 5;
+        $artCollection = new Collection([]);
+        for ($i=0; $i < count($keys); $i++) {
+            $tagid = $keys[$i]['tag_id'];
+            $articles = Article::join('article_tags', 'article_tags.article_id', '=', 'articles.id')
+                ->join('categories', 'articles.category_id', '=', 'categories.id')
+//                    ->join('tags', 'article_tags.tag_id', '=', 'tags.id')
+                ->join('users', 'users.id', '=', 'articles.created_by')
+                ->leftJoin('article_resources', 'articles.id', '=', 'article_resources.article_id')
+                ->leftJoin('resources', 'resources.id', '=', 'article_resources.resource_id')
+                ->leftJoin('profiles', 'articles.created_by', '=', 'profiles.user_id')
+                ->join('article_types', 'articles.type_id', '=', 'article_types.id')
+                ->select('articles.id', 'articles.title', 'articles.description', 'articles.authname', 'articles.readed',
+                    'categories.name as categoryName', 'articles.category_id', 'article_types.name as articletypeName'
+                    , 'articles.created_at', 'article_resources.resource_id'
+                    , 'resources.link as resourceLink', 'resources.name as resourceName',
+                    'users.name as userName',
+                    'profiles.media_name as mediaName')
+                ->where('articles.published', '=', 4)
+                ->where('articles.banned', '=', 0)
+                ->where('articles.category_id', '!=', 13)
+                ->where('article_tags.tag_id', '=', $tagid)
+                ->whereNotIn('articles.id', $exArray)
+                ->orderBy('articles.created_at', 'desc')
+                ->take($limit)
+                ->get();
+            foreach($articles as $article) {
+                array_push($exArray, $article['id']);
+//                $excludeids = $excludeids.','.$article['id'];
+            }
+            if(sizeof($articles))
+                $artCollection->push($articles);
+        }
+        $recommands = new Collection([]);
+        if(sizeof($artCollection)) {
+            for($j=0; $j < $limit ; $j++) {
+                foreach($artCollection as $articles) {
+                    if(sizeof($articles) > $j) {
+                        $recommands ->push($articles[$j]);
+                    }
+                    if(sizeof($recommands) == 5) break;
+                }
+                if(sizeof($recommands) == 5) break;
+            }
+        }
+        return $recommands;//['recommends' => $recommands];
+    }
+
     public function previewSite($article_id)
     {
         $article = Article::find($article_id);
-
         return view('articles/previewsite', ['article'=>$article]);
     }
 
