@@ -70,6 +70,11 @@ class Article extends Model
   {
     return $this->belongsTo('App\User', 'updated_by');
   }
+
+  public function adv_templates()
+  {
+    return $this->belongsTo('App\AdvTemplate', 'template_id');
+  }
   
   public static function getArticle($id)
   {

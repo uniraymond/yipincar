@@ -16,6 +16,16 @@
                     </div>
                 @endif
 
+                @if (count($errors) > 0)
+                    <span class="help-block">
+                         <strong>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </strong>
+                    </span>
+                @endif
+
                 <div class="col-lg-12 col-md-12 col-sm-12" style="margin-top: 55px">
                     {!! Form::open(array('url' => 'admin/article/', 'class' => 'form', 'method'=>'put', 'enctype'=>'multipart/form-data')) !!}
                     <div class="form-group  col-lg-12 col-md-12 col-sm-12" >
@@ -49,7 +59,7 @@
                             <div class="{{ isset($errors) && $errors->has('authname') ? 'has-error clearfix' : 'clearfix' }}" style="margin-bottom: 55px" >
                                 <label class="col-lg1-1 col-md-1 col-sm-1">作者</label>
                                 <div class="col-md-2">
-                                    <input class="col-lg-3 col-md-3 col-sm-3 form-control" value="{{ $authname }}" type="text" id="authname" name="authname"  />
+                                    <input class="col-lg-3 col-md-3 col-sm-3 form-control" type="text" id="authname" name="authname"  />
                                 </div>
                             </div>
                         @endif
@@ -67,23 +77,28 @@
                             @endif
                         </div><br>
 
+                        @if( !Auth::user()->hasAnyRole([ 'auth_editor']))
                         {!! Form::label('template_label', '首页模版', array('class'=>'col-md-1', 'style'=>'margin-top: 55px')) !!}
-                        <div class="col-md-2" style="margin-top: 55px">
-                            <select class="col-lg-12 col-md-12 col-sm-12 form-control" name="statusfilter" id="statusfilter">
-                                @foreach ($templates as $temp)
-                                    <option value="{{$temp->id}}" @if($template == $temp->id) selected = 'selected' @endif>{{$temp->name}}</option>
-                                @endforeach
-                            </select>
-                        </div>
 
+                        <form id="template_form" >
+                            <div class="col-md-8" style="margin-top: 55px">
+                                {{--<select class="col-lg-12 col-md-12 col-sm-12 form-control" name="temmplate_radio" id="temmplate_radio">--}}
+                                @foreach ($templates as $temp)
+                                    <input type="radio" style="margin-left: 30px" name="temmplate_radio" id="temmplate_radio"  value="{{$temp->id}}" @if(1 == $temp->id) checked="checked" @endif />{{$temp->name}}
+                                    {{--<option value="{{$temp->id}}" @if($template == $temp->id) selected = 'selected' @endif>{{$temp->name}}</option>--}}
+                                @endforeach
+                                {{--</select>--}}
+                            </div>
+                        </form>
                         <div class="clearfix"></div>
+                        @endif
 
                         <div>
-                            <label class="col-lg-1 col-md-1 col-sm-1" style="margin-top: 55px">首页图片</label>
+                            <label class="col-lg-1 col-md-1 col-sm-1" style="margin-top: 75px">首页图片</label>
 
                             {{--<form style="position:relative">--}}
-                                <div class="col-md-3"  style=" margin-top: 55px; margin-bottom: 55px">
-                                    <input type="file" class="col-md-12 form-control-file" id="images1" name="images1" style="display:none"/>
+                                <div id="image_container1" class="col-md-3"  style=" margin-top: 55px;">
+                                    <input type="file" class="col-md-12 form-control-file" id="images1" name="images1"  style="display:none"/>
                                     {{--                                {!! Form::file('images', '', array('class'=>'col-md-12 form-control-file form-control', 'id'=>'images', 'required'=>'required')) !!}--}}
                                     <label for="images1">　　
                                         　　　　　　
@@ -92,18 +107,18 @@
                                         　　</label>
                                 </div>
 
-                            @if($template==3)
-                                <div class="col-md-3"  style=" margin-top: 55px; margin-bottom: 55px">
+{{--                            @if($template==3)--}}
+                                <div id="image_container2" class="col-md-3"  style=" margin-top: 55px; display:none">
                                     <input type="file" class="col-md-12 form-control-file" id="images2" name="images2" style="display:none"/>
                                     {{--                                {!! Form::file('images', '', array('class'=>'col-md-12 form-control-file form-control', 'id'=>'images', 'required'=>'required')) !!}--}}
                                     <label for="images2">　　
                                         　　　　　　
-                                        <img src="/photos/add_image.jpg" id="image2" width="200" />
+                                        <img src="/photos/add_image.jpg" id="image2" width="200"/>
                                         　　
                                         　　</label>
                                 </div>
 
-                                <div class="col-md-3"  style=" margin-top: 55px; margin-bottom: 55px">
+                                <div id="image_container3" class="col-md-3"  style=" margin-top: 55px; display:none">
                                     <input type="file" class="col-md-12 form-control-file" id="images3" name="images3" style="display:none"/>
                                     {{--                                {!! Form::file('images', '', array('class'=>'col-md-12 form-control-file form-control', 'id'=>'images', 'required'=>'required')) !!}--}}
                                     <label for="images3">　　
@@ -112,7 +127,7 @@
                                         　　
                                         　　</label>
                                 </div>
-                            @endif
+                            {{--@endif--}}
 
 
                             {{--</form>--}}
@@ -120,11 +135,13 @@
                         </div>
                         <div class="clearfix"/>
 
-                        <div>
-                            <label class="col-md-3 published_label" style="margin-top: 60px">
-                                <input class="published" type="checkbox" name="watermark"  /> 添加水印
-                            </label>
-                        </div>
+                        @if( !Auth::user()->hasAnyRole([ 'auth_editor']))
+                            <div>
+                                <label class="col-md-3 published_label" style="margin-top: 60px">
+                                    <input class="published" type="checkbox" name="watermark" id="watermark" /> 添加水印
+                                </label>
+                            </div>
+                        @endif
 
                         <div class="{{ isset($errors) && $errors->has('title') ? 'has-error clearfix' : 'clearfix' }}" style="margin-bottom: 0px" >
                             {{--<label class="col-lg-1 col-md-1 col-sm-1">标题</label>--}}
@@ -194,6 +211,7 @@
         </div>
     </div>
 
+    <script src="{{ url('/src/js/vendor/tinymce/js/tinymce/tinymce.min.js') }}"></script>
     <script>
         document.getElementById("images1").onchange = function () {
             var reader = new FileReader();
@@ -232,8 +250,8 @@
         };
     </script>
 {{--@endsection--}}
-<script src="{{ url('/src/js/vendor/tinymce/js/tinymce/tinymce.min.js') }}"></script>
-<script>
+
+    <script>
 //    var sampleApp = angular.module('myapp', [], function($interpolateProvider) {
 //        $interpolateProvider.startSymbol('<%');
 //        $interpolateProvider.endSymbol('%>');
@@ -378,28 +396,101 @@
 </script>
 
 <script src="{{ url('/src/js/jQuery.min.2.2.4.js') }}" ></script>
-<script type="text/javascript">
-    jQuery('#statusfilter').change(function(){
-        $(".statusfilter").empty();
+    <script type="text/javascript">
+        var val = document.getElementByIdx("temmplate_radio").value;
+        alert('checked value: ' + val);
 
-// 实际的应用中，这里的option一般都是用循环生成多个了
+        $('#temmplate_radio').each(function(){
+//            $('#temmplate_radio').ajaxForm(options).submit()
+            var val;
+            if($(this).attr("checked")){
+                val=$(this).attr("value")
+            }
+            alert('checked value: ' + val);
 
-//            var option = $("<option>").val(1).text("pxx");
-//
-//            $(".statusfilter").append(option);
-        console.log($("#statusfilter").val());
-        var statusfilterurl = "/admin/article/create?template="+$("#statusfilter").val()+"&authname="+$("#authname").val();
-        jQuery(window.location).attr('href', statusfilterurl);
-    });
+        });
+//    jQuery('#temmplate_radio').change(function(){
+    $(document).ready(function() {
+        var options = {
+            beforeSubmit: setTemplate,
+            success:      showResponse,
+//            dataType: json,
+        }
+        $('#temmplate_radio').each(function(){
+//            $('#temmplate_radio').ajaxForm(options).submit()
+            var val;
+            if($(this).attr("checked")){
+                val=$(this).attr("value")
+            }
+            alert('checked value: ' + val);
+
+        });
+
+        function setTemplate() {
+            alert('value changed' + $('#temmplate_radio').val());
+            if ($('#temmplate_radio').val()==3) {
+                $('#image2').css('display', 'block');
+                $('#image3').css('display', 'block');
+            } else {
+                $('#image2').css('display', 'none');
+                $('#image3').css('display', 'none');
+            }
+        }
+
+        function showResponse() {
+            alert('value changed' + $('#temmplate_radio').val());
+            if ($('#temmplate_radio').val()==3) {
+                $('#image2').css('display', 'block');
+                $('#image3').css('display', 'block');
+            } else {
+                $('#image2').css('display', 'none');
+                $('#image3').css('display', 'none');
+            }
+        }
+    }
+
+        {{--$(".temmplate_radio").empty();--}}
+
+{{--// 实际的应用中，这里的option一般都是用循环生成多个了--}}
+
+{{--//            var option = $("<option>").val(1).text("pxx");--}}
+{{--//--}}
+{{--//            $(".temmplate_radio").append(option);--}}
+        {{--console.log($("#temmplate_radio").val());--}}
+        {{--var temmplate_radiourl = "/admin/article/create?template="+$("#temmplate_radio").val()+"&authname="+$("#authname").val();--}}
+        {{--jQuery(window.location).attr('href', temmplate_radiourl);--}}
+//    });
 </script>
-{{--<script src="{{ url('/src/js/jQuery.min.2.2.4.js') }}" ></script>--}}
-{{--<script type="text/javascript">--}}
-    {{--jQuery('#template_id').change(function(){--}}
-        {{--$(".template_id").empty();--}}
-        {{--console.log($("#template_id").val());--}}
-        {{--var statusfilterurl = "/admin/article/create?template="+$("#template_id").val();--}}
-        {{--jQuery(window.location).attr('href', statusfilterurl);--}}
-    {{--});--}}
-{{--</script>--}}
+<script src="{{ url('/src/js/jQuery.min.2.2.4.js') }}" ></script>
+<script type="text/javascript">
+
+    $(document).ready(function() {
+        $('input[name=temmplate_radio]').change(function(){
+//            alert('raido value: ' + $(this).val());
+            if ($(this).val()==3) {
+                $('#image_container2').css('display', 'block');
+                $('#image_container3').css('display', 'block');
+            } else {
+                $('#image_container2').css('display', 'none');
+                $('#image_container3').css('display', 'none');
+            }
+            $('#template_form').submit();
+        });
+    });
+
+//    $("[name=template_id]").each(function(i,v){
+//        var dep2 = $(this).val();
+//        alert(dep2);
+////        if(data.dep == dep2) $(this).prop("checked",true);
+//    });
+
+//    jQuery('#template_id').each(function(){
+//        alert('$("#template_id").val()');
+////        $(".template_id").empty();
+////        console.log($("#template_id").val());
+////        var temmplate_radiourl = "/admin/article/create?template="+$("#template_id").val();
+////        jQuery(window.location).attr('href', temmplate_radiourl);
+//    });
+</script>
 
 @stop

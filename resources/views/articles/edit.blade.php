@@ -16,6 +16,16 @@
                     </div>
                 @endif
 
+                @if (count($errors) > 0)
+                    @foreach ($errors->all() as $error)
+                        <div class="col-md-12 bs-example-bg-classes" >
+                            <p class="bg-danger">
+                                {{ $error }}
+                            </p>
+                        </div>
+                    @endforeach
+                @endif
+
                 <div class="col-lg-12 col-md-12 col-sm-12" style="margin-top: 55px">
                     {!! Form::open(array('url' => 'admin/article/'.$article->id, 'class' => 'form', 'method'=>'put', 'enctype'=>'multipart/form-data')) !!}
                     <div class="form-group  col-lg-12 col-md-12 col-sm-12" >
@@ -60,24 +70,106 @@
                             </div>
                         </div>
 
+                        @if( !Auth::user()->hasAnyRole([ 'auth_editor']))
+                            {!! Form::label('template_label', '首页模版', array('class'=>'col-md-1', 'style'=>'margin-top: 55px')) !!}
+
+                            <form id="template_form" >
+                                <div class="col-md-8" style="margin-top: 55px">
+                                    {{--<select class="col-lg-12 col-md-12 col-sm-12 form-control" name="temmplate_radio" id="temmplate_radio">--}}
+                                    @foreach ($templates as $temp)
+                                        <input type="radio" style="margin-left: 30px" name="temmplate_radio" id="temmplate_radio"  value="{{$temp->id}}" @if($article->template_id == $temp->id) checked="checked" @endif />{{$temp->name}}
+                                        {{--<option value="{{$temp->id}}" @if($template == $temp->id) selected = 'selected' @endif>{{$temp->name}}</option>--}}
+                                    @endforeach
+                                    {{--</select>--}}
+                                </div>
+                            </form>
+                            <div class="clearfix"></div>
+                        @endif
+
                         <div>
-                            <label class="col-lg-1 col-md-1 col-sm-1" style="margin-top: 55px">首页图片</label>
-                            <div class="col-md-4" style="margin-top: 55px; margin-bottom: 55px">
-{{--                                {!! Form::file('images', '', array('class'=>'col-md-12 form-control-file form-control', 'id'=>'files images', 'required'=>'required')) !!}--}}
-                                <input type="file" id="images" name="images" class="col-md-12 form-control-file form-control" />
-                                @php
-                                    $articleLinks = $article->resources;
-                                    $articleLink = '';
-                                    if (count($articleLinks) > 0) {
-                                        foreach($articleLinks as $artLink) {
-                                            $articleLink = $artLink->link;
-                                            break;
-                                        }
-                                    }
-                                @endphp
-                                <img id="image" width="100" src="{{ $articleLink  }}" alt="{{ $article->title }}" />
+                            <label class="col-lg-3 col-md-1 col-sm-1" style="margin-top: 75px">首页图片(点击图片重新设置)</label>
+                            <div class="clearfix"></div>
+                            @php
+                            $articleLinks = $article->resources;
+                            $links = array();
+                            if (count($articleLinks) > 0) {
+                            foreach($articleLinks as $artLink) {
+
+                                array_push($links, $artLink);
+                            }
+                            }
+                            usort($links, 'cmp');
+
+                            function  cmp ( $linka ,  $linkb )
+                            {
+                            return $linka->order  >  $linkb->order;
+                            }
+                            @endphp
+                            {{--<form style="position:relative">--}}
+                            <div id="image_container1" class="col-md-3">
+                                <input type="file" class="col-md-12 form-control-file" id="images1" name="images1" style="display:none"/>
+                                {{--                                {!! Form::file('images', '', array('class'=>'col-md-12 form-control-file form-control', 'id'=>'images', 'required'=>'required')) !!}--}}
+                                <label for="images1">　　
+                                    　　　　　　
+                                    <img  src="{{ $links[0]->link  }}" alt="{{ $article->title }}" id="image1" width="200" />
+                                    　　
+                                    　　</label>
                             </div>
+
+
+                            <div id="image_container2" class="col-md-3"  @if($article->template_id == 3 && count($links) >= 3) style="display:block"  @else  style="display:none" @endif>
+                                <input type="file" class="col-md-12 form-control-file" id="images2" name="images2" style="display:none"/>
+                                {{--                                {!! Form::file('images', '', array('class'=>'col-md-12 form-control-file form-control', 'id'=>'images', 'required'=>'required')) !!}--}}
+                                <label for="images2">　　
+                                    　　　　　　
+                                    <img id="image2" width="200"   @if($article->template_id == 3 && count($links) >= 3) src="{{$links[1]->link}}" @else src="/photos/add_image.jpg" @endif/>
+                                    　　
+                                    　　</label>
+                            </div>
+
+                            <div id="image_container3" class="col-md-3" @if($article->template_id == 3 && count($links) >= 3) style="display:block" @else style="display:none" @endif>
+                                <input type="file" class="col-md-12 form-control-file" id="images3" name="images3" style="display:none"/>
+                                {{--                                {!! Form::file('images', '', array('class'=>'col-md-12 form-control-file form-control', 'id'=>'images', 'required'=>'required')) !!}--}}
+                                <label for="images3">　　
+                                    　　　　　　
+                                    <img id="image3" @if($article->template_id == 3 && count($links) >= 3) src="{{$links[2]->link}}" @else src="/photos/add_image.jpg" @endif width="200"/>
+                                    　　
+                                    　　</label>
+                            </div>
+                            {{--@endif--}}
+
+
+                            {{--</form>--}}
+
                         </div>
+                        <div class="clearfix"/>
+
+                        @if( !Auth::user()->hasAnyRole([ 'auth_editor']))
+                            <div>
+                                <label class="col-md-3 published_label" style="margin-top: 60px">
+                                    <input class="published" type="checkbox" name="watermark" id="watermark" @if($article->watermark) checked="checked" @endif/> 添加水印
+                                </label>
+                            </div>
+                        @endif
+
+                        {{--<div>--}}
+                            {{--<label class="col-lg-1 col-md-1 col-sm-1" style="margin-top: 55px">首页图片</label>--}}
+                            {{--<div class="col-md-4" style="margin-top: 55px; margin-bottom: 55px">--}}
+{{--                                {!! Form::file('images', '', array('class'=>'col-md-12 form-control-file form-control', 'id'=>'files images', 'required'=>'required')) !!}--}}
+                                {{--<input type="file" id="images" name="images" class="col-md-12 form-control-file form-control" />--}}
+                                {{--@php--}}
+                                    {{--$articleLinks = $article->resources;--}}
+                                    {{--$articleLink = '';--}}
+                                    {{--if (count($articleLinks) > 0) {--}}
+                                        {{--foreach($articleLinks as $artLink) {--}}
+                                            {{--$articleLink = $artLink->link;--}}
+                                            {{--break;--}}
+                                        {{--}--}}
+                                    {{--}--}}
+                                {{--@endphp--}}
+                                {{--<img id="image" width="100" src="{{ $articleLink  }}" alt="{{ $article->title }}" />--}}
+                            {{--</div>--}}
+                        {{--</div>--}}
 
                         <div class="{{ isset($errors) && $errors->has('title') ? 'has-error clearfix' : 'clearfix' }}" style="margin-bottom: 0px" >
                             {{--<label class="col-lg-12 col-md-12 col-sm-12">标题</label>--}}
@@ -159,17 +251,52 @@
        </div>
        <script src="{{ url('/src/js/jQuery.min.2.2.4.js') }}" ></script>
        <script>
-           document.getElementById("images").onchange = function () {
+           document.getElementById("images1").onchange = function () {
                var reader = new FileReader();
 
                reader.onload = function (e) {
                    // get loaded data and render thumbnail.
-                   document.getElementById("image").src = e.target.result;
+                   document.getElementById("image1").src = e.target.result;
                };
 
                // read the image file as a data URL.
                reader.readAsDataURL(this.files[0]);
            };
+
+           document.getElementById("images2").onchange = function () {
+               var reader = new FileReader();
+
+               reader.onload = function (e) {
+                   // get loaded data and render thumbnail.
+                   document.getElementById("image2").src = e.target.result;
+               };
+
+               // read the image file as a data URL.
+               reader.readAsDataURL(this.files[0]);
+           };
+
+           document.getElementById("images3").onchange = function () {
+               var reader = new FileReader();
+
+               reader.onload = function (e) {
+                   // get loaded data and render thumbnail.
+                   document.getElementById("image3").src = e.target.result;
+               };
+
+               // read the image file as a data URL.
+               reader.readAsDataURL(this.files[0]);
+           };
+//           document.getElementById("images").onchange = function () {
+//               var reader = new FileReader();
+//
+//               reader.onload = function (e) {
+//                   // get loaded data and render thumbnail.
+//                   document.getElementById("image").src = e.target.result;
+//               };
+//
+//               // read the image file as a data URL.
+//               reader.readAsDataURL(this.files[0]);
+//           };
 
            jQuery(document).ready(function(){
                jQuery('#title').blur(function(){
@@ -211,6 +338,12 @@
                    {selector: 'span', attributes : ['style', 'class'], remove : 'empty', split : true, expand : false, deep : true},
                    {selector: '*', attributes : ['style', 'class'], split : false, expand : false, deep : true}
                ],
+
+               paste_auto_cleanup_on_paste : true,
+               paste_remove_styles: true,
+               paste_remove_styles_if_webkit: true,
+               paste_strip_class_attributes: true,
+
                file_browser_callback_types: 'image media',
                file_browser_callback : function(field_name, url, type, win) {
                    var x = window.innerWidth || document.documentElement.clientWidth || document.getElementsByTagName('body')[0].clientWidth;
@@ -298,4 +431,25 @@
                        });
            } );
        </script>
+
+
+    <script src="{{ url('/src/js/jQuery.min.2.2.4.js') }}" ></script>
+    <script type="text/javascript">
+
+        $(document).ready(function() {
+            $('input[name=temmplate_radio]').change(function(){
+//            alert('image1 value: ' + document.getElementById("image1").src);
+                if ($(this).val()==3) {
+                    $('#image_container2').css('display', 'block');
+                    $('#image_container3').css('display', 'block');
+
+                } else {
+                    $('#image_container2').css('display', 'none');
+                    $('#image_container3').css('display', 'none');
+                }
+                $('#template_form').submit();
+            });
+        });
+
+    </script>
    @endsection

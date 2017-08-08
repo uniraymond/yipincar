@@ -47,12 +47,33 @@
                             <div><p>{{ $advsetting->description }}</p></div>
                             <div>图片</div>
                             <div>
-                                <img src="{{ url($advsetting->resources->link) }}" alt="{{ $advsetting->description }}" width="300px"/>
+                                @php
+                                $advsettingLinks = $advsetting->resources;
+                                $links = array();
+                                if (count($advsettingLinks) > 0) {
+                                foreach($advsettingLinks as $artLink) {
+                                array_push($links, $artLink);
+                                }
+                                }
+                                //var_dump($links);
+                                usort($links, 'cmp');
+
+                                function  cmp ( $linka ,  $linkb )
+                                {
+                                return ( $linka->order  >  $linkb->order );
+                                }
+                                @endphp
+                                <img id="image" width="200" src="{{ $links[0]->link }}" alt="{{ $advsetting->title }}" />
+                                @if($advsetting->template_id == 3 && count($links) >= 3)
+                                    <img id="image" width="200" src="{{ $links[1]->link  }}" alt="{{ $advsetting->title }}" />
+                                    <img id="image" width="200" src="{{ $links[2]->link  }}" alt="{{ $advsetting->title }}" />
+                                @endif
+                                {{--<img src="{{ url($advsetting->resources->link) }}" alt="{{ $advsetting->description }}" width="300px"/>--}}
                             </div>
                             <div class="clearfix"></div>
                             <div class="list-group">
                                 <div class="list-group-item list-group-item-action">
-                                    模版: {{ count($advsetting->adv_templates->name) >= 0 ? $advsetting->adv_templates->name : ''}} </div>
+                                    模版: {{($advsetting->adv_templates && count($advsetting->adv_templates->name) >= 0) ? $advsetting->adv_templates->name : ''}} </div>
                                 <div class="list-group-item list-group-item-action">
                                     类型: {{ $advsetting->adv_types->name }} </div>
                                 <div class="list-group-item list-group-item-action">

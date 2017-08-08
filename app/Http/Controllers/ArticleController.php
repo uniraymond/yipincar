@@ -31,10 +31,10 @@ use App\AdvTemplate;
 
 class ArticleController extends Controller
 {
-    public function generateImageName($file){
+    public function generateImageName($file, $order){
         $fartime = strtotime('2300-12-30');
         $nowtime  = strtotime('now');
-        $new_name = ($fartime - $nowtime).'ypc';
+        $new_name = ($fartime - $nowtime).'ypc-'.$order;
         $new_filename = $new_name . '.' . $file->getClientOriginalExtension();
         return $new_filename;
     }
@@ -195,6 +195,7 @@ class ArticleController extends Controller
 
             $tags = Tags::all();
             $articletypes = ArticleTypes::all();
+            $templates = AdvTemplate::all();
 
             $tagString = null;
             $tagArray = array();
@@ -219,7 +220,8 @@ class ArticleController extends Controller
                 'tagArray' => $tagArray,
                 'currentTagString' => $currentTagString,
                 'types'=>$types,
-                'currentAction'=>$currentAction
+                'currentAction'=>$currentAction,
+                'templates'=>$templates,
             ]);
         } else {
             $request->session()->flash('status', '您不是文章的作者,不能编辑此文章.');
@@ -235,7 +237,13 @@ class ArticleController extends Controller
         $this->validate($request, [
             'title' => 'required|max:36',
             'description' => 'max:141',
-            'content'=> 'required'
+            'content'=> 'required',
+            'images1' => 'max:2048000|mimes:jpg,gif,bmp,bnp,png,mif,mif,jpeg,ico,tif,tiff,cut,pic,tga,dib,svg,eps',
+            'images2' => 'max:2048000|mimes:jpg,gif,bmp,bnp,png,mif,mif,jpeg,ico,tif,tiff,cut,pic,tga,dib,svg,eps',
+            'images3' => 'max:2048000|mimes:jpg,gif,bmp,bnp,png,mif,mif,jpeg,ico,tif,tiff,cut,pic,tga,dib,svg,eps',
+//            'images1' => 'required_if:temmplate_radio,3|image',
+//            'images2' => 'required_if:temmplate_radio,3|image',
+//            'images3' => 'required_if:temmplate_radio,3|image',
         ], $this->messages());
 
         $title = $request->input('title');
@@ -245,7 +253,8 @@ class ArticleController extends Controller
         $content = trim($request['content']);
         $description = $request['description'];
         $authname = $request['authname'];
-//    $typeId = $request['type_id'];
+        $waterMark = $request['watermark'] ? 1 : 0;
+        $template_id = $request['temmplate_radio'];
         $categoryId = $request['category_id'];
 
         if ($request['published']) {
@@ -286,6 +295,9 @@ class ArticleController extends Controller
         $article->content = $content;
         $article->description = $description;
         $article->updated_by = $authuser->id;
+        $article->watermark = $waterMark;
+        $article->template_id = $template_id;
+
         if($authname) {
             $article->authname = $authname;
         }
@@ -354,41 +366,12 @@ class ArticleController extends Controller
 
         $authuser = $request->user();
 
-        $file = $request->file('images');
-        $checkArticlResource = ArticleResources::where('article_id', $article->id)->get();
+        $file = $request->file('images1');
+        $checkArticlResource = ArticleResources::where('article_id', $article->id)
+            ->where('displayorder', 1)
+            ->get();
         if (!empty($file)) {
-            $fileOriginalName = $file->getClientOriginalName();
-            $fileName = $this->generateImageName($file);
-            $fileOriginalDir = "photos/".$authuser->id."/original";
-            $fileThumbsDir = "photos/".$authuser->id."/thumbs";
-            $fileDir = "photos/".$authuser->id;
-
-            $file->move($fileDir, $fileName);
-
-            $imageOriginalLink = $fileOriginalDir . '/' . $fileName;
-            $imageThumbsLink = $fileThumbsDir . '/' . $fileName;
-            $imageLink = $fileDir . '/' . $fileName;
-            copy($imageLink, $imageThumbsLink);
-            copy($imageLink, $imageOriginalLink);
-
-            $cell_img_size = GetImageSize($imageLink); // need to caculate the file width and height to make the image same
-
-            $image = Image::make(sprintf('photos/'.$authuser->id.'/%s', $fileName))->save();
-            $imageThumbs = Image::make(sprintf('photos/'.$authuser->id.'/thumbs/%s', $fileName))->resize(300, (int)((300 *  $cell_img_size[1]) / $cell_img_size[0]))->save();
-            $imageOriginal = Image::make(sprintf('photos/'.$authuser->id.'/original/%s', $fileName))->save();
-
-            $resource = new Resource();
-            $resource->name = $fileName;
-            $resource->link = '/' . $imageLink;
-            $resource->created_by = $authuser->id;
-            $resource->save();
-
-            $oldArticlResource = ArticleResources::where('article_id', $article->id)->delete();
-
-            $articlResource = new ArticleResources();
-            $articlResource->article_id = $article->id;
-            $articlResource->resource_id = $resource->id;
-            $articlResource->save();
+            $this->saveArticleIconWith($file, $authuser, $article, true, 1);
         } elseif (!isset($checkArticlResource) && count($checkArticlResource) <= 0) {
             $files = Resource::all();
 
@@ -415,6 +398,39 @@ class ArticleController extends Controller
 
                 if (!$hasImage && $article_image) {
                     $article_image->delete();
+                }
+            }
+        }
+
+        if($template_id == 3) {
+            $file = $request->file('images2');
+            if(!empty($file)) {
+                $this->saveArticleIconWith($file, $authuser, $article, true, 2);
+            }
+            $file = $request->file('images3');
+            if(!empty($file)) {
+                $this->saveArticleIconWith($file, $authuser, $article, true, 3);
+            }
+        }
+
+        if($waterMark) {
+            $paths = array();
+            preg_match_all('/<img.+src=\"?(.+\.(jpg|gif|bmp|bnp|png|mif|mif|jpeg|ico|tif|tiff|cut|pic|tga|dib|svg|eps|))\"?.+>/i', $article->content, $paths);
+            $paths = $paths[1];
+//        var_dump($paths);
+            if($paths && count($paths) ) {
+                foreach($paths as $path) {
+//                $photo = Image::make(sprintf(public_path().'/%s', $image->link));
+//                echo $path;
+                    if($path && strlen($path)) {
+                        $newPath = substr($path, 1, strlen($path));
+                        $photo = Image::make($newPath);
+                        $imageSize = GetImageSize($newPath);
+                        $markWidth = ($imageSize[0] > $imageSize[1] ? $imageSize[1] : $imageSize[0]) - 20;
+                        $waterMark = Image::make('photos/watermark2.png')->resize($markWidth -40, $markWidth -40);
+                        $photo->insert($waterMark, 'center');
+                        $photo->save();
+                    }
                 }
             }
         }
@@ -489,16 +505,11 @@ class ArticleController extends Controller
 
     public function create(Request $request)
     {
-//        Input::flash();
-        $authname = $request->get('authname');
-//        Session::flash('authname', 'title');
         $categories = Category::where('last_category', 1)->get();
         $types = ArticleTypes::all();
         $templates = AdvTemplate::all();
         $tags = Tags::all();
         $currentAction = false;
-        $requestTemplate = $request->get('template');
-        $template = $requestTemplate ? $requestTemplate : 1;
 
         $tagString = null;
         $tagArray = array();
@@ -507,21 +518,15 @@ class ArticleController extends Controller
         }
         $tagString = implode(', ', $tagArray);
 
-        if($requestTemplate) {
-//            return redirect()->back()->withInput();
-//            return redirect('/admin/article/create?template='.$requestTemplate)->withInput();
-//            return redirect()->route('/admin/article/create?template='.$requestTemplate)->withInput();
-        }
         return view('articles/create', [
             'articletypes' => $types,
             'categories' => $categories,
             'tags' => $tags,
             'tagString' => $tagString,
             'tagArray' => $tagArray,
-            'types'=>$types, 'currentAction'=>$currentAction,
+            'types'=>$types,
+            'currentAction'=>$currentAction,
             'templates'=>$templates,
-            'template'=>$template,
-            'authname'=>$authname,
         ]);
     }
 
@@ -531,7 +536,10 @@ class ArticleController extends Controller
         $this->validate($request, [
             'title' => 'required|max:36',
             'description' => 'max:141',
-            'content'=> 'required'
+            'content'=> 'required',
+            'images1' => 'required_if:temmplate_radio,3|max:2048000|mimes:jpg,gif,bmp,bnp,png,mif,mif,jpeg,ico,tif,tiff,cut,pic,tga,dib,svg,eps',
+            'images2' => 'required_if:temmplate_radio,3|max:2048000|mimes:jpg,gif,bmp,bnp,png,mif,mif,jpeg,ico,tif,tiff,cut,pic,tga,dib,svg,eps',
+            'images3' => 'required_if:temmplate_radio,3|max:2048000|mimes:jpg,gif,bmp,bnp,png,mif,mif,jpeg,ico,tif,tiff,cut,pic,tga,dib,svg,eps',
         ], $this->messages());
 
         $title = $request->input('title');
@@ -540,7 +548,9 @@ class ArticleController extends Controller
         $typeId = $request['type_id'];
         $categoryId = $request['category_id'];
         $published = $request['published'] ? 2 : 1;
+        $waterMark = $request['watermark'] ? 1 : 0;
         $authname = $request['authname'];
+        $template_id = $request['temmplate_radio'];
 
         if (isset($request['tags'])){
             $tags = trim($request['tags']);
@@ -565,7 +575,8 @@ class ArticleController extends Controller
         $article->content = $content;
         $article->description = $description;
         $article->created_by = $authuser->id;
-//    $article->type_id = $typeId;
+        $article->watermark = $waterMark;
+        $article->template_id = $template_id;
         //$typeId default is article and setup 1 as article
         $article->type_id = 1;
         $article->category_id = $categoryId;
@@ -608,51 +619,46 @@ class ArticleController extends Controller
                 $article_tag->save();
             }
         }
-        $file = $request->file('images');
+        $file = $request->file('images1');
         if (!empty($file)) {
-            $fileOriginalName = $file->getClientOriginalName();
-            $fileName = $this->generateImageName($file);
-            $fileOriginalDir = "photos/".$authuser->id."/original";
-            $fileThumbsDir = "photos/".$authuser->id."/thumbs";
-            $fileDir = "photos/".$authuser->id;
-
-            $file->move($fileDir, $fileName);
-//          $file->move($fileThumbsDir, $fileName);
-//          $fileOriginal->copy($fileOriginalDir, $fileName);
-
-//            $imageOriginalLink = $fileOriginalDir . '/' . $file->getClientOriginalName();
-//            $imageThumbsLink = $fileThumbsDir . '/' . $file->getClientOriginalName();
-//            $imageLink = $fileDir . '/' . $file->getClientOriginalName();
-            $imageOriginalLink = $fileOriginalDir . '/' . $fileName;
-            $imageThumbsLink = $fileThumbsDir . '/' . $fileName;
-            $imageLink = $fileDir . '/' . $fileName;
-
-            copy($imageLink, $imageThumbsLink);
-            copy($imageLink, $imageOriginalLink);
-
-//          $cell_img_size_thumbs = GetImageSize($imageThumbsLink); // need to caculate the file width and height to make the image same
-            $cell_img_size = GetImageSize($imageLink); // need to caculate the file width and height to make the image same
-
-            $image = Image::make(sprintf('photos/'.$authuser->id.'/%s', $fileName));
-//            $markWidth = ($cell_img_size[0] > $cell_img_size[1] ? $cell_img_size[1] : $cell_img_size[0]) - 20;
-//            $waterMark = Image::make(sprintf('photos/watermark2.png'))->resize($markWidth -40, $markWidth -40);
-//            $image->insert($waterMark, 'center');
-            $image->save();
-            $imageThumbs = Image::make(sprintf('photos/'.$authuser->id.'/thumbs/%s', $fileName))->resize(300, (int)((300 *  $cell_img_size[1]) / $cell_img_size[0]))->save();
-            $imageOriginal = Image::make(sprintf('photos/'.$authuser->id.'/original/%s', $fileName))->save();
-
-            $resource = new Resource();
-            $resource->name = $fileName;
-            $resource->link = '/' . $imageLink;
-            $resource->created_by = $authuser->id;
-
-            $resource->save();
-            $articlResource = new ArticleResources();
-            $articlResource->article_id = $article->id;
-            $articlResource->resource_id = $resource->id;
-            $articlResource->save();
-
-
+            $this->saveArticleIconWith($file, $authuser, $article, false, 1);
+//            $fileOriginalName = $file->getClientOriginalName();
+//            $fileName = $this->generateImageName($file);
+//            $fileOriginalDir = "photos/".$authuser->id."/original";
+//            $fileThumbsDir = "photos/".$authuser->id."/thumbs";
+//            $fileDir = "photos/".$authuser->id;
+//
+//            $file->move($fileDir, $fileName);
+////          $file->move($fileThumbsDir, $fileName);
+////          $fileOriginal->copy($fileOriginalDir, $fileName);
+//
+////            $imageOriginalLink = $fileOriginalDir . '/' . $file->getClientOriginalName();
+////            $imageThumbsLink = $fileThumbsDir . '/' . $file->getClientOriginalName();
+////            $imageLink = $fileDir . '/' . $file->getClientOriginalName();
+//            $imageOriginalLink = $fileOriginalDir . '/' . $fileName;
+//            $imageThumbsLink = $fileThumbsDir . '/' . $fileName;
+//            $imageLink = $fileDir . '/' . $fileName;
+//
+//            copy($imageLink, $imageThumbsLink);
+//            copy($imageLink, $imageOriginalLink);
+//
+////          $cell_img_size_thumbs = GetImageSize($imageThumbsLink); // need to caculate the file width and height to make the image same
+//            $cell_img_size = GetImageSize($imageLink); // need to caculate the file width and height to make the image same
+//
+//            $image = Image::make(sprintf('photos/'.$authuser->id.'/%s', $fileName))->save();
+//            $imageThumbs = Image::make(sprintf('photos/'.$authuser->id.'/thumbs/%s', $fileName))->resize(300, (int)((300 *  $cell_img_size[1]) / $cell_img_size[0]))->save();
+//            $imageOriginal = Image::make(sprintf('photos/'.$authuser->id.'/original/%s', $fileName))->save();
+//
+//            $resource = new Resource();
+//            $resource->name = $fileName;
+//            $resource->link = '/' . $imageLink;
+//            $resource->created_by = $authuser->id;
+//            $resource->save();
+//
+//            $articlResource = new ArticleResources();
+//            $articlResource->article_id = $article->id;
+//            $articlResource->resource_id = $resource->id;
+//            $articlResource->save();
         }else {
             $files = Resource::all();
             $image_links = array();
@@ -671,22 +677,32 @@ class ArticleController extends Controller
                 }
             }
         }
-        $paths = array();
-        preg_match_all('/<img.+src=\"?(.+\.(jpg|gif|bmp|bnp|png|mif|mif|jpeg|ico|tif|tiff|cut|pic|tga|dib|svg|eps|))\"?.+>/i', $article->content, $paths);
-        $paths = $paths[1];
+
+        if($template_id == 3) {
+            $file = $request->file('images2');
+            $this->saveArticleIconWith($file, $authuser, $article, false, 2);
+            $file = $request->file('images3');
+            $this->saveArticleIconWith($file, $authuser, $article, false, 3);
+        }
+
+        if($waterMark) {
+            $paths = array();
+            preg_match_all('/<img.+src=\"?(.+\.(jpg|gif|bmp|bnp|png|mif|mif|jpeg|ico|tif|tiff|cut|pic|tga|dib|svg|eps|))\"?.+>/i', $article->content, $paths);
+            $paths = $paths[1];
 //        var_dump($paths);
-        if($paths && count($paths) ) {
-            foreach($paths as $path) {
+            if($paths && count($paths) ) {
+                foreach($paths as $path) {
 //                $photo = Image::make(sprintf(public_path().'/%s', $image->link));
 //                echo $path;
-                if($path && strlen($path)) {
-                    $newPath = substr($path, 1, strlen($path));
-                    $photo = Image::make($newPath);
-                    $imageSize = GetImageSize($newPath);
-                    $markWidth = ($imageSize[0] > $imageSize[1] ? $imageSize[1] : $imageSize[0]) - 20;
-                    $waterMark = Image::make('photos/watermark2.png')->resize($markWidth -40, $markWidth -40);
-                    $photo->insert($waterMark, 'center');
-                    $photo->save();
+                    if($path && strlen($path)) {
+                        $newPath = substr($path, 1, strlen($path));
+                        $photo = Image::make($newPath);
+                        $imageSize = GetImageSize($newPath);
+                        $markWidth = ($imageSize[0] > $imageSize[1] ? $imageSize[1] : $imageSize[0]) - 20;
+                        $waterMark = Image::make('photos/watermark2.png')->resize($markWidth -40, $markWidth -40);
+                        $photo->insert($waterMark, 'center');
+                        $photo->save();
+                    }
                 }
             }
         }
@@ -954,9 +970,65 @@ class ArticleController extends Controller
         return [
             'title.required' => '标题是必填的',
             'title.max' => '标题不能超过35个字',
-            'description' => '简介不能超过140个字',
-            'content' => '内容是必须的'
+            'description.max' => '简介不能超过140个字',
+            'content.required' => '内容是必须的',
+            'images1.mimes' => '首图1请上传正确的图片格式',
+            'images2.mimes' => '首图2请上传正确的图片格式',
+            'images3.mimes' => '首图3请上传正确的图片格式',
+            'images1.required_if' => '选择3图模板,则必须添加首图1',
+            'images2.required_if' => '选择3图模板,则必须添加首图2',
+            'images3.required_if' => '选择3图模板,则必须添加首图3',
+            'images1.max' => '上传图片1不能超过20M',
+            'images2.max' => '上传图片2不能超过20M',
+            'images3.max' => '上传图片3不能超过20M',
+
+
         ];
+    }
+
+    public function saveArticleIconWith($file, $authuser, $article, $update, $order) {
+        $fileOriginalName = $file->getClientOriginalName();
+        $fileName = $this->generateImageName($file, $order);
+        $fileOriginalDir = "photos/".$authuser->id."/original";
+        $fileThumbsDir = "photos/".$authuser->id."/thumbs";
+        $fileDir = "photos/".$authuser->id;
+
+        $file->move($fileDir, $fileName);
+
+        $imageOriginalLink = $fileOriginalDir . '/' . $fileName;
+        $imageThumbsLink = $fileThumbsDir . '/' . $fileName;
+        $imageLink = $fileDir . '/' . $fileName;
+        copy($imageLink, $imageThumbsLink);
+        copy($imageLink, $imageOriginalLink);
+
+        $cell_img_size = GetImageSize($imageLink); // need to caculate the file width and height to make the image same
+
+        $image = Image::make(sprintf('photos/'.$authuser->id.'/%s', $fileName))->save();
+        $imageThumbs = Image::make(sprintf('photos/'.$authuser->id.'/thumbs/%s', $fileName))->resize(300, (int)((300 *  $cell_img_size[1]) / $cell_img_size[0]))->save();
+        $imageOriginal = Image::make(sprintf('photos/'.$authuser->id.'/original/%s', $fileName))->save();
+
+        if($update) {
+            $oldArticlResource = ArticleResources::where('article_id', $article->id)
+                ->where('displayorder', $order)
+                ->delete();
+            Resource::where('link', '/' . $imageLink)->delete();
+        }
+
+        $resource = new Resource();
+        $resource->name = $fileName;
+        $resource->link = '/' . $imageLink;
+        $resource->created_by = $authuser->id;
+        $resource->order = $order;
+        $resource->save();
+
+        $articlResource = new ArticleResources();
+        $articlResource->article_id = $article->id;
+        $articlResource->resource_id = $resource->id;
+        $articlResource->displayorder = $order;
+        $articlResource->save();
+
+
+
     }
 
 

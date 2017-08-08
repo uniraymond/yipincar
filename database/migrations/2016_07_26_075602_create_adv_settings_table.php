@@ -17,7 +17,7 @@ class CreateAdvSettingsTable extends Migration
             $table->string('name');
             $table->string('title');
             $table->text('description');
-            $table->integer('resource_id')->references('id')->on('resources')->onDelete('cascade');
+            $table->integer('resource_id')->references('id')->on('resources')->onDelete('cascade')->nullable();
             $table->dateTime('published_at');
             $table->dateTime('finished_at');
             $table->tinyInteger('order');

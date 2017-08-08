@@ -50,15 +50,24 @@
                             <div>
                                 @php
                                     $articleLinks = $article->resources;
-                                    $articleLink = '';
+                                    $links = array();
                                     if (count($articleLinks) > 0) {
                                         foreach($articleLinks as $artLink) {
-                                            $articleLink = $artLink->link;
-                                            break;
+                                            array_push($links, $artLink);
                                         }
                                     }
+                                usort($links, 'cmp');
+
+                                function  cmp ( $linka ,  $linkb )
+                                {
+                                    return $linka->order  >  $linkb->order;
+                                }
                                 @endphp
-                                <img id="image" width="100" src="{{ $articleLink  }}" alt="{{ $article->title }}" />
+                                <img id="image" width="200" src="{{ $links[0]->link }}" alt="{{ $article->title }}" />
+                                @if($article->template_id == 3 && count($links) >= 3)
+                                    <img id="image" width="200" src="{{ $links[1]->link  }}" alt="{{ $article->title }}" />
+                                    <img id="image" width="200" src="{{ $links[2]->link  }}" alt="{{ $article->title }}" />
+                                @endif
                             </div>
                             <div>简述:</div>
                             <div class="description" style="margin-bottom: 15px">{{ $article->description }}</div>
