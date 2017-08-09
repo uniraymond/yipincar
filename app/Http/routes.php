@@ -177,6 +177,9 @@ Route::group(['prefix'=>'api'], function() {
     Route::get('checkupdate/{device}', 'InfoController@checkAppUpdate');
     Route::get('replaceimages', 'InfoController@replaceArticleImages');
     Route::get('makeuserdirs', 'InfoController@makeUserDir');
+
+    Route::get('articlelistv1/{category?}/{lastid?}/{page?}/{limit?}', 'InfoController@getArticleListV1');
+
 });
 
 Route::get('/get_captcha/{config?}', function (\Mews\Captcha\Captcha $captcha, $config = 'default') {

@@ -193,20 +193,16 @@ class InfoController extends Controller
 
     private function getArticleListContent() {
         return Article::join('categories', 'articles.category_id', '=', 'categories.id')
-                ->leftJoin('article_resources', 'articles.id', '=', 'article_resources.article_id')
-//            ->leftJoin('article_resources', function ($resources) {
-//                $resources ->on('articles.id', '=', 'article_resources.article_id')
-//                    ->where('article_resources.id', '=', DB::raw("(select max(`id`) from article_resources)"));
-//            })
-                ->leftJoin('resources', 'resources.id', '=', 'article_resources.resource_id')
+//                ->leftJoin('article_resources', 'articles.id', '=', 'article_resources.article_id')
+//                ->leftJoin('resources', 'resources.id', '=', 'article_resources.resource_id')
 
                 ->leftJoin('profiles', 'articles.created_by', '=', 'profiles.user_id')
                 ->join('article_types', 'articles.type_id', '=', 'article_types.id')
                 ->join('users', 'users.id', '=', 'articles.created_by')
                 ->select('articles.id', 'articles.title', 'articles.description', 'articles.authname', 'articles.readed',
                     'categories.name as categoryName', 'articles.category_id', 'article_types.name as articletypeName'
-                    , 'articles.created_at', 'article_resources.resource_id'
-                    , 'resources.link as resourceLink', 'resources.name as resourceName',
+                    , 'articles.created_at',
+//                    'article_resources.resource_id', 'resources.link as resourceLink', 'resources.name as resourceName',
                     'users.name as userName',
                     'profiles.media_name as mediaName')
                 ->where('articles.published', '=', 4)
@@ -217,6 +213,7 @@ class InfoController extends Controller
     public function getArticleList($category, $lastid, $page, $limit) {
         //$limit = 10;//$category < 8 ? 7 :10;
         $from = ($page -1) * $limit;
+
 
         $articles = $this ->getArticleListContent()->skip($from) ->take($limit);
 //            Article::join('categories', 'articles.category_id', '=', 'categories.id')
@@ -229,7 +226,9 @@ class InfoController extends Controller
 ////            ->where('articles.published', '=', 0)
 //            ->orderBy('articles.created_at', 'desc')
 //         $articles = $articles ->skip($from) ->take($limit);
-
+//        ->join('resource', function($join) {
+//            $join->
+//        })
         if($category != 3) {
             $articles = $articles ->where('articles.category_id', '=', $category);
         } else {
@@ -253,7 +252,144 @@ class InfoController extends Controller
                 $topAdverts = $this ->getAdvert(2, 6, 1, $category);
             }
         }
+
+        foreach ($articles as $article) {
+//            array_push($ids, $article->id);
+            $resources = Resource::join('article_resources', 'resources.id', '=', 'article_resources.resource_id')
+                ->where('article_resources.article_id', $article->id)
+                ->select('link', 'name')
+                ->orderBy('name', 'desc')
+                ->first();
+            if(count($resources)) {
+                $article['resourceLink'] = $resources->link;
+                $article['resourceName'] = $resources->name;
+            }
+
+        }
+
         return [
+            'articles'      =>$articles,
+            'topArticles'   => $topArticles,
+            'topAdvert'     => $topAdverts,
+            'listAdverts'   => $listAdverts
+        ];
+//        if($category < 8) {
+//            $adverts = Article::join('categories', 'articles.category_id', '=', 'categories.id')
+////            ->join('article_resources', 'articles.id', '=', 'article_resources.article_id')
+//                ->join('article_types', 'articles.type_id', '=', 'article_types.id')
+//                ->select('articles.id', 'articles.title', 'categories.name as categoryName', 'articles.category_id', 'article_types.name as articletypeName'
+//                    , 'articles.created_at')
+////                , 'article_resources.id as resourceid')
+//                ->where('articles.category_id', '=', $category)
+//                ->where('articles.published', '=', 0)
+//                ->orderBy('articles.created_at', 'desc')
+//                //            ->where('article_resources.displayorder', '=', 0)
+//                ->skip($from)
+//                ->take(10 - $limit);
+//
+//            if($advlast && $advlast > 0)
+//                $adverts = $adverts->where('articles.id', '<=', $advlast);
+//
+//            $adverts = $adverts->get();
+//
+//            foreach($adverts as $advert) {
+//                $articles->push($advert);
+//            }
+//
+//        }
+//        return $articles;
+    }
+
+    private function getArticleListContentV1() {
+        return Article::join('categories', 'articles.category_id', '=', 'categories.id')
+            ->leftJoin('profiles', 'articles.created_by', '=', 'profiles.user_id')
+            ->join('users', 'users.id', '=', 'articles.created_by')
+//                            ->join('article_types', 'articles.type_id', '=', 'article_types.id')
+//            ->leftJoin('article_resources', 'articles.id', '=', 'article_resources.article_id')
+//            ->leftJoin('resources', 'resources.id', '=', 'article_resources.resource_id')
+            ->where('articles.published', '=', 4)
+            ->where('articles.banned', '=', 0)
+            ->select('articles.id', 'articles.title', 'articles.description', 'articles.authname', 'articles.readed',
+                'categories.name as categoryName', 'articles.category_id'
+                , 'articles.created_at', 'template_id', //'article_types.name as articletypeName',
+//                     'resources.link as resourceLink', 'resources.name as resourceName',
+                'users.name as userName',
+                'profiles.media_name as mediaName')
+            ->orderBy('articles.created_at', 'desc');
+
+//        return Article::join('categories', 'articles.category_id', '=', 'categories.id')
+//                ->leftJoin('article_resources', 'articles.id', '=', 'article_resources.article_id')
+////            ->leftJoin('article_resources', function ($resources) {
+////                $resources ->on('articles.id', '=', 'article_resources.article_id')
+////                    ->where('article_resources.id', '=', DB::raw("(select max(`id`) from article_resources)"));
+////            })
+//                ->leftJoin('resources', 'resources.id', '=', 'article_resources.resource_id')
+//
+//                ->leftJoin('profiles', 'articles.created_by', '=', 'profiles.user_id')
+//                ->join('article_types', 'articles.type_id', '=', 'article_types.id')
+//                ->join('users', 'users.id', '=', 'articles.created_by')
+//                ->select('articles.id', 'articles.title', 'articles.description', 'articles.authname', 'articles.readed',
+//                    'categories.name as categoryName', 'articles.category_id', 'article_types.name as articletypeName'
+//                    , 'articles.created_at', 'article_resources.resource_id'
+//                    , 'resources.link as resourceLink', 'resources.name as resourceName',
+//                    'users.name as userName',
+//                    'profiles.media_name as mediaName')
+//                ->where('articles.published', '=', 4)
+//                ->where('articles.banned', '=', 0)
+//                ->orderBy('articles.created_at', 'desc');
+    }
+
+    public function getArticleListV1($category, $lastid, $page, $limit) {
+        //$limit = 10;//$category < 8 ? 7 :10;
+        $from = ($page -1) * $limit;
+
+        $articles = $this ->getArticleListContentV1()->skip($from) ->take($limit);
+//            Article::join('categories', 'articles.category_id', '=', 'categories.id')
+//            ->leftJoin('article_resources', 'articles.id', '=', 'article_resources.article_id')
+//            ->leftJoin('resources', 'resources.id', '=', 'article_resources.resource_id')
+//            ->join('article_types', 'articles.type_id', '=', 'article_types.id')
+//            ->join('users', 'users.id', '=', 'articles.created_by')
+//            ->select('articles.id', 'articles.title', 'categories.name as categoryName', 'articles.category_id', 'article_types.name as articletypeName'
+//                , 'articles.created_at' , 'resources.link as resourceLink', 'resources.name as resourceName', 'users.name as userName')
+////            ->where('articles.published', '=', 0)
+//            ->orderBy('articles.created_at', 'desc')
+//         $articles = $articles ->skip($from) ->take($limit);
+//        ->join('resource', function($join) {
+//            $join->
+//        })
+        if($category != 3) {
+            $articles = $articles ->where('articles.category_id', '=', $category);
+        } else {
+            $articles = $articles ->where('articles.top', '=', 0)
+                ->where('articles.category_id', '!=', 13);
+
+        }
+
+        if($page != 1 && $lastid && $lastid > 0)
+            $articles = $articles->where('articles.id', '<=', $lastid);
+
+        $articles = $articles->get();
+
+        $listAdverts = array();
+        $topArticles = array();
+        $topAdverts = array();
+        if($page == 1) {
+            $listAdverts = $this ->getAdvert(2, 0, 0, $category);
+            if($category == 3) {
+                $topArticles = $this->getArticleListContent() ->where('articles.top', 1)->get();
+                $topAdverts = $this ->getAdvert(2, 6, 1, $category);
+            }
+        }
+//        $ids = array();
+        foreach ($articles as $article) {
+//            array_push($ids, $article->id);
+            $resources = Resource::join('article_resources', 'resources.id', '=', 'article_resources.resource_id')
+                ->where('article_resources.article_id', $article->id)
+                ->select('link', 'name')->get();
+            $article['resources'] = $resources;
+        }
+        return [
+//            'ids' => $ids,
             'articles'      =>$articles,
             'topArticles'   => $topArticles,
             'topAdvert'     => $topAdverts,
