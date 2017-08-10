@@ -176,19 +176,20 @@ class InfoController extends Controller
     }
 
     public function getAdvert($position, $limit, $top, $category) {
-        $advert = AdvSetting::join('resources', 'resources.id', '=', 'adv_settings.resource_id')
+        $adverts = AdvSetting::join('resources', 'resources.id', '=', 'adv_settings.resource_id')
             ->select('adv_settings.*', 'resources.name as resourceName', 'resources.link as resourceLink')
             ->where('status', 4)
             ->where('position_id', $position);
 
         if($category > 0 && $top == 0)
-            $advert = $advert ->where('category_id', $category);
+            $adverts = $adverts ->where('category_id', $category);
         if($top >= 0)
-            $advert = $advert ->where('top', $top);
+            $adverts = $adverts ->where('top', $top);
         if($limit > 0)
-            $advert = $advert ->take($limit);
-        $advert = $advert ->orderBy('order', 'asc') ->get();
-        return $advert;
+            $adverts = $adverts ->take($limit);
+        $adverts = $adverts ->orderBy('order', 'asc') ->get();
+
+        return $adverts;
     }
 
     private function getArticleListContent() {
@@ -234,7 +235,6 @@ class InfoController extends Controller
         } else {
             $articles = $articles ->where('articles.top', '=', 0)
                 ->where('articles.category_id', '!=', 13);
-
         }
 
         if($page != 1 && $lastid && $lastid > 0)
@@ -300,6 +300,28 @@ class InfoController extends Controller
 //        return $articles;
     }
 
+    public function getAdvertV1($position, $limit, $top, $category) {
+        $adverts = AdvSetting::where('status', 4)
+//            ->select('adv_settings.*')
+            ->where('position_id', $position);
+
+        if($category > 0 && $top == 0)
+            $adverts = $adverts ->where('category_id', $category);
+        if($top >= 0)
+            $adverts = $adverts ->where('top', $top);
+        if($limit > 0)
+            $adverts = $adverts ->take($limit);
+        $adverts = $adverts ->orderBy('order', 'asc') ->get();
+
+        foreach ($adverts as $advert) {
+            $resources = Resource::join('adv_setting_resources', 'resources.id', '=', 'adv_setting_resources.resource_id')
+                ->where('adv_setting_resources.adv_setting_id', $advert->id)
+                ->select('link', 'name')->get();
+            $advert['resources'] = $resources;
+        }
+        return $adverts;
+    }
+
     private function getArticleListContentV1() {
         return Article::join('categories', 'articles.category_id', '=', 'categories.id')
             ->leftJoin('profiles', 'articles.created_by', '=', 'profiles.user_id')
@@ -316,27 +338,6 @@ class InfoController extends Controller
                 'users.name as userName',
                 'profiles.media_name as mediaName')
             ->orderBy('articles.created_at', 'desc');
-
-//        return Article::join('categories', 'articles.category_id', '=', 'categories.id')
-//                ->leftJoin('article_resources', 'articles.id', '=', 'article_resources.article_id')
-////            ->leftJoin('article_resources', function ($resources) {
-////                $resources ->on('articles.id', '=', 'article_resources.article_id')
-////                    ->where('article_resources.id', '=', DB::raw("(select max(`id`) from article_resources)"));
-////            })
-//                ->leftJoin('resources', 'resources.id', '=', 'article_resources.resource_id')
-//
-//                ->leftJoin('profiles', 'articles.created_by', '=', 'profiles.user_id')
-//                ->join('article_types', 'articles.type_id', '=', 'article_types.id')
-//                ->join('users', 'users.id', '=', 'articles.created_by')
-//                ->select('articles.id', 'articles.title', 'articles.description', 'articles.authname', 'articles.readed',
-//                    'categories.name as categoryName', 'articles.category_id', 'article_types.name as articletypeName'
-//                    , 'articles.created_at', 'article_resources.resource_id'
-//                    , 'resources.link as resourceLink', 'resources.name as resourceName',
-//                    'users.name as userName',
-//                    'profiles.media_name as mediaName')
-//                ->where('articles.published', '=', 4)
-//                ->where('articles.banned', '=', 0)
-//                ->orderBy('articles.created_at', 'desc');
     }
 
     public function getArticleListV1($category, $lastid, $page, $limit) {
@@ -344,19 +345,6 @@ class InfoController extends Controller
         $from = ($page -1) * $limit;
 
         $articles = $this ->getArticleListContentV1()->skip($from) ->take($limit);
-//            Article::join('categories', 'articles.category_id', '=', 'categories.id')
-//            ->leftJoin('article_resources', 'articles.id', '=', 'article_resources.article_id')
-//            ->leftJoin('resources', 'resources.id', '=', 'article_resources.resource_id')
-//            ->join('article_types', 'articles.type_id', '=', 'article_types.id')
-//            ->join('users', 'users.id', '=', 'articles.created_by')
-//            ->select('articles.id', 'articles.title', 'categories.name as categoryName', 'articles.category_id', 'article_types.name as articletypeName'
-//                , 'articles.created_at' , 'resources.link as resourceLink', 'resources.name as resourceName', 'users.name as userName')
-////            ->where('articles.published', '=', 0)
-//            ->orderBy('articles.created_at', 'desc')
-//         $articles = $articles ->skip($from) ->take($limit);
-//        ->join('resource', function($join) {
-//            $join->
-//        })
         if($category != 3) {
             $articles = $articles ->where('articles.category_id', '=', $category);
         } else {
@@ -374,10 +362,10 @@ class InfoController extends Controller
         $topArticles = array();
         $topAdverts = array();
         if($page == 1) {
-            $listAdverts = $this ->getAdvert(2, 0, 0, $category);
+            $listAdverts = $this ->getAdvertV1(2, 0, 0, $category);
             if($category == 3) {
-                $topArticles = $this->getArticleListContent() ->where('articles.top', 1)->get();
-                $topAdverts = $this ->getAdvert(2, 6, 1, $category);
+                $topArticles = $this->getArticleListContentV1() ->where('articles.top', 1)->get();
+                $topAdverts = $this ->getAdvertV1(2, 6, 1, $category);
             }
         }
 //        $ids = array();
@@ -395,31 +383,6 @@ class InfoController extends Controller
             'topAdvert'     => $topAdverts,
             'listAdverts'   => $listAdverts
         ];
-//        if($category < 8) {
-//            $adverts = Article::join('categories', 'articles.category_id', '=', 'categories.id')
-////            ->join('article_resources', 'articles.id', '=', 'article_resources.article_id')
-//                ->join('article_types', 'articles.type_id', '=', 'article_types.id')
-//                ->select('articles.id', 'articles.title', 'categories.name as categoryName', 'articles.category_id', 'article_types.name as articletypeName'
-//                    , 'articles.created_at')
-////                , 'article_resources.id as resourceid')
-//                ->where('articles.category_id', '=', $category)
-//                ->where('articles.published', '=', 0)
-//                ->orderBy('articles.created_at', 'desc')
-//                //            ->where('article_resources.displayorder', '=', 0)
-//                ->skip($from)
-//                ->take(10 - $limit);
-//
-//            if($advlast && $advlast > 0)
-//                $adverts = $adverts->where('articles.id', '<=', $advlast);
-//
-//            $adverts = $adverts->get();
-//
-//            foreach($adverts as $advert) {
-//                $articles->push($advert);
-//            }
-//
-//        }
-//        return $articles;
     }
 
     public function getCommentList($articleid, $lastid, $page, $limit) {
