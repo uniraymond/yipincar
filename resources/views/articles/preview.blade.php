@@ -46,7 +46,7 @@
         @endif
 
         {{--<table>--}}
-            <div class="content col-xs-12">{!! $article->content !!}</div>
+            <div id="content" class="content col-xs-12">{!! $article->content !!}</div>
             <div class="clearfix"></div>
 
         {{--</table>--}}

@@ -1196,9 +1196,12 @@ class InfoController extends Controller
 
     public function getArticleDetailInfo($id, $excludes) {
         $article = Article::findOrFail($id);
-        $excludes = $this->getRecommendListV1($article->id, $excludes);
+        $recommands = $this->getRecommendListV1($article->id, $excludes);
+        $advert = $this ->getAdvert(3, 1, -1, $article['category_id']);
         return ['article' => $article,
-                'excludeids' => $excludes['excludes']];
+                'recommands' => $recommands,
+                'advert'  => $advert,
+        ];
     }
 
     public function replaceArticleImages() {
