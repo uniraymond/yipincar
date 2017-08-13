@@ -126,7 +126,6 @@ Route::group(['middleware'=>'auth', 'prefix'=>'admin'], function() {
 });
 
 Route::group(['middleware'=>'auth', 'prefix'=>'adminv1'], function() {
-
 });
 
 Route::group(['middleware' => 'auth'], function () {
@@ -179,6 +178,8 @@ Route::group(['prefix'=>'api'], function() {
     Route::get('makeuserdirs', 'InfoController@makeUserDir');
 
     Route::get('articlelistv1/{category?}/{lastid?}/{page?}/{limit?}', 'InfoController@getArticleListV1');
+    Route::get('detailinfo/{id}/{excludes}', 'InfoController@getArticleDetailInfo');
+
 
 });
 

@@ -366,6 +366,12 @@ class InfoController extends Controller
             if($category == 3) {
                 $topArticles = $this->getArticleListContentV1() ->where('articles.top', 1)->get();
                 $topAdverts = $this ->getAdvertV1(2, 6, 1, $category);
+                foreach ($topArticles as $article) {
+                    $resources = Resource::join('article_resources', 'resources.id', '=', 'article_resources.resource_id')
+                        ->where('article_resources.article_id', $article->id)
+                        ->select('link', 'name')->get();
+                    $article['resources'] = $resources;
+                }
             }
         }
 //        $ids = array();
@@ -460,6 +466,57 @@ class InfoController extends Controller
             }
         }
         return ['recommand' => $recommands];
+    }
+
+    public function getRecommendListV1($articleid, $excludeids) {
+        $keys = ArticleTags::select('tag_id') ->where('article_id', $articleid) ->get();
+        $exArray = explode(',', $excludeids);
+
+        $limit = 5;
+        $artCollection = new Collection([]);
+        for ($i=0; $i < count($keys); $i++) {
+            $tagid = $keys[$i]['tag_id'];
+            $articles = Article::join('article_tags', 'article_tags.article_id', '=', 'articles.id')
+                ->join('categories', 'articles.category_id', '=', 'categories.id')
+                ->join('users', 'users.id', '=', 'articles.created_by')
+                ->leftJoin('profiles', 'articles.created_by', '=', 'profiles.user_id')
+                ->join('article_types', 'articles.type_id', '=', 'article_types.id')
+                ->select('articles.id', 'articles.title', 'articles.description', 'articles.authname', 'articles.readed',
+                    'categories.name as categoryName', 'articles.category_id', 'article_types.name as articletypeName'
+                    , 'articles.created_at', 'users.name as userName', 'profiles.media_name as mediaName')
+                ->where('articles.published', '=', 4)
+                ->where('articles.banned', '=', 0)
+                ->where('articles.category_id', '!=', 13)
+                ->where('article_tags.tag_id', '=', $tagid)
+                ->whereNotIn('articles.id', $exArray)
+                ->orderBy('articles.created_at', 'desc')
+                ->take($limit)
+                ->get();
+            foreach($articles as $article) {
+                $resources = Resource::join('article_resources', 'resources.id', '=', 'article_resources.resource_id')
+                    ->where('article_resources.article_id', $article->id)
+                    ->select('link', 'name')->get();
+                $article['resources'] = $resources;
+                array_push($exArray, $article['id']);
+//                $excludeids = $excludeids.','.$article['id'];
+            }
+            if(sizeof($articles))
+                $artCollection->push($articles);
+        }
+        $recommands = new Collection([]);
+        if(sizeof($artCollection)) {
+            for($j=0; $j < $limit ; $j++) {
+                foreach($artCollection as $articles) {
+                    if(sizeof($articles) > $j) {
+                        $recommands ->push($articles[$j]);
+                    }
+                    if(sizeof($recommands) == 5) break;
+                }
+                if(sizeof($recommands) == 5) break;
+            }
+        }
+        return ['recommand' => $recommands,
+                'excludes' => $exArray];
     }
 
 //    //if lastid == 0, it should be first page requst,
@@ -1135,6 +1192,13 @@ class InfoController extends Controller
             return ['version' => $this->androidVersion];
         } elseif ($device == 'ios')
             return ['version' => $this->iosVersion];
+    }
+
+    public function getArticleDetailInfo($id, $excludes) {
+        $article = Article::findOrFail($id);
+        $excludes = $this->getRecommendListV1($article->id, $excludes);
+        return ['article' => $article,
+                'excludeids' => $excludes['excludes']];
     }
 
     public function replaceArticleImages() {
