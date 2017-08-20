@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\AdvSetting;
 use App\ArticleStatus;
 use App\ArticleStatusCheck;
+use App\Comment;
 use App\Tags;
 use App\User;
 use App\Yipinlog;
@@ -894,36 +895,35 @@ class ArticleController extends Controller
         return view('articles/preview', ['article'=>$article]);
     }
 
-    public function previewv1($article_id, $excludeids)
+    public function previewv1($article_id, $excludeids, $readerid = 0, $uid=1)
     {
         $article = Article::find($article_id);
-        $recommends = $this->getRecommendList($article_id, $excludeids);
-        $comments=$article->comments;
-        return view('articles/previewv1', ['article'=>$article, 'recommends'=>$recommends, 'comments'=>$comments]);
+        $recommends = $this->getRecommendListV1($article_id, $excludeids);
+//        $comments=$article->comments;
+//        echo 'article created by: '.$article->user_created_by;
+        return view('articles/previewv1', ['article'=>$article,
+            'recommends'=>$recommends['recommends'],
+            'comments'=>$this->getCommentList($article_id),
+            'excludes'=>$recommends['excludes'], 'readerid'=>$readerid, 'uid'=>$uid]);
     }
 
-    public function getRecommendList($articleid, $excludeids) {
+    public function getRecommendListV1($articleid, $excludeids) {
         $keys = ArticleTags::select('tag_id') ->where('article_id', $articleid) ->get();
-        $exArray = explode(',', $excludeids);
-
+        $divider = 'a';
+        $exArray = explode($divider, $excludeids);
+//        var_dump($exArray);
         $limit = 5;
-        $artCollection = new Collection([]);
+//        $artCollection = new Collection([]);
+        $recommends = array();
         for ($i=0; $i < count($keys); $i++) {
             $tagid = $keys[$i]['tag_id'];
             $articles = Article::join('article_tags', 'article_tags.article_id', '=', 'articles.id')
                 ->join('categories', 'articles.category_id', '=', 'categories.id')
-//                    ->join('tags', 'article_tags.tag_id', '=', 'tags.id')
                 ->join('users', 'users.id', '=', 'articles.created_by')
-                ->leftJoin('article_resources', 'articles.id', '=', 'article_resources.article_id')
-                ->leftJoin('resources', 'resources.id', '=', 'article_resources.resource_id')
                 ->leftJoin('profiles', 'articles.created_by', '=', 'profiles.user_id')
-                ->join('article_types', 'articles.type_id', '=', 'article_types.id')
-                ->select('articles.id', 'articles.title', 'articles.description', 'articles.authname', 'articles.readed',
-                    'categories.name as categoryName', 'articles.category_id', 'article_types.name as articletypeName'
-                    , 'articles.created_at', 'article_resources.resource_id'
-                    , 'resources.link as resourceLink', 'resources.name as resourceName',
-                    'users.name as userName',
-                    'profiles.media_name as mediaName')
+//                ->join('article_types', 'articles.type_id', '=', 'article_types.id')
+                ->select('articles.id', 'articles.title', 'articles.authname', 'articles.readed',
+                    'articles.created_at', 'users.name as userName', 'profiles.media_name as mediaName')
                 ->where('articles.published', '=', 4)
                 ->where('articles.banned', '=', 0)
                 ->where('articles.category_id', '!=', 13)
@@ -932,26 +932,96 @@ class ArticleController extends Controller
                 ->orderBy('articles.created_at', 'desc')
                 ->take($limit)
                 ->get();
-            foreach($articles as $article) {
-                array_push($exArray, $article['id']);
-//                $excludeids = $excludeids.','.$article['id'];
-            }
-            if(sizeof($articles))
-                $artCollection->push($articles);
-        }
-        $recommands = new Collection([]);
-        if(sizeof($artCollection)) {
-            for($j=0; $j < $limit ; $j++) {
-                foreach($artCollection as $articles) {
-                    if(sizeof($articles) > $j) {
-                        $recommands ->push($articles[$j]);
-                    }
-                    if(sizeof($recommands) == 5) break;
+            if(count($articles)) {
+                foreach($articles as $article) {
+                    $resources = Resource::join('article_resources', 'resources.id', '=', 'article_resources.resource_id')
+                        ->where('article_resources.article_id', $article->id)
+                        ->select('link', 'name')->first();
+                    if($resources)
+                        $article['resources'] = $resources->link;
+//                    array_push($exArray, $article['id']);
+
+
                 }
-                if(sizeof($recommands) == 5) break;
+//                $artCollection->push($articles);
+//                $recommends = array_merge($recommends, $articles);
+                array_push($recommends, $article);
             }
         }
-        return $recommands;//['recommends' => $recommands];
+        $recommends = array_slice(array_unique($recommends), 0, 5);
+//        var_dump($recommends);
+        foreach($recommends as $recommend) {
+            $excludeids = $excludeids.$divider.$recommend['id'];
+//            echo $excludeids.'\n';
+        }
+//        $recommends = new Collection([]);
+//        if(sizeof($artCollection)) {
+//            for($j=0; $j < $limit ; $j++) {
+//                foreach($artCollection as $articles) {
+//                    if(sizeof($articles) > $j) {
+//                        $recommends ->push($articles[$j]);
+//                    }
+//                    if(sizeof($recommends) == 5) break;
+//                }
+//                if(sizeof($recommends) == 5) break;
+//            }
+//        }
+        return ['recommends' => $recommends,
+            'excludes' => $excludeids];;
+    }
+
+    public function getCommentList($articleid) {
+//        if (!$lastid) $lastid = 0;
+//        $from = ($page -1) * $limit;
+
+        $comments = Comment::join('users', 'comments.created_by', '=', 'users.id')
+//            ->leftJoin('zans', 'comments.id', '=', 'zans.comment_id')
+            ->join('profiles', 'comments.created_by', '=', 'profiles.user_id')
+            ->select('comments.*', 'users.name as userName', 'profiles.icon_uri',
+                'profiles.weixin_id', 'profiles.weixin_name', 'profiles.weixin_icon',
+                'profiles.weibo_id', 'profiles.weibo_name','profiles.weibo_icon',
+                'profiles.qq_id', 'profiles.qq_name', 'profiles.qq_icon')
+            ->where('comments.article_id', '=', $articleid)
+            ->where('comments.banned', '=', 0)
+            ->orderBy('created_at', 'desc')->get();
+//            ->skip($from)
+//            ->take($limit);
+//        if($lastid > 0)
+//            $comments = $comments ->where('comments.id', '<=', $lastid);
+//        $comments = $comments ->get();
+        foreach ($comments as $comment) {
+//            echo "role id".$comment->role_id;
+            switch ($comment->role_id) {
+                case 10: {
+                    $comment['name'] = $comment->userName;
+                    $comment['icon'] = $comment->icon_uri;
+            } break;
+
+                case 12: {
+                    $comment['name'] = $comment->weibo_name;
+                    $comment['icon'] = $comment->weibo_icon;
+            } break;
+
+
+                case 13: {
+                    $comment['name'] = $comment->weixin_name;
+                    $comment['icon'] = $comment->weixin_icon;
+            } break;
+
+                case 14: {
+                    $comment['name'] = $comment->qq_name;
+                    $comment['icon'] = $comment->qq_icon;
+            } break;
+
+
+                default:
+                    break;
+            }
+            $comment['zans'] = count($comment->zan);
+        }
+//        var_dump($comments);
+
+        return $comments;
     }
 
     public function previewSite($article_id)

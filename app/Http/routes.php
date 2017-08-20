@@ -27,7 +27,7 @@ Route::get('authsendtxtpw/{phone}', 'UserController@cellphonevalidatepw');
 Route::get('authprofile/{uid}/show', 'ProfileController@authshow');
 Route::get('authprofile/{uid}/update', 'ProfileController@authupdate');
 Route::get('preview/{id}', 'ArticleController@preview');
-Route::get('v1/preview/{id}/{exid}', 'ArticleController@previewv1');
+Route::get('v1/preview/{id}/{exid}/{readerid}/{uid}', 'ArticleController@previewv1');
 
 Route::get('authsendtxt/{phone}', 'UserController@cellphonevalidate');
 
@@ -179,6 +179,7 @@ Route::group(['prefix'=>'api'], function() {
 
     Route::get('articlelistv1/{category?}/{lastid?}/{page?}/{limit?}', 'InfoController@getArticleListV1');
     Route::get('detailinfo/{id}/{excludes}', 'InfoController@getArticleDetailInfo');
+    Route::any('showdetailv1', 'InfoController@showDetailV1');
 
 
 });

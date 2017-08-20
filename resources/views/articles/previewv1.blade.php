@@ -80,18 +80,14 @@
 {{--</rss>--}}
 {{--@section('content')--}}
 <div class="article-preview" id="prviewbody" contenteditable="false">
-    <div style="margin: 17px" >
+    <div style="margin: 8px" >
 
         <div class="title col-xs-12">{{ $article->title }}</div>
         <div class="clearfix"></div>
         <div class="subtitle">
-            <div class="category col-xs-8">{{ $article->categories->name }}
-                @if (isset($article->user_created_by->profiles))
-                    @if(isset($article->user_created_by->profiles->media_name) && $article->user_created_by->profiles->media_name != '')
-                        <span class="mediaName" >{{ $article->user_created_by->profiles->media_name }}</span>
-                    @else
-                        <span class="authname" >{{ $article->authname != '' ? $article->authname : $article->user_created_by->name }}</span>
-                    @endif
+            <div class="category col-xs-10">{{ $article->categories->name }}
+                @if(isset($article->user_created_by->profiles) && isset($article->user_created_by->profiles->media_name) && $article->user_created_by->profiles->media_name != '')
+                    <span class="mediaName" >{{ $article->user_created_by->profiles->media_name }}</span>
                 @else
                     <span class="authname" >{{ $article->authname != '' ? $article->authname : $article->user_created_by->name }}</span>
                 @endif
@@ -108,175 +104,122 @@
         {{--<table>--}}
         <div class="content col-xs-12">{!! $article->content !!}</div>
         <div class="clearfix"></div>
-        <div class="clearfix"></div>
         {{--</table>--}}
 
     </div>
 
-{{--    @if(count($recommends))--}}
+    @if(count($recommends))
         <div class="recommend_top">推荐阅读</div>
-        <div class="container">
-            <div class="row">
-                <div class="col-md-9" role="main">
-                    @foreach($recommends as $recommend)
-                        <div class="media"  onclick="recommendClicked($article)">
-                            <div class="media-left">
-                                <a href="#">
-                                    @php
-                                    $articleLinks = $recommend->resources;
-                                    $articleLink = '';
-                                    if (count($articleLinks) > 0) {
-                                    foreach($articleLinks as $artLink) {
-                                    $articleLink = $artLink->link;
-                                    break;
-                                    }
-                                    }
-                                    @endphp
-                                    <img class="media-object img-circle" width="64" alt="图标" src="{{$articleLink}}">
-                                    {{--                                {!! gettype($diary->user->avatar) !!}--}}
-                                </a>
-                            </div>
-                            <div class="media-body">
-                                <h4 class="media-heading">{{$recommend->title}}</h4>
-                                {{$recommend->description}}
-{{--                                回复:{{count($article->comments)}}--}}
-                            </div>
+        {{--<div class="media recommend_list">--}}
+            {{--<div class="media-body" onclick="recommendClicked({{$article->id}})">--}}
+                {{--<h4 class="media-heading">{{$article->title}}</h4>--}}
+                {{--{{$article->description}}--}}
+                {{--回复:{{count($article->comments)}}--}}
+            {{--</div>--}}
 
-                        </div>
-
-                    @endforeach
-
-                </div>
-            </div>
-        </div>
-
-        <div class="media recommend_list">
-            <div class="media-body" onclick="recommendClicked({{$article->id}})">
-                <h4 class="media-heading">{{$article->title}}</h4>
-                {{$article->description}}
-                回复:{{count($article->comments)}}
-            </div>
-
-                <div class="media-right">
-                    @php
-                    $articleLinks = $article->resources;
-                    $articleLink = '';
-                    if (count($articleLinks) > 0) {
-                    foreach($articleLinks as $artLink) {
-                    $articleLink = $artLink->link;
-                    break;
-                    }
-                    }
-                    @endphp
+                {{--<div class="media-right">--}}
+                    {{--@php--}}
+                    {{--$articleLinks = $article->resources;--}}
+                    {{--$articleLink = '';--}}
+                    {{--if (count($articleLinks) > 0) {--}}
+                    {{--foreach($articleLinks as $artLink) {--}}
+                    {{--$articleLink = $artLink->link;--}}
+                    {{--break;--}}
+                    {{--}--}}
+                    {{--}--}}
+                    {{--@endphp--}}
                     {{--<a href="#">--}}
-                        <img class="media-object" width="100" alt="图标" src="{{$articleLink}}">
+                        {{--<img class="media-object" width="100" alt="图标" src="{{$articleLink}}">--}}
                         {{--                                {!! gettype($diary->user->avatar) !!}--}}
                     {{--</a>--}}
-                </div>
-        </div>
-    <div class="article_divider"></div>
+                {{--</div>--}}
+        {{--</div>--}}
+    {{--<div class="article_divider"></div>--}}
 
-    <div class="media">
-        <div class="media-body  recommend_list" onclick="recommendClicked({{$article->id}})">
-            <h4 class="media-heading">{{$article->title}}</h4>
-            <h6 class="recommend_subtitle">
-                <div class="recommend_subInfo media-list">
-                    @if (isset($article->user_created_by->profiles))
-                        @if(isset($article->user_created_by->profiles->media_name) && $article->user_created_by->profiles->media_name != '')
-                            {{ $article->user_created_by->profiles->media_name }}
-                        @else
-                            {{ $article->authname != '' ? $article->authname : $article->user_created_by->name }}
-                        @endif
-                    @else
-                        {{ $article->authname != '' ? $article->authname : $article->user_created_by->name }}
-                    @endif
-                    设定都是发送设定都是发送
-                    {{ date('Y-m-d H:i', strtotime($article->created_at)) }}
-                </div>
-
-                <div class="pull-right recommend_readed" >阅读:{{$article->readed}}</div>
-            </h6>
-        </div>
-
-        <div class="media-right">
+    <div class="media recommend_list">
+        @foreach($recommends as $recommend)
             @php
-            $articleLinks = $article->resources;
-            $articleLink = '';
-            if (count($articleLinks) > 0) {
-            foreach($articleLinks as $artLink) {
-            $articleLink = $artLink->link;
-            break;
-            }
-            }
+                $uri = "/v1/preview/".$recommend->id."/".$excludes.'/'.$readerid;
             @endphp
-            {{--<a href="#">--}}
-            <img class="media-object recommend_icon" width="120" alt="图标" src="{{$articleLink}}">
-            {{--                                {!! gettype($diary->user->avatar) !!}--}}
-            {{--</a>--}}
-        </div>
+            {{--{{$uri}}--}}
+        <a href= "{{$uri}}">
+            <div class="media-body  recommend_container" >
+                <h4 class="media-heading recommend_title">{{$recommend->title}}</h4>
+                <h6 class="recommend_subtitle">
+                    <div class="recommend_subInfo media-list">
+                        @if(isset($recommend->mediaName) && $recommend->mediaName != '')
+                            {{ $recommend->mediaName }}
+                        @else
+                            {{ $recommend->userName != '' ? $recommend->userName : $recommend->userName }}
+                        @endif
+                        {{ date('Y-m-d H:i', strtotime($recommend->created_at)) }}
+                    </div>
 
-        <div class="article_divider"></div>
+                    <div class="pull-right recommend_readed" >阅读:{{$recommend->readed}}</div>
+                </h6>
+            </div>
 
+            <div class="media-right">
+                @if($recommend->resources)
+                    <img class="media-object recommend_icon" alt="图标" src="{{$recommend->resources}}">
+                @else
+                    <img class="media-object recommend_icon" alt="图标" src="/photos/app_logo.png">
+                @endif
+            </div>
+        </a>
+            <div class="article_divider"></div>
+
+
+
+        @endforeach
     </div>
-    {{--@endif--}}
+    @endif
 
-{{--    @if(count($comments))--}}
+    @if(count($comments))
         <div class="recommend_top">热门评论</div>
     @foreach($comments as $comment)
+            {{--@php--}}
+            {{--$uri = "/v1/preview/".$recommend->id."/".$excludes.'/'.$readerid;--}}
+            {{--@endphp--}}
+        {{--<a href="{{$uri}}">--}}
+            <div class="media-body  recommend_container" onclick="replyComment({{$comment->id}})">
+                <div class="media-left">
+                    @if($comment->icon)
+                        <img class="media-object img-circle" width="50" height="50" alt="图标" src="{{$comment->icon}}">
+                    @else
+                        <img class="media-object img-circle" width="50" height="50" alt="图标" src="/photos/male_holder.png">
+                    @endif
+{{--                    @if($readerid && $readerid == $comment->created_by)--}}
+                        <h5 class="comment_delete" onclick="event.cancelBubble=true;deleteComment({{$comment->id}})">删除</h5>
+                        {{--<a class="comment_delete" href="/api/delcomment?commentid={{$comment->id}}">删除</a>--}}
+                    {{--@endif--}}
+                </div>
+
+                <div class="media-body comment_content">
+                    <h4 class="media-heading">{{$comment->name}}</h4>
+                    <h4 class="recommend_subtitle">
+                        {{substr(Carbon\Carbon::today(), 0, 10)==substr($article->created_at, 0, 10) ?
+                        "今天 ".substr($comment->created_at, 10, strlen($comment->created_at)) : $comment->created_at}}
+                    </h4>
+                    <div class="clearfix"></div>
+                    {{$comment->comment}}
+                </div>
+
+                <div class="media-right" id="approve_comment" onclick="event.cancelBubble=true;aprroveComment({{$comment->id}}, {{$uid}})">
+                    {{--<a href="#">--}}
+                    <img class="media-object" width="25" alt="图标" src="/photos/approve_button.png">
+                    <div class="comment_approve" id="comment_approves_count" >{{$comment->zans ? $comment->zans : "点赞"}}</div>
+                    {{--                                {!! gettype($diary->user->avatar) !!}--}}
+                    {{--</a>--}}
+                </div>
+
+                <div class="article_divider"></div>
+            </div>
+        {{--</a>--}}
     @endforeach
-    <div class="media-body  recommend_list" onclick="recommendClicked({{$article->id}})">
-        <div class="media-left">
-            @php
-            $articleLinks = $article->resources;
-            $articleLink = '';
-            if (count($articleLinks) > 0) {
-            foreach($articleLinks as $artLink) {
-            $articleLink = $artLink->link;
-            break;
-            }
-            }
-            @endphp
-            <img class="media-object img-circle" width="50" height="50" alt="图标" src="{{$articleLink}}">
 
-            {{--            @if()--}}
-            <a class="comment_delete" href="">删除</a>
+    @endif
 
-            {{--@endif--}}
-        </div>
-
-        <div class="media-body">
-            <h4 class="media-heading">{{$article->user_created_by->name}}</h4>
-            {{substr(Carbon\Carbon::today(), 0, 10)==substr($article->created_at, 0, 10) ?
-                "今天 ".substr($article->created_at, 10, strlen($article->created_at)) : $article->created_at}}
-            <div class="clearfix"></div>
-            {{$article->description}}
-        </div>
-
-        <div class="media-right" onclick="event.cancelBubble=true;aprroveComment({{$article->id}})">
-            {{--<a href="#">--}}
-            <img class="media-object" width="25" alt="图标" src="/photos/approve_button.png">
-            @php
-            $countApproved = "点赞";
-            if(count($comments)) {
-                $comment=$comments[0];
-                $countApproved = count($comment->zan);
-            }
-
-            @endphp
-            <div class="comment_approve" >{{$countApproved}}</div>
-            {{--                                {!! gettype($diary->user->avatar) !!}--}}
-            {{--</a>--}}
-        </div>
-        <div class="article_divider"></div>
-    </div>
-
-    {{--@endif--}}
-
-    <div class="content">
-        <div class="vuetitle">
-            <p>@{{ message }}</p>
-        </div>
-    </div>
 
     {{--<loadmore :top-method="loadTop" :bottom-method="loadBottom" :bottom-all-loaded="allLoaded" ref="loadmore">--}}
         {{--<ul>--}}
@@ -294,29 +237,29 @@
     {{--</div>--}}
     {{--</loadmore>--}}
 
-    <loadmore :top-method="loadTop" :bottom-method="loadBottom" :bottom-all-loaded="allLoaded" ref="loadmore">
-        <div class="card facebook-card" v-for="item in mes">
-            <div class="card-header no-border">
-                <div class="facebook-avatar">
-                    <img :src="item.userHeadImg" alt=""width="34" height="34"/>
-                </div>
-                <div class="facebook-name">{{$article->title}}</div>
-                <div class="facebook-date">{{$article->description}}</div>
-            </div>
-            <div class="card-content">
-                <img :src="item.headImage" alt="" width="100%"/>
-            </div>
-            <div class="card-footer no-border">
-                <a href="#" class="link">{{$article->id}}赞</a>
-                <a href="#" class="link">评论</a>
-                <a href="#" class="link">分享</a>
-            </div>
-        </div>
-    </loadmore>
+    {{--<loadmore :top-method="loadTop" :bottom-method="loadBottom" :bottom-all-loaded="allLoaded" ref="loadmore">--}}
+        {{--<div class="card facebook-card" v-for="item in mes">--}}
+            {{--<div class="card-header no-border">--}}
+                {{--<div class="facebook-avatar">--}}
+                    {{--<img :src="item.userHeadImg" alt=""width="34" height="34"/>--}}
+                {{--</div>--}}
+                {{--<div class="facebook-name">{{$article->title}}</div>--}}
+                {{--<div class="facebook-date">{{$article->description}}</div>--}}
+            {{--</div>--}}
+            {{--<div class="card-content">--}}
+                {{--<img :src="item.headImage" alt="" width="100%"/>--}}
+            {{--</div>--}}
+            {{--<div class="card-footer no-border">--}}
+                {{--<a href="#" class="link">{{$article->id}}赞</a>--}}
+                {{--<a href="#" class="link">评论</a>--}}
+                {{--<a href="#" class="link">分享</a>--}}
+            {{--</div>--}}
+        {{--</div>--}}
+    {{--</loadmore>--}}
 
 </div>
 
-{{--<script src="{{ url('/src/js/jQuery.min.2.2.4.js') }}" ></script>--}}
+<script src="{{ url('/src/js/jQuery.min.2.2.4.js') }}" ></script>
 {{--<script>--}}
     {{--jQuery(document).ready(function(){--}}
         {{--var width = $(document.body).width();--}}
@@ -337,142 +280,239 @@
 
     {{--});--}}
 
+
+{{--<script type="text/javascript">--}}
+
+    {{--new Vue({--}}
+        {{--el: '.vuetitle',--}}
+        {{--data: {--}}
+            {{--message: 'Hello Laravel!'--}}
+        {{--}--}}
+    {{--})--}}
+
+    {{--// ES6 mudule--}}
+    {{--import Loadmore from 'vue-loadmore';--}}
+
+    {{--// CommonJS--}}
+{{--//    const Loadmore = require('vue-loadmore').default;//    Vue.component('loadmore', Loadmore);--}}
+    {{--new Vue({--}}
+        {{--el: '#example1',--}}
+        {{--components: {--}}
+            {{--'loadmore': Loadmore--}}
+        {{--},--}}
+
+        {{--data() {--}}
+        {{--return {--}}
+            {{--list: [],--}}
+            {{--allLoaded: false--}}
+        {{--};--}}
+    {{--},--}}
+
+    {{--methods: {--}}
+        {{--loadTop(id) {--}}
+            {{--setTimeout(() => {--}}
+                {{--if (this.list[0] === 1) {--}}
+                {{--for (let i = 0; i >= -10; i--) {--}}
+                    {{--this.list.unshift(i);--}}
+                {{--}--}}
+            {{--}--}}
+            {{--this.$refs.top.onTopLoaded(id);--}}
+        {{--}, 1500);--}}
+        {{--},--}}
+
+        {{--loadBottom(id) {--}}
+            {{--setTimeout(() => {--}}
+                {{--let lastValue = this.list[this.list.length - 1];--}}
+            {{--if (lastValue < 40) {--}}
+                {{--for (let i = 1; i <= 10; i++) {--}}
+                    {{--this.list.push(lastValue + i);--}}
+                {{--}--}}
+            {{--} else {--}}
+                {{--this.allLoaded = true;--}}
+            {{--}--}}
+            {{--this.$broadcast('onBottomLoaded', id);--}}
+        {{--}, 1500);--}}
+        {{--}--}}
+    {{--},--}}
+
+    {{--created() {--}}
+        {{--for (let i = 1; i <= 20; i++) {--}}
+            {{--this.list.push(i);--}}
+        {{--}--}}
+    {{--}--}}
+    {{--});--}}
+
+    {{--new Vue({--}}
+        {{--el: '#example2',--}}
+        {{--components: {--}}
+            {{--'loadmore': Loadmore--}}
+        {{--},--}}
+
+        {{--data() {--}}
+        {{--return {--}}
+            {{--list2: [],--}}
+            {{--topStatus: ''--}}
+        {{--};--}}
+    {{--},--}}
+
+    {{--methods:{--}}
+        {{--getList:function(page){--}}
+            {{--this.$http.get("https://apis.baidu.com/qunartravel/travellist/travellist",{--}}
+                {{--params:{--}}
+                    {{--page:this.page,--}}
+                {{--},--}}
+                {{--headers:{--}}
+                    {{--'apikey':'06ad8ab76e20c1fb0a04cfd9ce4f5e0c'--}}
+                {{--}--}}
+            {{--}).then(function(res){--}}
+                {{--//this.mes=this.mes.concat(res.body.data.books);  数据追加--}}
+                {{--this.mes=res.body.data.books;--}}
+                {{--console.log(this.mes);--}}
+            {{--},function(err){--}}
+                {{--console.log(err);--}}
+                {{--this.success=false;--}}
+            {{--})--}}
+        {{--},--}}
+        {{--loadTop(id){--}}
+            {{--console.log(this.page);--}}
+            {{--//默认是第三页，下拉刷新的时候获取第一页--}}
+            {{--this.page=1;--}}
+            {{--this.getList(this.page);--}}
+            {{--this.$refs.loadmore.onTopLoaded(id);--}}
+            {{--console.log("id="+id);--}}
+        {{--},--}}
+        {{--loadMore(){--}}
+            {{--console.log("loadMore");--}}
+
+        {{--},--}}
+        {{--loadBottom(id) {--}}
+            {{--console.log("下方在执行id="+id)--}}
+            {{--//this.page++;--}}
+            {{--//this.getList(this.page);--}}
+            {{--//  this.$refs.loadmore.onBottomLoaded(id);--}}
+        {{--}--}}
+
+    {{--}--}}
+
+    {{--created() {--}}
+        {{--for (let i = 1; i <= 20; i++) {--}}
+            {{--this.list2.push(i);--}}
+        {{--}--}}
+    {{--}--}}
+    {{--});--}}
+
+    {{--//    Vue.component('ZZScroll', require('/src/js/components/ZZScroll.vue'))--}}
 {{--</script>--}}
-<script type="text/javascript" src="{{asset('/src/js/vue.js')}}"></script>
 
-<script type="text/javascript">
-
-    new Vue({
-        el: '.vuetitle',
-        data: {
-            message: 'Hello Laravel!'
-        }
-    })
-
-    // ES6 mudule
-    import Loadmore from 'vue-loadmore';
-
-    // CommonJS
-//    const Loadmore = require('vue-loadmore').default;//    Vue.component('loadmore', Loadmore);
-    new Vue({
-        el: '#example1',
-        components: {
-            'loadmore': Loadmore
-        },
-
-        data() {
-        return {
-            list: [],
-            allLoaded: false
-        };
-    },
-
-    methods: {
-        loadTop(id) {
-            setTimeout(() => {
-                if (this.list[0] === 1) {
-                for (let i = 0; i >= -10; i--) {
-                    this.list.unshift(i);
-                }
-            }
-            this.$refs.top.onTopLoaded(id);
-        }, 1500);
-        },
-
-        loadBottom(id) {
-            setTimeout(() => {
-                let lastValue = this.list[this.list.length - 1];
-            if (lastValue < 40) {
-                for (let i = 1; i <= 10; i++) {
-                    this.list.push(lastValue + i);
-                }
-            } else {
-                this.allLoaded = true;
-            }
-            this.$broadcast('onBottomLoaded', id);
-        }, 1500);
-        }
-    },
-
-    created() {
-        for (let i = 1; i <= 20; i++) {
-            this.list.push(i);
-        }
-    }
-    });
-
-    new Vue({
-        el: '#example2',
-        components: {
-            'loadmore': Loadmore
-        },
-
-        data() {
-        return {
-            list2: [],
-            topStatus: ''
-        };
-    },
-
-    methods:{
-        getList:function(page){
-            this.$http.get("https://apis.baidu.com/qunartravel/travellist/travellist",{
-                params:{
-                    page:this.page,
-                },
-                headers:{
-                    'apikey':'06ad8ab76e20c1fb0a04cfd9ce4f5e0c'
-                }
-            }).then(function(res){
-                //this.mes=this.mes.concat(res.body.data.books);  数据追加
-                this.mes=res.body.data.books;
-                console.log(this.mes);
-            },function(err){
-                console.log(err);
-                this.success=false;
-            })
-        },
-        loadTop(id){
-            console.log(this.page);
-            //默认是第三页，下拉刷新的时候获取第一页
-            this.page=1;
-            this.getList(this.page);
-            this.$refs.loadmore.onTopLoaded(id);
-            console.log("id="+id);
-        },
-        loadMore(){
-            console.log("loadMore");
-
-        },
-        loadBottom(id) {
-            console.log("下方在执行id="+id)
-            //this.page++;
-            //this.getList(this.page);
-            //  this.$refs.loadmore.onBottomLoaded(id);
-        }
-
-    }
-
-    created() {
-        for (let i = 1; i <= 20; i++) {
-            this.list2.push(i);
-        }
-    }
-    });
-
-    //    Vue.component('ZZScroll', require('/src/js/components/ZZScroll.vue'))
-</script>
+<script src="{{ url('/src/js/jQuery.min.2.2.4.js') }}" ></script>
 
 <script>
-    function recommendClicked($recommendid){
-        $assign='/v1/preview/' + ($recommendid-1) +'/' + ($recommendid-1);
+//    function recommendClicked($recommendid, $excludes, $readerid){
+//        $assign = '/v1/preview/' + $recommendid +'/' + $excludes + '/' + $readerid;
+//        alert('url:' + $readerid);
+////        window.location.assign($assign)
+//    }
+
+
+
+    {{--$('#approve_comment').click(function(){--}}
+    {{--//            alert('raido value: ' + $(this).val());--}}
+        {{--$.post('{{ action('InfoController@releaseComment') }}',--}}
+
+                {{--{ '_token': token ,'oldpassword': oldpassword,--}}
+
+                    {{--'newpassword': newpassword, 'newpassword2':newpassword2 },--}}
+
+                {{--function(data){--}}
+
+                    {{--alert("Data Loaded: " + data);--}}
+
+                {{--});--}}
+    {{--});--}}
+
+    function replyComment($commentid) {
+        $assign = '/api/comment?commentid=' + $commentid;
         window.location.assign($assign)
+
     }
 
-    function aprroveComment($commentid) {
-        alert('approved');
-//        $assign='/preview/' + ($recommendid-1);
+    function aprroveComment($commentid, $uid) {
+        $assign='/api/approvecomment?commentid=' + $commentid + '&uid=' + $uid;
+//        alert('谢谢支持!' + $assign);
 //        window.location.assign($assign)
+        $.ajax({
+
+            type: 'GET',
+
+            url: $assign,
+
+            data: { commentid : $commentid},
+
+            dataType: "json",
+
+//            headers: {
+//
+//                'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+//
+//            },
+
+            success: function(data){
+
+//                console.log(data);
+                if (data.approved == '+1') {
+                    alert('谢谢支持!');
+                } else {
+                    alert('取消点赞!');
+                }
+                $('#comment_approves_count').text(data.count == 0 ? '点赞' : data.count)
+
+            },
+
+            error: function(xhr, type){
+
+//                alert('Ajax error!')
+
+            }
+
+        });
+    }
+
+    function deleteComment($commentid) {
+        if (confirm('确定要删除评论?')) {
+            alert('谢谢支持!');
+            $assign = "/api/delcomment?commentid=" + $commentid;
+            $.ajax({
+
+                type: 'GET',
+
+                url: $assign,
+
+                data: { commentid : $commentid},
+
+                dataType: "json",
+
+//            headers: {
+//
+//                'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+//
+//            },
+
+                success: function(data){
+
+//                console.log(data);
+
+                    window.location.reload();
+                },
+
+                error: function(xhr, type){
+//                    alert('Ajax error!')
+                }
+
+            });
+        } else  {
+//            alert('取消删除!');
+        }
+
     }
 </script>
 {{--@endsection--}}

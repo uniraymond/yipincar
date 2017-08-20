@@ -122,6 +122,29 @@ class InfoController extends Controller
         ];
     }
 
+    public function showDetailV1(Request $request)
+    {
+        $id = $request ->get('id');
+        $upreaded = $request ->get('upreaded');
+        $article = Article::findorFail($id);
+//        $comments = $article->comments()->take(10)->get();
+//        $approved = $info->approved()->count();
+        if ($upreaded == 1 && $article['readed'] < 6600) {
+//            Article::where('id', $id)->update(['readed' => $article['readed'] + 1]);
+//            $article['readed'] = $article['readed'] + 1;
+            $article['readed'] = $article['readed'] + random_int(5, 10);
+            Article::where('id', $id)->update(['readed' => $article['readed']]);
+        }
+        $article['comment'] = $this ->getCommentList($id, 0, 1, 10);
+//        $info['approved'] = $approved;
+//        $zan = $info->zan()->count();
+        $article['zan'] = $this ->articleApprovedCount($id);
+        $advert = $this ->getAdvert(3, 1, -1, $article['category_id']);
+        return ['article' => $article,
+            'advert'  => $advert
+        ];
+    }
+
     /**
      * Show the form for editing the specified resource.
      *
@@ -398,7 +421,7 @@ class InfoController extends Controller
         $comments = Comment::join('users', 'comments.created_by', '=', 'users.id')
 //            ->leftJoin('zans', 'comments.id', '=', 'zans.comment_id')
             ->join('profiles', 'comments.created_by', '=', 'profiles.user_id')
-            ->select('comments.*', 'users.name as userName',
+            ->select('comments.*', 'users.name as userName', 'profiles.icon_uri',
                 'profiles.weixin_id', 'profiles.weixin_name', 'profiles.weixin_icon',
                 'profiles.weibo_id', 'profiles.weibo_name','profiles.weibo_icon',
                 'profiles.qq_id', 'profiles.qq_name', 'profiles.qq_icon')
