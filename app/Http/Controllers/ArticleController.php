@@ -922,7 +922,7 @@ class ArticleController extends Controller
                 ->join('users', 'users.id', '=', 'articles.created_by')
                 ->leftJoin('profiles', 'articles.created_by', '=', 'profiles.user_id')
 //                ->join('article_types', 'articles.type_id', '=', 'article_types.id')
-                ->select('articles.id', 'articles.title', 'articles.authname', 'articles.readed',
+                ->select('articles.id', 'articles.created_by', 'articles.title', 'articles.authname', 'articles.readed',
                     'articles.created_at', 'users.name as userName', 'profiles.media_name as mediaName')
                 ->where('articles.published', '=', 4)
                 ->where('articles.banned', '=', 0)
@@ -937,8 +937,10 @@ class ArticleController extends Controller
                     $resources = Resource::join('article_resources', 'resources.id', '=', 'article_resources.resource_id')
                         ->where('article_resources.article_id', $article->id)
                         ->select('link', 'name')->first();
-                    if($resources)
-                        $article['resources'] = $resources->link;
+                    if($resources) {
+                        $article['resources'] = substr_replace($resources->link, 'thumbs/', strlen('/photos/'.$article->created_by.'/'), 0);
+//                        echo $article['resources'];
+                    }
 //                    array_push($exArray, $article['id']);
 
 
@@ -994,7 +996,7 @@ class ArticleController extends Controller
             switch ($comment->role_id) {
                 case 10: {
                     $comment['name'] = $comment->userName;
-                    $comment['icon'] = $comment->icon_uri;
+                    $comment['icon'] = substr_replace($comment->icon_uri, 'thumbs/', strlen('/photos/users/'.$comment->created_by.'/'), 0);
             } break;
 
                 case 12: {
@@ -1072,9 +1074,13 @@ class ArticleController extends Controller
         copy($imageLink, $imageOriginalLink);
 
         $cell_img_size = GetImageSize($imageLink); // need to caculate the file width and height to make the image same
-
-        $image = Image::make(sprintf('photos/'.$authuser->id.'/%s', $fileName))->save();
-        $imageThumbs = Image::make(sprintf('photos/'.$authuser->id.'/thumbs/%s', $fileName))->resize(300, (int)((300 *  $cell_img_size[1]) / $cell_img_size[0]))->save();
+        $maxSize = 480;
+        if($cell_img_size[0] > $maxSize) {
+            $image = Image::make(sprintf('photos/'.$authuser->id.'/%s', $fileName))->resize($maxSize, (int)(($maxSize *  $cell_img_size[1]) / $cell_img_size[0]))->save();
+        } else {
+            $image = Image::make(sprintf('photos/'.$authuser->id.'/%s', $fileName))->save();
+        }
+        $imageThumbs = Image::make(sprintf('photos/'.$authuser->id.'/thumbs/%s', $fileName))->resize(190, (int)((190 *  $cell_img_size[1]) / $cell_img_size[0]))->save();
         $imageOriginal = Image::make(sprintf('photos/'.$authuser->id.'/original/%s', $fileName))->save();
 
         if($update) {

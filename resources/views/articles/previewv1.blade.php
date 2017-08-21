@@ -139,7 +139,7 @@
     <div class="media recommend_list">
         @foreach($recommends as $recommend)
             @php
-                $uri = "/v1/preview/".$recommend->id."/".$excludes.'/'.$readerid;
+                $uri = 'http://'.$_SERVER['HTTP_HOST']."/v1/preview/".$recommend->id."/".$excludes.'/'.$readerid.'/'.$uid;
             @endphp
             {{--{{$uri}}--}}
         <a href= "{{$uri}}">
@@ -431,7 +431,8 @@
     {{--});--}}
 
     function replyComment($commentid) {
-        $assign = '/api/comment?commentid=' + $commentid;
+        $assign = window.location.host + '/api/comment?commentid=' + $commentid;
+        alert($assign);
         window.location.assign($assign)
 
     }
