@@ -4,59 +4,59 @@
 <link rel="stylesheet" href="{{ asset("/src/css/bootstrap.css") }}">
 <link rel="stylesheet" href="{{ asset("/src/css/preview.css") }}"/>
 
-<style media="screen">
-    * {
-        padding: 0;
-        margin: 0;
-        -webkit-user-select: none;
-        -webkit-tap-highlight-color:rgba(0, 0, 0, 0);
-    }
+{{--<style media="screen">--}}
+    {{--* {--}}
+        {{--padding: 0;--}}
+        {{--margin: 0;--}}
+        {{---webkit-user-select: none;--}}
+        {{---webkit-tap-highlight-color:rgba(0, 0, 0, 0);--}}
+    {{--}--}}
 
-    html, body {
-        height: 100%;
-        -webkit-overflow-scrolling: touch;
-    }
+    {{--html, body {--}}
+        {{--height: 100%;--}}
+        {{---webkit-overflow-scrolling: touch;--}}
+    {{--}--}}
 
-    .example-title {
-        height: 40px;
-        line-height: 40px;
-        text-align: center;
-        font-size: 20px;
-        background-color: #dddddd;
-    }
+    {{--.example-title {--}}
+        {{--height: 40px;--}}
+        {{--line-height: 40px;--}}
+        {{--text-align: center;--}}
+        {{--font-size: 20px;--}}
+        {{--background-color: #dddddd;--}}
+    {{--}--}}
 
-    .example-list {
-        padding: 4px 4px 0;
-        list-style: none;
-    }
+    {{--.example-list {--}}
+        {{--padding: 4px 4px 0;--}}
+        {{--list-style: none;--}}
+    {{--}--}}
 
-    .example-listitem {
-        height: 50px;
-        line-height: 50px;
-        border: solid 1px #999;
-        border-radius: 2px;
-        margin-bottom: 4px;
-        text-align: center;
-    }
+    {{--.example-listitem {--}}
+        {{--height: 50px;--}}
+        {{--line-height: 50px;--}}
+        {{--border: solid 1px #999;--}}
+        {{--border-radius: 2px;--}}
+        {{--margin-bottom: 4px;--}}
+        {{--text-align: center;--}}
+    {{--}--}}
 
-    .example-listitem:last-child {
-        margin-bottom: 0;
-    }
+    {{--.example-listitem:last-child {--}}
+        {{--margin-bottom: 0;--}}
+    {{--}--}}
 
-    .example-wrapper {
-        height: 300px;
-        overflow: scroll;
-    }
+    {{--.example-wrapper {--}}
+        {{--height: 300px;--}}
+        {{--overflow: scroll;--}}
+    {{--}--}}
 
-    .mint-loadmore-top span {
-        display: inline-block;
-        transition: .2s linear;
-    }
+    {{--.mint-loadmore-top span {--}}
+        {{--display: inline-block;--}}
+        {{--transition: .2s linear;--}}
+    {{--}--}}
 
-    .rotate {
-        transform: rotate(180deg);
-    }
-</style>
+    {{--.rotate {--}}
+        {{--transform: rotate(180deg);--}}
+    {{--}--}}
+{{--</style>--}}
 
 
 {{--<script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>--}}
@@ -138,6 +138,7 @@
 
     <div class="media recommend_list">
         @foreach($recommends as $recommend)
+{{--            {{$recommend->resources}}--}}
             @php
                 $uri = 'http://'.$_SERVER['HTTP_HOST']."/v1/preview/".$recommend->id."/".$excludes.'/'.$readerid.'/'.$uid;
             @endphp
@@ -260,25 +261,27 @@
 </div>
 
 <script src="{{ url('/src/js/jQuery.min.2.2.4.js') }}" ></script>
-{{--<script>--}}
-    {{--jQuery(document).ready(function(){--}}
-        {{--var width = $(document.body).width();--}}
+<script>
 
 
-{{--//        var tables = document.getElementsByTagName('img');--}}
-{{--//        for(var i = 0; i<tables.length; i++){  // 逐个改变--}}
-{{--//            tables[i].style.width = '100%';  // 宽度改为100%--}}
-{{--//            tables[i].style.height = 'auto';--}}
-{{--//        }--}}
+    jQuery(document).ready(function(){
+        var width = $(document.body).width();
 
-{{--//        var width = document.body.scrollWidth;--}}
-{{--//        jQuery('.content p img').width(width > 800 ? 800 *0.9 : width);--}}
-{{--//        jQuery('.article-preview').width(width > 800 ? 800 *0.9 : width);--}}
 
-        {{--jQuery('.content p img').width(width -30);--}}
-{{--//        jQuery('.article-preview').width(width -30);--}}
+//        var tables = document.getElementsByTagName('img');
+//        for(var i = 0; i<tables.length; i++){  // 逐个改变
+//            tables[i].style.width = '100%';  // 宽度改为100%
+//            tables[i].style.height = 'auto';
+//        }
 
-    {{--});--}}
+//        var width = document.body.scrollWidth;
+//        jQuery('.content p img').width(width > 800 ? 800 *0.9 : width);
+//        jQuery('.article-preview').width(width > 800 ? 800 *0.9 : width);
+
+        jQuery('.content p img').width(width -60);
+//        jQuery('.article-preview').width(width -30);
+
+    });
 
 
 {{--<script type="text/javascript">--}}
@@ -402,7 +405,7 @@
     {{--});--}}
 
     {{--//    Vue.component('ZZScroll', require('/src/js/components/ZZScroll.vue'))--}}
-{{--</script>--}}
+</script>
 
 <script src="{{ url('/src/js/jQuery.min.2.2.4.js') }}" ></script>
 

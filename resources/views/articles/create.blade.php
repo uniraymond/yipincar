@@ -269,6 +269,7 @@
         menubar: false,
         toolbar: 'undo redo | image | removeformat | bold italic underline strikethrough | alignleft aligncenter alignright | link',
         relative_urls: false,
+//        object_resizing: false,
         automatic_uploads: false,
         removeformat: [
             {selector: 'b,strong,em,i,font,u,strike', remove : 'all', split : true, expand : false, block_expand: true, deep : true},
@@ -427,7 +428,7 @@
         });
 
         function setTemplate() {
-            alert('value changed' + $('#temmplate_radio').val());
+//            alert('value changed' + $('#temmplate_radio').val());
             if ($('#temmplate_radio').val()==3) {
                 $('#image2').css('display', 'block');
                 $('#image3').css('display', 'block');
@@ -438,7 +439,7 @@
         }
 
         function showResponse() {
-            alert('value changed' + $('#temmplate_radio').val());
+//            alert('value changed' + $('#temmplate_radio').val());
             if ($('#temmplate_radio').val()==3) {
                 $('#image2').css('display', 'block');
                 $('#image3').css('display', 'block');

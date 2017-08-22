@@ -109,9 +109,8 @@
                             <div id="image_container1" class="col-md-3">
                                 <input type="file" class="col-md-12 form-control-file" id="images1" name="images1" style="display:none"/>
                                 {{--                                {!! Form::file('images', '', array('class'=>'col-md-12 form-control-file form-control', 'id'=>'images', 'required'=>'required')) !!}--}}
-                                <label for="images1">　　
-                                    　　　　　　
-                                    <img  src="{{ $links[0]->link  }}" alt="{{ $article->title }}" id="image1" width="200" />
+                                <label for="images1">　　                                    　　　　　
+                                    <img  @if(count($links)) src="{{$links[0]->link}}" @else src="/photos/add_image.jpg" @endif alt="{{ $article->title }}" id="image1" width="200" />
                                     　　
                                     　　</label>
                             </div>

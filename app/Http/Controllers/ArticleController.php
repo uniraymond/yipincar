@@ -931,7 +931,7 @@ class ArticleController extends Controller
                 ->where('article_tags.tag_id', '=', $tagid)
                 ->whereNotIn('articles.id', $exArray)
                 ->orderBy('articles.created_at', 'desc')
-//                ->take($limit)
+                ->take($limit)
                 ->get();
             if(count($articles)) {
                 foreach($articles as $article) {

@@ -63,10 +63,12 @@
                                     return $linka->order  >  $linkb->order;
                                 }
                                 @endphp
-                                <img id="image" width="200" src="{{ $links[0]->link }}" alt="{{ $article->title }}" />
-                                @if($article->template_id == 3 && count($links) >= 3)
-                                    <img id="image" width="200" src="{{ $links[1]->link  }}" alt="{{ $article->title }}" />
-                                    <img id="image" width="200" src="{{ $links[2]->link  }}" alt="{{ $article->title }}" />
+                                @if(count($links))
+                                    <img id="image" width="200" src="{{ $links[0]->link }}" alt="{{ $article->title }}" />
+                                    @if($article->template_id == 3 && count($links) >= 3)
+                                        <img id="image" width="200" src="{{ $links[1]->link  }}" alt="{{ $article->title }}" />
+                                        <img id="image" width="200" src="{{ $links[2]->link  }}" alt="{{ $article->title }}" />
+                                    @endif
                                 @endif
                             </div>
                             <div>简述:</div>

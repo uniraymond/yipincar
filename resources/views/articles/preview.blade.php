@@ -54,26 +54,26 @@
     </div>
 </div>
 
-{{--<script src="{{ url('/src/js/jQuery.min.2.2.4.js') }}" ></script>--}}
-{{--<script>--}}
-    {{--jQuery(document).ready(function(){--}}
-        {{--var width = $(document.body).width();--}}
+<script src="{{ url('/src/js/jQuery.min.2.2.4.js') }}" ></script>
+<script>
+    jQuery(document).ready(function(){
+        var width = $(document.body).width();
 
 
-{{--//        var tables = document.getElementsByTagName('img');--}}
-{{--//        for(var i = 0; i<tables.length; i++){  // 逐个改变--}}
-{{--//            tables[i].style.width = '100%';  // 宽度改为100%--}}
-{{--//            tables[i].style.height = 'auto';--}}
-{{--//        }--}}
+//        var tables = document.getElementsByTagName('img');
+//        for(var i = 0; i<tables.length; i++){  // 逐个改变
+//            tables[i].style.width = '100%';  // 宽度改为100%
+//            tables[i].style.height = 'auto';
+//        }
 
-{{--//        var width = document.body.scrollWidth;--}}
-{{--//        jQuery('.content p img').width(width > 800 ? 800 *0.9 : width);--}}
-{{--//        jQuery('.article-preview').width(width > 800 ? 800 *0.9 : width);--}}
+//        var width = document.body.scrollWidth;
+//        jQuery('.content p img').width(width > 800 ? 800 *0.9 : width);
+//        jQuery('.article-preview').width(width > 800 ? 800 *0.9 : width);
 
-        {{--jQuery('.content p img').width(width -30);--}}
-        {{--jQuery('.article-preview').width(width -30);--}}
-    {{--});--}}
-{{--</script>--}}
+        jQuery('.content p img').width(width -60);
+//        jQuery('.article-preview').width(width -30);
+    });
+</script>
 
 
 {{--<script>--}}
