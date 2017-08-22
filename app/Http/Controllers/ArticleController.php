@@ -914,6 +914,7 @@ class ArticleController extends Controller
 //        var_dump($exArray);
         $limit = 5;
 //        $artCollection = new Collection([]);
+        $allArticles = array();
         $recommends = array();
         for ($i=0; $i < count($keys); $i++) {
             $tagid = $keys[$i]['tag_id'];
@@ -930,10 +931,27 @@ class ArticleController extends Controller
                 ->where('article_tags.tag_id', '=', $tagid)
                 ->whereNotIn('articles.id', $exArray)
                 ->orderBy('articles.created_at', 'desc')
-                ->take($limit)
+//                ->take($limit)
                 ->get();
             if(count($articles)) {
                 foreach($articles as $article) {
+                    array_push($allArticles, $article);
+                }
+            }
+        }
+
+        if(count($allArticles)) {
+            $inCount = 0;
+            for($i = 0; $i<count($allArticles) && $inCount < 5; $i++) {
+                $article = $allArticles[$i];
+                $found = false;
+                foreach($recommends as $recommend) {
+                    if($recommend->id == $article->id) {
+                        $found = true;
+                        break;
+                    }
+                }
+                if(!$found) {
                     $resources = Resource::join('article_resources', 'resources.id', '=', 'article_resources.resource_id')
                         ->where('article_resources.article_id', $article->id)
                         ->select('link', 'name')->first();
@@ -941,21 +959,21 @@ class ArticleController extends Controller
                         $article['resources'] = substr_replace($resources->link, 'thumbs/', strlen('/photos/'.$article->created_by.'/'), 0);
 //                        echo $article['resources'];
                     }
-//                    array_push($exArray, $article['id']);
-
-
+                    $inCount ++;
+                    array_push($recommends, $article);
+                    $excludeids = $excludeids.$divider.$article['id'];
                 }
-//                $artCollection->push($articles);
-//                $recommends = array_merge($recommends, $articles);
-                array_push($recommends, $article);
             }
+//                $artCollection->push($articles);
+//                $recommends = array_merge($recommends, $articles);]
+
         }
-        $recommends = array_slice(array_unique($recommends), 0, 5);
-//        var_dump($recommends);
-        foreach($recommends as $recommend) {
-            $excludeids = $excludeids.$divider.$recommend['id'];
-//            echo $excludeids.'\n';
-        }
+//        $recommends = array_slice(array_unique($recommends), 0, 5);
+////        var_dump($recommends);
+//        foreach($recommends as $recommend) {
+//            $excludeids = $excludeids.$divider.$recommend['id'];
+////            echo $excludeids.'\n';
+//        }
 //        $recommends = new Collection([]);
 //        if(sizeof($artCollection)) {
 //            for($j=0; $j < $limit ; $j++) {

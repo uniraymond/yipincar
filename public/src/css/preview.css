@@ -81,6 +81,9 @@ p {
     padding: 10px;
 }
 
+.recommend_list a{
+    text-decoration: none;
+}
 .recommend_title{
     font-size: 17px;
     color: black;

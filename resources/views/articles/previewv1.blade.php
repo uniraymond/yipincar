@@ -144,7 +144,7 @@
             {{--{{$uri}}--}}
         <a href= "{{$uri}}">
             <div class="media-body  recommend_container" >
-                <h4 class="media-heading recommend_title">{{$recommend->title}}</h4>
+                <h4 class="recommend_title">{{$recommend->title}}</h4>
                 <h6 class="recommend_subtitle">
                     <div class="recommend_subInfo media-list">
                         @if(isset($recommend->mediaName) && $recommend->mediaName != '')
