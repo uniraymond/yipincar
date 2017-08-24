@@ -332,6 +332,9 @@
                menubar: false,
                toolbar: 'undo redo | image | removeformat | bold italic underline strikethrough | alignleft aligncenter alignright | link',
                relative_urls: false,
+               object_resizing: true,
+               automatic_uploads: true,
+               
                removeformat: [
                    {selector: 'b,strong,em,i,font,u,strike', remove : 'all', split : true, expand : false, block_expand: true, deep : true},
                    {selector: 'span', attributes : ['style', 'class'], remove : 'empty', split : true, expand : false, deep : true},
@@ -342,7 +345,8 @@
                paste_remove_styles: true,
                paste_remove_styles_if_webkit: true,
                paste_strip_class_attributes: true,
-
+//               invalid_styles: 'width',
+//               extended_valid_elements : "img[class|src|border=0|alt|title|hspace|vspace|align|onmouseover|onmouseout|name]",
                file_browser_callback_types: 'image media',
                file_browser_callback : function(field_name, url, type, win) {
                    var x = window.innerWidth || document.documentElement.clientWidth || document.getElementsByTagName('body')[0].clientWidth;

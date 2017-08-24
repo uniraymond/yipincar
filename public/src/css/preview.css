@@ -85,7 +85,7 @@ p {
     text-decoration: none;
 }
 .recommend_title{
-    font-size: 17px;
+    font-size: 14px;
     color: black;
 }
 
@@ -123,6 +123,7 @@ p {
     padding: 10px;
 }
 
+
 .recommend_icon{
     padding-right: 90px;
     padding-top: 10px;
@@ -136,9 +137,20 @@ p {
     padding-left:10%;
 }
 
+.comment_container{
+    padding: 10px;
+}
+.comment_heading{
+    font-size: 13px;
+}
 .comment_content{
     color: black;
 }
+
+.comment_icon{
+    height: 80px;
+}
+
 .comment_delete{
     padding-top: 5px;
     margin: 0 auto;

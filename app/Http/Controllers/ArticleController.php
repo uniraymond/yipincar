@@ -251,6 +251,18 @@ class ArticleController extends Controller
 
         //remove content format
 //    $content = strip_tags(trim($request['content']), "<img><p><b><b/><b /><img");
+        //去掉图片宽度
+//        $searchWidth = '/(<img.*?)width=(["\'])?.*?(?(2)\2|\s)([^>]+>)/is';
+//        //去除图片的高度
+//        $searchHeight = '/(<img.*?)height=(["\'])?.*?(?(2)\2|\s)([^>]+>)/is';
+//        $searchDataW = '/(<img.*?)data-w=(["\'])?.*?(?(2)\2|\s)([^>]+>)/is';
+//        $searchDataH = '/(<img.*?)data-height=(["\'])?.*?(?(2)\2|\s)([^>]+>)/is';
+//        $searchDataS = '/(<img.*?)data-size=(["\'])?.*?(?(2)\2|\s)([^>]+>)/is';
+//        $content = preg_replace($searchWidth, '$1$3', trim($request['content']));
+//        $content = preg_replace($searchHeight, '$1$3', $content);
+//        $content = preg_replace($searchDataW, $searchWidth, trim($request['content']));
+//        $content = preg_replace($searchDataH, $searchHeight, $content);
+//        $content = preg_replace($searchDataS, '$1$3', $content);
         $content = trim($request['content']);
         $description = $request['description'];
         $authname = $request['authname'];

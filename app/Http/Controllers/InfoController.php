@@ -542,6 +542,10 @@ class InfoController extends Controller
                 'excludes' => $exArray];
     }
 
+    public function getCommentInfo($commentid) {
+        return Comment::findorFail($commentid);
+    }
+
 //    //if lastid == 0, it should be first page requst,
 //    // else there should only one key for more recommand
 //    public function getRecommendList($keys, $lastid, $excludeids) {

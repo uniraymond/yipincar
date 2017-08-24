@@ -70,7 +70,7 @@
 //        jQuery('.content p img').width(width > 800 ? 800 *0.9 : width);
 //        jQuery('.article-preview').width(width > 800 ? 800 *0.9 : width);
 
-        jQuery('.content p img').width(width -60);
+        jQuery('.content p img').width(width -60 > 700 ? 700 : width -60);
 //        jQuery('.article-preview').width(width -30);
     });
 </script>
@@ -98,16 +98,16 @@
 
     {{--};--}}
 
-    {{--function getImages(){--}}
-        {{--var objs = document.getElementsByClassName("content")[0].getElementsByTagName("img");--}}
-        {{--var imgScr = '';--}}
-        {{--for(var i=0;i<objs.length;i++){--}}
-            {{--imgScr = imgScr + objs[i].src + '+';--}}
-            {{--objs[i].onclick=function(){--}}
-                {{--document.location="myweb:imageClick:"+this.src;--}}
-            {{--};--}}
-        {{--}--}}
-        {{--return imgScr;--}}
-    {{--};--}}
-    {{--);--}}
+    function getImages(){
+        var objs = document.getElementsByClassName("content")[0].getElementsByTagName("img");
+        var imgScr = '';
+        for(var i=0;i<objs.length;i++){
+            imgScr = imgScr + objs[i].src + '+';
+            objs[i].onclick=function(){
+                document.location="myweb:imageClick:"+this.src;
+            };
+        }
+        return imgScr;
+    };
+    );
 {{--</script>--}}

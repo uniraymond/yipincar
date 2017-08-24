@@ -178,47 +178,45 @@
 
     @if(count($comments))
         <div class="recommend_top">热门评论</div>
-    @foreach($comments as $comment)
-            {{--@php--}}
-            {{--$uri = "/v1/preview/".$recommend->id."/".$excludes.'/'.$readerid;--}}
-            {{--@endphp--}}
-        {{--<a href="{{$uri}}">--}}
-            <div class="media-body  recommend_container" onclick="replyComment({{$comment->id}})">
-                <div class="media-left">
-                    @if($comment->icon)
-                        <img class="media-object img-circle" width="50" height="50" alt="图标" src="{{$comment->icon}}">
-                    @else
-                        <img class="media-object img-circle" width="50" height="50" alt="图标" src="/photos/male_holder.png">
-                    @endif
-{{--                    @if($readerid && $readerid == $comment->created_by)--}}
-                        <h5 class="comment_delete" onclick="event.cancelBubble=true;deleteComment({{$comment->id}})">删除</h5>
-                        {{--<a class="comment_delete" href="/api/delcomment?commentid={{$comment->id}}">删除</a>--}}
-                    {{--@endif--}}
-                </div>
+        <div class="media recommend_list">
+            @foreach($comments as $comment)
 
-                <div class="media-body comment_content">
-                    <h4 class="media-heading">{{$comment->name}}</h4>
-                    <h4 class="recommend_subtitle">
-                        {{substr(Carbon\Carbon::today(), 0, 10)==substr($article->created_at, 0, 10) ?
-                        "今天 ".substr($comment->created_at, 10, strlen($comment->created_at)) : $comment->created_at}}
-                    </h4>
-                    <div class="clearfix"></div>
-                    {{$comment->comment}}
-                </div>
+                    <div class="media-body  recommend_container">
+                        <div class="media-left">
+                            @if($comment->icon)
+                                <img class="media-object img-circle" width="50" height="50" alt="图标" src="{{$comment->icon}}">
+                            @else
+                                <img class="media-object img-circle" width="50" height="50" alt="图标" src="/photos/male_holder.png">
+                            @endif
+                            @if($readerid && $readerid == $comment->created_by)
+                                <h5 class="comment_delete" onclick="event.cancelBubble=true;deleteComment({{$comment->id}})">删除</h5>
+                                {{--<a class="comment_delete" href="/api/delcomment?commentid={{$comment->id}}">删除</a>--}}
+                            @endif
+                        </div>
 
-                <div class="media-right" id="approve_comment" onclick="event.cancelBubble=true;aprroveComment({{$comment->id}}, {{$uid}})">
-                    {{--<a href="#">--}}
-                    <img class="media-object" width="25" alt="图标" src="/photos/approve_button.png">
-                    <div class="comment_approve" id="comment_approves_count" >{{$comment->zans ? $comment->zans : "点赞"}}</div>
-                    {{--                                {!! gettype($diary->user->avatar) !!}--}}
-                    {{--</a>--}}
-                </div>
+                        <div class="media-body comment_content">
+                            <h4 class="comment_heading">{{$comment->name}}</h4>
+                            <h4 class="recommend_subtitle">
+                                {{substr(Carbon\Carbon::today(), 0, 10)==substr($article->created_at, 0, 10) ?
+                                "今天 ".substr($comment->created_at, 10, strlen($comment->created_at)) : $comment->created_at}}
+                            </h4>
+                            <div class="clearfix"></div>
+                            {{$comment->comment}}
+                        </div>
 
-                <div class="article_divider"></div>
-            </div>
-        {{--</a>--}}
-    @endforeach
+                        <div class="media-right" id="approve_comment" onclick="event.cancelBubble=true;aprroveComment({{$comment->id}}, {{$uid}})">
+                            {{--<a href="#">--}}
+                            <img class="media-object" width="25" alt="图标" src="/photos/approve_button.png">
+                            <div class="comment_approve" id="comment_approves_count" >{{$comment->zans ? $comment->zans : "点赞"}}</div>
+                            {{--                                {!! gettype($diary->user->avatar) !!}--}}
+                            {{--</a>--}}
+                        </div>
 
+                        <div class="article_divider"></div>
+                    </div>
+                </a>
+            @endforeach
+        </div>
     @endif
 
 
@@ -278,7 +276,8 @@
 //        jQuery('.content p img').width(width > 800 ? 800 *0.9 : width);
 //        jQuery('.article-preview').width(width > 800 ? 800 *0.9 : width);
 
-        jQuery('.content p img').width(width -60);
+        jQuery('.content p img').width(width -60 > 800 ? 800 : width -60);
+
 //        jQuery('.article-preview').width(width -30);
 
     });
@@ -434,7 +433,7 @@
     {{--});--}}
 
     function replyComment($commentid) {
-        $assign = window.location.host + '/api/comment?commentid=' + $commentid;
+        $assign = '/api/comment?commentid=' + $commentid;
         alert($assign);
         window.location.assign($assign)
 

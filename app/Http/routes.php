@@ -180,7 +180,7 @@ Route::group(['prefix'=>'api'], function() {
     Route::get('articlelistv1/{category?}/{lastid?}/{page?}/{limit?}', 'InfoController@getArticleListV1');
     Route::get('detailinfo/{id}/{excludes}', 'InfoController@getArticleDetailInfo');
     Route::any('showdetailv1', 'InfoController@showDetailV1');
-
+    Route::get('commentinfo/{id}', 'InfoController@getCommentInfo');
 
 });
 
