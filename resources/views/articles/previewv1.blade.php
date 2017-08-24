@@ -204,7 +204,7 @@
                             {{$comment->comment}}
                         </div>
 
-                        <div class="media-right" id="approve_comment" onclick="event.cancelBubble=true;aprroveComment({{$comment->id}}, {{$uid}})">
+                        <div class="media-right" id="approve_comment" onclick="event.cancelBubble=true;aprroveComment({{$comment->id}})">
                             {{--<a href="#">--}}
                             <img class="media-object" width="25" alt="图标" src="/photos/approve_button.png" >
                             <div class="comment_approve" id="comment_approves_count" >{{$comment->zans ? $comment->zans : "点赞"}}</div>
@@ -439,46 +439,45 @@
 
     }
 
-    function aprroveComment($commentid, $uid) {
-        $assign='/api/approvecomment?commentid=' + $commentid + '&uid=' + $uid;
-//        alert('谢谢支持!' + $assign);
+    function aprroveComment($commentid) {
+        $assign='/api/approvecomment?commentid=' + $commentid;
+        alert('谢谢支持!' + $assign);
 //        window.location.assign($assign)
-        $.ajax({
-
-            type: 'GET',
-
-            url: $assign,
-
-            data: { commentid : $commentid,
-                    uid : $uid},
-
-            dataType: "json",
-
-//            headers: {
+//        $.ajax({
 //
-//                'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+//            type: 'GET',
+//
+//            url: $assign,
+//
+//            data: { commentid : $commentid},
+//
+//            dataType: "json",
+//
+////            headers: {
+////
+////                'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+////
+////            },
+//
+//            success: function(data){
+//
+////                console.log(data);
+//                if (data.approved == '+1') {
+//                    alert('谢谢支持!');
+//                } else {
+//                    alert('取消点赞!');
+//                }
+//                $('#comment_approves_count').text(data.count == 0 ? '点赞' : data.count)
 //
 //            },
+//
+//            error: function(xhr, type){
+//
+////                alert('Ajax error!')
+//
+//            }
 
-            success: function(data){
-
-//                console.log(data);
-                if (data.approved == '+1') {
-                    alert('谢谢支持!');
-                } else {
-                    alert('取消点赞!');
-                }
-                $('#comment_approves_count').text(data.count == 0 ? '点赞' : data.count)
-
-            },
-
-            error: function(xhr, type){
-
-//                alert('Ajax error!')
-
-            }
-
-        });
+//        });
     }
 
     function deleteComment($commentid) {
