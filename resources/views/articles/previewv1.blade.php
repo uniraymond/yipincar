@@ -181,7 +181,7 @@
         <div class="media recommend_list">
             @foreach($comments as $comment)
 
-                    <div class="media-body  recommend_container">
+                    <div class="media-body  recommend_container" onclick="replyComment({{$comment->id}})">
                         <div class="media-left">
                             @if($comment->icon)
                                 <img class="media-object img-circle" width="50" height="50" alt="图标" src="{{$comment->icon}}">
@@ -434,7 +434,7 @@
 
     function replyComment($commentid) {
         $assign = '/api/comment?commentid=' + $commentid;
-        alert($assign);
+//        alert($assign);
         window.location.assign($assign)
 
     }
