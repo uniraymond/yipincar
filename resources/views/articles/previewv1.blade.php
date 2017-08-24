@@ -204,10 +204,12 @@
                             {{$comment->comment}}
                         </div>
 
-                        <div class="media-right" id="approve_comment" onclick="event.cancelBubble=true;aprroveComment({{$comment->id}}, {{$uid}})">
+                        <div class="media-right" id="approve_comment">
                             {{--<a href="#">--}}
-                            <img class="media-object" width="25" alt="图标" src="/photos/approve_button.png">
-                            <div class="comment_approve" id="comment_approves_count" >{{$comment->zans ? $comment->zans : "点赞"}}</div>
+                            <img class="media-object" width="25" alt="图标" src="/photos/approve_button.png"
+                                 onclick="event.cancelBubble=true;aprroveComment({{$comment->id}}, {{$uid}})">
+                            <div class="comment_approve" id="comment_approves_count"
+                                 onclick="event.cancelBubble=true;aprroveComment({{$comment->id}}, {{$uid}})">{{$comment->zans ? $comment->zans : "点赞"}}</div>
                             {{--                                {!! gettype($diary->user->avatar) !!}--}}
                             {{--</a>--}}
                         </div>
