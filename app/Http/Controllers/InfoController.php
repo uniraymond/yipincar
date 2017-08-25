@@ -424,7 +424,7 @@ class InfoController extends Controller
             ->select('comments.*', 'users.name as userName', 'profiles.icon_uri',
                 'profiles.weixin_id', 'profiles.weixin_name', 'profiles.weixin_icon',
                 'profiles.weibo_id', 'profiles.weibo_name','profiles.weibo_icon',
-                'profiles.qq_id', 'profiles.qq_name', 'profiles.qq_icon')
+                'profiles.qq_id', 'profiles.qq_name', 'profiles.qq_icon', 'profiles.media_icon')
             ->where('comments.article_id', '=', $articleid)
             ->where('comments.banned', '=', 0)
             ->orderBy('created_at', 'desc')
@@ -434,6 +434,41 @@ class InfoController extends Controller
             $comments = $comments ->where('comments.id', '<=', $lastid);
         $comments = $comments ->get();
         foreach ($comments as $comment) {
+            $comment['zan'] = $this ->commentApprovedCount($comment['id']);//Zan::select('id')->where('comment_id', $comment['id'])->count();
+        }
+        return $comments;
+    }
+
+    public function getCommentListV1($articleid, $lastid, $page, $limit) {
+        if (!$lastid)
+            $lastid = Comment::all()->orderby('created_at', 'desc')->first();
+        $from = ($page -1) * $limit;
+        $comments = Comment::where('article_id', '=', $articleid)
+            ->where('banned', '=', 0)
+            ->where('comments.id', '<=', $lastid)
+            ->orderBy('created_at', 'desc')
+            ->skip($from)
+            ->take($limit)->get();
+
+//        $comments = Comment::join('users', 'comments.created_by', '=', 'users.id')
+////            ->leftJoin('zans', 'comments.id', '=', 'zans.comment_id')
+//            ->join('profiles', 'comments.created_by', '=', 'profiles.user_id')
+//            ->select('comments.*', 'users.name as userName', 'profiles.icon_uri',
+//                'profiles.weixin_id', 'profiles.weixin_name', 'profiles.weixin_icon',
+//                'profiles.weibo_id', 'profiles.weibo_name','profiles.weibo_icon',
+//                'profiles.qq_id', 'profiles.qq_name', 'profiles.qq_icon', 'profiles.media_icon')
+//            ->where('comments.article_id', '=', $articleid)
+//            ->where('comments.banned', '=', 0)
+//            ->orderBy('created_at', 'desc')
+//            ->skip($from)
+//            ->take($limit);
+//        if($lastid > 0)
+//            $comments = $comments ->where('comments.id', '<=', $lastid);
+//        $comments = $comments ->get();
+        foreach ($comments as $comment) {
+            if($comment['user_created_by'])
+                $comment['user_created_by'] = $comment->user_created_by->profiles;
+
             $comment['zan'] = $this ->commentApprovedCount($comment['id']);//Zan::select('id')->where('comment_id', $comment['id'])->count();
         }
         return $comments;

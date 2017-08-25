@@ -214,7 +214,7 @@
 
                         <div class="article_divider"></div>
                     </div>
-                </a>
+                <div class="clearfix"></div>
             @endforeach
         </div>
     @endif

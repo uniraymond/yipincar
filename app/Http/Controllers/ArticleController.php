@@ -438,10 +438,10 @@ class ArticleController extends Controller
                     if($path && strlen($path)) {
                         $newPath = substr($path, 1, strlen($path));
                         $photo = Image::make($newPath);
-                        $imageSize = GetImageSize($newPath);
-                        $markWidth = ($imageSize[0] > $imageSize[1] ? $imageSize[1] : $imageSize[0]) - 20;
-                        $waterMark = Image::make('photos/watermark2.png')->resize($markWidth -40, $markWidth -40);
-                        $photo->insert($waterMark, 'center');
+//                        $imageSize = GetImageSize($newPath);
+//                        $markWidth = ($imageSize[0] > $imageSize[1] ? $imageSize[1] : $imageSize[0]) - 20;
+//                        $waterMark = Image::make('photos/watermark2.png')->resize($markWidth -40, $markWidth -40);
+                        $photo->insert(Image::make('photos/water_mark3.png'), 'center');
                         $photo->save();
                     }
                 }
@@ -710,10 +710,10 @@ class ArticleController extends Controller
                     if($path && strlen($path)) {
                         $newPath = substr($path, 1, strlen($path));
                         $photo = Image::make($newPath);
-                        $imageSize = GetImageSize($newPath);
-                        $markWidth = ($imageSize[0] > $imageSize[1] ? $imageSize[1] : $imageSize[0]) - 20;
-                        $waterMark = Image::make('photos/watermark2.png')->resize($markWidth -40, $markWidth -40);
-                        $photo->insert($waterMark, 'center');
+//                        $imageSize = GetImageSize($newPath);
+//                        $markWidth = ($imageSize[0] > $imageSize[1] ? $imageSize[1] : $imageSize[0]) - 20;
+//                        $waterMark = Image::make('photos/watermark2.png')->resize($markWidth -40, $markWidth -40);
+                        $photo->insert(Image::make('photos/water_mark3.png'), 'center');
                         $photo->save();
                     }
                 }
@@ -913,6 +913,8 @@ class ArticleController extends Controller
         $recommends = $this->getRecommendListV1($article_id, $excludeids);
 //        $comments=$article->comments;
 //        echo 'article created by: '.$article->user_created_by;
+        $article['readed'] = $article['readed'] + random_int(5, 10);
+        Article::where('id', $article_id)->update(['readed' => $article['readed']]);
         return view('articles/previewv1', ['article'=>$article,
             'recommends'=>$recommends['recommends'],
             'comments'=>$this->getCommentList($article_id),
