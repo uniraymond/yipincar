@@ -543,7 +543,13 @@ class InfoController extends Controller
     }
 
     public function getCommentInfo($commentid) {
-        return Comment::findorFail($commentid);
+        $comment = Comment::findorFail($commentid);
+        if($comment['user_created_by'])
+            $comment['user_created_by'] = $comment->user_created_by->profiles;
+//        if($comment['user']) {
+//            $comment['user_profiles'] = $comment['user']->profiles;
+//        }
+        return $comment;
     }
 
 //    //if lastid == 0, it should be first page requst,
@@ -1395,8 +1401,8 @@ class InfoController extends Controller
                 $image_names[] = $file->name;
 
                 //check a image in the content and image in resource table
+                $hasImage = true;
                 if (false !== strpos($article->content, $file->link)) {
-                    $hasImage = true;
                     if (count($article_image)) {
                         break;
                     } else {

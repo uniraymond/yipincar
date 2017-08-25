@@ -15,4 +15,14 @@ class Comment extends Model
   {
     return $this->hasMany('App\Zan');
   }
+
+  public function user_created_by()
+  {
+    return $this->belongsTo('App\User', 'created_by');
+  }
+
+  public function user_updated_by()
+  {
+    return $this->belongsTo('App\User', 'updated_by');
+  }
 }
