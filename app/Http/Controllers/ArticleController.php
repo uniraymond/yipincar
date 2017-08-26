@@ -968,6 +968,7 @@ class ArticleController extends Controller
                 if(!$found) {
                     $resources = Resource::join('article_resources', 'resources.id', '=', 'article_resources.resource_id')
                         ->where('article_resources.article_id', $article->id)
+                        ->orderBy('resources.id', 'desc')
                         ->select('link', 'name')->first();
                     if($resources) {
                         $article['resources'] = substr_replace($resources->link, 'thumbs/', strlen('/photos/'.$article->created_by.'/'), 0);

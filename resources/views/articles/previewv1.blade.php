@@ -142,8 +142,8 @@
             @php
                 $uri = 'http://'.$_SERVER['HTTP_HOST']."/v1/preview/".$recommend->id."/".$excludes.'/'.$readerid.'/'.$uid;
             @endphp
-            {{--{{$uri}}--}}
-        <a href= "{{$uri}}">
+{{--            {{$recommend->resources}}--}}
+            <a href= "{{$uri}}">
             <div class="media-body  recommend_container" >
                 <h4 class="recommend_title">{{$recommend->title}}</h4>
                 <h6 class="recommend_subtitle">
