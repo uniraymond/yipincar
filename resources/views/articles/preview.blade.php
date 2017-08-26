@@ -98,16 +98,16 @@
 
     {{--};--}}
 
-    function getImages(){
-        var objs = document.getElementsByClassName("content")[0].getElementsByTagName("img");
-        var imgScr = '';
-        for(var i=0;i<objs.length;i++){
-            imgScr = imgScr + objs[i].src + '+';
-            objs[i].onclick=function(){
-                document.location="myweb:imageClick:"+this.src;
-            };
-        }
-        return imgScr;
-    };
-    );
+    {{--function getImages(){--}}
+        {{--var objs = document.getElementsByClassName("content")[0].getElementsByTagName("img");--}}
+        {{--var imgScr = '';--}}
+        {{--for(var i=0;i<objs.length;i++){--}}
+            {{--imgScr = imgScr + objs[i].src + '+';--}}
+            {{--objs[i].onclick=function(){--}}
+                {{--document.location="myweb:imageClick:"+this.src;--}}
+            {{--};--}}
+        {{--}--}}
+        {{--return imgScr;--}}
+    {{--};--}}
+    {{--);--}}
 {{--</script>--}}
