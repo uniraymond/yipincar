@@ -683,6 +683,41 @@ class InfoController extends Controller
         return $articles;
     }
 
+    public function getSubscribeArticleListV1($authorid, $lastid, $page, $limit) {
+        $from = ($page -1) * $limit;
+
+//            Article::join('categories', 'articles.category_id', '=', 'categories.id')
+//            ->leftJoin('article_resources', 'articles.id', '=', 'article_resources.article_id')
+//            ->leftJoin('profiles', 'articles.created_by', '=', 'profiles.user_id')
+//            ->leftJoin('resources', 'resources.id', '=', 'article_resources.resource_id')
+//            ->join('article_types', 'articles.type_id', '=', 'article_types.id')
+//            ->join('users', 'users.id', '=', 'articles.created_by')
+//            ->select('articles.id', 'articles.title', 'articles.description', 'articles.authname', 'categories.name as categoryName', 'articles.category_id', 'article_types.name as articletypeName'
+//                , 'articles.created_at' , 'resources.link as resourceLink', 'resources.name as resourceName', 'users.name as userName',
+//                'profiles.media_name as mediaName')
+//            ->where('articles.published', '=', 4)
+//            ->where('articles.banned', '=', 0)
+        $articles = $this ->getArticleListContentV1() ->where('articles.created_by', '=', $authorid)
+//            ->orderBy('articles.created_at', 'desc')
+            ->skip($from)
+            ->take($limit);
+
+        if($page != 1 && $lastid && $lastid > 0)
+            $articles = $articles->where('articles.id', '<=', $lastid);
+
+        $articles = $articles->get();
+
+        foreach ($articles as $article) {
+//            array_push($ids, $article->id);
+            $resources = Resource::join('article_resources', 'resources.id', '=', 'article_resources.resource_id')
+                ->where('article_resources.article_id', $article->id)
+                ->select('link', 'name')->get();
+            $article['resources'] = $resources;
+        }
+
+        return $articles;
+    }
+
     public function getCollectArticleList($userid, $lastid, $page, $limit) {
         $from = ($page -1) * $limit;
         $articles = Article::join('collections', 'collections.article_id', '=', 'articles.id')
@@ -709,6 +744,42 @@ class InfoController extends Controller
         $articles = $articles->get();
         return $articles;
     }
+
+    public function getCollectArticleListV1($userid, $lastid, $page, $limit) {
+        $from = ($page -1) * $limit;
+        $articles = Article::join('collections', 'collections.article_id', '=', 'articles.id')
+            ->join('categories', 'articles.category_id', '=', 'categories.id')
+//            ->leftJoin('article_resources', 'articles.id', '=', 'article_resources.article_id')
+//            ->leftJoin('resources', 'resources.id', '=', 'article_resources.resource_id')
+
+            ->leftJoin('profiles', 'articles.created_by', '=', 'profiles.user_id')
+            ->join('article_types', 'articles.type_id', '=', 'article_types.id')
+            ->join('users', 'users.id', '=', 'articles.created_by')
+            ->select('articles.id', 'articles.title', 'articles.description', 'articles.authname', 'categories.name as categoryName', 'articles.category_id', 'article_types.name as articletypeName'
+                , 'articles.created_at' , 'users.name as userName',
+                'profiles.media_name as mediaName')
+            ->where('articles.published', '=', 4)
+            ->where('articles.banned', '=', 0)
+            ->where('collections.user_id', '=', $userid)
+            ->orderBy('articles.created_at', 'desc')
+            ->skip($from)
+            ->take($limit);
+
+        if($page != 1 && $lastid && $lastid > 0)
+            $articles = $articles->where('articles.id', '<=', $lastid);
+
+        $articles = $articles->get();
+
+        foreach ($articles as $article) {
+//            array_push($ids, $article->id);
+            $resources = Resource::join('article_resources', 'resources.id', '=', 'article_resources.resource_id')
+                ->where('article_resources.article_id', $article->id)
+                ->select('link', 'name')->get();
+            $article['resources'] = $resources;
+        }
+        return $articles;
+    }
+
 
 
     public function searchArticles(Request $request) {
@@ -745,6 +816,50 @@ class InfoController extends Controller
             $articles = $articles ->where('articles.category_id', '=', $category);
 
          $articles = $articles ->get();
+        return $articles;
+    }
+
+    public function searchArticlesV1(Request $request) {
+        $key = $request ->get('key');
+        $category = $request ->get('category');
+        $this -> likeKey = '%'.$key.'%';
+
+        $articles = $this ->getArticleListContentV1();
+//            Article::join('categories', 'articles.category_id', '=', 'categories.id')
+//            ->leftJoin('article_resources', 'articles.id', '=', 'article_resources.article_id')
+//            ->leftJoin('resources', 'resources.id', '=', 'article_resources.resource_id')
+//            ->leftJoin('profiles', 'articles.created_by', '=', 'profiles.user_id')
+//            ->join('article_types', 'articles.type_id', '=', 'article_types.id')
+//            ->join('users', 'users.id', '=', 'articles.created_by')
+//            ->select('articles.id', 'articles.title', 'articles.description', 'articles.authname', 'categories.name as categoryName', 'articles.category_id', 'article_types.name as articletypeName'
+//                , 'articles.created_at' , 'resources.link as resourceLink', 'resources.name as resourceName', 'users.name as userName',
+//                'profiles.media_name as mediaName')
+//            ->where('articles.published', '=', 4)
+//            ->where('articles.banned', '=', 0)
+        $articles = $articles ->where(function($query){
+            $query->where('articles.title', 'like', $this -> likeKey)
+                ->orWhere(function($query){
+                    $query->where('articles.content', 'like', $this -> likeKey);
+                });
+        })
+//            ->where('articles.category_id', '=', $category)
+
+//            ->where('articles.title'.'articles.content', 'like', $likeKey)
+//            ->orWhere('articles.content', 'like', $likeKey)
+//            ->where('articles.type_id', 1)
+//            ->orderBy('articles.created_at', 'desc')
+            ->take(15);
+        if($category != 3)
+            $articles = $articles ->where('articles.category_id', '=', $category);
+
+        $articles = $articles ->get();
+        foreach ($articles as $article) {
+//            array_push($ids, $article->id);
+            $resources = Resource::join('article_resources', 'resources.id', '=', 'article_resources.resource_id')
+                ->where('article_resources.article_id', $article->id)
+                ->select('link', 'name')->get();
+            $article['resources'] = $resources;
+        }
         return $articles;
     }
 

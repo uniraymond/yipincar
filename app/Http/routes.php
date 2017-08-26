@@ -181,6 +181,9 @@ Route::group(['prefix'=>'api'], function() {
     Route::get('detailinfo/{id}/{excludes}', 'InfoController@getArticleDetailInfo');
     Route::any('showdetailv1', 'InfoController@showDetailV1');
     Route::get('commentinfo/{id}', 'InfoController@getCommentInfo');
+    Route::any('searcharticlesv1', 'InfoController@searchArticlesV1');
+    Route::get('subscribearticlesv1/{authorid?}/{lastid?}/{page?}/{limit?}', 'InfoController@getSubscribeArticleListV1');
+    Route::get('collectarticlesv1/{userid?}/{lastid?}/{page?}/{limit?}', 'InfoController@getCollectArticleListV1');
 
 });
 
