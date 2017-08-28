@@ -47,7 +47,7 @@
         @endif
 
         {{--<table>--}}
-        <div class="content col-xs-12">{!! $article->content !!}</div>
+        <div id="content" class="content col-xs-12">{!! $article->content !!}</div>
         <div class="clearfix"></div>
         {{--</table>--}}
 
@@ -56,23 +56,76 @@
 
 <script src="{{ url('/src/js/jQuery.min.2.2.4.js') }}" ></script>
 <script>
-    jQuery(document).ready(function(){
-        var width = $(document.body).width();
+    $(window).load(function(){
+//        var width = $(document.body).width();
+//        width = width -60 > 700 ? 700 : width -60;
+        //        jQuery('.content p img').width(width);
 
-
-//        var tables = document.getElementsByTagName('img');
-//        for(var i = 0; i<tables.length; i++){  // 逐个改变
-//            tables[i].style.width = '100%';  // 宽度改为100%
-//            tables[i].style.height = 'auto';
-//        }
+        var tables = document.getElementsByTagName('img');
+        for(var i = 0; i<tables.length; i++){  // 逐个改变
+            tables[i].style.width = '100%';  // 宽度改为100%
+            tables[i].style.height = 'auto';
+        }
 
 //        var width = document.body.scrollWidth;
 //        jQuery('.content p img').width(width > 800 ? 800 *0.9 : width);
 //        jQuery('.article-preview').width(width > 800 ? 800 *0.9 : width);
 
-        jQuery('.content p img').width(width -60 > 700 ? 700 : width -60);
+//        jQuery('.content p img').load(resizeimg(this, 800));
+//        alert(document.getElementsByClassName("content")[0].getElementsByTagName("img"));
+//        var image = document.getElementsByClassName("content");
+//        alert(image.offsetWidth + " * " + image.offsetHeight);
 //        jQuery('.article-preview').width(width -30);
+//        var objs = document.getElementsByClassName("content")[0].getElementsByTagName("img");
+//        var makeArray = function(objs){
+//            try{
+//                Array.prototype.slice.call(document.documentElement.childNodes, 0)[0].nodeType;
+//            }catch(e){
+//                makeArray = function(objs){
+//                    var res = [];
+//                    for(var i=0,len=objs.length; i<len; i++){
+//                        res.push(objs[i]);
+//                    }
+//                    return res;
+//                }
+//            }
+//        }
+
+//        alert(JSON.stringify(objs));
+//        for(var i=0;i<objs.length;i++){
+//            objs[i].style.height = objs[i].height *  width / objs[i].width;
+//            objs[i].width = width;
+//        }
     });
+
+    function resizeimg(obj,imgW)
+    {
+        obj.height = obj.height * imgW / obj.width;
+        obj.width = imgW;
+    }
+
+//    function resizeimg(obj,maxW,maxH)
+//    {
+//        var imgW=obj.width;
+//        var imgH=obj.height;
+//        if(imgW>maxW||imgH>maxH)
+//        {
+//            var ratioA=imgW/maxW;
+//            var ratioB=imgH/maxH;
+//            if(ratioA>ratioB)
+//            {
+//                imgW=maxW;
+//                imgH=maxW*(imgH/imgW);
+//            }
+//            else
+//            {
+//                imgH=maxH;
+//                imgW=maxH*(imgW/imgH);
+//            }
+//            obj.width=imgW;
+//            obj.height=imgH;
+//        }
+//    }
 </script>
 
 
