@@ -263,8 +263,8 @@
 
 
     jQuery(document).ready(function(){
-        var width = $(document.body).width();
-        jQuery('.content p img').width(width -60 > 800 ? 800 : width -60);
+//        var width = $(document.body).width();
+//        jQuery('.content p img').width(width -60 > 800 ? 800 : width -60);
 
         var tables = document.getElementsByTagName('img');
         for(var i = 0; i<tables.length; i++){  // 逐个改变
