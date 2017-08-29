@@ -266,7 +266,7 @@
 //        var width = $(document.body).width();
 //        jQuery('.content p img').width(width -60 > 800 ? 800 : width -60);
 
-        var tables = document.getElementsByTagName('img');
+        var tables = document.getElementsByClassName('content')[0].getElementsByTagName('img');
         for(var i = 0; i<tables.length; i++){  // 逐个改变
             tables[i].style.width = '100%';  // 宽度改为100%
             tables[i].style.height = 'auto';
