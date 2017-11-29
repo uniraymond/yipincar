@@ -435,7 +435,7 @@ class ArticleController extends Controller
                 foreach($paths as $path) {
 //                $photo = Image::make(sprintf(public_path().'/%s', $image->link));
 //                echo $path;
-                    if($path && strlen($path)) {
+                    if($path && strlen($path) && (!strpos($path, "ttp://") || strpos($path, "topautochina.com"))) {
                         $newPath = substr($path, 1, strlen($path));
                         $photo = Image::make($newPath);
 //                        $imageSize = GetImageSize($newPath);
@@ -707,7 +707,7 @@ class ArticleController extends Controller
                 foreach($paths as $path) {
 //                $photo = Image::make(sprintf(public_path().'/%s', $image->link));
 //                echo $path;
-                    if($path && strlen($path)) {
+                    if($path && strlen($path) && (!strpos($path, "ttp://") || strpos($path, "topautochina.com"))) {
                         $newPath = substr($path, 1, strlen($path));
                         $photo = Image::make($newPath);
 //                        $imageSize = GetImageSize($newPath);
