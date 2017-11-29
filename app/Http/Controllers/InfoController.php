@@ -246,10 +246,27 @@ class InfoController extends Controller
         $listAdverts = array();
         $topArticles = array();
         $topAdverts = array();
+        $topList = array();
+
         if($page == 1) {
             $listAdverts = $this ->getAdvert(2, 0, 0, $category);
             if($category == 3) {
-                $topArticles = $this->getArticleListContent() ->where('articles.top', 1)->get();
+//                $topArticles = $this->getArticleListContent() ->where('articles.top', 1)->get();
+                $topList = $this->getArticleListContent() ->where('articles.top', 1)->get();
+                for ($i=0; $i<count($topList); $i++) {
+                    $article = $topList[$i];
+                    $idExist = false;
+                    for ($j = 0; $j<count($topArticles); $j++) {
+                        $getArticle = $topArticles[$j];
+                        if ($article->id == $getArticle->id)  {
+                            $idExist = true;
+                            break;
+                        }
+                    }
+                    if (!$idExist) {
+                        array_push($topArticles, $article);
+                    }
+                }
                 $topAdverts = $this ->getAdvert(2, 6, 1, $category);
             }
         }
