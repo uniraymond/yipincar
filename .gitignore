@@ -1,4 +1,4 @@
-
+/vendor
 !/vendor/unisharp
 /node_modules
 /public/storage
