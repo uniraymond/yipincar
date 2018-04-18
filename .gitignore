@@ -13,3 +13,6 @@ Homestead.json
 /public/vendor/FFMpeg
 /bower_components
 /public/videos
+
+!/public/photos/add_image.jpg
+!/public/photos/water_mark3.png
