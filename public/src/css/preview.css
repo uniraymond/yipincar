@@ -42,7 +42,10 @@ body {
 
 .content {
     /*margin: 30px;*/
+}
 
+.content img{
+    border-radius:5px;
 }
 
 p {
@@ -55,12 +58,15 @@ p {
     color: #555;
     font-size: 18px;
     line-height: 27px;
+
 }
 
 .content p img {
     text-align: center;
     width: 90%;
     height: auto;
+
+
 }
 .clearfix {
     clear: both;
@@ -74,4 +80,5 @@ p {
     /*margin: 17px;*/
     /*width: 90%;*/
     /*alignment: center;*/
+
 }
