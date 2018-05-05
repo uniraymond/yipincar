@@ -87,16 +87,20 @@ p {
 }
 
 .recommend_container{
-    height: 80px;
-    padding: 10px;
+    height: 115px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 20px;
 }
 
 .recommend_list a{
     text-decoration: none;
 }
 .recommend_title{
-    font-size: 14px;
+    height: 60px;
+    font-size: 15px;
     color: black;
+    line-height:20px;
 }
 
 .recommend_subtitle{
@@ -111,7 +115,7 @@ p {
 .recommend_readed{
     min-width: 80px;
     position: absolute;
-    right: 120px;
+    right: 115px;
 }
 
 .recommend_subInfo{
@@ -135,10 +139,11 @@ p {
 
 
 .recommend_icon{
-    padding-right: 10px;
-    padding-top: 10px;
-    width: 80px;
-    height: 60px;
+    margin-right: 20px;
+    margin-top: 20px;
+    width: 100px;
+    height: 85px;
+    border-radius:5px;
 }
 
 .article_divider{
