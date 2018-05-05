@@ -87,7 +87,7 @@ p {
 }
 
 .recommend_container{
-    height: 115px;
+    height: 135px;
     padding-top: 10px;
     padding-bottom: 10px;
     padding-left: 20px;
@@ -97,7 +97,7 @@ p {
     text-decoration: none;
 }
 .recommend_title{
-    height: 60px;
+    height: 80px;
     font-size: 15px;
     color: black;
     line-height:20px;
@@ -115,7 +115,7 @@ p {
 .recommend_readed{
     min-width: 80px;
     position: absolute;
-    right: 115px;
+    right: 125px;
 }
 
 .recommend_subInfo{
@@ -141,8 +141,8 @@ p {
 .recommend_icon{
     margin-right: 20px;
     margin-top: 20px;
-    width: 100px;
-    height: 85px;
+    width: 120px;
+    height: 100px;
     border-radius:5px;
 }
 
