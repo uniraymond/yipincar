@@ -36,7 +36,6 @@
                 @else
                     <span class="authname" >{{ $article->authname != '' ? $article->authname : $article->user_created_by->name }}</span>
                 @endif
-<<<<<<< HEAD
             @else
                 <span class="authname" >{{ $article->authname != '' ? $article->authname : $article->user_created_by->name }}</span>
             @endif
@@ -44,12 +43,10 @@
         {{--<div class="comment col-xs-2">评论{{ count($article->comments) }}</div>--}}
     </div>
     <div class="clearfix"></div>
-=======
                 <span class="article_publish_date">{{ date('Y-m-d H:i', strtotime($article->created_at)) }}</span> </div>
             {{--<div class="comment col-xs-2">评论{{ count($article->comments) }}</div>--}}
         </div>
         {{--<div class="clearfix"></div>--}}
->>>>>>> debug-master
 
         @if($article->description)
             <div class="description  col-xs-12"> 导读： {{ $article->description }}</div>
@@ -76,7 +73,6 @@
             tables[i].style.width = '100%';  // 宽度改为100%
             tables[i].style.height = 'auto';
         }
-<<<<<<< HEAD
     });
 //    jQuery(document).ready(function(){
 //        var width = $(document.body).width();
@@ -95,8 +91,6 @@
 //        jQuery('.content p img').width(width -30);
 //        jQuery('.article-preview').width(width -30);
 //    });
-</script>
-=======
 
 //        var width = document.body.scrollWidth;
 //        jQuery('.content p img').width(width > 800 ? 800 *0.9 : width);
@@ -127,7 +121,6 @@
 //            objs[i].style.height = objs[i].height *  width / objs[i].width;
 //            objs[i].width = width;
 //        }
-    });
 
     function resizeimg(obj,imgW)
     {
@@ -195,4 +188,3 @@
     {{--};--}}
     {{--);--}}
 {{--</script>--}}
->>>>>>> debug-master
