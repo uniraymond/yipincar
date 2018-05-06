@@ -48,10 +48,7 @@ body {
 .content {
     /*margin: 30px;*/
 }
-<<<<<<< HEAD
 
-.content img{
-=======
 
 
 .content img{
@@ -59,7 +56,6 @@ body {
     /*border: 5px solid #dedede;*/
     /*-moz-border-radius: 15px;*/
     /*-webkit-border-radius: 15px;*/
->>>>>>> debug-master
     border-radius:5px;
 }
 
