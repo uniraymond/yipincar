@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use App\AdvSetting;
 use App\ArticleStatus;
 use App\ArticleStatusCheck;
+use App\Comment;
 use App\Tags;
 use App\User;
 use App\Yipinlog;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB as DB;
 use Illuminate\Http\Response;
@@ -16,19 +18,24 @@ use App\Article;
 use App\ArticleTags as ArticleTags;
 use App\Category;
 use App\ArticleTypes as ArticleTypes;
+use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use App\Resource;
 use App\ArticleResources;
 use App\Http\Controllers\Auth;
+use App\Libraries;
+use Illuminate\Support\Collection;
+use App\AdvTemplate;
 
 class ArticleController extends Controller
 {
-    public function generateImageName($file){
+    public function generateImageName($file, $order){
         $fartime = strtotime('2300-12-30');
         $nowtime  = strtotime('now');
-        $new_name = ($fartime - $nowtime).'ypc';
+        $new_name = ($fartime - $nowtime).'ypc-'.$order;
         $new_filename = $new_name . '.' . $file->getClientOriginalExtension();
         return $new_filename;
     }
@@ -189,6 +196,7 @@ class ArticleController extends Controller
 
             $tags = Tags::all();
             $articletypes = ArticleTypes::all();
+            $templates = AdvTemplate::all();
 
             $tagString = null;
             $tagArray = array();
@@ -213,7 +221,8 @@ class ArticleController extends Controller
                 'tagArray' => $tagArray,
                 'currentTagString' => $currentTagString,
                 'types'=>$types,
-                'currentAction'=>$currentAction
+                'currentAction'=>$currentAction,
+                'templates'=>$templates,
             ]);
         } else {
             $request->session()->flash('status', '您不是文章的作者,不能编辑此文章.');
@@ -229,17 +238,36 @@ class ArticleController extends Controller
         $this->validate($request, [
             'title' => 'required|max:36',
             'description' => 'max:141',
-            'content'=> 'required'
+            'content'=> 'required',
+            'images1' => 'max:2048000|mimes:jpg,gif,bmp,bnp,png,mif,mif,jpeg,ico,tif,tiff,cut,pic,tga,dib,svg,eps',
+            'images2' => 'max:2048000|mimes:jpg,gif,bmp,bnp,png,mif,mif,jpeg,ico,tif,tiff,cut,pic,tga,dib,svg,eps',
+            'images3' => 'max:2048000|mimes:jpg,gif,bmp,bnp,png,mif,mif,jpeg,ico,tif,tiff,cut,pic,tga,dib,svg,eps',
+//            'images1' => 'required_if:temmplate_radio,3|image',
+//            'images2' => 'required_if:temmplate_radio,3|image',
+//            'images3' => 'required_if:temmplate_radio,3|image',
         ], $this->messages());
 
         $title = $request->input('title');
 
         //remove content format
 //    $content = strip_tags(trim($request['content']), "<img><p><b><b/><b /><img");
+        //去掉图片宽度
+//        $searchWidth = '/(<img.*?)width=(["\'])?.*?(?(2)\2|\s)([^>]+>)/is';
+//        //去除图片的高度
+//        $searchHeight = '/(<img.*?)height=(["\'])?.*?(?(2)\2|\s)([^>]+>)/is';
+//        $searchDataW = '/(<img.*?)data-w=(["\'])?.*?(?(2)\2|\s)([^>]+>)/is';
+//        $searchDataH = '/(<img.*?)data-height=(["\'])?.*?(?(2)\2|\s)([^>]+>)/is';
+//        $searchDataS = '/(<img.*?)data-size=(["\'])?.*?(?(2)\2|\s)([^>]+>)/is';
+//        $content = preg_replace($searchWidth, '$1$3', trim($request['content']));
+//        $content = preg_replace($searchHeight, '$1$3', $content);
+//        $content = preg_replace($searchDataW, $searchWidth, trim($request['content']));
+//        $content = preg_replace($searchDataH, $searchHeight, $content);
+//        $content = preg_replace($searchDataS, '$1$3', $content);
         $content = trim($request['content']);
         $description = $request['description'];
         $authname = $request['authname'];
-//    $typeId = $request['type_id'];
+        $waterMark = $request['watermark'] ? 1 : 0;
+        $template_id = $request['temmplate_radio'];
         $categoryId = $request['category_id'];
 
         if ($request['published']) {
@@ -280,6 +308,9 @@ class ArticleController extends Controller
         $article->content = $content;
         $article->description = $description;
         $article->updated_by = $authuser->id;
+        $article->watermark = $waterMark;
+        $article->template_id = $template_id;
+
         if($authname) {
             $article->authname = $authname;
         }
@@ -348,41 +379,12 @@ class ArticleController extends Controller
 
         $authuser = $request->user();
 
-        $file = $request->file('images');
-        $checkArticlResource = ArticleResources::where('article_id', $article->id)->get();
+        $file = $request->file('images1');
+        $checkArticlResource = ArticleResources::where('article_id', $article->id)
+            ->where('displayorder', 1)
+            ->get();
         if (!empty($file)) {
-            $fileOriginalName = $file->getClientOriginalName();
-            $fileName = $this->generateImageName($file);
-            $fileOriginalDir = "photos/".$authuser->id."/original";
-            $fileThumbsDir = "photos/".$authuser->id."/thumbs";
-            $fileDir = "photos/".$authuser->id;
-
-            $file->move($fileDir, $fileName);
-
-            $imageOriginalLink = $fileOriginalDir . '/' . $fileName;
-            $imageThumbsLink = $fileThumbsDir . '/' . $fileName;
-            $imageLink = $fileDir . '/' . $fileName;
-            copy($imageLink, $imageThumbsLink);
-            copy($imageLink, $imageOriginalLink);
-
-            $cell_img_size = GetImageSize($imageLink); // need to caculate the file width and height to make the image same
-
-            $image = Image::make(sprintf('photos/'.$authuser->id.'/%s', $fileName))->save();
-            $imageThumbs = Image::make(sprintf('photos/'.$authuser->id.'/thumbs/%s', $fileName))->resize(600, (int)((600 *  $cell_img_size[1]) / $cell_img_size[0]))->save();
-            $imageOriginal = Image::make(sprintf('photos/'.$authuser->id.'/original/%s', $fileName))->save();
-
-            $resource = new Resource();
-            $resource->name = $fileName;
-            $resource->link = '/' . $imageLink;
-            $resource->created_by = $authuser->id;
-            $resource->save();
-
-            $oldArticlResource = ArticleResources::where('article_id', $article->id)->delete();
-
-            $articlResource = new ArticleResources();
-            $articlResource->article_id = $article->id;
-            $articlResource->resource_id = $resource->id;
-            $articlResource->save();
+            $this->saveArticleIconWith($file, $authuser, $article, true, 1);
         } elseif (!isset($checkArticlResource) && count($checkArticlResource) <= 0) {
             $files = Resource::all();
 
@@ -409,6 +411,39 @@ class ArticleController extends Controller
 
                 if (!$hasImage && $article_image) {
                     $article_image->delete();
+                }
+            }
+        }
+
+        if($template_id == 3) {
+            $file = $request->file('images2');
+            if(!empty($file)) {
+                $this->saveArticleIconWith($file, $authuser, $article, true, 2);
+            }
+            $file = $request->file('images3');
+            if(!empty($file)) {
+                $this->saveArticleIconWith($file, $authuser, $article, true, 3);
+            }
+        }
+
+        if($waterMark) {
+            $paths = array();
+            preg_match_all('/<img.+src=\"?(.+\.(jpg|gif|bmp|bnp|png|mif|mif|jpeg|ico|tif|tiff|cut|pic|tga|dib|svg|eps|))\"?.+>/i', $article->content, $paths);
+            $paths = $paths[1];
+//        var_dump($paths);
+            if($paths && count($paths) ) {
+                foreach($paths as $path) {
+//                $photo = Image::make(sprintf(public_path().'/%s', $image->link));
+//                echo $path;
+                    if($path && strlen($path) && (!strpos($path, "ttp://") || strpos($path, "topautochina.com"))) {
+                        $newPath = substr($path, 1, strlen($path));
+                        $photo = Image::make($newPath);
+//                        $imageSize = GetImageSize($newPath);
+//                        $markWidth = ($imageSize[0] > $imageSize[1] ? $imageSize[1] : $imageSize[0]) - 20;
+//                        $waterMark = Image::make('photos/watermark2.png')->resize($markWidth -40, $markWidth -40);
+                        $photo->insert(Image::make('photos/water_mark3.png'), 'center');
+                        $photo->save();
+                    }
                 }
             }
         }
@@ -481,10 +516,11 @@ class ArticleController extends Controller
         return redirect('admin/article');
     }
 
-    public function create()
+    public function create(Request $request)
     {
         $categories = Category::where('last_category', 1)->get();
         $types = ArticleTypes::all();
+        $templates = AdvTemplate::all();
         $tags = Tags::all();
         $currentAction = false;
 
@@ -501,7 +537,9 @@ class ArticleController extends Controller
             'tags' => $tags,
             'tagString' => $tagString,
             'tagArray' => $tagArray,
-            'types'=>$types, 'currentAction'=>$currentAction
+            'types'=>$types,
+            'currentAction'=>$currentAction,
+            'templates'=>$templates,
         ]);
     }
 
@@ -511,7 +549,10 @@ class ArticleController extends Controller
         $this->validate($request, [
             'title' => 'required|max:36',
             'description' => 'max:141',
-            'content'=> 'required'
+            'content'=> 'required',
+            'images1' => 'required_if:temmplate_radio,3|max:2048000|mimes:jpg,gif,bmp,bnp,png,mif,mif,jpeg,ico,tif,tiff,cut,pic,tga,dib,svg,eps',
+            'images2' => 'required_if:temmplate_radio,3|max:2048000|mimes:jpg,gif,bmp,bnp,png,mif,mif,jpeg,ico,tif,tiff,cut,pic,tga,dib,svg,eps',
+            'images3' => 'required_if:temmplate_radio,3|max:2048000|mimes:jpg,gif,bmp,bnp,png,mif,mif,jpeg,ico,tif,tiff,cut,pic,tga,dib,svg,eps',
         ], $this->messages());
 
         $title = $request->input('title');
@@ -520,7 +561,9 @@ class ArticleController extends Controller
         $typeId = $request['type_id'];
         $categoryId = $request['category_id'];
         $published = $request['published'] ? 2 : 1;
+        $waterMark = $request['watermark'] ? 1 : 0;
         $authname = $request['authname'];
+        $template_id = $request['temmplate_radio'];
 
         if (isset($request['tags'])){
             $tags = trim($request['tags']);
@@ -545,7 +588,8 @@ class ArticleController extends Controller
         $article->content = $content;
         $article->description = $description;
         $article->created_by = $authuser->id;
-//    $article->type_id = $typeId;
+        $article->watermark = $waterMark;
+        $article->template_id = $template_id;
         //$typeId default is article and setup 1 as article
         $article->type_id = 1;
         $article->category_id = $categoryId;
@@ -553,7 +597,7 @@ class ArticleController extends Controller
         if($authname) {
             $article->authname = $authname;
         }
-        $article->readed = random_int(4000, 7000);
+        $article->readed = random_int(8000, 15000);
         $article->save();
 
         if ($request['published']) {
@@ -588,52 +632,58 @@ class ArticleController extends Controller
                 $article_tag->save();
             }
         }
-        $file = $request->file('images');
+        $file = $request->file('images1');
         if (!empty($file)) {
-            $fileOriginalName = $file->getClientOriginalName();
-            $fileName = $this->generateImageName($file);
-            $fileOriginalDir = "photos/".$authuser->id."/original";
-            $fileThumbsDir = "photos/".$authuser->id."/thumbs";
-            $fileDir = "photos/".$authuser->id;
-
-            $file->move($fileDir, $fileName);
-//          $file->move($fileThumbsDir, $fileName);
-//          $fileOriginal->copy($fileOriginalDir, $fileName);
-
-//            $imageOriginalLink = $fileOriginalDir . '/' . $file->getClientOriginalName();
-//            $imageThumbsLink = $fileThumbsDir . '/' . $file->getClientOriginalName();
-//            $imageLink = $fileDir . '/' . $file->getClientOriginalName();
-            $imageOriginalLink = $fileOriginalDir . '/' . $fileName;
-            $imageThumbsLink = $fileThumbsDir . '/' . $fileName;
-            $imageLink = $fileDir . '/' . $fileName;
-
-            copy($imageLink, $imageThumbsLink);
-            copy($imageLink, $imageOriginalLink);
-
-//          $cell_img_size_thumbs = GetImageSize($imageThumbsLink); // need to caculate the file width and height to make the image same
-            $cell_img_size = GetImageSize($imageLink); // need to caculate the file width and height to make the image same
-
-            $image = Image::make(sprintf('photos/'.$authuser->id.'/%s', $fileName))->save();
-            $imageThumbs = Image::make(sprintf('photos/'.$authuser->id.'/thumbs/%s', $fileName))->resize(300, (int)((300 *  $cell_img_size[1]) / $cell_img_size[0]))->save();
-            $imageOriginal = Image::make(sprintf('photos/'.$authuser->id.'/original/%s', $fileName))->save();
-
-            $resource = new Resource();
-            $resource->name = $fileName;
-            $resource->link = '/' . $imageLink;
-            $resource->created_by = $authuser->id;
-            $resource->save();
-            $articlResource = new ArticleResources();
-            $articlResource->article_id = $article->id;
-            $articlResource->resource_id = $resource->id;
-            $articlResource->save();
+            $this->saveArticleIconWith($file, $authuser, $article, false, 1);
+//            $fileOriginalName = $file->getClientOriginalName();
+//            $fileName = $this->generateImageName($file);
+//            $fileOriginalDir = "photos/".$authuser->id."/original";
+//            $fileThumbsDir = "photos/".$authuser->id."/thumbs";
+//            $fileDir = "photos/".$authuser->id;
+//
+//            $file->move($fileDir, $fileName);
+////          $file->move($fileThumbsDir, $fileName);
+////          $fileOriginal->copy($fileOriginalDir, $fileName);
+//
+////            $imageOriginalLink = $fileOriginalDir . '/' . $file->getClientOriginalName();
+////            $imageThumbsLink = $fileThumbsDir . '/' . $file->getClientOriginalName();
+////            $imageLink = $fileDir . '/' . $file->getClientOriginalName();
+//            $imageOriginalLink = $fileOriginalDir . '/' . $fileName;
+//            $imageThumbsLink = $fileThumbsDir . '/' . $fileName;
+//            $imageLink = $fileDir . '/' . $fileName;
+//
+//            copy($imageLink, $imageThumbsLink);
+//            copy($imageLink, $imageOriginalLink);
+//
+////          $cell_img_size_thumbs = GetImageSize($imageThumbsLink); // need to caculate the file width and height to make the image same
+//            $cell_img_size = GetImageSize($imageLink); // need to caculate the file width and height to make the image same
+//
+//            $image = Image::make(sprintf('photos/'.$authuser->id.'/%s', $fileName))->save();
+//            $imageThumbs = Image::make(sprintf('photos/'.$authuser->id.'/thumbs/%s', $fileName))->resize(300, (int)((300 *  $cell_img_size[1]) / $cell_img_size[0]))->save();
+//            $imageOriginal = Image::make(sprintf('photos/'.$authuser->id.'/original/%s', $fileName))->save();
+//
+//            $resource = new Resource();
+//            $resource->name = $fileName;
+//            $resource->link = '/' . $imageLink;
+//            $resource->created_by = $authuser->id;
+//            $resource->save();
+//
+//            $articlResource = new ArticleResources();
+//            $articlResource->article_id = $article->id;
+//            $articlResource->resource_id = $resource->id;
+//            $articlResource->save();
         }else {
             $files = Resource::all();
             $image_links = array();
             $image_names = array();
 
+
             foreach ($files as $file) {
                 $image_links[] = $file->link;
                 $image_names[] = $file->name;
+
+
+
                 if (false !== strpos($article->content, $file->link)) {
                     $article->resources()->attach($file->id);
                     break;
@@ -641,6 +691,34 @@ class ArticleController extends Controller
             }
         }
 
+        if($template_id == 3) {
+            $file = $request->file('images2');
+            $this->saveArticleIconWith($file, $authuser, $article, false, 2);
+            $file = $request->file('images3');
+            $this->saveArticleIconWith($file, $authuser, $article, false, 3);
+        }
+
+        if($waterMark) {
+            $paths = array();
+            preg_match_all('/<img.+src=\"?(.+\.(jpg|gif|bmp|bnp|png|mif|mif|jpeg|ico|tif|tiff|cut|pic|tga|dib|svg|eps|))\"?.+>/i', $article->content, $paths);
+            $paths = $paths[1];
+//        var_dump($paths);
+            if($paths && count($paths) ) {
+                foreach($paths as $path) {
+//                $photo = Image::make(sprintf(public_path().'/%s', $image->link));
+//                echo $path;
+                    if($path && strlen($path) && (!strpos($path, "ttp://") || strpos($path, "topautochina.com"))) {
+                        $newPath = substr($path, 1, strlen($path));
+                        $photo = Image::make($newPath);
+//                        $imageSize = GetImageSize($newPath);
+//                        $markWidth = ($imageSize[0] > $imageSize[1] ? $imageSize[1] : $imageSize[0]) - 20;
+//                        $waterMark = Image::make('photos/watermark2.png')->resize($markWidth -40, $markWidth -40);
+                        $photo->insert(Image::make('photos/water_mark3.png'), 'center');
+                        $photo->save();
+                    }
+                }
+            }
+        }
 
 
         $log['name'] = 'Create Article';
@@ -829,10 +907,161 @@ class ArticleController extends Controller
         return view('articles/preview', ['article'=>$article]);
     }
 
+    public function previewv1($article_id, $excludeids, $readerid = 0, $uid=1)
+    {
+        $article = Article::find($article_id);
+        $recommends = $this->getRecommendListV1($article_id, $excludeids);
+//        $comments=$article->comments;
+//        echo 'article created by: '.$article->user_created_by;
+        $article['readed'] = $article['readed'] + random_int(5, 10);
+        Article::where('id', $article_id)->update(['readed' => $article['readed']]);
+        return view('articles/previewv1', ['article'=>$article,
+            'recommends'=>$recommends['recommends'],
+            'comments'=>$this->getCommentList($article_id),
+            'excludes'=>$recommends['excludes'], 'readerid'=>$readerid, 'uid'=>$uid]);
+    }
+
+    public function getRecommendListV1($articleid, $excludeids) {
+        $keys = ArticleTags::select('tag_id') ->where('article_id', $articleid) ->get();
+        $divider = 'a';
+        $exArray = explode($divider, $excludeids);
+//        var_dump($exArray);
+        $limit = 5;
+//        $artCollection = new Collection([]);
+        $allArticles = array();
+        $recommends = array();
+        for ($i=0; $i < count($keys); $i++) {
+            $tagid = $keys[$i]['tag_id'];
+            $articles = Article::join('article_tags', 'article_tags.article_id', '=', 'articles.id')
+                ->join('categories', 'articles.category_id', '=', 'categories.id')
+                ->join('users', 'users.id', '=', 'articles.created_by')
+                ->leftJoin('profiles', 'articles.created_by', '=', 'profiles.user_id')
+//                ->join('article_types', 'articles.type_id', '=', 'article_types.id')
+                ->select('articles.id', 'articles.created_by', 'articles.title', 'articles.authname', 'articles.readed',
+                    'articles.created_at', 'users.name as userName', 'profiles.media_name as mediaName')
+                ->where('articles.published', '=', 4)
+                ->where('articles.banned', '=', 0)
+                ->where('articles.category_id', '!=', 13)
+                ->where('article_tags.tag_id', '=', $tagid)
+                ->whereNotIn('articles.id', $exArray)
+                ->orderBy('articles.created_at', 'desc')
+                ->take($limit)
+                ->get();
+            if(count($articles)) {
+                foreach($articles as $article) {
+                    array_push($allArticles, $article);
+                }
+            }
+        }
+
+        if(count($allArticles)) {
+            $inCount = 0;
+            for($i = 0; $i<count($allArticles) && $inCount < 5; $i++) {
+                $article = $allArticles[$i];
+                $found = false;
+                foreach($recommends as $recommend) {
+                    if($recommend->id == $article->id) {
+                        $found = true;
+                        break;
+                    }
+                }
+                if(!$found) {
+                    $resources = Resource::join('article_resources', 'resources.id', '=', 'article_resources.resource_id')
+                        ->where('article_resources.article_id', $article->id)
+                        ->orderBy('resources.id', 'desc')
+                        ->select('link', 'name')->first();
+                    if($resources) {
+                        $article['resources'] = substr_replace($resources->link, 'thumbs/', strlen('/photos/'.$article->created_by.'/'), 0);
+//                        echo $article['resources'];
+                    }
+                    $inCount ++;
+                    array_push($recommends, $article);
+                    $excludeids = $excludeids.$divider.$article['id'];
+                }
+            }
+//                $artCollection->push($articles);
+//                $recommends = array_merge($recommends, $articles);]
+
+        }
+//        $recommends = array_slice(array_unique($recommends), 0, 5);
+////        var_dump($recommends);
+//        foreach($recommends as $recommend) {
+//            $excludeids = $excludeids.$divider.$recommend['id'];
+////            echo $excludeids.'\n';
+//        }
+//        $recommends = new Collection([]);
+//        if(sizeof($artCollection)) {
+//            for($j=0; $j < $limit ; $j++) {
+//                foreach($artCollection as $articles) {
+//                    if(sizeof($articles) > $j) {
+//                        $recommends ->push($articles[$j]);
+//                    }
+//                    if(sizeof($recommends) == 5) break;
+//                }
+//                if(sizeof($recommends) == 5) break;
+//            }
+//        }
+        return ['recommends' => $recommends,
+            'excludes' => $excludeids];;
+    }
+
+    public function getCommentList($articleid) {
+//        if (!$lastid) $lastid = 0;
+//        $from = ($page -1) * $limit;
+
+        $comments = Comment::join('users', 'comments.created_by', '=', 'users.id')
+//            ->leftJoin('zans', 'comments.id', '=', 'zans.comment_id')
+            ->join('profiles', 'comments.created_by', '=', 'profiles.user_id')
+            ->select('comments.*', 'users.name as userName', 'profiles.icon_uri',
+                'profiles.weixin_id', 'profiles.weixin_name', 'profiles.weixin_icon',
+                'profiles.weibo_id', 'profiles.weibo_name','profiles.weibo_icon',
+                'profiles.qq_id', 'profiles.qq_name', 'profiles.qq_icon')
+            ->where('comments.article_id', '=', $articleid)
+            ->where('comments.banned', '=', 0)
+            ->orderBy('created_at', 'desc')->get();
+//            ->skip($from)
+//            ->take($limit);
+//        if($lastid > 0)
+//            $comments = $comments ->where('comments.id', '<=', $lastid);
+//        $comments = $comments ->get();
+        foreach ($comments as $comment) {
+//            echo "role id".$comment->role_id;
+            switch ($comment->role_id) {
+                case 10: {
+                    $comment['name'] = $comment->userName;
+                    $comment['icon'] = substr_replace($comment->icon_uri, 'thumbs/', strlen('/photos/users/'.$comment->created_by.'/'), 0);
+            } break;
+
+                case 12: {
+                    $comment['name'] = $comment->weibo_name;
+                    $comment['icon'] = $comment->weibo_icon;
+            } break;
+
+
+                case 13: {
+                    $comment['name'] = $comment->weixin_name;
+                    $comment['icon'] = $comment->weixin_icon;
+            } break;
+
+                case 14: {
+                    $comment['name'] = $comment->qq_name;
+                    $comment['icon'] = $comment->qq_icon;
+            } break;
+
+
+                default:
+                    break;
+            }
+            $comment['zans'] = count($comment->zan);
+        }
+//        var_dump($comments);
+
+        return $comments;
+    }
+
     public function previewSite($article_id)
     {
         $article = Article::find($article_id);
-
         return view('articles/previewsite', ['article'=>$article]);
     }
 
@@ -846,8 +1075,70 @@ class ArticleController extends Controller
         return [
             'title.required' => '标题是必填的',
             'title.max' => '标题不能超过35个字',
-            'description' => '简介不能超过140个字',
-            'content' => '内容是必须的'
+            'description.max' => '简介不能超过140个字',
+            'content.required' => '内容是必须的',
+            'images1.mimes' => '首图1请上传正确的图片格式',
+            'images2.mimes' => '首图2请上传正确的图片格式',
+            'images3.mimes' => '首图3请上传正确的图片格式',
+            'images1.required_if' => '选择3图模板,则必须添加首图1',
+            'images2.required_if' => '选择3图模板,则必须添加首图2',
+            'images3.required_if' => '选择3图模板,则必须添加首图3',
+            'images1.max' => '上传图片1不能超过20M',
+            'images2.max' => '上传图片2不能超过20M',
+            'images3.max' => '上传图片3不能超过20M',
+
+
         ];
     }
+
+    public function saveArticleIconWith($file, $authuser, $article, $update, $order) {
+        $fileOriginalName = $file->getClientOriginalName();
+        $fileName = $this->generateImageName($file, $order);
+        $fileOriginalDir = "photos/".$authuser->id."/original";
+        $fileThumbsDir = "photos/".$authuser->id."/thumbs";
+        $fileDir = "photos/".$authuser->id;
+
+        $file->move($fileDir, $fileName);
+
+        $imageOriginalLink = $fileOriginalDir . '/' . $fileName;
+        $imageThumbsLink = $fileThumbsDir . '/' . $fileName;
+        $imageLink = $fileDir . '/' . $fileName;
+        copy($imageLink, $imageThumbsLink);
+        copy($imageLink, $imageOriginalLink);
+
+        $cell_img_size = GetImageSize($imageLink); // need to caculate the file width and height to make the image same
+        $maxSize = 480;
+        if($cell_img_size[0] > $maxSize) {
+            $image = Image::make(sprintf('photos/'.$authuser->id.'/%s', $fileName))->resize($maxSize, (int)(($maxSize *  $cell_img_size[1]) / $cell_img_size[0]))->save();
+        } else {
+            $image = Image::make(sprintf('photos/'.$authuser->id.'/%s', $fileName))->save();
+        }
+        $imageThumbs = Image::make(sprintf('photos/'.$authuser->id.'/thumbs/%s', $fileName))->resize(190, (int)((190 *  $cell_img_size[1]) / $cell_img_size[0]))->save();
+        $imageOriginal = Image::make(sprintf('photos/'.$authuser->id.'/original/%s', $fileName))->save();
+
+        if($update) {
+            $oldArticlResource = ArticleResources::where('article_id', $article->id)
+                ->where('displayorder', $order)
+                ->delete();
+            Resource::where('link', '/' . $imageLink)->delete();
+        }
+
+        $resource = new Resource();
+        $resource->name = $fileName;
+        $resource->link = '/' . $imageLink;
+        $resource->created_by = $authuser->id;
+        $resource->order = $order;
+        $resource->save();
+
+        $articlResource = new ArticleResources();
+        $articlResource->article_id = $article->id;
+        $articlResource->resource_id = $resource->id;
+        $articlResource->displayorder = $order;
+        $articlResource->save();
+
+
+
+    }
+
+
 }

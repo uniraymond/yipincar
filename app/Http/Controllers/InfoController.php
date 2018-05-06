@@ -122,6 +122,29 @@ class InfoController extends Controller
         ];
     }
 
+    public function showDetailV1(Request $request)
+    {
+        $id = $request ->get('id');
+        $upreaded = $request ->get('upreaded');
+        $article = Article::findorFail($id);
+//        $comments = $article->comments()->take(10)->get();
+//        $approved = $info->approved()->count();
+        if ($upreaded == 1 && $article['readed'] < 6600) {
+//            Article::where('id', $id)->update(['readed' => $article['readed'] + 1]);
+//            $article['readed'] = $article['readed'] + 1;
+            $article['readed'] = $article['readed'] + random_int(5, 10);
+            Article::where('id', $id)->update(['readed' => $article['readed']]);
+        }
+        $article['comment'] = $this ->getCommentList($id, 0, 1, 10);
+//        $info['approved'] = $approved;
+//        $zan = $info->zan()->count();
+        $article['zan'] = $this ->articleApprovedCount($id);
+        $advert = $this ->getAdvert(3, 1, -1, $article['category_id']);
+        return ['article' => $article,
+            'advert'  => $advert
+        ];
+    }
+
     /**
      * Show the form for editing the specified resource.
      *
@@ -176,37 +199,34 @@ class InfoController extends Controller
     }
 
     public function getAdvert($position, $limit, $top, $category) {
-        $advert = AdvSetting::join('resources', 'resources.id', '=', 'adv_settings.resource_id')
+        $adverts = AdvSetting::join('resources', 'resources.id', '=', 'adv_settings.resource_id')
             ->select('adv_settings.*', 'resources.name as resourceName', 'resources.link as resourceLink')
             ->where('status', 4)
             ->where('position_id', $position);
 
         if($category > 0 && $top == 0)
-            $advert = $advert ->where('category_id', $category);
+            $adverts = $adverts ->where('category_id', $category);
         if($top >= 0)
-            $advert = $advert ->where('top', $top);
+            $adverts = $adverts ->where('top', $top);
         if($limit > 0)
-            $advert = $advert ->take($limit);
-        $advert = $advert ->orderBy('order', 'asc') ->get();
-        return $advert;
+            $adverts = $adverts ->take($limit);
+        $adverts = $adverts ->orderBy('order', 'asc') ->get();
+
+        return $adverts;
     }
 
     private function getArticleListContent() {
         return Article::join('categories', 'articles.category_id', '=', 'categories.id')
-                ->leftJoin('article_resources', 'articles.id', '=', 'article_resources.article_id')
-//            ->leftJoin('article_resources', function ($resources) {
-//                $resources ->on('articles.id', '=', 'article_resources.article_id')
-//                    ->where('article_resources.id', '=', DB::raw("(select max(`id`) from article_resources)"));
-//            })
-                ->leftJoin('resources', 'resources.id', '=', 'article_resources.resource_id')
+//                ->leftJoin('article_resources', 'articles.id', '=', 'article_resources.article_id')
+//                ->leftJoin('resources', 'resources.id', '=', 'article_resources.resource_id')
 
                 ->leftJoin('profiles', 'articles.created_by', '=', 'profiles.user_id')
                 ->join('article_types', 'articles.type_id', '=', 'article_types.id')
                 ->join('users', 'users.id', '=', 'articles.created_by')
                 ->select('articles.id', 'articles.title', 'articles.description', 'articles.authname', 'articles.readed',
                     'categories.name as categoryName', 'articles.category_id', 'article_types.name as articletypeName'
-                    , 'articles.created_at', 'article_resources.resource_id'
-                    , 'resources.link as resourceLink', 'resources.name as resourceName',
+                    , 'articles.created_at',
+//                    'article_resources.resource_id', 'resources.link as resourceLink', 'resources.name as resourceName',
                     'users.name as userName',
                     'profiles.media_name as mediaName')
                 ->where('articles.published', '=', 4)
@@ -217,6 +237,7 @@ class InfoController extends Controller
     public function getArticleList($category, $lastid, $page, $limit) {
         //$limit = 10;//$category < 8 ? 7 :10;
         $from = ($page -1) * $limit;
+
 
         $articles = $this ->getArticleListContent()->skip($from) ->take($limit);
 //            Article::join('categories', 'articles.category_id', '=', 'categories.id')
@@ -229,13 +250,14 @@ class InfoController extends Controller
 ////            ->where('articles.published', '=', 0)
 //            ->orderBy('articles.created_at', 'desc')
 //         $articles = $articles ->skip($from) ->take($limit);
-
+//        ->join('resource', function($join) {
+//            $join->
+//        })
         if($category != 3) {
             $articles = $articles ->where('articles.category_id', '=', $category);
         } else {
             $articles = $articles ->where('articles.top', '=', 0)
                 ->where('articles.category_id', '!=', 13);
-
         }
 
         if($page != 1 && $lastid && $lastid > 0)
@@ -247,17 +269,27 @@ class InfoController extends Controller
         $topArticles = array();
         $topAdverts = array();
         $topList = array();
+<<<<<<< HEAD
 
         if($page == 1) {
             $listAdverts = $this ->getAdvert(2, 0, 0, $category);
             if($category == 3) {
 //                $topArticles = $this->getArticleListContent() ->where('articles.top', 1)->get();
+=======
+        if($page == 1) {
+            $listAdverts = $this ->getAdvert(2, 0, 0, $category);
+            if($category == 3) {
+>>>>>>> debug-master
                 $topList = $this->getArticleListContent() ->where('articles.top', 1)->get();
                 for ($i=0; $i<count($topList); $i++) {
                     $article = $topList[$i];
                     $idExist = false;
                     for ($j = 0; $j<count($topArticles); $j++) {
+<<<<<<< HEAD
                         $getArticle = $topArticles[$j];
+=======
+                                $getArticle = $topArticles[$j];
+>>>>>>> debug-master
                         if ($article->id == $getArticle->id)  {
                             $idExist = true;
                             break;
@@ -270,6 +302,21 @@ class InfoController extends Controller
                 $topAdverts = $this ->getAdvert(2, 6, 1, $category);
             }
         }
+
+        foreach ($articles as $article) {
+//            array_push($ids, $article->id);
+            $resources = Resource::join('article_resources', 'resources.id', '=', 'article_resources.resource_id')
+                ->where('article_resources.article_id', $article->id)
+                ->select('link', 'name')
+                ->orderBy('name', 'desc')
+                ->first();
+            if(count($resources)) {
+                $article['resourceLink'] = $resources->link;
+                $article['resourceName'] = $resources->name;
+            }
+
+        }
+
         return [
             'articles'      =>$articles,
             'topArticles'   => $topArticles,
@@ -303,6 +350,97 @@ class InfoController extends Controller
 //        return $articles;
     }
 
+    public function getAdvertV1($position, $limit, $top, $category) {
+        $adverts = AdvSetting::where('status', 4)
+//            ->select('adv_settings.*')
+            ->where('position_id', $position);
+
+        if($category > 0 && $top == 0)
+            $adverts = $adverts ->where('category_id', $category);
+        if($top >= 0)
+            $adverts = $adverts ->where('top', $top);
+        if($limit > 0)
+            $adverts = $adverts ->take($limit);
+        $adverts = $adverts ->orderBy('order', 'asc') ->get();
+
+        foreach ($adverts as $advert) {
+            $resources = Resource::join('adv_setting_resources', 'resources.id', '=', 'adv_setting_resources.resource_id')
+                ->where('adv_setting_resources.adv_setting_id', $advert->id)
+                ->select('link', 'name')->get();
+            $advert['resources'] = $resources;
+        }
+        return $adverts;
+    }
+
+    private function getArticleListContentV1() {
+        return Article::join('categories', 'articles.category_id', '=', 'categories.id')
+            ->leftJoin('profiles', 'articles.created_by', '=', 'profiles.user_id')
+            ->join('users', 'users.id', '=', 'articles.created_by')
+//                            ->join('article_types', 'articles.type_id', '=', 'article_types.id')
+//            ->leftJoin('article_resources', 'articles.id', '=', 'article_resources.article_id')
+//            ->leftJoin('resources', 'resources.id', '=', 'article_resources.resource_id')
+            ->where('articles.published', '=', 4)
+            ->where('articles.banned', '=', 0)
+            ->select('articles.id', 'articles.title', 'articles.description', 'articles.authname', 'articles.readed',
+                'categories.name as categoryName', 'articles.category_id'
+                , 'articles.created_at', 'template_id', //'article_types.name as articletypeName',
+//                     'resources.link as resourceLink', 'resources.name as resourceName',
+                'users.name as userName',
+                'profiles.media_name as mediaName')
+            ->orderBy('articles.created_at', 'desc');
+    }
+
+    public function getArticleListV1($category, $lastid, $page, $limit) {
+        //$limit = 10;//$category < 8 ? 7 :10;
+        $from = ($page -1) * $limit;
+
+        $articles = $this ->getArticleListContentV1()->skip($from) ->take($limit);
+        if($category != 3) {
+            $articles = $articles ->where('articles.category_id', '=', $category);
+        } else {
+            $articles = $articles ->where('articles.top', '=', 0)
+                ->where('articles.category_id', '!=', 13);
+
+        }
+
+        if($page != 1 && $lastid && $lastid > 0)
+            $articles = $articles->where('articles.id', '<=', $lastid);
+
+        $articles = $articles->get();
+
+        $listAdverts = array();
+        $topArticles = array();
+        $topAdverts = array();
+        if($page == 1) {
+            $listAdverts = $this ->getAdvertV1(2, 0, 0, $category);
+            if($category == 3) {
+                $topArticles = $this->getArticleListContentV1() ->where('articles.top', 1)->get();
+                $topAdverts = $this ->getAdvertV1(2, 6, 1, $category);
+                foreach ($topArticles as $article) {
+                    $resources = Resource::join('article_resources', 'resources.id', '=', 'article_resources.resource_id')
+                        ->where('article_resources.article_id', $article->id)
+                        ->select('link', 'name')->get();
+                    $article['resources'] = $resources;
+                }
+            }
+        }
+//        $ids = array();
+        foreach ($articles as $article) {
+//            array_push($ids, $article->id);
+            $resources = Resource::join('article_resources', 'resources.id', '=', 'article_resources.resource_id')
+                ->where('article_resources.article_id', $article->id)
+                ->select('link', 'name')->get();
+            $article['resources'] = $resources;
+        }
+        return [
+//            'ids' => $ids,
+            'articles'      =>$articles,
+            'topArticles'   => $topArticles,
+            'topAdvert'     => $topAdverts,
+            'listAdverts'   => $listAdverts
+        ];
+    }
+
     public function getCommentList($articleid, $lastid, $page, $limit) {
         if (!$lastid) $lastid = 0;
         $from = ($page -1) * $limit;
@@ -310,10 +448,10 @@ class InfoController extends Controller
         $comments = Comment::join('users', 'comments.created_by', '=', 'users.id')
 //            ->leftJoin('zans', 'comments.id', '=', 'zans.comment_id')
             ->join('profiles', 'comments.created_by', '=', 'profiles.user_id')
-            ->select('comments.*', 'users.name as userName',
+            ->select('comments.*', 'users.name as userName', 'profiles.icon_uri',
                 'profiles.weixin_id', 'profiles.weixin_name', 'profiles.weixin_icon',
                 'profiles.weibo_id', 'profiles.weibo_name','profiles.weibo_icon',
-                'profiles.qq_id', 'profiles.qq_name', 'profiles.qq_icon')
+                'profiles.qq_id', 'profiles.qq_name', 'profiles.qq_icon', 'profiles.media_icon')
             ->where('comments.article_id', '=', $articleid)
             ->where('comments.banned', '=', 0)
             ->orderBy('created_at', 'desc')
@@ -323,6 +461,41 @@ class InfoController extends Controller
             $comments = $comments ->where('comments.id', '<=', $lastid);
         $comments = $comments ->get();
         foreach ($comments as $comment) {
+            $comment['zan'] = $this ->commentApprovedCount($comment['id']);//Zan::select('id')->where('comment_id', $comment['id'])->count();
+        }
+        return $comments;
+    }
+
+    public function getCommentListV1($articleid, $lastid, $page, $limit) {
+        if (!$lastid)
+            $lastid = Comment::all()->orderby('created_at', 'desc')->first();
+        $from = ($page -1) * $limit;
+        $comments = Comment::where('article_id', '=', $articleid)
+            ->where('banned', '=', 0)
+            ->where('comments.id', '<=', $lastid)
+            ->orderBy('created_at', 'desc')
+            ->skip($from)
+            ->take($limit)->get();
+
+//        $comments = Comment::join('users', 'comments.created_by', '=', 'users.id')
+////            ->leftJoin('zans', 'comments.id', '=', 'zans.comment_id')
+//            ->join('profiles', 'comments.created_by', '=', 'profiles.user_id')
+//            ->select('comments.*', 'users.name as userName', 'profiles.icon_uri',
+//                'profiles.weixin_id', 'profiles.weixin_name', 'profiles.weixin_icon',
+//                'profiles.weibo_id', 'profiles.weibo_name','profiles.weibo_icon',
+//                'profiles.qq_id', 'profiles.qq_name', 'profiles.qq_icon', 'profiles.media_icon')
+//            ->where('comments.article_id', '=', $articleid)
+//            ->where('comments.banned', '=', 0)
+//            ->orderBy('created_at', 'desc')
+//            ->skip($from)
+//            ->take($limit);
+//        if($lastid > 0)
+//            $comments = $comments ->where('comments.id', '<=', $lastid);
+//        $comments = $comments ->get();
+        foreach ($comments as $comment) {
+            if($comment['user_created_by'])
+                $comment['user_created_by'] = $comment->user_created_by->profiles;
+
             $comment['zan'] = $this ->commentApprovedCount($comment['id']);//Zan::select('id')->where('comment_id', $comment['id'])->count();
         }
         return $comments;
@@ -378,6 +551,67 @@ class InfoController extends Controller
             }
         }
         return ['recommand' => $recommands];
+    }
+
+    public function getRecommendListV1($articleid, $excludeids) {
+        $keys = ArticleTags::select('tag_id') ->where('article_id', $articleid) ->get();
+        $exArray = explode(',', $excludeids);
+
+        $limit = 5;
+        $artCollection = new Collection([]);
+        for ($i=0; $i < count($keys); $i++) {
+            $tagid = $keys[$i]['tag_id'];
+            $articles = Article::join('article_tags', 'article_tags.article_id', '=', 'articles.id')
+                ->join('categories', 'articles.category_id', '=', 'categories.id')
+                ->join('users', 'users.id', '=', 'articles.created_by')
+                ->leftJoin('profiles', 'articles.created_by', '=', 'profiles.user_id')
+                ->join('article_types', 'articles.type_id', '=', 'article_types.id')
+                ->select('articles.id', 'articles.title', 'articles.description', 'articles.authname', 'articles.readed',
+                    'categories.name as categoryName', 'articles.category_id', 'article_types.name as articletypeName'
+                    , 'articles.created_at', 'users.name as userName', 'profiles.media_name as mediaName')
+                ->where('articles.published', '=', 4)
+                ->where('articles.banned', '=', 0)
+                ->where('articles.category_id', '!=', 13)
+                ->where('article_tags.tag_id', '=', $tagid)
+                ->whereNotIn('articles.id', $exArray)
+                ->orderBy('articles.created_at', 'desc')
+                ->take($limit)
+                ->get();
+            foreach($articles as $article) {
+                $resources = Resource::join('article_resources', 'resources.id', '=', 'article_resources.resource_id')
+                    ->where('article_resources.article_id', $article->id)
+                    ->select('link', 'name')->get();
+                $article['resources'] = $resources;
+                array_push($exArray, $article['id']);
+//                $excludeids = $excludeids.','.$article['id'];
+            }
+            if(sizeof($articles))
+                $artCollection->push($articles);
+        }
+        $recommands = new Collection([]);
+        if(sizeof($artCollection)) {
+            for($j=0; $j < $limit ; $j++) {
+                foreach($artCollection as $articles) {
+                    if(sizeof($articles) > $j) {
+                        $recommands ->push($articles[$j]);
+                    }
+                    if(sizeof($recommands) == 5) break;
+                }
+                if(sizeof($recommands) == 5) break;
+            }
+        }
+        return ['recommand' => $recommands,
+                'excludes' => $exArray];
+    }
+
+    public function getCommentInfo($commentid) {
+        $comment = Comment::findorFail($commentid);
+        if($comment['user_created_by'])
+            $comment['user_created_by'] = $comment->user_created_by->profiles;
+//        if($comment['user']) {
+//            $comment['user_profiles'] = $comment['user']->profiles;
+//        }
+        return $comment;
     }
 
 //    //if lastid == 0, it should be first page requst,
@@ -476,6 +710,41 @@ class InfoController extends Controller
         return $articles;
     }
 
+    public function getSubscribeArticleListV1($authorid, $lastid, $page, $limit) {
+        $from = ($page -1) * $limit;
+
+//            Article::join('categories', 'articles.category_id', '=', 'categories.id')
+//            ->leftJoin('article_resources', 'articles.id', '=', 'article_resources.article_id')
+//            ->leftJoin('profiles', 'articles.created_by', '=', 'profiles.user_id')
+//            ->leftJoin('resources', 'resources.id', '=', 'article_resources.resource_id')
+//            ->join('article_types', 'articles.type_id', '=', 'article_types.id')
+//            ->join('users', 'users.id', '=', 'articles.created_by')
+//            ->select('articles.id', 'articles.title', 'articles.description', 'articles.authname', 'categories.name as categoryName', 'articles.category_id', 'article_types.name as articletypeName'
+//                , 'articles.created_at' , 'resources.link as resourceLink', 'resources.name as resourceName', 'users.name as userName',
+//                'profiles.media_name as mediaName')
+//            ->where('articles.published', '=', 4)
+//            ->where('articles.banned', '=', 0)
+        $articles = $this ->getArticleListContentV1() ->where('articles.created_by', '=', $authorid)
+//            ->orderBy('articles.created_at', 'desc')
+            ->skip($from)
+            ->take($limit);
+
+        if($page != 1 && $lastid && $lastid > 0)
+            $articles = $articles->where('articles.id', '<=', $lastid);
+
+        $articles = $articles->get();
+
+        foreach ($articles as $article) {
+//            array_push($ids, $article->id);
+            $resources = Resource::join('article_resources', 'resources.id', '=', 'article_resources.resource_id')
+                ->where('article_resources.article_id', $article->id)
+                ->select('link', 'name')->get();
+            $article['resources'] = $resources;
+        }
+
+        return $articles;
+    }
+
     public function getCollectArticleList($userid, $lastid, $page, $limit) {
         $from = ($page -1) * $limit;
         $articles = Article::join('collections', 'collections.article_id', '=', 'articles.id')
@@ -502,6 +771,42 @@ class InfoController extends Controller
         $articles = $articles->get();
         return $articles;
     }
+
+    public function getCollectArticleListV1($userid, $lastid, $page, $limit) {
+        $from = ($page -1) * $limit;
+        $articles = Article::join('collections', 'collections.article_id', '=', 'articles.id')
+            ->join('categories', 'articles.category_id', '=', 'categories.id')
+//            ->leftJoin('article_resources', 'articles.id', '=', 'article_resources.article_id')
+//            ->leftJoin('resources', 'resources.id', '=', 'article_resources.resource_id')
+
+            ->leftJoin('profiles', 'articles.created_by', '=', 'profiles.user_id')
+            ->join('article_types', 'articles.type_id', '=', 'article_types.id')
+            ->join('users', 'users.id', '=', 'articles.created_by')
+            ->select('articles.id', 'articles.title', 'articles.description', 'articles.authname', 'categories.name as categoryName', 'articles.category_id', 'article_types.name as articletypeName'
+                , 'articles.created_at' , 'users.name as userName',
+                'profiles.media_name as mediaName')
+            ->where('articles.published', '=', 4)
+            ->where('articles.banned', '=', 0)
+            ->where('collections.user_id', '=', $userid)
+            ->orderBy('articles.created_at', 'desc')
+            ->skip($from)
+            ->take($limit);
+
+        if($page != 1 && $lastid && $lastid > 0)
+            $articles = $articles->where('articles.id', '<=', $lastid);
+
+        $articles = $articles->get();
+
+        foreach ($articles as $article) {
+//            array_push($ids, $article->id);
+            $resources = Resource::join('article_resources', 'resources.id', '=', 'article_resources.resource_id')
+                ->where('article_resources.article_id', $article->id)
+                ->select('link', 'name')->get();
+            $article['resources'] = $resources;
+        }
+        return $articles;
+    }
+
 
 
     public function searchArticles(Request $request) {
@@ -538,6 +843,50 @@ class InfoController extends Controller
             $articles = $articles ->where('articles.category_id', '=', $category);
 
          $articles = $articles ->get();
+        return $articles;
+    }
+
+    public function searchArticlesV1(Request $request) {
+        $key = $request ->get('key');
+        $category = $request ->get('category');
+        $this -> likeKey = '%'.$key.'%';
+
+        $articles = $this ->getArticleListContentV1();
+//            Article::join('categories', 'articles.category_id', '=', 'categories.id')
+//            ->leftJoin('article_resources', 'articles.id', '=', 'article_resources.article_id')
+//            ->leftJoin('resources', 'resources.id', '=', 'article_resources.resource_id')
+//            ->leftJoin('profiles', 'articles.created_by', '=', 'profiles.user_id')
+//            ->join('article_types', 'articles.type_id', '=', 'article_types.id')
+//            ->join('users', 'users.id', '=', 'articles.created_by')
+//            ->select('articles.id', 'articles.title', 'articles.description', 'articles.authname', 'categories.name as categoryName', 'articles.category_id', 'article_types.name as articletypeName'
+//                , 'articles.created_at' , 'resources.link as resourceLink', 'resources.name as resourceName', 'users.name as userName',
+//                'profiles.media_name as mediaName')
+//            ->where('articles.published', '=', 4)
+//            ->where('articles.banned', '=', 0)
+        $articles = $articles ->where(function($query){
+            $query->where('articles.title', 'like', $this -> likeKey)
+                ->orWhere(function($query){
+                    $query->where('articles.content', 'like', $this -> likeKey);
+                });
+        })
+//            ->where('articles.category_id', '=', $category)
+
+//            ->where('articles.title'.'articles.content', 'like', $likeKey)
+//            ->orWhere('articles.content', 'like', $likeKey)
+//            ->where('articles.type_id', 1)
+//            ->orderBy('articles.created_at', 'desc')
+            ->take(15);
+        if($category != 3)
+            $articles = $articles ->where('articles.category_id', '=', $category);
+
+        $articles = $articles ->get();
+        foreach ($articles as $article) {
+//            array_push($ids, $article->id);
+            $resources = Resource::join('article_resources', 'resources.id', '=', 'article_resources.resource_id')
+                ->where('article_resources.article_id', $article->id)
+                ->select('link', 'name')->get();
+            $article['resources'] = $resources;
+        }
         return $articles;
     }
 
@@ -1055,6 +1404,16 @@ class InfoController extends Controller
             return ['version' => $this->iosVersion];
     }
 
+    public function getArticleDetailInfo($id, $excludes) {
+        $article = Article::findOrFail($id);
+        $recommands = $this->getRecommendListV1($article->id, $excludes);
+        $advert = $this ->getAdvert(3, 1, -1, $article['category_id']);
+        return ['article' => $article,
+                'recommands' => $recommands,
+                'advert'  => $advert,
+        ];
+    }
+
     public function replaceArticleImages() {
         //check image name/ extention
         $dirs = $this->read_all_dir(public_path().'/photos/oldarticles')['dir'];//all old article dir & files
@@ -1219,8 +1578,8 @@ class InfoController extends Controller
                 $image_names[] = $file->name;
 
                 //check a image in the content and image in resource table
+                $hasImage = true;
                 if (false !== strpos($article->content, $file->link)) {
-                    $hasImage = true;
                     if (count($article_image)) {
                         break;
                     } else {

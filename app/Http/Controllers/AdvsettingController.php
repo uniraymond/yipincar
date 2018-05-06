@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\AdvPosition;
+use App\AdvSettingResources;
 use App\AdvTemplate;
 use App\AdvType;
 use App\Article;
@@ -22,10 +23,10 @@ use Symfony\Component\HttpFoundation\File\File;
 
 class AdvsettingController extends Controller
 {
-    public function generateImageName($file){
+    public function generateImageName($file, $order){
         $fartime = strtotime('2300-12-30');
         $nowtime  = strtotime('now');
-        $new_name = ($fartime - $nowtime).'ypc';
+        $new_name = ($fartime - $nowtime).'ypc-'.$order;
         $new_filename = $new_name . '.' . $file->getClientOriginalExtension();
         return $new_filename;
     }
@@ -83,7 +84,6 @@ class AdvsettingController extends Controller
         $advsetting->delete();
       }
     }
-
 
     $request->session()->flash('status', '广告已更新.');
     return redirect('admin/advsetting/list');
@@ -244,23 +244,30 @@ class AdvsettingController extends Controller
     $authuser = $request->user();
 
     $this->validate($request, [
-//        'links' => 'required',
-        'id' => 'required',
-        'title' => 'required|max:36'
-    ]);
+//        'id' => 'required',
+        'title' => 'required|max:36',
+        'links' => 'required|URL',
+        'images1' => 'max:2048000|mimes:jpg,gif,bmp,bnp,png,mif,mif,jpeg,ico,tif,tiff,cut,pic,tga,dib,svg,eps',
+        'images2' => 'max:2048000|mimes:jpg,gif,bmp,bnp,png,mif,mif,jpeg,ico,tif,tiff,cut,pic,tga,dib,svg,eps',
+        'images3' => 'max:2048000|mimes:jpg,gif,bmp,bnp,png,mif,mif,jpeg,ico,tif,tiff,cut,pic,tga,dib,svg,eps',
+//        'images1' => 'required|image',
+//        'images2' => 'required_if:temmplate_radio,3|image',
+//        'images3' => 'required_if:temmplate_radio,3|image',
+    ], $this->messages());
 
-    $advSetting = AdvSetting::findorFail($request['id']);
+      $advSetting = AdvSetting::findorFail($request['id']);
 
-    $advSetting->title = $request['title'];
-    $advSetting->type_id = $request['type_id'];
-    $advSetting->position_id = $request['position_id'];
-    $advSetting->template_id = $request['template_id'];
-    $advSetting->category_id = $request['category_id'];
-    $advSetting->description = $request['description'];
-    $advSetting->order = $request['order'];
-    $advSetting->links = $request['links'];
-    $advSetting->published_at = date('Y-m-d');
-    $advSetting->created_by = $authuser->id;
+      $advSetting->title = $request['title'];
+      $advSetting->type_id = $request['type_id'];
+      $advSetting->position_id = $request['position_id'];
+      $advSetting->template_id = $request['temmplate_radio'];
+      $advSetting->category_id = $request['category_id'];
+      $advSetting->description = $request['description'];
+      $advSetting->identification = $request['identification'];
+      $advSetting->order = $request['order'];
+      $advSetting->links = $request['links'];
+      $advSetting->published_at = date('Y-m-d');
+      $advSetting->created_by = $authuser->id;
       if (isset($request['status'])) {
           $advSetting->status = $request['status'] ? 2 : 1;
       }
@@ -268,7 +275,24 @@ class AdvsettingController extends Controller
       if (isset($request['top'])) {
           $advSetting->top = $request['top'] ? 1 : 0;
       }
-    $advSetting->save();
+      $advSetting->save();
+
+      $file = $request->file('images1');
+
+      if (!empty($file)) {
+          $this->saveAdvIconWith($file, $authuser, $advSetting, true, 1);
+      }
+
+      if($advSetting->template_id == 3) {
+          $file = $request->file('images2');
+          if(!empty($file)) {
+              $this->saveAdvIconWith($file, $authuser, $advSetting, true, 2);
+          }
+          $file = $request->file('images3');
+          if(!empty($file)) {
+              $this->saveAdvIconWith($file, $authuser, $advSetting, true, 3);
+          }
+      }
 
     $request->session()->flash('status', '成功更新广告');
     return redirect('admin/advsetting/list');
@@ -277,48 +301,61 @@ class AdvsettingController extends Controller
   public function uploadimage(Request $request)
   {
       $this->validate($request, [
-          'title' => 'required|max:36'
-      ]);
+          'title' => 'required|max:36',
+          'links' => 'required|URL',
+//          'images'=> 'required|image',
+          'images1' => 'required|max:2048000|mimes:jpg,gif,bmp,bnp,png,mif,mif,jpeg,ico,tif,tiff,cut,pic,tga,dib,svg,eps',
+          'images2' => 'required_if:temmplate_radio,3|max:2048000|mimes:jpg,gif,bmp,bnp,png,mif,mif,jpeg,ico,tif,tiff,cut,pic,tga,dib,svg,eps',
+          'images3' => 'required_if:temmplate_radio,3|max:2048000|mimes:jpg,gif,bmp,bnp,png,mif,mif,jpeg,ico,tif,tiff,cut,pic,tga,dib,svg,eps',
+      ], $this->messages());
     $authuser = $request->user();
-    $file = $request->file('images');
+    $file = $request->file('images1');
 
     if (!empty($file)) {
-      $fileOriginalName = $file->getClientOriginalName();
-      $fileName = $this->generateImageName($file);
-//      $fileName = $request['name'] ? $request['name'] : $file->getClientOriginalName(); //if wanna use filled file name use this line
+//      $fileOriginalName = $file->getClientOriginalName();
+//      $fileName = $this->generateImageName($file, 1);
+////      $fileName = $request['name'] ? $request['name'] : $file->getClientOriginalName(); //if wanna use filled file name use this line
+//
+//      $fileDir = "photos/adv";
+//      $file->move($fileDir, $fileName);
+////      $imageLink = $fileDir . '/' . $file->getClientOriginalName();
+//      $imageLink = $fileDir . '/' . $fileName;
+//      $cell_img_size = GetImageSize($imageLink); // need to caculate the file width and height to make the image same
+//
+////      $image = Image::make(sprintf('photos/adv/%s', $file->getClientOriginalName()))->resize(800, (int)((800 * $cell_img_size[1]) / $cell_img_size[0]))->save();
+//      $image = Image::make(sprintf('photos/adv/%s', $fileName))->save();
+//      $resource = new Resource();
+//      $resource->name = $fileName;
+//      $resource->link = '/' . $imageLink;
+//      $resource->created_by = $authuser->id;
+//      $resource->save();
 
-      $fileDir = "photos/adv";
-      $file->move($fileDir, $fileName);
-//      $imageLink = $fileDir . '/' . $file->getClientOriginalName();
-      $imageLink = $fileDir . '/' . $fileName;
-      $cell_img_size = GetImageSize($imageLink); // need to caculate the file width and height to make the image same
-
-//      $image = Image::make(sprintf('photos/adv/%s', $file->getClientOriginalName()))->resize(800, (int)((800 * $cell_img_size[1]) / $cell_img_size[0]))->save();
-      $image = Image::make(sprintf('photos/adv/%s', $fileName))->save();
-      $resource = new Resource();
-      $resource->name = $fileName;
-      $resource->link = '/' . $imageLink;
-      $resource->created_by = $authuser->id;
-      $resource->save();
-
-      
-      $advSetting = new AdvSetting();
-      $advSetting->title = $request['title'];
-      $advSetting->resource_id = $resource->id;
-      $advSetting->type_id = $request['type_id'];
-      $advSetting->position_id = $request['position_id'];
-      $advSetting->template_id = $request['template_id'];
-      $advSetting->category_id = $request['category_id'];
-      $advSetting->description = $request['description'];
-      $advSetting->order = $request['order'];
-      $advSetting->links = $request['links'];
-      $advSetting->status = $request['status'] ? 2 : 1;
-      $advSetting->top = $request['top'] ? 1 : 0;
-      $advSetting->published_at = date('Y-m-d');
-      $advSetting->created_by = $authuser->id;
-      $advSetting->readed = random_int(4000, 7000);
-//        $advSetting->readed = random_int(15000, 20000);
+        $advSetting = new AdvSetting();
+        $advSetting->title = $request['title'];
+//      $advSetting->resource_id = $resource->id;
+        $advSetting->type_id = $request['type_id'];
+        $advSetting->position_id = $request['position_id'];
+        $advSetting->template_id = $request['temmplate_radio'];
+        $advSetting->category_id = $request['category_id'];
+        $advSetting->description = $request['description'];
+        $advSetting->identification = $request['identification'];
+        $advSetting->order = $request['order'];
+        $advSetting->links = $request['links'];
+        $advSetting->status = $request['status'] ? 2 : 1;
+        $advSetting->top = $request['top'] ? 1 : 0;
+        $advSetting->published_at = date('Y-m-d');
+        $advSetting->created_by = $authuser->id;
+        $advSetting->readed = random_int(8000, 15000);
         $advSetting->save();
+
+        $this->saveAdvIconWith($file, $authuser, $advSetting, false, 1);
+
+        if($advSetting->template_id == 3) {
+            $file = $request->file('images2');
+            $this->saveAdvIconWith($file, $authuser, $advSetting, false, 2);
+            $file = $request->file('images3');
+            $this->saveAdvIconWith($file, $authuser, $advSetting, false, 3);
+        }
 
         if ($request['status']) {
             $articleStatusCheck = new ArticleStatusCheck();
@@ -330,7 +367,7 @@ class AdvsettingController extends Controller
         }
     }
 
-    $request->session()->flash('status', '图片上传成功.');
+    $request->session()->flash('status', '推广添加成功.');
     return redirect('admin/advsetting/list');
   }
 
@@ -366,4 +403,69 @@ class AdvsettingController extends Controller
         $arr = array('status'=>'success');
         return response()->Json($arr);
     }
+
+    public function messages()
+    {
+        return [
+            'title.required' => '标题是必填的',
+            'title.max' => '标题不能超过35个字',
+            'links.required' => '链接是必须的',
+            'links.u_r_l' => '请填写正确的链接格式',
+            'images1.required' => '至少添加一张图片',
+            'images1.mimes' => '图1请上传正确的图片格式',
+            'images2.mimes' => '图2请上传正确的图片格式',
+            'images3.mimes' => '图3请上传正确的图片格式',
+            'images2.required_if' => '选择3图模板,则必须添加图片2',
+            'images3.required_if' => '选择3图模板,则必须添加图片3',
+            'images1.max' => '上传图片1不能超过20M',
+            'images2.max' => '上传图片2不能超过20M',
+            'images3.max' => '上传图片3不能超过20M',
+        ];
+    }
+
+    public function saveAdvIconWith($file, $authuser, $adv_setting, $update, $order) {
+        $fileOriginalName = $file->getClientOriginalName();
+        $fileName = $this->generateImageName($file, $order);
+        $fileOriginalDir = "photos/adv/original";
+        $fileThumbsDir = "photos/adv/thumbs";
+        $fileDir = "photos/adv";
+
+        $file->move($fileDir, $fileName);
+
+        $imageOriginalLink = $fileOriginalDir . '/' . $fileName;
+        $imageThumbsLink = $fileThumbsDir . '/' . $fileName;
+        $imageLink = $fileDir . '/' . $fileName;
+        copy($imageLink, $imageThumbsLink);
+        copy($imageLink, $imageOriginalLink);
+
+        $cell_img_size = GetImageSize($imageLink); // need to caculate the file width and height to make the image same
+
+        $image = Image::make(sprintf('photos/adv/%s', $fileName))->save();
+        $imageThumbs = Image::make(sprintf('photos/adv/thumbs/%s', $fileName))->resize(300, (int)((300 *  $cell_img_size[1]) / $cell_img_size[0]))->save();
+        $imageOriginal = Image::make(sprintf('photos/adv/original/%s', $fileName))->save();
+
+        if($update) {
+            $oldArticlResource = AdvSettingResources::where('adv_setting_id', $adv_setting->id)
+                ->where('displayorder', $order)
+                ->delete();
+            Resource::where('link', '/' . $imageLink)->delete();
+        }
+
+        $resource = new Resource();
+        $resource->name = $fileName;
+        $resource->link = '/' . $imageLink;
+        $resource->created_by = $authuser->id;
+        $resource->order = $order;
+        $resource->save();
+
+        $advResource = new AdvSettingResources();
+        $advResource->adv_setting_id = $adv_setting->id;
+        $advResource->resource_id = $resource->id;
+        $advResource->displayorder = $order;
+        $advResource->save();
+
+
+
+    }
+
 }

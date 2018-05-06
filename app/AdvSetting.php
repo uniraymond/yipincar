@@ -69,7 +69,9 @@ class AdvSetting extends Model
 
   public function resources()
   {
-    return $this->belongsTo('App\Resource', 'resource_id');
+    return $this->belongsToMany('App\Resource', 'adv_setting_resources', 'adv_setting_id', 'resource_id');
+
+//    return $this->belongsTo('App\Resource', 'resource_id');
   }
 
     public function users()

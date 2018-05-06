@@ -1,18 +1,6 @@
 {
   "private": true,
   "scripts": {
-    "prod": "gulp --production",
-    "dev": "gulp watch"
-  },
-  "devDependencies": {
-    "gulp": "^3.9.1",
-    "laravel-elixir": "^5.0.0",
-    "bootstrap-sass": "^3.0.0"
-  },
-
-  "name": "angular2-quickstart",
-  "version": "1.0.0",
-  "scripts": {
     "start": "tsc && concurrently \"npm run tsc:w\" \"npm run lite\" ",
     "lite": "lite-server",
     "postinstall": "typings install",
@@ -20,6 +8,24 @@
     "tsc:w": "tsc -w",
     "typings": "typings"
   },
+  "devDependencies": {
+    "bootstrap-sass": "^3.3.7",
+    "concurrently": "^2.0.0",
+    "gulp": "^3.9.1",
+    "jquery": "^3.2.1",
+    "laravel-elixir-browsersync-official": "^1.0.0",
+    "laravel-elixir-vue": "^0.1.8",
+    "laravel-elixir-webpack-official": "^1.0.10",
+    "lite-server": "^2.2.0",
+    "lodash": "^4.17.4",
+    "typescript": "^1.8.10",
+    "typings": "^1.0.4",
+    "vue": "^2.4.2",
+    "vue-resource": "^1.3.4",
+    "vue-router": "^2.7.0"
+  },
+  "name": "angular2-quickstart",
+  "version": "1.0.0",
   "license": "ISC",
   "dependencies": {
     "@angular/common": "2.0.0-rc.4",
@@ -39,11 +45,5 @@
     "zone.js": "^0.6.12",
     "angular2-in-memory-web-api": "0.0.14",
     "bootstrap": "^3.3.6"
-  },
-  "devDependencies": {
-    "concurrently": "^2.0.0",
-    "lite-server": "^2.2.0",
-    "typescript": "^1.8.10",
-    "typings":"^1.0.4"
   }
 }

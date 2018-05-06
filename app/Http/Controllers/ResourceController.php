@@ -53,6 +53,13 @@ class ResourceController extends Controller
       );
     }
 
+//        $image = Image::make(sprintf($fileDir.'/'.$fileName));
+//        $imageSize = GetImageSize($fileDir.'/'.$fileName);
+//        $markWidth = ($imageSize[0] > $imageSize[1] ? $imageSize[1] : $imageSize[0]) - 20;
+//        $waterMark = Image::make(sprintf('photos/watermark2.png'))->resize($markWidth -40, $markWidth -40);
+//        $image->insert($waterMark, 'center');
+//        $image->save();
+
     $a = array(
         'filename'=>$file->getClientOriginalName(),
         'path'=>storage_path($file->getClientOriginalName()),

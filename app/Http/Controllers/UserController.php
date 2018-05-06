@@ -236,7 +236,11 @@ class UserController extends Controller
             $currentUser->name = $request['name'];
 
             $emailUser =  $currentUser->where('email',$request['email'])->get();
+<<<<<<< HEAD
             if ($checkemail == null || $id !=  $checkemail->id)  {
+=======
+            if ($checkemail ==  null || $id !=  $checkemail->id)  {
+>>>>>>> debug-master
                 $currentUser->email = $request['email'];
             }
 

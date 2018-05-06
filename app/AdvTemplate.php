@@ -10,4 +10,9 @@ class AdvTemplate extends Model
     {
         return $this->hasMany('App\AdvSettings', 'template_id');
     }
+
+    public function articles()
+    {
+        return $this->hasMany('App\Articles', 'template_id');
+    }
 }

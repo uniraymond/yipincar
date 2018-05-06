@@ -519,8 +519,13 @@ class ProfileController extends Controller
 
 //          $cell_img_size_thumbs = GetImageSize($imageThumbsLink); // need to caculate the file width and height to make the image same
                 $cell_img_size = GetImageSize($imageLink); // need to caculate the file width and height to make the image same
-                $image = Image::make(sprintf('photos/profiles/autheditors/'.$authuserId.'/%s', $file->getClientOriginalName()))->save();
-                $imageThumbs = Image::make(sprintf('photos/profiles/autheditors/'.$authuserId.'/thumbs/%s', $file->getClientOriginalName()))->resize(300, (int)((300 *  $cell_img_size[1]) / $cell_img_size[0]))->save();
+                $maxSize = 480;
+                if($cell_img_size[0] > $maxSize) {
+                    $image = Image::make(sprintf('photos/profiles/autheditors/'.$authuserId.'/%s', $file->getClientOriginalName()))->resize($maxSize, (int)(($maxSize *  $cell_img_size[1]) / $cell_img_size[0]))->save();
+                } else {
+                    $image = Image::make(sprintf('photos/profiles/autheditors/'.$authuserId.'/%s', $file->getClientOriginalName()))->save();
+                }
+                $imageThumbs = Image::make(sprintf('photos/profiles/autheditors/'.$authuserId.'/thumbs/%s', $file->getClientOriginalName()))->resize(190, (int)((190 *  $cell_img_size[1]) / $cell_img_size[0]))->save();
                 $imageOriginal = Image::make(sprintf('photos/profiles/autheditors/'.$authuserId.'/original/%s', $file->getClientOriginalName()))->save();
             } else {
                 $fileDir = "photos/profiles/autheditors/".$authuserId;
