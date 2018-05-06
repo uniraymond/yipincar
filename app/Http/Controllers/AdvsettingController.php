@@ -345,7 +345,7 @@ class AdvsettingController extends Controller
         $advSetting->top = $request['top'] ? 1 : 0;
         $advSetting->published_at = date('Y-m-d');
         $advSetting->created_by = $authuser->id;
-        $advSetting->readed = random_int(4000, 7000);
+        $advSetting->readed = random_int(8000, 15000);
         $advSetting->save();
 
         $this->saveAdvIconWith($file, $authuser, $advSetting, false, 1);

@@ -597,7 +597,7 @@ class ArticleController extends Controller
         if($authname) {
             $article->authname = $authname;
         }
-        $article->readed = random_int(4000, 7000);
+        $article->readed = random_int(8000, 15000);
         $article->save();
 
         if ($request['published']) {
