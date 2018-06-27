@@ -73,14 +73,69 @@
 
                         <div class="clearfix formgroup"  style="margin-bottom: 55px">
                             {{--<div class="col-md-12">--}}
+                            {!! Form::label('media_icon', '自媒体头像', array('class'=>'col-md-2')) !!}
+                            @if ($errors->has('media_icon'))
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('media_icon') }}</strong>
+                                </span>
+                            @endif
+                            {{--                            {!! Form::file('media_icon', '', array('class'=>'col-md-12 form-control-file form-control', 'id'=>'media_icon', 'required'=>'required')) !!}--}}
+                            <form required="required" >
+                                <input type="file" id="media_icon" name="media_icon" class="col-md-12 form-control-file form-control"/>
+                            <img id="media_icon_image" width="100" />
+                            <div class="media_icon"></div>
+                            {{--</div>--}}
+                        </div>
+
+
+                        <div class="clearfix formgroup"  style="margin-bottom: 55px">
+                            {{--<div class="col-md-12">--}}
                             {!! Form::label('proveimage', '证件照片', array('class'=>'col-md-2')) !!}
                             @if ($errors->has('proveimage'))
                                 <span class="help-block">
                                         <strong>{{ $errors->first('proveimage') }}</strong>
                                     </span>
                             @endif
-                            {!! Form::file('proveimage', '', array('class'=>'col-md-10 form-control-file form-control', 'id'=>'proveimage', 'required'=>'required')) !!}
+                            {{--                            {!! Form::file('proveimage', '', array('class'=>'col-md-10 form-control-file form-control', 'id'=>'proveimage', 'required'=>'required')) !!}--}}
+                            <form required="required">
+                                <input type="file" class="col-md-10 form-control-file form-control" id="proveimage" name="proveimage"/>
                             <img id="proveimage_image" width="100" />
+                            <div class="clearfix"></div>
+                            {{--</div>--}}
+                        </div>
+
+                        <div class="clearfix formgroup" style="margin-bottom: 55px">
+                            {{--<div class="col-md-12">--}}
+                            {!! Form::label('contract_auth', '合同授权书', array('class'=>'col-md-2')) !!}
+                            @if ($errors->has('contract_auth'))
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('contract_auth') }}</strong>
+                                </span>
+                            @endif
+
+                            {{--                            {!! Form::file('contract_auth', '', array('class'=>'col-md-2 form-control-file form-control', 'id'=>'contract_auth', 'required'=>'required')) !!}--}}
+                            <form required="required">
+                                <input type="file" class="col-md-2 form-control-file form-control"  name="contract_auth" id="contract_auth"/>
+                            <img id="contract_auth_image" width="100" />
+                            <div class="auth_document"  style="margin-top: 5px">请先下载<a href="{{ url('/documents/《一品汽车》媒体平台入驻授权书.docx') }}" target="_blank">《一品汽车媒体平台入驻授权书》</a> ，上传加盖公章的扫描件，支持上传jpg,jpeg,png</div>
+                            <div class="clearfix"></div>
+                            {{--</div>--}}
+                        </div>
+
+
+
+                        <div class="clearfix formgroup" id="ass_resource_upload"  style="margin-bottom: 55px">
+                            {{--<div class="col-md-12">--}}
+                            {!! Form::label('ass_resource', '组织机构代码证', array('class'=>'col-md-2')) !!}
+                            @if ($errors->has('ass_resource'))
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('ass_resource') }}</strong>
+                                </span>
+                            @endif
+                            {{--                            {!! Form::file('ass_resource', '', array('class'=>'col-md-12 form-control-file form-control', 'id'=>'ass_resource', 'required'=>'required')) !!}--}}
+                            <form>
+                                <input id="ass_resource" name="ass_resource" class= 'col-md-12 form-control-file form-control' type="file"/>
+                            <img id="ass_resource_image" width="100" />
                             <div class="clearfix"></div>
                             {{--</div>--}}
                         </div>
@@ -154,35 +209,7 @@
                         {{--</div>--}}
                         {{--</div>--}}
 
-                        <div class="clearfix formgroup" style="margin-bottom: 55px">
-                            {{--<div class="col-md-12">--}}
-                            {!! Form::label('contract_auth', '合同授权书', array('class'=>'col-md-2')) !!}
-                            @if ($errors->has('contract_auth'))
-                                <span class="help-block">
-                                    <strong>{{ $errors->first('contract_auth') }}</strong>
-                                </span>
-                            @endif
 
-                            {!! Form::file('contract_auth', '', array('class'=>'col-md-2 form-control-file form-control', 'id'=>'contract_auth', 'required'=>'required')) !!}
-                            <img id="contract_auth_image" width="100" />
-                            <div class="auth_document"  style="margin-top: 5px">请先下载<a href="{{ url('/documents/《一品汽车》媒体平台入驻授权书.docx') }}" target="_blank">《一品汽车媒体平台入驻授权书》</a> ，上传加盖公章的扫描件，支持上传jpg,jpeg,png</div>
-                            <div class="clearfix"></div>
-                            {{--</div>--}}
-                        </div>
-
-                        <div class="clearfix formgroup" id="ass_resource_upload"  style="margin-bottom: 55px">
-                            {{--<div class="col-md-12">--}}
-                            {!! Form::label('ass_resource', '组织机构代码证', array('class'=>'col-md-2')) !!}
-                            @if ($errors->has('ass_resource'))
-                                <span class="help-block">
-                                    <strong>{{ $errors->first('ass_resource') }}</strong>
-                                </span>
-                            @endif
-                            {!! Form::file('ass_resource', '', array('class'=>'col-md-12 form-control-file form-control', 'id'=>'ass_resource', 'required'=>'required')) !!}
-                            <img id="ass_resource_image" width="100" />
-                            <div class="clearfix"></div>
-                            {{--</div>--}}
-                        </div>
 
 
 
@@ -235,19 +262,24 @@
                             @endif
                         </div>
 
-                        <div class="clearfix formgroup"  style="margin-bottom: 55px">
+
+
+                        {{--<div class="clearfix formgroup"  style="margin-bottom: 55px">--}}
                             {{--<div class="col-md-12">--}}
-                            {!! Form::label('media_icon', '自媒体头像', array('class'=>'col-md-2')) !!}
-                            @if ($errors->has('media_icon'))
-                                <span class="help-block">
-                                    <strong>{{ $errors->first('media_icon') }}</strong>
-                                </span>
-                            @endif
-                            {!! Form::file('media_icon', '', array('class'=>'col-md-12 form-control-file form-control', 'id'=>'media_icon', 'required'=>'required')) !!}
-                            <img id="media_icon_image" width="100" />
-                            <div class="media_icon"></div>
+                            {{--{!! Form::label('media_icon', '自媒体头像', array('class'=>'col-md-2')) !!}--}}
+                            {{--@if ($errors->has('media_icon'))--}}
+                                {{--<span class="help-block">--}}
+                                    {{--<strong>{{ $errors->first('media_icon') }}</strong>--}}
+                                {{--</span>--}}
+                            {{--@endif--}}
+{{--                            {!! Form::file('media_icon', '', array('class'=>'col-md-12 form-control-file form-control', 'id'=>'media_icon', 'required'=>'required')) !!}--}}
+                            {{--<form required="required" >--}}
+                                {{--<input type="file" id="media_icon" name="media_icon" class="col-md-12 form-control-file form-control"/>--}}
+                            {{--</form>--}}
+                            {{--<img id="media_icon_image" width="100" />--}}
+                            {{--<div class="media_icon"></div>--}}
                             {{--</div>--}}
-                        </div>
+                        {{--</div>--}}
 
                         <div class="clearfix formgroup"  style="margin-bottom: 55px">
                             {!! Form::label('media_intro', '自媒体简介', array('class'=>'col-md-2 clearfix')) !!}

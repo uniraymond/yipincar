@@ -28,6 +28,7 @@ Route::get('authprofile/{uid}/show', 'ProfileController@authshow');
 Route::get('authprofile/{uid}/update', 'ProfileController@authupdate');
 Route::get('preview/{id}', 'ArticleController@preview');
 Route::get('v1/preview/{id}/{exid}/{readerid}/{uid}', 'ArticleController@previewv1');
+Route::get('v1/preview/{id}/{exid}', 'ArticleController@previewv1NoReader');
 
 Route::get('authsendtxt/{phone}', 'UserController@cellphonevalidate');
 

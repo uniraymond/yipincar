@@ -42,7 +42,7 @@
                 {{--</li>--}}
             @elseif ((null != Auth::user()) && Auth::user()->hasAnyRole(['auth_editor']))
                 <li>
-                    @if (isset($profile) && count($profile)>0)
+                    @if (isset($profile) && $profile != null)
                         <a href="{{  url('authshow') }}" >
                     @else
                         <a href="{{  url('authprofile/create') }}" >

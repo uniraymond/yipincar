@@ -148,11 +148,20 @@
                 <h4 class="recommend_title">{{$recommend->title}}</h4>
                 <h6 class="recommend_subtitle">
                     <div class="recommend_subInfo media-list">
-                        @if(isset($recommend->mediaName) && $recommend->mediaName != '')
-                            {{ $recommend->mediaName }}
-                        @else
-                            {{ $recommend->userName != '' ? $recommend->userName : $recommend->userName }}
-                        @endif
+                        {{--@if(isset($recommend->mediaName) && $recommend->mediaName != '')--}}
+                            {{--{{ $recommend->mediaName }}--}}
+                        {{--@else--}}
+                            {{--{{ $recommend->userName != '' ? $recommend->userName : $recommend->userName }}--}}
+                        {{--@endif--}}
+
+                        {{--substr($recommend->user_created_by->profiles->media_name, 0, 4) == '一品汽车' ? '一品汽车' : $recommend->user_created_by->profiles->media_name--}}
+
+                            @if(isset($recommend->user_created_by->profiles) && isset($recommend->user_created_by->profiles->media_name) && $recommend->user_created_by->profiles->media_name != '')
+                                <span class="mediaName" >{{ $recommend->user_created_by->profiles->media_name }}</span>
+                            @else
+                                <span class="authname" >{{ $recommend->authname != '' ? (mb_substr($recommend->authname, 0, 4, 'utf-8') == '一品汽车' ? '一品汽车' : $recommend->authname) : $recommend->user_created_by->name }}</span>
+                            @endif
+
                         {{ date('Y-m-d H:i', strtotime($recommend->created_at)) }}
                     </div>
 

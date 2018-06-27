@@ -287,6 +287,17 @@ class InfoController extends Controller
                         array_push($topArticles, $article);
                     }
                 }
+                foreach ($topArticles as $article) {
+                    $resources = Resource::join('article_resources', 'resources.id', '=', 'article_resources.resource_id')
+                        ->where('article_resources.article_id', $article->id)
+                        ->select('link', 'name')
+                        ->orderBy('name', 'desc')
+                        ->first();
+                    if($resources != null) {
+                        $article['resourceLink'] = $resources->link;
+                        $article['resourceName'] = $resources->name;
+                    }
+                }
                 $topAdverts = $this ->getAdvert(2, 6, 1, $category);
             }
         }
@@ -298,7 +309,7 @@ class InfoController extends Controller
                 ->select('link', 'name')
                 ->orderBy('name', 'desc')
                 ->first();
-            if(count($resources)) {
+            if($resources != null) {
                 $article['resourceLink'] = $resources->link;
                 $article['resourceName'] = $resources->name;
             }

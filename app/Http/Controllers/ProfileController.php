@@ -208,7 +208,7 @@ class ProfileController extends Controller
 //        $cities = City::all();
 
         if($auth->id == $userId) {
-            if (count($profile)<1) {
+            if ($profile == null) {
                 return view('authusers/authprofilecreate', ['province'=>$province]);
             } else {
                 return view('authusers/authprofileshow', ['profile'=>$profile, 'province'=>$province]);
@@ -247,7 +247,7 @@ class ProfileController extends Controller
             $city = Province::where('id', $profile->city_id)->first();
         }
         $province = Province::all();
-        if (count($profile)>0) {
+        if ($profile != null) {
             return view('authusers/authprofileview', ['profile'=>$profile, 'defaultImage'=>$defaultImage, 'province'=>$city]);
         } else {
             $request->session()->flash('status', '入驻编辑还未填写资料');

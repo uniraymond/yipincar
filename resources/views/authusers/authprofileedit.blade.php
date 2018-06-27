@@ -79,7 +79,9 @@
                                     <strong>{{ $errors->first('proveimage') }}</strong>
                                 </span>
                             @endif
-                            {!! Form::file('proveimage', '', array('class'=>'col-md-10 form-control-file form-control', 'id'=>'proveimage', 'required'=>'required')) !!}
+{{--                            {!! Form::file('proveimage', '', array('class'=>'col-md-10 form-control-file form-control', 'id'=>'proveimage', 'required'=>'required')) !!}--}}
+                            <form required="required">
+                                <input type="file" name="proveimage" class="col-md-10 form-control-file form-control" id="proveimage"/>
                             <img id="proveimage_image" width="100" src="{{ $profile->prove_resource }}"/>
                             <div class="clearfix"></div>
 
@@ -156,7 +158,9 @@
                                     <strong>{{ $errors->first('ass_resource') }}</strong>
                                 </span>
                             @endif
-                            {!! Form::file('ass_resource', '', array('class'=>'col-md-12 form-control-file form-control', 'id'=>'ass_resource')) !!}
+                            {{--{!! Form::file('ass_resource', '', array('class'=>'col-md-12 form-control-file form-control', 'id'=>'ass_resource')) !!}--}}
+                            <form>
+                            <input type="file" name="ass_resource" class="col-md-12 form-control-file form-control" id="ass_resource"/>
                             <img id="ass_resource_image" width="100" src="{{ $profile->ass_resource }}" />
                             <div class="clearfix"></div>
                             {{--</div>--}}
@@ -170,7 +174,9 @@
                                     <strong>{{ $errors->first('contract_auth') }}</strong>
                                 </span>
                             @endif
-                            {!! Form::file('contract_auth', '', array('class'=>'col-md-12 form-control-file form-control', 'id'=>'contract_auth', 'required'=>'required')) !!}
+                            {{--{!! Form::file('contract_auth', '', array('class'=>'col-md-12 form-control-file form-control', 'id'=>'contract_auth', 'required'=>'required')) !!}--}}
+                            <form required="required">
+                            <input type="file" name="contract_auth" class="col-md-12 form-control-file form-control" id="contract_auth" />
                             <img id="contract_auth_image" width="100" src="{{ $profile->contract_auth }}" />
                             <div class="auth_document"  style="margin-top: 5px">请先下载<a href="{{ url('/documents/《一品汽车》媒体平台入驻授权书.docx') }}" target="_blank">《一品汽车媒体平台入驻授权书》</a> ，上传加盖公章的扫描件，支持上传jpg,jpeg,png</div>
 
@@ -235,7 +241,9 @@
                                     <strong>{{ $errors->first('media_icon') }}</strong>
                                 </span>
                             @endif
-                            {!! Form::file('media_icon', '', array('class'=>'col-md-12 form-control-file form-control', 'id'=>'media_icon', 'required'=>'required')) !!}
+{{--                            {!! Form::file('media_icon', '', array('class'=>'col-md-12 form-control-file form-control', 'id'=>'media_icon', 'required'=>'required')) !!}--}}
+                            <form required="required">
+                                <input type="file" name="media_icon" class="col-md-12 form-control-file form-control" id="media_icon"/>
                             <img id="media_icon_image" width="100" src="{{ $profile->media_icon }}"/>
                             <div class="media_icon"></div>
                             {{--</div>--}}

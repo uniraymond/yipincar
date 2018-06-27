@@ -563,7 +563,7 @@ class ArticleController extends Controller
         $published = $request['published'] ? 2 : 1;
         $waterMark = $request['watermark'] ? 1 : 0;
         $authname = $request['authname'];
-        $template_id = $request['temmplate_radio'];
+        $template_id = $request['temmplate_radio'] == null ? 1 : $request['temmplate_radio'];
 
         if (isset($request['tags'])){
             $tags = trim($request['tags']);
@@ -589,7 +589,7 @@ class ArticleController extends Controller
         $article->description = $description;
         $article->created_by = $authuser->id;
         $article->watermark = $waterMark;
-        $article->template_id = $template_id;
+        $article->template_id = $template_id == null ? 1 : $template_id;
         //$typeId default is article and setup 1 as article
         $article->type_id = 1;
         $article->category_id = $categoryId;
@@ -919,6 +919,19 @@ class ArticleController extends Controller
             'recommends'=>$recommends['recommends'],
             'comments'=>$this->getCommentList($article_id),
             'excludes'=>$recommends['excludes'], 'readerid'=>$readerid, 'uid'=>$uid]);
+    }
+
+    public function previewv1NoReader($article_id, $excludeids) {
+        $article = Article::find($article_id);
+        $recommends = $this->getRecommendListV1($article_id, $excludeids);
+//        $comments=$article->comments;
+//        echo 'article created by: '.$article->user_created_by;
+        $article['readed'] = $article['readed'] + random_int(5, 10);
+        Article::where('id', $article_id)->update(['readed' => $article['readed']]);
+        return view('articles/previewv1', ['article'=>$article,
+            'recommends'=>$recommends['recommends'],
+            'comments'=>$this->getCommentList($article_id),
+            'excludes'=>$recommends['excludes'], 'readerid'=>0, 'uid'=>1]);
     }
 
     public function getRecommendListV1($articleid, $excludeids) {

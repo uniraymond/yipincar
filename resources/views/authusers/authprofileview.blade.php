@@ -100,14 +100,17 @@
                             {{--</div>--}}
                         {{--</div>--}}
 
-                        <div class="clearfix">
-                            <div class="col-md-6">
-                                组织机构代码证：
+                        @if($profile->media_type_id == 2)
+                            <div class="clearfix">
+                                <div class="col-md-6">
+                                    组织机构代码证：
+                                </div>
+                                <div class="col-md-6">
+                                    <img id="ass_resource_image" width="100" src="{{ $profile->ass_resource ? url($profile->ass_resource) : '' }}" />
+                                </div>
                             </div>
-                            <div class="col-md-6">
-                                <img id="ass_resource_image" width="100" src="{{ $profile->ass_resource ? url($profile->ass_resource) : '' }}" />
-                            </div>
-                        </div>
+                        @endif
+
 
                         <div class="clearfix">
                             <div class="col-md-6">
