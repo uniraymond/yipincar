@@ -1,6 +1,5 @@
 /vendor
 !/vendor/unisharp
-!/public/apps
 /node_modules
 /public/storage
 /public/photos/*
@@ -10,7 +9,6 @@ Homestead.json
 .idea
 /config/database.php
 /laradock
-/public/apps/TopAuto.apk
 /public/vendor/FFMpeg
 /bower_components
 /public/videos
