@@ -199,3 +199,6 @@ Route::get('getcarbrand', 'CarController@getCarBrand');
 Route::get('getcars', 'CarController@getCars');
 Route::get('getbrandlogo', 'CarController@getBrandLogo');
 Route::get('getcarslogo', 'CarController@getCarsLogo');
+Route::get('carsbrandlist', 'CarController@getCarsBrandList');
+Route::get('brandcarlist/{parentid}', 'CarController@getCarsByBrand');
+

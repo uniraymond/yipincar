@@ -82,6 +82,14 @@ class CarController extends Controller
         }
     }
 
+    public function getCarsBrandList() {
+        return Car::all();
+    }
+
+    public function getCarsByBrand($parentid) {
+        return Car::where('parentid', $parentid)->get();
+    }
+
     function file_get_content($url) {
         if (function_exists('file_get_contents')) {
             $file_contents = @file_get_contents($url);
