@@ -194,3 +194,8 @@ Route::get('/get_captcha/{config?}', function (\Mews\Captcha\Captcha $captcha, $
 
 Route::get('termandconditions', 'ArticleController@term');
 
+Route::get('cardetail/{id}', 'CarController@carDetail');
+Route::get('getcarbrand', 'CarController@getCarBrand');
+Route::get('getcars', 'CarController@getCars');
+Route::get('getbrandlogo', 'CarController@getBrandLogo');
+Route::get('getcarslogo', 'CarController@getCarsLogo');
