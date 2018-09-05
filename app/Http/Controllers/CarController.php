@@ -83,7 +83,7 @@ class CarController extends Controller
     }
 
     public function getCarsBrandList() {
-        return Car::all();
+        return CarBrand::all();
     }
 
     public function getCarsByBrand($parentid) {
