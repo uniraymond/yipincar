@@ -83,7 +83,7 @@ class CarController extends Controller
     }
 
     public function getCarsBrandList() {
-        return CarBrand::all();
+        return CarBrand::orderBy('initial', 'asc')->get();
     }
 
     public function getCarsByBrand($parentid) {
