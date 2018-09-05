@@ -11,7 +11,7 @@ use App\Http\Requests;
 class CarController extends Controller
 {
     public function carDetail($id) {
-        return view('shopping/cardetail');
+        return view('shopping/cardetail', ['car'=>Car::findOrFail($id)]);
     }
 
     public function getCarBrand() {
