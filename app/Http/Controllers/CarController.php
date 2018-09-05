@@ -87,7 +87,13 @@ class CarController extends Controller
     }
 
     public function getCarsByBrand($parentid) {
-        return Car::where('parentid', $parentid)->get();
+        $cars = Car::where('parentid', $parentid)->get();
+        for ($i=0; $i<count($cars); $i++) {
+            $car = $cars[$i];
+            $subCar = Car::where('parentid', $car['jisu_id'])->get();
+            $car['series'] = $subCar;
+        }
+        return $cars;
     }
 
     function file_get_content($url) {
