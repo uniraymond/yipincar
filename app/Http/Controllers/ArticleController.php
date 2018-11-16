@@ -309,7 +309,7 @@ class ArticleController extends Controller
         $article->description = $description;
         $article->updated_by = $authuser->id;
         $article->watermark = $waterMark;
-        $article->template_id = $template_id;
+        $article->template_id = $template_id == null ? 1 : $template_id;
 
         if($authname) {
             $article->authname = $authname;
